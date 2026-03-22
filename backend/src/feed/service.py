@@ -1,50 +1,31 @@
-import json
-import random
-from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Optional
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.sql.expression import func
+from src.locations.models import Location
+# Dùng thư viện redis nếu có lưu cached vector của user, hiện tạm fetch random từ DB nếu không có logic vector rõ ràng cho feed mồi.
 
-# Load dữ liệu từ file test
-curr_dir = Path(__file__).resolve().parent
-data_path = curr_dir.parent / 'data_test' / 'database_vungtau.json'
-
-try:
-    with open(data_path, 'r', encoding='utf-8') as f:
-        PLACES_DB: List[Dict[str, Any]] = json.load(f)
-except Exception as e:
-    print(f"Warning: Không thể tải data_test/database_vungtau.json: {e}")
-    PLACES_DB = []
-
-def get_feed_cards(feed_type: str = "place", limit: int = 10) -> List[dict]:
+async def get_feed_cards(db: AsyncSession, user_id: Optional[str] = None, feed_type: str = "place", limit: int = 10) -> List[dict]:
     """
     Lấy danh sách thẻ để Frontend render.
-    - feed_type: "food" hoặc "place" (hiện tại chỉ có place)
-    - limit: số lượng thẻ cần trả về
-    
-    QUAN TRỌNG: KHÔNG trả về vector, Frontend không cần tính toán.
+    - Dùng PostgreSQL để lấy danh sách random hoặc theo Vector.
+    - Hiện tại tạm lấy random `ORDER BY random()`, sau này có thể kết hợp pgvector để kéo thẻ mồi hợp nhất.
     """
-    # Hiện tại chỉ có data place, sau này mở rộng thêm food
-    if feed_type == "place":
-        source_db = PLACES_DB
-    else:
-        # Placeholder: khi chưa có data food, trả mảng rỗng
-        source_db = []
+    query = select(Location).where(Location.category == feed_type).order_by(func.random()).limit(limit)
+    result = await db.execute(query)
+    locations = result.scalars().all()
     
-    if not source_db:
+    if not locations:
         return []
-    
-    # Trộn ngẫu nhiên, lấy `limit` thẻ
-    shuffled = random.sample(source_db, min(limit, len(source_db)))
-    
-    # Chỉ trả metadata, LOẠI BỎ vector
+        
     cards = []
-    for place in shuffled:
-        metadata = place.get('metadata', {})
+    for loc in locations:
         cards.append({
-            "place_id": place['id'],
-            "name": metadata.get('name', 'Unknown'),
-            "image_url": metadata.get('image_url', ''),
-            "category": metadata.get('category', ''),
-            "coordinates": metadata.get('coordinates', None)
+            "place_id": loc.id,
+            "name": loc.name,
+            "image_url": loc.image_url or "",
+            "category": loc.category,
+            "coordinates": {"lat": loc.lat, "lng": loc.lng} if loc.lat else None
         })
-    
+        
     return cards

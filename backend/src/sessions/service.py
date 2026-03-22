@@ -3,8 +3,8 @@ import uuid
 from typing import List
 import redis.asyncio as aioredis
 
-# Vector mặc định 8 chiều, mức trung lập
-DEFAULT_VECTOR: List[float] = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+# Vector mặc định 15 chiều, mức trung lập
+DEFAULT_VECTOR: List[float] = [0.5] * 15
 
 async def init_session(redis: aioredis.Redis, device_id: str, domain: str = "place") -> dict:
     """

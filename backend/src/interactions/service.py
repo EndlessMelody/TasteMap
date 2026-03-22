@@ -1,43 +1,60 @@
 import json
+import asyncio
 import numpy as np
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 import redis.asyncio as aioredis
-from src.recommendations.service import PLACES_DB
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from src.locations.models import Location
 
 # Hằng số thuật toán
 ALPHA_NORMAL = 0.1       # Hệ số học bình thường
 ALPHA_PENALTY = 0.01     # Hệ số học khi bị phạt (vuốt quá nhanh)
 PENALTY_THRESHOLD = 0.5  # Ngưỡng thời gian tối thiểu giữa 2 lần vuốt (giây)
 
-def _get_place_vector(place_id: int) -> np.ndarray | None:
+def _calculate_math_sync(U: np.ndarray, sorted_actions: List[Dict[str, Any]], db_vectors: Dict[int, np.ndarray]) -> Tuple[np.ndarray, int, bool]:
     """
-    Tìm vector của địa điểm theo ID từ database đã load sẵn.
+    Hàm tính toán thuật toán Active Learning chạy đồng bộ.
+    Sẽ được bọc ngoài bởi asyncio.to_thread để không block FastAPI Event Loop.
     """
-    for place in PLACES_DB:
-        if place['id'] == place_id:
-            return np.array(place['vector'], dtype=float)
-    return None
-
+    processed_count = 0
+    penalty_triggered = False
+    
+    for i, action in enumerate(sorted_actions):
+        place_id = action["place_id"]
+        direction = action["direction"]
+        timestamp = action["client_timestamp"]
+        
+        P = db_vectors.get(place_id)
+        if P is None or len(P) != 15:
+            continue
+            
+        alpha = ALPHA_NORMAL
+        if i > 0:
+            prev_timestamp = sorted_actions[i - 1]["client_timestamp"]
+            time_diff = timestamp - prev_timestamp
+            if time_diff < PENALTY_THRESHOLD:
+                alpha = ALPHA_PENALTY
+                penalty_triggered = True
+                
+        if direction == "RIGHT":
+            U = U + alpha * P
+        elif direction == "LEFT":
+            U = U - alpha * P
+            
+        U = np.clip(U, 0.0, 1.0)
+        processed_count += 1
+        
+    return U, processed_count, penalty_triggered
 
 async def process_swipe_batch(
+    db: AsyncSession,
     redis: aioredis.Redis,
     user_id: str,
     domain: str,
     actions: List[Dict[str, Any]]
 ) -> dict:
-    """
-    Xử lý một batch vuốt và cập nhật vector người dùng.
-    
-    Thuật toán Active Learning:
-    - RIGHT (Thích): U_new = U_old + α * P
-    - LEFT  (Không thích): U_new = U_old - α * P
-    
-    Penalty (Phạt vuốt nhanh):
-    - Nếu khoảng cách giữa 2 lần vuốt < 0.5 giây → α giảm từ 0.1 xuống 0.01
-    - Ý nghĩa: Vuốt quá nhanh = người dùng không thực sự suy nghĩ → ít ảnh hưởng đến vector
-    """
-    # Tìm user trên Redis bằng device_id thông qua user_id
-    # Scan tất cả key user:{domain}:* để tìm key chứa user_id này
+    # 1. Quét Redis tìm key user tương ứng
     user_key = None
     cursor = 0
     pattern = f"user:{domain}:*"
@@ -53,7 +70,7 @@ async def process_swipe_batch(
                     break
         if user_key or cursor == 0:
             break
-    
+            
     if not user_key:
         return {
             "status": "error",
@@ -61,48 +78,30 @@ async def process_swipe_batch(
             "penalty_triggered": False,
             "updated_vector": []
         }
-    
-    # Lấy vector hiện tại của user
+        
     user_data = json.loads(await redis.get(user_key))
     U = np.array(user_data["vector"], dtype=float)
+    if len(U) != 15:
+        return {"status": "error", "message": "User vector is not 15-dimensional.", "updated_vector": []}
     
-    processed_count = 0
-    penalty_triggered = False
+    # 2. Query location vectors from Database
+    place_ids = [a["place_id"] for a in actions]
+    result = await db.execute(select(Location.id, Location.vector).where(Location.id.in_(place_ids)))
+    locations = result.all()
     
-    # Sắp xếp actions theo timestamp để đảm bảo đúng thứ tự
+    db_vectors = {}
+    for loc_id, loc_vec in locations:
+        if loc_vec is not None:
+            db_vectors[loc_id] = np.array(loc_vec, dtype=float)
+            
     sorted_actions = sorted(actions, key=lambda a: a["client_timestamp"])
     
-    for i, action in enumerate(sorted_actions):
-        place_id = action["place_id"]
-        direction = action["direction"]
-        timestamp = action["client_timestamp"]
-        
-        # Lấy vector địa điểm
-        P = _get_place_vector(place_id)
-        if P is None:
-            continue  # Bỏ qua nếu không tìm thấy địa điểm
-        
-        # Kiểm tra Penalty: vuốt quá nhanh?
-        alpha = ALPHA_NORMAL
-        if i > 0:
-            prev_timestamp = sorted_actions[i - 1]["client_timestamp"]
-            time_diff = timestamp - prev_timestamp
-            if time_diff < PENALTY_THRESHOLD:
-                alpha = ALPHA_PENALTY
-                penalty_triggered = True
-        
-        # Áp dụng thuật toán Active Learning
-        if direction == "RIGHT":
-            U = U + alpha * P   # Thích → kéo vector user về phía địa điểm
-        elif direction == "LEFT":
-            U = U - alpha * P   # Không thích → đẩy vector user ra xa địa điểm
-        
-        # Clamp vector về khoảng [0, 1] để giữ giá trị hợp lệ
-        U = np.clip(U, 0.0, 1.0)
-        
-        processed_count += 1
+    # 3. Offload numpy calculations to thread pool to prevent blocking async loop
+    U, processed_count, penalty_triggered = await asyncio.to_thread(
+        _calculate_math_sync, U, sorted_actions, db_vectors
+    )
     
-    # Lưu vector mới vào Redis
+    # 4. Save updated vector to redis
     updated_vector = [round(float(x), 4) for x in U]
     user_data["vector"] = updated_vector
     await redis.set(user_key, json.dumps(user_data))

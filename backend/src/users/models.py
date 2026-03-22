@@ -9,5 +9,10 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     
-    # 15-dimensional vector for user preferences
-    preferences_vector = Column(Vector(15))
+    # 15-dimensional vectors separated by domain
+    food_vector = Column(Vector(15))
+    place_vector = Column(Vector(15))
+    
+    # Gamification
+    xp = Column(Integer, default=0)
+    level = Column(Integer, default=1)

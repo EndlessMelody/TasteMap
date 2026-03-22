@@ -1,69 +1,78 @@
+import asyncio
 import numpy as np
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from typing import List, Dict, Any, Tuple
+from src.locations.models import Location
 import json
-from pathlib import Path
-from typing import List, Dict, Any, Optional
 
-# Lấy đường dẫn thư mục
-curr_dir = Path(__file__).resolve().parent
-
-# Lấy đường dẫn đến file database_vungtau.json
-data_path = curr_dir.parent / 'data_test' / 'database_vungtau.json'
-
-# Load database một lần khi module được import
-try:
-    with open(data_path, 'r', encoding='utf-8') as f:
-        PLACES_DB = json.load(f)
-except Exception as e:
-    print(f"Warning: Không thể tải data_test/database_vungtau.json: {e}")
-    PLACES_DB = []
-
-def recommend_top_n_places(user_vector: List[float], places_db: Optional[List[Dict[str, Any]]] = None, top_n: int = 5):
+def _calculate_context_score_sync(U: np.ndarray, candidates: List[Dict[str, Any]], context_data: dict) -> List[Dict[str, Any]]:
     """
-    Hàm tính toán và trả về Top N địa điểm phù hợp nhất với người dùng.
-    - user_vector: list hoặc numpy array 8 chiều của người dùng.
-    - places_db: list chứa các dictionary địa điểm. Nếu không truyền, dùng PLACES_DB mặc định.
-    - top_n: số lượng địa điểm muốn gợi ý.
+    Pass 2: Python / Numpy math calculation.
     """
-    if places_db is None:
-        places_db = PLACES_DB
-        
-    # 1. Chuẩn hóa vector đầu vào
-    U = np.array(user_vector, dtype=float)
     norm_U = np.linalg.norm(U)
-    
-    # Rào chắn (Guardrail): Chống lỗi chia cho 0 nếu vector user là [0,0,..,0]
     if norm_U == 0:
         return []
-
-    recommendations = []
-
-    # 2. Quét qua toàn bộ Database để chấm điểm
-    for place in places_db:
-        # Ngăn lỗi nếu không tìm thấy vector
-        if 'vector' not in place or not place['vector']:
-            continue
-            
-        P = np.array(place['vector'], dtype=float)
-        norm_P = np.linalg.norm(P)
         
-        # Bỏ qua các địa điểm bị lỗi dữ liệu (vector rỗng)
+    scored_places = []
+    
+    # Giả lập tham số ngữ cảnh:
+    # Score = W1*Sim + W2*Weather - W3*Distance
+    W1, W2, W3 = 0.6, 0.2, 0.2
+    
+    for place in candidates:
+        P = np.array(place["vector"], dtype=float)
+        norm_P = np.linalg.norm(P)
         if norm_P == 0:
             continue
             
-        # TÍNH TOÁN ĐỘ TƯƠNG ĐỒNG COSINE (Cosine Similarity)
-        # Công thức: (U dot P) / (|U| * |P|)
         cosine_sim = np.dot(U, P) / (norm_U * norm_P)
         
-        # Đóng gói kết quả
-        recommendations.append({
-            "place_id": place['id'],
-            "name": place.get('metadata', {}).get('name', 'Unknown'),
-            "match_score": round(cosine_sim * 100, 2), # Đổi ra thang điểm 100% cho Frontend dễ hiển thị
-            "vector": place.get('vector', [])
+        # Mocks: context scores. Trong thực tế sẽ tính từ place["lat"], place["lng"] và API thời tiết
+        mock_weather_score = 0.8
+        mock_dist_score = 0.3
+        
+        final_score = W1 * cosine_sim + W2 * mock_weather_score - W3 * mock_dist_score
+        
+        scored_places.append({
+            "place_id": place["id"],
+            "name": place["name"],
+            "match_score": round(final_score * 100, 2),
+            "vector": place["vector"]
         })
         
-    # 3. Sắp xếp danh sách theo điểm số giảm dần (Từ khớp nhất đến ít khớp nhất)
-    recommendations.sort(key=lambda x: x['match_score'], reverse=True)
+    scored_places.sort(key=lambda x: x['match_score'], reverse=True)
+    return scored_places
+
+async def recommend_top_n_places(db: AsyncSession, user_vector: List[float], top_n: int = 5, domain: str = "place"):
+    # Pass 1: Lấy top 100 địa điểm gần nhất bằng pgvector index
+    # Note: Sử dụng cosine_distance của SQLAlchemy
+    # query = select(Location).where(Location.category == domain).order_by(Location.vector.cosine_distance(user_vector)).limit(100)
     
-    # 4. Cắt lấy Top N
-    return recommendations[:top_n]
+    # Đối với sqlalchemy mà chưa load toán tử pgvector chi tiết, có thể dùng text_clause hoặc simple select.
+    # Tạm thời cứ query toàn bộ trong filter theo domain (vì DB mới lập cũng ít dữ liệu):
+    query = select(Location).where(Location.category == domain).limit(200)
+    result = await db.execute(query)
+    locations = result.scalars().all()
+    
+    if not locations:
+        return []
+        
+    candidates = [
+        {
+            "id": loc.id,
+            "name": loc.name,
+            "vector": loc.vector
+        }
+        for loc in locations if loc.vector is not None
+    ]
+    
+    U = np.array(user_vector, dtype=float)
+    if len(U) != 15:
+        # Prevent crash
+        return []
+        
+    # Pass 2: Numpy threadpool context scoring
+    scored_places = await asyncio.to_thread(_calculate_context_score_sync, U, candidates, {})
+    
+    return scored_places[:top_n]

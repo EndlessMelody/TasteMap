@@ -27,4 +27,4 @@ class UserService:
             return new_user
         except Exception as e:
             await self.db.rollback()
-            raise HTTPException(status_code=400, detail="Không thể tạo người dùng")
+            raise HTTPException(status_code=400, detail=f"Không thể tạo người dùng: {str(e)}")

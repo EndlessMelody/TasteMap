@@ -8,9 +8,14 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     pass
 
-class UserResponse(UserBase):
+class UserResponse(BaseModel):
     id: int
-    preferences_vector: Optional[List[float]] = None
+    username: str
+    email: str
+    food_vector: Optional[List[float]] = None
+    place_vector: Optional[List[float]] = None
+    xp: int
+    level: int
 
     class Config:
         from_attributes = True
