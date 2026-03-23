@@ -45,7 +45,7 @@ export default function ReelModal({ data, onClose }: ReelModalProps) {
           borderRadius: '20px',
           overflow: 'hidden',
           position: 'relative',
-          border: '1px solid rgba(255,255,255,0.08)',
+          border: '1px solid rgba(255,255,255,0.06)',
         }}
       >
         {/* Full Image Background */}

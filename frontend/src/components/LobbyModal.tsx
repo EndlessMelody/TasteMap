@@ -45,8 +45,8 @@ export default function LobbyModal({ data, onClose }: LobbyModalProps) {
           width: '480px', maxWidth: '95vw',
           borderRadius: '20px',
           overflow: 'hidden',
-          border: '1px solid rgba(255,255,255,0.08)',
-          backgroundColor: '#161616',
+          border: '1px solid rgba(255,255,255,0.06)',
+          backgroundColor: '#121217',
         }}
       >
         {/* Hero Image */}
@@ -106,7 +106,7 @@ export default function LobbyModal({ data, onClose }: LobbyModalProps) {
                       <div style={{
                         position: 'absolute', bottom: -2, right: -2,
                         width: '18px', height: '18px', borderRadius: '50%',
-                        backgroundColor: '#111111', display: 'flex',
+                        backgroundColor: '#121217', display: 'flex',
                         alignItems: 'center', justifyContent: 'center',
                       }}>
                         <CheckCircle size={14} color="#00D1B2" fill="#00D1B2" />

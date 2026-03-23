@@ -51,9 +51,9 @@ export default function PostModal({ data, onClose }: PostModalProps) {
           width: '900px', maxWidth: '95vw', height: '600px', maxHeight: '90vh',
           borderRadius: '20px',
           overflow: 'hidden',
-          border: '1px solid rgba(255,255,255,0.08)',
+          border: '1px solid rgba(255,255,255,0.06)',
           display: 'flex',
-          backgroundColor: '#111111',
+          backgroundColor: '#121217',
         }}
       >
         {/* Left — Image (60%) */}
@@ -76,7 +76,7 @@ export default function PostModal({ data, onClose }: PostModalProps) {
         </div>
 
         {/* Right — Content (40%) */}
-        <Column style={{ width: '40%', height: '100%', backgroundColor: '#161616' }}>
+        <Column style={{ width: '40%', height: '100%', backgroundColor: '#121217' }}>
           {/* Header */}
           <Row style={{
             padding: '20px', alignItems: 'center', justifyContent: 'space-between',
