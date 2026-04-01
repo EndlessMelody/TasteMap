@@ -4,7 +4,7 @@ import React from "react";
 import { Column, Row, Heading, Text } from "@/components/OnceUI";
 import { motion } from "framer-motion";
 import { Sparkles, Navigation, DollarSign } from "lucide-react";
-import { surface, text, border, radius, shadow, spacing } from "../tokens";
+import { surface, accent, text, border, radius, shadow, spacing } from "../tokens";
 import { RouteChip } from "./RouteChip";
 import { StatusBadge } from "./StatusBadge";
 
@@ -26,45 +26,45 @@ interface StopCardProps {
   onFlip?: () => void;
 }
 
-export function StopCard({ card, isFlipped = false, onFlip }: StopCardProps) {
+export function StopCard({ card }: StopCardProps) {
   return (
-    <motion.div
-      animate={{ rotateY: isFlipped ? 180 : 0 }}
-      transition={{ duration: 0.6, type: "spring", damping: 20 }}
+    <Row
+      fill
       style={{
         width: "100%",
         height: "100%",
-        position: "relative",
-        transformStyle: "preserve-3d",
+        backgroundColor: "white",
+        borderRadius: radius["2xl"],
+        overflow: "hidden",
+        boxShadow: shadow.elevated,
+        border: `1px solid ${border.medium}`,
       }}
     >
-      {/* ─── FRONT SIDE ─── */}
+      {/* ─── LEFT SIDE: IMAGE & IDENTITY ─── */}
       <div
-        onDoubleClick={onFlip}
         style={{
-          position: "absolute",
-          inset: 0,
-          backfaceVisibility: "hidden",
-          borderRadius: radius["2xl"],
+          width: "55%",
+          height: "100%",
+          position: "relative",
           overflow: "hidden",
-          backgroundImage: `url(${card.img})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          boxShadow: `${shadow.elevated}, ${shadow.insetBorder(border.medium)}`,
         }}
       >
-        {/* Gradient overlay */}
+        <img
+          src={card.img}
+          alt={card.title}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+        {/* Gradient overlay for text legibility */}
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.3) 100%)",
+            background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 50%)",
             pointerEvents: "none",
           }}
         />
 
-        {/* Top badges */}
+        {/* Top Badges */}
         <Row
           style={{
             position: "absolute",
@@ -83,190 +83,112 @@ export function StopCard({ card, isFlipped = false, onFlip }: StopCardProps) {
           <StatusBadge
             type="distance"
             value={card.distance}
-            icon={<Navigation size={11} color="rgba(255,255,255,0.5)" />}
+            icon={<Navigation size={11} color="rgba(255,255,255,0.7)" />}
           />
         </Row>
 
-        {/* Flip hint */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            opacity: 0.15,
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: "0.7rem",
-              fontWeight: 600,
-              textTransform: "uppercase",
-              letterSpacing: "2px",
-            }}
-          >
-            Double-tap to flip
-          </Text>
-        </div>
-
-        {/* Bottom content */}
+        {/* Identity Overlay */}
         <Column
           style={{
             position: "absolute",
             bottom: 0,
             left: 0,
             right: 0,
-            zIndex: 3,
             padding: `${spacing.xl}px ${spacing.l}px`,
-            gap: spacing.s,
+            gap: spacing.xs,
           }}
         >
           <Heading
             variant="display-strong-s"
-            style={{ color: "white", lineHeight: 1.1 }}
+            style={{ color: "white", lineHeight: 1.1, fontSize: '2.4rem' }}
           >
             {card.title}
           </Heading>
-          <Text style={{ color: text.tertiary, fontSize: "0.9rem" }}>
+          <Text style={{ color: "rgba(255,255,255,0.9)", fontSize: "1rem", fontWeight: 500 }}>
             {card.subtitle}
           </Text>
-          <Row style={{ gap: spacing.xs, flexWrap: "wrap" }}>
-            {card.tags.map((tag) => (
-              <RouteChip key={tag} label={tag} color={card.color} />
-            ))}
-          </Row>
-          <Row
-            style={{
-              alignItems: "center",
-              gap: spacing.xs,
-              marginTop: spacing["2xs"],
-            }}
-          >
-            <DollarSign size={14} color={text.muted} />
-            <Text style={{ color: text.tertiary, fontSize: "0.8rem" }}>
-              ~{card.price} VND
-            </Text>
-          </Row>
         </Column>
       </div>
 
-      {/* ─── BACK SIDE ─── */}
-      <div
-        onDoubleClick={onFlip}
+      {/* ─── RIGHT SIDE: BENTO DETAILS ─── */}
+      <Column
         style={{
-          position: "absolute",
-          inset: 0,
-          backfaceVisibility: "hidden",
-          transform: "rotateY(180deg)",
-          borderRadius: radius["2xl"],
-          overflow: "hidden",
-          backgroundColor: surface.elevated,
-          boxShadow: `${shadow.elevated}, ${shadow.insetBorder(border.weak)}`,
-          display: "flex",
-          flexDirection: "column",
+          width: "45%",
+          height: "100%",
+          backgroundColor: "#F8FAFF",
+          borderLeft: `1px solid ${border.subtle}`,
+          padding: `${spacing.xl}px`,
+          gap: spacing.l,
+          overflowY: 'auto'
         }}
       >
-        {/* Top image strip */}
-        <div
-          style={{ height: "40%", position: "relative", overflow: "hidden" }}
-        >
-          <img
-            src={card.img}
-            alt={card.title}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: `linear-gradient(to bottom, transparent 50%, ${surface.elevated} 100%)`,
-            }}
-          />
-        </div>
-
-        {/* Details */}
-        <Column
-          style={{
-            flex: 1,
-            padding: `${spacing.l}px ${spacing.l}px`,
-            gap: spacing.m,
-          }}
-        >
-          <Heading variant="heading-strong-m" style={{ color: "white" }}>
-            {card.title}
-          </Heading>
-          <Text style={{ color: text.tertiary, fontSize: "0.8rem" }}>
-            {card.subtitle}
-          </Text>
-
-          {/* Stats */}
-          <Row style={{ gap: spacing.m, flexWrap: "wrap" }}>
-            <StatusBadge
-              type="rating"
-              value="4.8"
-              icon={<Sparkles size={14} color="#FBBF24" />}
-            />
-            <StatusBadge
-              type="price"
-              value={`~${card.price} VND`}
-              icon={<DollarSign size={14} />}
-            />
-            <StatusBadge
-              type="distance"
-              value={card.distance}
-              icon={<Navigation size={14} />}
-            />
-          </Row>
-
-          {/* Mini Reviews */}
-          <Column style={{ gap: spacing.xs }}>
-            <Text
-              style={{
-                color: text.muted,
-                fontSize: "0.65rem",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "1px",
-              }}
-            >
-              Top Reviews
-            </Text>
-            <Text
-              style={{
-                color: text.tertiary,
-                fontSize: "0.75rem",
-                lineHeight: 1.4,
-              }}
-            >
-              &ldquo;Absolutely incredible, best in the area!&rdquo; —
-              ⭐⭐⭐⭐⭐
-            </Text>
-            <Text
-              style={{
-                color: text.tertiary,
-                fontSize: "0.75rem",
-                lineHeight: 1.4,
-              }}
-            >
-              &ldquo;Must visit spot, don&apos;t miss it.&rdquo; — ⭐⭐⭐⭐
-            </Text>
-          </Column>
-
-          {/* Flip hint */}
+        {/* Quick Stats Grid */}
+        <Column style={{ gap: spacing.m }}>
           <Text
             style={{
-              color: text.disabled,
-              fontSize: "0.65rem",
-              textAlign: "center",
-              marginTop: "auto",
+              color: text.muted,
+              fontSize: "0.7rem",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "1.5px",
             }}
           >
-            Double-tap to flip back
+            Palate Analytics
           </Text>
+          <Row style={{ gap: spacing.s, flexWrap: "wrap" }}>
+            {card.tags.map((tag) => (
+              <RouteChip key={tag} label={tag} color={card.color} variant="on-surface" />
+            ))}
+          </Row>
         </Column>
-      </div>
-    </motion.div>
+
+        <div style={{ height: '1px', backgroundColor: border.subtle, width: '100%' }} />
+
+        {/* Pricing/Rating */}
+        <Row style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+          <Column style={{ gap: '4px' }}>
+             <Text style={{ color: text.tertiary, fontSize: '0.75rem', fontWeight: 600 }}>Estimated Cost</Text>
+             <Row vertical="center" style={{ gap: '6px' }}>
+                <DollarSign size={16} color={accent.primary} />
+                <Text style={{ color: text.primary, fontSize: '1.1rem', fontWeight: 800 }}>~{card.price} VND</Text>
+             </Row>
+          </Column>
+          <StatusBadge type="rating" value="4.8" icon={<Sparkles size={14} color="#FBBF24" />} />
+        </Row>
+
+        <div style={{ height: '1px', backgroundColor: border.subtle, width: '100%' }} />
+
+        {/* Curation Insight / Reviews */}
+        <Column style={{ gap: spacing.m }}>
+          <Text
+            style={{
+              color: text.muted,
+              fontSize: "0.7rem",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "1.5px",
+            }}
+          >
+            Community Consensus
+          </Text>
+          <Column style={{ gap: spacing.m }}>
+            <div style={{ padding: spacing.m, backgroundColor: 'white', borderRadius: radius.m, border: `1px solid ${border.subtle}`, boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+              <Text style={{ color: text.secondary, fontSize: "0.85rem", lineHeight: 1.5, fontStyle: 'italic' }}>
+                &ldquo;Absolutely incredible, best in the area! The flavor profile perfectly matches your group's current spicy preference.&rdquo;
+              </Text>
+            </div>
+          </Column>
+        </Column>
+
+        <div style={{ marginTop: 'auto', paddingTop: spacing.m }}>
+           <Row vertical="center" style={{ gap: spacing.xs, opacity: 0.6 }}>
+              <Sparkles size={14} color={accent.primary} />
+              <Text style={{ fontSize: '0.7rem', fontWeight: 700, color: text.tertiary, textTransform: 'uppercase' }}>
+                Highly Recommended for your Tour DNA
+              </Text>
+           </Row>
+        </div>
+      </Column>
+    </Row>
   );
 }

@@ -82,7 +82,10 @@ export const HeroSection = () => {
               position: "relative",
               zIndex: 10,
               justifyContent: "center",
-              padding: "48px 48px", // Reduced padding for 300px height
+              paddingTop: "48px",
+              paddingBottom: "48px",
+              paddingLeft: "48px",
+              paddingRight: "48px",
               height: "100%",
               gap: "14px",
             }}
@@ -99,7 +102,10 @@ export const HeroSection = () => {
                 <Row
                   className="glass-premium"
                   style={{
-                    padding: "5px 10px",
+                    paddingTop: "5px",
+                    paddingBottom: "5px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
                     borderRadius: "8px",
                     alignItems: "center",
                     gap: "6px",
@@ -124,7 +130,10 @@ export const HeroSection = () => {
               <Row
                 className="glass-premium"
                 style={{
-                    padding: "5px 10px",
+                    paddingTop: "5px",
+                    paddingBottom: "5px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
                     borderRadius: "8px",
                     alignItems: "center",
                     gap: "6px",
@@ -146,7 +155,10 @@ export const HeroSection = () => {
 
               <Row
                 style={{
-                  padding: "5px 10px",
+                  paddingTop: "5px",
+                  paddingBottom: "5px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
                   backgroundColor: "rgba(255,255,255,0.85)",
                   backdropFilter: "blur(12px)",
                   borderRadius: "8px",
@@ -216,7 +228,12 @@ export const HeroSection = () => {
                             key={i}
                             style={{ 
                                 marginLeft: i === 0 ? 0 : -10,
-                                border: "2px solid #FFFFFF",
+                                borderTopWidth: "2px",
+                                borderBottomWidth: "2px",
+                                borderLeftWidth: "2px",
+                                borderRightWidth: "2px",
+                                borderStyle: "solid",
+                                borderColor: "#FFFFFF",
                                 borderRadius: "50%",
                                 zIndex: 3 - i,
                                 boxShadow: "0 4px 10px rgba(0,0,0,0.05)"
@@ -246,7 +263,12 @@ export const HeroSection = () => {
                         width: "42px",
                         height: "42px",
                         borderRadius: "12px",
-                        border: "1px solid rgba(0, 122, 255, 0.1)"
+                        borderTopWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderStyle: "solid",
+                        borderColor: "rgba(0, 122, 255, 0.1)"
                         }}
                     />
                     <Button
@@ -256,7 +278,10 @@ export const HeroSection = () => {
                         style={{
                         position: "relative",
                         overflow: "hidden",
-                        padding: "12px 28px",
+                        paddingTop: "12px",
+                        paddingBottom: "12px",
+                        paddingLeft: "28px",
+                        paddingRight: "28px",
                         borderRadius: "14px",
                         boxShadow: "0 8px 20px rgba(0, 122, 255, 0.2)",
                         }}

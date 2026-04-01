@@ -14,6 +14,7 @@ import {
   PolarAngleAxis,
   ResponsiveContainer,
 } from "recharts";
+import ClientOnly from '@/components/common/ClientOnly';
 import { MOCK_USER } from '@/constants/mock-data';
 
 // ═══════════ PROFILE PAGE ═══════════ //
@@ -38,17 +39,18 @@ export default function ProfilePage() {
   const handleComingSoon = () => toast('Will be updated in the next version 🚀');
 
   return (
-    <Column fillWidth fillHeight style={{ 
-      minHeight: '100vh', 
+    <Column fillWidth fillHeight className="no-scrollbar" style={{ 
       backgroundColor: '#FFFFFF', 
       position: 'relative',
+      overflowY: 'auto',
+      overflowX: 'hidden',
       paddingBottom: '120px'
     }}>
 
       {/* ═══ COVER PHOTO ═══ */}
       <div style={{ position: 'relative', width: '100%', height: '320px', flexShrink: 0 }}>
         <img src={MOCK_USER.cover} alt="Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 100%)' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 100%)' }} />
 
         {/* Back Button */}
         <Link href="/" style={{ position: 'absolute', top: '24px', left: '24px', display: 'flex' }}>
@@ -57,7 +59,8 @@ export default function ProfilePage() {
             style={{
               backgroundColor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(12px)',
               borderRadius: '14px', width: '44px', height: '44px', cursor: 'pointer',
-              border: '1px solid rgba(0,0,0,0.05)',
+              borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+              borderStyle: 'solid', borderColor: 'rgba(0,0,0,0.05)',
               boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
             }}
           />
@@ -71,8 +74,9 @@ export default function ProfilePage() {
             style={{
               backgroundColor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(12px)',
               borderRadius: '14px', color: '#1C1C1E', fontWeight: 700,
-              padding: '10px 20px', cursor: 'pointer',
-              border: '1px solid rgba(0,0,0,0.05)',
+              paddingTop: '10px', paddingBottom: '10px', paddingLeft: '20px', paddingRight: '20px', cursor: 'pointer',
+              borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+              borderStyle: 'solid', borderColor: 'rgba(0,0,0,0.05)',
               boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
             }}
           >
@@ -87,7 +91,8 @@ export default function ProfilePage() {
             style={{
               backgroundColor: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(12px)',
               borderRadius: '14px', width: '44px', height: '44px', cursor: 'pointer',
-              border: '1px solid rgba(0,0,0,0.05)',
+              borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+              borderStyle: 'solid', borderColor: 'rgba(0,0,0,0.05)',
               boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
             }}
           />
@@ -95,21 +100,32 @@ export default function ProfilePage() {
       </div>
 
       {/* ═══ PROFILE HEADER ═══ */}
-      <Column fillWidth style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 40px', marginTop: '-100px', zIndex: 10 }}>
+      <Column fillWidth style={{ 
+        maxWidth: '1200px', 
+        marginLeft: 'auto', 
+        marginRight: 'auto', 
+        paddingLeft: '40px', 
+        paddingRight: '40px', 
+        marginTop: '-100px', 
+        zIndex: 10 
+      }}>
 
         {/* Avatar Area */}
         <Row fillWidth style={{ marginBottom: '32px' }}>
           <div style={{ position: 'relative' }}>
             <Avatar src={MOCK_USER.avatar} size="xl" style={{
               width: '160px', height: '160px', borderRadius: '50%',
-              border: '6px solid #FFFFFF',
+              borderTopWidth: '6px', borderBottomWidth: '6px', borderLeftWidth: '6px', borderRightWidth: '6px',
+              borderStyle: 'solid', borderColor: '#FFFFFF',
               boxShadow: '0 12px 32px rgba(0,0,0,0.1)',
             }} />
             {/* Level Badge */}
             <div style={{
               position: 'absolute', bottom: '8px', right: '8px',
               backgroundColor: '#007AFF', borderRadius: '14px',
-              padding: '6px 12px', border: '4px solid #FFFFFF',
+              paddingTop: '6px', paddingBottom: '6px', paddingLeft: '12px', paddingRight: '12px',
+              borderTopWidth: '4px', borderBottomWidth: '4px', borderLeftWidth: '4px', borderRightWidth: '4px',
+              borderStyle: 'solid', borderColor: '#FFFFFF',
               boxShadow: '0 4px 12px rgba(0,122,255,0.3)',
             }}>
               <Text style={{ color: 'white', fontSize: '0.75rem', fontWeight: 800 }}>LV {MOCK_USER.level}</Text>
@@ -164,15 +180,20 @@ export default function ProfilePage() {
         <Row fillWidth style={{ gap: '24px', marginBottom: '48px' }}>
           {/* Radar Chart Card */}
           <Column style={{
-            flex: 1.2, backgroundColor: '#EAF2FF', borderRadius: '32px',
+            flexGrow: 1.2, flexShrink: 1, flexBasis: '0%', backgroundColor: '#EAF2FF', borderRadius: '32px',
             paddingTop: '40px', paddingRight: '40px', paddingBottom: '40px', paddingLeft: '40px',
-            border: '1px solid rgba(0,122,255,0.08)',
+            borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+            borderStyle: 'solid', borderColor: 'rgba(0,122,255,0.08)',
             boxShadow: '0 12px 40px rgba(0,122,255,0.04)',
             height: '420px', position: 'relative'
           }}>
             <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                <Row style={{ gap: '12px', alignItems: 'center' }}>
-                  <div style={{ backgroundColor: '#007AFF', padding: '10px', borderRadius: '12px' }}>
+                  <div style={{ 
+                    backgroundColor: '#007AFF', 
+                    paddingTop: '10px', paddingBottom: '10px', paddingLeft: '10px', paddingRight: '10px', 
+                    borderRadius: '12px' 
+                  }}>
                     <TrendingUp size={20} color="white" />
                   </div>
                   <Column>
@@ -183,27 +204,31 @@ export default function ProfilePage() {
                <Button size="s" variant="secondary" style={{ backgroundColor: 'white', borderRadius: '12px' }}>View Insights</Button>
             </Row>
             
-            <div style={{ flex: 1, width: '100%', minHeight: '280px' }}>
-              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={MOCK_USER.radarData}>
-                  <PolarGrid stroke="rgba(0,122,255,0.1)" />
-                  <PolarAngleAxis dataKey="subject" tick={{ fill: '#8E8E93', fontSize: 12, fontWeight: 600 }} />
-                  <Radar
-                    name="Taste"
-                    dataKey="A"
-                    stroke="#007AFF"
-                    fill="#007AFF"
-                    fillOpacity={0.25}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+            <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: "0%", width: '100%', minHeight: '280px' }}>
+              <ClientOnly>
+                <ResponsiveContainer width="100%" height={280} minWidth={100} debounce={50}>
+                  <RadarChart cx="50%" cy="50%" outerRadius="70%" data={MOCK_USER.radarData}>
+                    <PolarGrid stroke="rgba(0,122,255,0.1)" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#8E8E93', fontSize: 12, fontWeight: 600 }} />
+                    <Radar
+                      name="Taste"
+                      dataKey="A"
+                      stroke="#007AFF"
+                      fill="#007AFF"
+                      fillOpacity={0.25}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </ClientOnly>
             </div>
           </Column>
 
           {/* Top Traits Card */}
           <Column style={{
-            flex: 1, backgroundColor: '#FFFFFF', borderRadius: '32px',
-            padding: '32px', border: '1px solid #F2F2F7',
+            flexGrow: 1, flexShrink: 1, flexBasis: '0%', backgroundColor: '#FFFFFF', borderRadius: '32px',
+            paddingTop: '32px', paddingBottom: '32px', paddingLeft: '32px', paddingRight: '32px',
+            borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+            borderStyle: 'solid', borderColor: '#F2F2F7',
             boxShadow: '0 8px 32px rgba(0,0,0,0.02)',
             height: '420px'
           }}>
@@ -215,9 +240,11 @@ export default function ProfilePage() {
                 { icon: '💎', label: 'Hidden Gem Finder', desc: 'Discovered 12 hotspots', color: '#F5F3FF', bg: '#F5F3FF' },
               ].map(trait => (
                 <Row key={trait.label} style={{
-                  padding: '16px 20px', backgroundColor: '#FFFFFF',
+                  paddingTop: '16px', paddingBottom: '16px', paddingLeft: '20px', paddingRight: '20px', 
+                  backgroundColor: '#FFFFFF',
                   borderRadius: '18px', gap: '16px', alignItems: 'center',
-                  border: `1px solid ${trait.bg}`,
+                  borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                  borderStyle: 'solid', borderColor: trait.bg,
                   boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
                 }}>
                   <div style={{ 
@@ -234,9 +261,11 @@ export default function ProfilePage() {
                 </Row>
               ))}
             </Column>
-            <div style={{ flex: 1 }} />
+            <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: '0%' }} />
             <Row style={{
-              backgroundColor: '#F9F9FB', padding: '16px 20px', borderRadius: '18px',
+              backgroundColor: '#F9F9FB', 
+              paddingTop: '16px', paddingBottom: '16px', paddingLeft: '20px', paddingRight: '20px', 
+              borderRadius: '18px',
               justifyContent: 'space-between', alignItems: 'center'
             }}>
               <Text style={{ color: '#636366', fontSize: '0.85rem', fontWeight: 600 }}>Taste Match with Friends</Text>
@@ -248,12 +277,29 @@ export default function ProfilePage() {
         {/* ═══ TABS SECTION ═══ */}
         <Column fillWidth style={{ marginBottom: '64px' }}>
           {/* Tab Headers */}
-          <Row style={{ gap: '32px', borderBottom: '2px solid #EAF2FF', paddingBottom: '12px', marginBottom: '32px' }}>
+          <Row style={{ 
+            gap: '32px', 
+            borderTopWidth: '0px',
+            borderLeftWidth: '0px',
+            borderRightWidth: '0px',
+            borderBottomWidth: '2px', 
+            borderBottomStyle: 'solid', 
+            borderBottomColor: '#EAF2FF', 
+            paddingBottom: '12px', 
+            marginBottom: '32px' 
+          }}>
             {['Posts', 'Reviews', 'Achievements', 'Visited'].map(tab => (
-              <div 
+                <div 
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                style={{ position: 'relative', cursor: 'pointer', padding: '8px 4px' }}
+                style={{ 
+                  position: 'relative', 
+                  cursor: 'pointer', 
+                  paddingTop: '8px',
+                  paddingBottom: '8px',
+                  paddingLeft: '4px',
+                  paddingRight: '4px'
+                }}
               >
                 <Text style={{ 
                   color: activeTab === tab ? '#007AFF' : '#8E8E93', 
@@ -299,7 +345,7 @@ export default function ProfilePage() {
                     >
                       <img src={post.img} alt="Post" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       <div style={{ 
-                        position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.2)', 
+                        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.2)', 
                         opacity: 0, transition: 'opacity 0.2s', display: 'flex', 
                         alignItems: 'center', justifyContent: 'center', gap: '24px'
                       }} 
@@ -326,9 +372,10 @@ export default function ProfilePage() {
                     {MOCK_USER.badges.map(badge => (
                       <Row key={badge.label} style={{
                         gap: '16px', alignItems: 'center',
-                        padding: '18px 32px',
+                        paddingTop: '18px', paddingBottom: '18px', paddingLeft: '32px', paddingRight: '32px',
                         backgroundColor: '#EAF2FF',
-                        border: `1px solid rgba(0,122,255,0.08)`,
+                        borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                        borderStyle: 'solid', borderColor: 'rgba(0,122,255,0.08)',
                         borderRadius: '24px',
                       }}>
                         <span style={{ fontSize: '1.5rem' }}>{badge.icon}</span>
@@ -346,15 +393,18 @@ export default function ProfilePage() {
                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
                     {MOCK_USER.topSpots.map(spot => (
                       <Column key={spot.name} style={{
-                        padding: '24px', backgroundColor: '#FFFFFF', borderRadius: '24px',
-                        gap: '16px', border: '1px solid #EAF2FF',
+                        paddingTop: '24px', paddingBottom: '24px', paddingLeft: '24px', paddingRight: '24px',
+                        backgroundColor: '#FFFFFF', borderRadius: '24px',
+                        gap: '16px', 
+                        borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                        borderStyle: 'solid', borderColor: '#EAF2FF',
                         boxShadow: '0 8px 24px rgba(0,122,255,0.04)',
                         transition: 'transform 0.2s',
                         cursor: 'pointer'
                       }}>
                         <Row style={{ gap: '16px', alignItems: 'center' }}>
-                          <img src={spot.img} alt={spot.name} style={{ width: '64px', height: '64px', borderRadius: '14px', objectFit: 'cover' }} />
-                          <Column style={{ flex: 1, gap: '4px' }}>
+                          <img src={spot.img} alt={spot.name} style={{ width: '64px', height: '64px', borderRadius: '14px', objectFit: 'cover', flexShrink: 0 }} />
+                          <Column style={{ flexGrow: 1, flexShrink: 1, flexBasis: '0%', gap: '4px' }}>
                             <Heading variant="heading-strong-s" style={{ fontSize: '1rem', color: '#1C1C1E' }}>{spot.name}</Heading>
                             <Row style={{ gap: '4px' }}>
                               {[1,2,3,4,5].map(i => <Star key={i} size={12} color={i <= 4 ? '#FBBF24' : '#E5E5EA'} fill={i <= 4 ? '#FBBF24' : '#E5E5EA'} />)}
@@ -363,7 +413,10 @@ export default function ProfilePage() {
                           <Text style={{ color: '#8E8E93', fontSize: '0.75rem', fontWeight: 600 }}>2d ago</Text>
                         </Row>
                         <Column style={{ gap: '12px' }}>
-                          <div style={{ padding: '4px 10px', backgroundColor: '#EAF2FF', borderRadius: '8px', alignSelf: 'flex-start' }}>
+                          <div style={{ 
+                            paddingTop: '4px', paddingBottom: '4px', paddingLeft: '10px', paddingRight: '10px', 
+                            backgroundColor: '#EAF2FF', borderRadius: '8px', alignSelf: 'flex-start' 
+                          }}>
                              <Text style={{ color: '#007AFF', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase' }}>{spot.category}</Text>
                           </div>
                           <Text style={{ color: '#636366', fontSize: '0.9rem', lineHeight: 1.6, fontWeight: 500 }}>
@@ -376,7 +429,17 @@ export default function ProfilePage() {
               )}
 
               {activeTab === 'Visited' && (
-                <Column style={{ gap: '20px', height: '400px', backgroundColor: '#FFFFFF', border: '1px solid #EAF2FF', borderRadius: '32px', alignItems: 'center', justifyContent: 'center' }}>
+                <Column style={{ 
+                  gap: '20px', 
+                  height: '400px', 
+                  backgroundColor: '#FFFFFF', 
+                  borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                  borderStyle: 'solid', 
+                  borderColor: '#EAF2FF', 
+                  borderRadius: '32px', 
+                  alignItems: 'center', 
+                  justifyContent: 'center' 
+                }}>
                     <MapIcon size={48} color="#007AFF" style={{ opacity: 0.2 }} />
                     <Text style={{ color: '#007AFF', fontWeight: 600, opacity: 0.5 }}>Interactive Map Coming Soon 🗺️</Text>
                     <Button variant="secondary" size="s">View List instead</Button>
@@ -397,7 +460,12 @@ export default function ProfilePage() {
             transition={{ duration: 0.2 }}
             onClick={() => setIsEditModalOpen(false)}
             style={{
-              position: 'fixed', inset: 0, zIndex: 1000,
+              position: 'fixed', 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              bottom: 0, 
+              zIndex: 1000,
               backgroundColor: 'rgba(28, 28, 30, 0.4)',
               backdropFilter: 'blur(16px)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -412,7 +480,18 @@ export default function ProfilePage() {
               style={{
                 width: '640px', maxWidth: '95vw', maxHeight: '90vh',
                 backgroundColor: '#FFFFFF',
-                border: '1px solid rgba(0, 122, 255, 0.1)',
+                borderTopWidth: '1px',
+                borderBottomWidth: '1px',
+                borderLeftWidth: '1px',
+                borderRightWidth: '1px',
+                borderTopStyle: 'solid',
+                borderBottomStyle: 'solid',
+                borderLeftStyle: 'solid',
+                borderRightStyle: 'solid',
+                borderTopColor: 'rgba(0, 122, 255, 0.1)',
+                borderBottomColor: 'rgba(0, 122, 255, 0.1)',
+                borderLeftColor: 'rgba(0, 122, 255, 0.1)',
+                borderRightColor: 'rgba(0, 122, 255, 0.1)',
                 borderRadius: '28px',
                 overflow: 'hidden',
                 boxShadow: '0 32px 80px rgba(0,0,0,0.15)',
@@ -423,7 +502,11 @@ export default function ProfilePage() {
               <Row style={{
                 paddingTop: '24px', paddingRight: '32px', paddingBottom: '24px', paddingLeft: '32px',
                 justifyContent: 'space-between', alignItems: 'center',
-                backgroundColor: '#EAF2FF', borderBottom: '1px solid rgba(0, 122, 255, 0.08)',
+                backgroundColor: '#EAF2FF', 
+                borderTopWidth: '0px', borderLeftWidth: '0px', borderRightWidth: '0px',
+                borderBottomWidth: '1px',
+                borderBottomStyle: 'solid',
+                borderBottomColor: 'rgba(0, 122, 255, 0.08)',
                 flexShrink: 0,
               }}>
                 <Column style={{ gap: '4px' }}>
@@ -437,27 +520,31 @@ export default function ProfilePage() {
                     backgroundColor: '#FFFFFF', borderRadius: '14px',
                     width: '44px', height: '44px', cursor: 'pointer',
                     boxShadow: '0 4px 12px rgba(0, 122, 255, 0.1)',
-                    border: '1px solid rgba(0, 122, 255, 0.05)',
+                    borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                    borderStyle: 'solid',
+                    borderColor: 'rgba(0, 122, 255, 0.05)',
                   }}
                 />
               </Row>
 
               {/* Scrollable Body */}
-              <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: '0%', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
 
                 {/* Cover + Avatar Visual */}
                 <Column style={{ paddingTop: '32px', paddingRight: '32px', paddingBottom: '0', paddingLeft: '32px', gap: '20px' }}>
                   {/* Cover Photo */}
                   <div style={{ position: 'relative', height: '140px', borderRadius: '18px', overflow: 'hidden' }}>
                     <img src={MOCK_USER.cover} alt="Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.1)' }} />
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.1)' }} />
                     <div
                       onClick={handleComingSoon}
                       style={{
                         position: 'absolute', bottom: '12px', right: '12px',
                         width: '40px', height: '40px', borderRadius: '12px',
                         backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(255,255,255,0.3)',
+                        borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                        borderStyle: 'solid',
+                        borderColor: 'rgba(255,255,255,0.3)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         cursor: 'pointer', boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                       }}
@@ -471,7 +558,8 @@ export default function ProfilePage() {
                     <div style={{ position: 'relative' }}>
                       <Avatar src={MOCK_USER.avatar} size="xl" style={{
                         width: '100px', height: '100px', borderRadius: '50%',
-                        border: '4px solid #FFFFFF',
+                        borderTopWidth: '4px', borderBottomWidth: '4px', borderLeftWidth: '4px', borderRightWidth: '4px',
+                        borderStyle: 'solid', borderColor: '#FFFFFF',
                         boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
                       }} />
                       <div
@@ -480,7 +568,9 @@ export default function ProfilePage() {
                           position: 'absolute', bottom: '2px', right: '2px',
                           width: '32px', height: '32px', borderRadius: '50%',
                           backgroundColor: '#007AFF',
-                          border: '3px solid #FFFFFF',
+                          borderTopWidth: '3px', borderBottomWidth: '3px', borderLeftWidth: '3px', borderRightWidth: '3px',
+                          borderStyle: 'solid',
+                          borderColor: '#FFFFFF',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,122,255,0.3)',
                         }}
@@ -512,7 +602,9 @@ export default function ProfilePage() {
                           width: '100%', 
                           paddingTop: '14px', paddingRight: '20px', paddingBottom: '14px', paddingLeft: '20px',
                           backgroundColor: '#F9F9FB',
-                          border: '1px solid #E5E5EA',
+                          borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                          borderStyle: 'solid',
+                          borderColor: '#E5E5EA',
                           borderRadius: '16px', color: '#1C1C1E',
                           fontSize: '0.95rem', outline: 'none',
                           transition: 'all 0.2s',
@@ -535,11 +627,17 @@ export default function ProfilePage() {
                       <Text style={{ color: '#1C1C1E', fontSize: '0.85rem', fontWeight: 600 }}>Username</Text>
                       <Row style={{
                         backgroundColor: '#F9F9FB',
-                        border: '1px solid #E5E5EA',
+                        borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                        borderStyle: 'solid',
+                        borderColor: '#E5E5EA',
                         borderRadius: '14px', overflow: 'hidden', alignItems: 'center',
                       }}>
                         <span style={{
-                          padding: '14px 0 14px 20px', color: '#8E8E93',
+                          paddingTop: '14px',
+                          paddingBottom: '14px',
+                          paddingLeft: '20px',
+                          paddingRight: '0px',
+                          color: '#8E8E93',
                           fontSize: '0.95rem', userSelect: 'none',
                         }}>@</span>
                         <input
@@ -547,14 +645,22 @@ export default function ProfilePage() {
                           value={formUsername}
                           onChange={e => setFormUsername(e.target.value)}
                           style={{
-                          flex: 1, padding: '14px 20px 14px 8px',
-                          backgroundColor: 'transparent', border: 'none',
-                          color: '#1C1C1E', fontSize: '0.95rem', outline: 'none',
+                            flexGrow: 1, 
+                            flexShrink: 1,
+                            flexBasis: '0%',
+                            paddingTop: '14px',
+                            paddingBottom: '14px',
+                            paddingLeft: '8px',
+                            paddingRight: '20px',
+                            backgroundColor: 'transparent', 
+                            borderTopWidth: '0px', borderBottomWidth: '0px', borderLeftWidth: '0px', borderRightWidth: '0px',
+                            borderStyle: 'none',
+                            color: '#1C1C1E', fontSize: '0.95rem', outline: 'none',
                           }}
                         />
                       </Row>
                     </Column>
-
+                    
                     {/* Bio */}
                     <Column style={{ gap: '8px' }}>
                       <Text style={{ color: '#1C1C1E', fontSize: '0.85rem', fontWeight: 600 }}>Bio</Text>
@@ -566,7 +672,9 @@ export default function ProfilePage() {
                           width: '100%', 
                           paddingTop: '16px', paddingRight: '20px', paddingBottom: '16px', paddingLeft: '20px',
                           backgroundColor: '#F9F9FB',
-                          border: '1px solid #E5E5EA',
+                          borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                          borderStyle: 'solid',
+                          borderColor: '#E5E5EA',
                           borderRadius: '16px', color: '#1C1C1E',
                           fontSize: '0.95rem', outline: 'none',
                           resize: 'none', fontFamily: 'inherit',
@@ -608,7 +716,9 @@ export default function ProfilePage() {
                           width: '100%', 
                           paddingTop: '14px', paddingRight: '20px', paddingBottom: '14px', paddingLeft: '20px',
                           backgroundColor: '#F9F9FB',
-                          border: '1px solid #E5E5EA',
+                          borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                          borderStyle: 'solid',
+                          borderColor: '#E5E5EA',
                           borderRadius: '16px', color: '#1C1C1E',
                           fontSize: '0.95rem', outline: 'none',
                         }}
@@ -626,7 +736,9 @@ export default function ProfilePage() {
                           width: '100%', 
                           paddingTop: '14px', paddingRight: '20px', paddingBottom: '14px', paddingLeft: '20px',
                           backgroundColor: '#F9F9FB',
-                          border: '1px solid #E5E5EA',
+                          borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                          borderStyle: 'solid',
+                          borderColor: '#E5E5EA',
                           borderRadius: '16px', color: '#1C1C1E',
                           fontSize: '0.95rem', outline: 'none',
                         }}
@@ -640,7 +752,11 @@ export default function ProfilePage() {
               <Row style={{
                 paddingTop: '24px', paddingRight: '32px', paddingBottom: '24px', paddingLeft: '32px',
                 justifyContent: 'flex-end', gap: '16px',
-                borderTop: '1px solid rgba(0, 122, 255, 0.08)', flexShrink: 0,
+                borderTopWidth: '1px',
+                borderTopStyle: 'solid',
+                borderTopColor: 'rgba(0, 122, 255, 0.08)',
+                borderLeftWidth: '0px', borderRightWidth: '0px', borderBottomWidth: '0px',
+                flexShrink: 0,
                 backgroundColor: '#EAF2FF',
               }}>
                 <Button
@@ -648,9 +764,15 @@ export default function ProfilePage() {
                   onClick={() => setIsEditModalOpen(false)}
                   style={{
                     backgroundColor: '#FFFFFF',
-                    border: '1px solid rgba(0, 122, 255, 0.1)',
+                    borderTopWidth: '1px', borderBottomWidth: '1px', borderLeftWidth: '1px', borderRightWidth: '1px',
+                    borderStyle: 'solid',
+                    borderColor: 'rgba(0, 122, 255, 0.1)',
                     borderRadius: '16px', color: '#8E8E93',
-                    padding: '12px 28px', cursor: 'pointer', fontWeight: 600,
+                    paddingTop: '12px',
+                    paddingBottom: '12px',
+                    paddingLeft: '28px',
+                    paddingRight: '28px',
+                    cursor: 'pointer', fontWeight: 600,
                   }}
                 >
                   Cancel
@@ -661,8 +783,13 @@ export default function ProfilePage() {
                   style={{
                     backgroundColor: '#007AFF', color: '#FFFFFF',
                     borderRadius: '16px', fontWeight: 700,
-                    padding: '12px 32px', cursor: 'pointer',
-                    border: 'none',
+                    paddingTop: '12px',
+                    paddingBottom: '12px',
+                    paddingLeft: '32px',
+                    paddingRight: '32px',
+                    cursor: 'pointer',
+                    borderTopWidth: '0px', borderBottomWidth: '0px', borderLeftWidth: '0px', borderRightWidth: '0px',
+                    borderStyle: 'none',
                     boxShadow: '0 8px 24px rgba(0,122,255,0.3)',
                   }}
                 >

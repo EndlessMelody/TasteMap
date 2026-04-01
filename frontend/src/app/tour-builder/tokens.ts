@@ -1,53 +1,53 @@
 /**
- * Tour Builder Design Tokens
+ * Tour Builder Design Tokens — ELITE PASTEL LIGHT MODE
  * ─────────────────────────────────────────────────────────────
  * Central source of truth for all Tour Builder styling.
- * Following Once UI dark-mode first philosophy (Vercel/Linear/Raycast).
+ * Aligned with the Pastel Blue + White aesthetic.
  */
 
 // ═══════════ SURFACES ═══════════
 export const surface = {
-  page: '#08080C',
-  base: '#0C0C10',
-  elevated: '#121217',
-  overlay: 'rgba(12, 12, 16, 0.92)',
-  glass: 'rgba(18, 18, 23, 0.85)',
-  card: '#16161C',
+  page: '#F8FAFF',
+  base: '#F0F4FA',
+  elevated: '#FFFFFF',
+  overlay: 'rgba(255, 255, 255, 0.92)',
+  glass: 'rgba(255, 255, 255, 0.75)',
+  card: '#FFFFFF',
 } as const;
 
 // ═══════════ BRAND / ACCENT COLORS ═══════════
 export const accent = {
-  primary: '#00D1B2',       // Teal — main CTA, success, active
-  primaryMuted: 'rgba(0, 209, 178, 0.15)',
-  primaryGlow: 'rgba(0, 209, 178, 0.4)',
+  primary: '#007AFF',       // Elite Blue — main CTA, success, active
+  primaryMuted: 'rgba(0, 122, 255, 0.1)',
+  primaryGlow: 'rgba(0, 122, 255, 0.25)',
   
-  secondary: '#A855F7',     // Purple — time, premium
-  secondaryMuted: 'rgba(168, 85, 247, 0.15)',
+  secondary: '#8E44AD',     // Deep Purple — time, premium
+  secondaryMuted: 'rgba(142, 68, 173, 0.1)',
   
-  warning: '#FBBF24',       // Amber — match %, sparkles
-  warningMuted: 'rgba(251, 191, 36, 0.15)',
+  warning: '#F59E0B',       // Amber — match %, sparkles
+  warningMuted: 'rgba(245, 158, 11, 0.1)',
   
-  danger: '#EF4444',        // Red — discard, skip
-  dangerMuted: 'rgba(239, 68, 68, 0.15)',
+  danger: '#FF3B30',        // Apple Red — discard, skip
+  dangerMuted: 'rgba(255, 59, 48, 0.1)',
   
-  brand: '#ED1B24',         // Brand red — location pin
+  brand: '#0066CC',         // Brand deep blue — location pin
 } as const;
 
 // ═══════════ TEXT COLORS ═══════════
 export const text = {
-  primary: '#FFFFFF',
-  secondary: 'rgba(255, 255, 255, 0.7)',
-  tertiary: 'rgba(255, 255, 255, 0.5)',
-  muted: 'rgba(255, 255, 255, 0.35)',
-  disabled: 'rgba(255, 255, 255, 0.2)',
+  primary: '#1C1C1E',
+  secondary: 'rgba(28, 28, 30, 0.7)',
+  tertiary: 'rgba(28, 28, 30, 0.5)',
+  muted: 'rgba(28, 28, 30, 0.35)',
+  disabled: 'rgba(28, 28, 30, 0.2)',
 } as const;
 
 // ═══════════ BORDERS ═══════════
 export const border = {
-  subtle: 'rgba(255, 255, 255, 0.04)',
-  weak: 'rgba(255, 255, 255, 0.06)',
-  medium: 'rgba(255, 255, 255, 0.08)',
-  strong: 'rgba(255, 255, 255, 0.12)',
+  subtle: 'rgba(0, 0, 0, 0.05)',
+  weak: 'rgba(0, 0, 0, 0.08)',
+  medium: 'rgba(0, 0, 0, 0.12)',
+  strong: 'rgba(0, 0, 0, 0.18)',
 } as const;
 
 // ═══════════ SPACING (8px grid) ═══════════
@@ -76,10 +76,10 @@ export const radius = {
 
 // ═══════════ SHADOWS ═══════════
 export const shadow = {
-  card: '0 8px 32px rgba(0, 0, 0, 0.35)',
-  elevated: '0 16px 48px rgba(0, 0, 0, 0.5)',
+  card: '0 8px 32px rgba(0, 122, 255, 0.08)',
+  elevated: '0 16px 48px rgba(0, 0, 0, 0.08)',
   glow: (color: string) => `0 0 20px ${color}`,
-  insetBorder: (color: string) => `inset 0 0 0 1px ${color}`,
+  insetBorder: (color: string) => `inset 0 0 0 1.5px ${color}`,
 } as const;
 
 // ═══════════ TYPOGRAPHY SCALE ═══════════
@@ -106,9 +106,9 @@ export const typography = {
 
 // ═══════════ ROUTE STATUS COLORS ═══════════
 export const routeStatus = {
-  empty: { bg: 'rgba(255, 255, 255, 0.02)', border: 'rgba(255, 255, 255, 0.08)' },
-  active: { bg: 'rgba(0, 209, 178, 0.08)', border: 'rgba(0, 209, 178, 0.4)' },
-  filled: (color: string) => ({ bg: `${color}15`, border: color }),
+  empty: { bg: 'rgba(0, 0, 0, 0.03)', border: 'rgba(0, 0, 0, 0.08)' },
+  active: { bg: 'rgba(0, 122, 255, 0.05)', border: 'rgba(0, 122, 255, 0.4)' },
+  filled: (color: string) => ({ bg: `${color}10`, border: color }),
   connector: { active: accent.primary, inactive: border.weak },
 } as const;
 

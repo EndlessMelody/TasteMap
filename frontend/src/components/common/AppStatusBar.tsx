@@ -31,17 +31,19 @@ export const AppStatusBar = () => {
       fillWidth
       horizontal="center"
       style={{
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
         height: "32px",
-        backgroundColor: "rgba(255, 255, 255, 0.7)",
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
-        borderTop: "1px solid rgba(0, 0, 0, 0.05)",
+        borderTopWidth: "1px",
+        borderTopStyle: "solid",
+        borderTopColor: "rgba(0, 0, 0, 0.05)",
         zIndex: 1000,
-        padding: "0 24px",
+        paddingTop: "0px",
+        paddingBottom: "0px",
+        paddingLeft: "24px",
+        paddingRight: "24px",
+        flexShrink: 0,
       }}
     >
       <Row
@@ -73,9 +75,17 @@ export const AppStatusBar = () => {
           vertical="center"
           style={{
             backgroundColor: "rgba(0, 0, 0, 0.03)",
-            padding: "2px 16px",
+            paddingTop: "2px",
+            paddingBottom: "2px",
+            paddingLeft: "16px",
+            paddingRight: "16px",
             borderRadius: "999px",
-            border: "1px solid rgba(0, 0, 0, 0.03)",
+            borderTopWidth: "1px",
+            borderBottomWidth: "1px",
+            borderLeftWidth: "1px",
+            borderRightWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "rgba(0, 0, 0, 0.03)",
           }}
         >
           {["Discovery", "Vault", "Map"].map((item) => (
@@ -86,7 +96,8 @@ export const AppStatusBar = () => {
                 color: "#1C1C1E",
                 fontWeight: 500,
                 cursor: "pointer",
-                transition: "opacity 0.2s",
+                transitionProperty: "opacity",
+                transitionDuration: "0.2s",
               }}
               onMouseEnter={(e: any) => (e.target.style.opacity = "0.6")}
               onMouseLeave={(e: any) => (e.target.style.opacity = "1")}

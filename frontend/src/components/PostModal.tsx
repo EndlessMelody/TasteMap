@@ -53,14 +53,20 @@ export default function PostModal({ isOpen, data, onClose }: PostModalProps) {
           exit={{ opacity: 0 }}
           style={{
             position: "fixed",
-            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             zIndex: 200,
             backgroundColor: "rgba(0,0,0,0.8)",
             backdropFilter: "blur(12px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "20px",
+            paddingTop: "20px",
+            paddingBottom: "20px",
+            paddingLeft: "20px",
+            paddingRight: "20px",
           }}
           onClick={onClose}
         >
@@ -117,7 +123,10 @@ export default function PostModal({ isOpen, data, onClose }: PostModalProps) {
               {/* Header */}
               <Row
                 style={{
-                  padding: "18px 24px",
+                  paddingTop: "18px",
+                  paddingBottom: "18px",
+                  paddingLeft: "24px",
+                  paddingRight: "24px",
                   borderBottom: "1px solid var(--border-medium)",
                   alignItems: "center",
                   justifyContent: "space-between",

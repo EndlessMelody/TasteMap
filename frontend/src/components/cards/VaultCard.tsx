@@ -34,7 +34,12 @@ export function VaultCard({
         flexShrink: 0,
         minWidth: "260px",
         backgroundColor: "#FFFFFF",
-        border: "1px solid #E5E5EA",
+        borderTopWidth: "1px",
+        borderBottomWidth: "1px",
+        borderLeftWidth: "1px",
+        borderRightWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "#E5E5EA",
         overflow: "hidden",
         cursor: "pointer",
         transform: "translateZ(0)",
@@ -74,11 +79,16 @@ export function VaultCard({
             zIndex: 3,
             backgroundColor: "rgba(255,255,255,0.85)",
             backdropFilter: "blur(8px)",
-            padding: "4px 10px",
+            paddingTop: "4px",
+            paddingBottom: "4px",
+            paddingLeft: "10px",
+            paddingRight: "10px",
             borderRadius: "8px",
             gap: "4px",
             alignItems: "center",
-            border: "1px solid rgba(255,255,255,0.5)",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "rgba(255,255,255,0.5)",
           }}
         >
           <Sparkles size={10} color="#FBBF24" />
@@ -98,11 +108,16 @@ export function VaultCard({
             zIndex: 3,
             backgroundColor: "rgba(255,255,255,0.85)",
             backdropFilter: "blur(8px)",
-            padding: "4px 8px",
+            paddingTop: "4px",
+            paddingBottom: "4px",
+            paddingLeft: "8px",
+            paddingRight: "8px",
             borderRadius: "8px",
             gap: "3px",
             alignItems: "center",
-            border: "1px solid rgba(255,255,255,0.5)",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "rgba(255,255,255,0.5)",
           }}
         >
           <Star size={11} color="#FBBF24" fill="#FBBF24" />
@@ -115,7 +130,7 @@ export function VaultCard({
       </div>
 
       {/* Text Area — white bottom */}
-      <Column style={{ padding: "14px 16px", gap: "4px" }}>
+      <Column style={{ paddingTop: "14px", paddingBottom: "14px", paddingLeft: "16px", paddingRight: "16px", gap: "4px" }}>
         <Text
           style={{ color: "#1C1C1E", fontWeight: 700, fontSize: "0.95rem" }}
         >

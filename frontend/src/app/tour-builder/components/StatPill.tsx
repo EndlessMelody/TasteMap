@@ -17,9 +17,9 @@ export function StatPill({ icon, label, color }: StatPillProps) {
         alignItems: 'center',
         gap: spacing.xs,
         padding: `${spacing.xs}px ${spacing.m}px`,
-        backgroundColor: 'rgba(255,255,255,0.04)',
-        borderRadius: radius.m,
-        border: `1px solid ${border.weak}`,
+        backgroundColor: 'rgba(0,122,255,0.08)',
+        borderRadius: radius.s,
+        border: `1px solid rgba(0,122,255,0.12)`,
       }}
     >
       {icon}

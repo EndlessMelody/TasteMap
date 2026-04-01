@@ -72,7 +72,12 @@ export const AIPicksSection = () => {
                 borderRadius: "20px",
                 overflow: "hidden",
                 backgroundColor: "#FFFFFF",
-                border: "1px solid rgba(0,0,0,0.05)",
+                borderTopWidth: "1px",
+                borderBottomWidth: "1px",
+                borderLeftWidth: "1px",
+                borderRightWidth: "1px",
+                borderStyle: "solid",
+                borderColor: "rgba(0,0,0,0.05)",
                 cursor: "pointer",
                 flexShrink: 0,
                 position: "relative",
@@ -108,9 +113,17 @@ export const AIPicksSection = () => {
                     position: "absolute",
                     top: "12px",
                     right: "12px",
-                    padding: "6px 12px",
+                    paddingTop: "6px",
+                    paddingBottom: "6px",
+                    paddingLeft: "12px",
+                    paddingRight: "12px",
                     borderRadius: "10px",
-                    border: "1px solid rgba(255,255,255,0.4)",
+                    borderTopWidth: "1px",
+                    borderBottomWidth: "1px",
+                    borderLeftWidth: "1px",
+                    borderRightWidth: "1px",
+                    borderStyle: "solid",
+                    borderColor: "rgba(255,255,255,0.4)",
                   }}
                 >
                   <Text
@@ -125,7 +138,7 @@ export const AIPicksSection = () => {
                   </Text>
                 </div>
               </div>
-              <Column style={{ padding: "16px", gap: "8px" }}>
+              <Column style={{ paddingTop: "16px", paddingBottom: "16px", paddingLeft: "16px", paddingRight: "16px", gap: "8px" }}>
                 <Text
                   style={{
                     color: "#1C1C1E",
@@ -160,7 +173,7 @@ export const AIPicksSection = () => {
                     <Text style={{ color: "#8E8E93", fontSize: "0.8rem", fontWeight: 500 }}>
                         From {pick.price} VND
                     </Text>
-                    <div style={{ padding: "4px", borderRadius: "8px", backgroundColor: "#F2F2F7" }}>
+                    <div style={{ paddingTop: "4px", paddingBottom: "4px", paddingLeft: "4px", paddingRight: "4px", borderRadius: "8px", backgroundColor: "#F2F2F7" }}>
                         <Sparkles size={12} color="#A855F7" />
                     </div>
                 </Row>

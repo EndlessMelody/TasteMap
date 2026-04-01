@@ -48,7 +48,8 @@ export const TrendingReels: React.FC<TrendingReelsProps> = ({ onReelClick }) => 
               fontSize: "0.85rem",
               fontWeight: 600,
               cursor: "pointer",
-              transition: "opacity 0.2s",
+              transitionProperty: "opacity",
+              transitionDuration: "0.2s",
             }}
           >
             View all

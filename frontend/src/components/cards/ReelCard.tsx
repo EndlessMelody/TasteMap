@@ -36,7 +36,12 @@ export function ReelCard({
         minWidth: "180px",
         height: "400px",
         backgroundColor: "#FFFFFF",
-        border: "1px solid #E5E5EA",
+        borderTopWidth: "1px",
+        borderBottomWidth: "1px",
+        borderLeftWidth: "1px",
+        borderRightWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "#E5E5EA",
         overflow: "hidden",
         cursor: "pointer",
         transform: "translateZ(0)",
@@ -76,11 +81,19 @@ export function ReelCard({
             zIndex: 10,
             backgroundColor: "rgba(255,255,255,0.85)",
             backdropFilter: "blur(8px)",
-            padding: "4px 8px",
+            paddingTop: "4px",
+            paddingBottom: "4px",
+            paddingLeft: "8px",
+            paddingRight: "8px",
             borderRadius: "8px",
             gap: "4px",
             alignItems: "center",
-            border: "1px solid rgba(255,255,255,0.5)",
+            borderTopWidth: "1px",
+            borderBottomWidth: "1px",
+            borderLeftWidth: "1px",
+            borderRightWidth: "1px",
+            borderStyle: "solid",
+            borderColor: "rgba(255,255,255,0.5)",
           }}
         >
           <Eye size={10} color="#8E8E93" />
@@ -112,7 +125,12 @@ export function ReelCard({
               borderRadius: "50%",
               backgroundColor: "rgba(255,255,255,0.85)",
               backdropFilter: "blur(12px)",
-              border: "1px solid rgba(255,255,255,0.5)",
+              borderTopWidth: "1px",
+              borderBottomWidth: "1px",
+              borderLeftWidth: "1px",
+              borderRightWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "rgba(255,255,255,0.5)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -129,7 +147,10 @@ export function ReelCard({
       {/* Text Area — white bottom, no overlay */}
       <Column
         style={{
-          padding: "12px 14px",
+          paddingTop: "12px",
+          paddingBottom: "12px",
+          paddingLeft: "14px",
+          paddingRight: "14px",
           gap: "6px",
         }}
       >

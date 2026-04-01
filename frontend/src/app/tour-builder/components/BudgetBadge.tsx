@@ -21,9 +21,9 @@ export function BudgetBadge({ price, size = "m" }: BudgetBadgeProps) {
         padding: isSmall
           ? `${spacing["2xs"]}px ${spacing.xs}px`
           : `${spacing.xs}px ${spacing.s}px`,
-        backgroundColor: accent.primaryMuted,
+        backgroundColor: 'rgba(0,122,255,0.08)',
         borderRadius: radius.s,
-        border: `1px solid ${accent.primary}25`,
+        border: `1px solid rgba(0,122,255,0.12)`,
       }}
     >
       <DollarSign size={isSmall ? 12 : 14} color={accent.primary} />

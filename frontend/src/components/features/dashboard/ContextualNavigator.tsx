@@ -55,9 +55,17 @@ export const ContextualNavigator = () => {
                   }}
                   whileTap={{ scale: 0.95 }}
                   style={{
-                    padding: "3px 10px",
+                    paddingTop: "3px",
+                    paddingBottom: "3px",
+                    paddingLeft: "10px",
+                    paddingRight: "10px",
                     backgroundColor: `${ctx.accent}15`,
-                    border: `1px solid ${ctx.accent}30`,
+                    borderTopWidth: "1px",
+                    borderBottomWidth: "1px",
+                    borderLeftWidth: "1px",
+                    borderRightWidth: "1px",
+                    borderStyle: "solid",
+                    borderColor: `${ctx.accent}30`,
                     borderRadius: "6px",
                     fontSize: "0.7rem",
                     fontWeight: 600,

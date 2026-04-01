@@ -32,14 +32,20 @@ export default function ReelModal({ isOpen, data, onClose }: ReelModalProps) {
           exit={{ opacity: 0 }}
           style={{
             position: "fixed",
-            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             zIndex: 200,
             backgroundColor: "rgba(0,0,0,0.8)",
             backdropFilter: "blur(12px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: "20px",
+            paddingTop: "20px",
+            paddingBottom: "20px",
+            paddingLeft: "20px",
+            paddingRight: "20px",
           }}
           onClick={onClose}
         >
@@ -99,7 +105,9 @@ export default function ReelModal({ isOpen, data, onClose }: ReelModalProps) {
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  border: "1px solid rgba(255,255,255,0.25)",
+                  borderWidth: "1px",
+                  borderStyle: "solid",
+                  borderColor: "rgba(255,255,255,0.25)",
                 }}
               >
                 <Play size={26} color="white" fill="white" />
@@ -112,16 +120,23 @@ export default function ReelModal({ isOpen, data, onClose }: ReelModalProps) {
                 width: "45%",
                 height: "100%",
                 backgroundColor: "#FFFFFF",
-                borderLeft: "1px solid #E5E5EA",
+                borderLeftWidth: "1px",
+                borderLeftStyle: "solid",
+                borderLeftColor: "#E5E5EA",
                 display: "flex",
                 flexDirection: "column",
               }}
             >
               {/* Header */}
               <Row
-                style={{
-                  padding: "18px 24px",
-                  borderBottom: "1px solid var(--border-medium)",
+                 style={{
+                  paddingTop: "18px",
+                  paddingBottom: "18px",
+                  paddingLeft: "24px",
+                  paddingRight: "24px",
+                  borderBottomWidth: "1px",
+                  borderBottomStyle: "solid",
+                  borderBottomColor: "var(--border-medium)",
                   alignItems: "center",
                   justifyContent: "space-between",
                   flexShrink: 0,
@@ -155,10 +170,13 @@ export default function ReelModal({ isOpen, data, onClose }: ReelModalProps) {
               {/* Scrollable Content (Caption + Comments) */}
               <Column
                 className="no-scrollbar"
-                style={{
+                 style={{
                   flex: 1,
                   overflowY: "auto",
-                  padding: "24px",
+                  paddingTop: "24px",
+                  paddingBottom: "24px",
+                  paddingLeft: "24px",
+                  paddingRight: "24px",
                   gap: "24px",
                 }}
               >
@@ -296,22 +314,31 @@ export default function ReelModal({ isOpen, data, onClose }: ReelModalProps) {
               </Column>
 
               {/* Input Footer */}
-              <Row
+               <Row
                 style={{
-                  padding: "16px 24px",
-                  borderTop: "1px solid var(--border-medium)",
+                  paddingTop: "16px",
+                  paddingBottom: "16px",
+                  paddingLeft: "24px",
+                  paddingRight: "24px",
+                  borderTopWidth: "1px",
+                  borderTopStyle: "solid",
+                  borderTopColor: "var(--border-medium)",
                   alignItems: "center",
                   gap: "16px",
                   flexShrink: 0,
                 }}
               >
-                <Input
+                 <Input
                   placeholder="Add a comment..."
                   style={{
                     flex: 1,
-                    border: "none",
+                    borderWidth: 0,
+                    borderStyle: "none",
                     backgroundColor: "transparent",
-                    padding: 0,
+                    paddingTop: 0,
+                    paddingBottom: 0,
+                    paddingLeft: 0,
+                    paddingRight: 0,
                     fontSize: "0.85rem",
                   }}
                 />

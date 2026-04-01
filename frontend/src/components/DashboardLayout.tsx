@@ -31,8 +31,10 @@ import {
   PolarAngleAxis,
   ResponsiveContainer,
 } from "recharts";
+import ClientOnly from "./common/ClientOnly";
+import { UserVectorProvider, useUserVector } from "@/context/UserVectorContext";
 
-const radarData = MOCK_USER.radarData;
+const radarDataSample = MOCK_USER.radarData;
 
 function SidebarItem({
   icon,
@@ -58,13 +60,23 @@ function SidebarItem({
       className="focus-ring"
       tabIndex={0}
       style={{
-        padding: collapsed ? "10px 0" : "10px 12px",
+        paddingTop: "10px",
+        paddingBottom: "10px",
+        paddingLeft: collapsed ? "0px" : "12px",
+        paddingRight: collapsed ? "0px" : "12px",
         borderRadius: "10px",
         backgroundColor: showHighlight ? "#EAF2FF" : "transparent",
         cursor: "pointer",
-        borderLeft: active ? "3px solid #007AFF" : "3px solid transparent",
+        borderTopWidth: "0px",
+        borderBottomWidth: "0px",
+        borderRightWidth: "0px",
+        borderLeftWidth: "3px",
+        borderLeftStyle: "solid",
+        borderLeftColor: active ? "#007AFF" : "transparent",
         color: showHighlight ? "#007AFF" : "#8E8E93",
-        transition: "all 0.2s ease",
+        transitionProperty: "all",
+        transitionDuration: "0.2s",
+        transitionTimingFunction: "ease",
         alignItems: "center",
         justifyContent: collapsed ? "center" : "flex-start",
         gap: collapsed ? "0px" : "14px",
@@ -148,29 +160,46 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [isLoading, setIsLoading] = useState(true);
+  return (
+    <UserVectorProvider>
+      <LayoutContent>{children}</LayoutContent>
+    </UserVectorProvider>
+  );
+}
+
+function LayoutContent({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { radarData, mergedRadarData, isPulsing } = useUserVector();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isRightExpanded, setIsRightExpanded] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
   const isProfilePage = pathname === "/profile" || pathname.startsWith("/admin");
+  const isFullScreenPage = pathname.startsWith("/profile") ||
+    pathname.startsWith("/tour-builder");
 
-  // Auto-collapse sidebars when entering the profile page
+  // Auto-collapse sidebars when entering fullscreen pages
   React.useEffect(() => {
-    if (isProfilePage) {
+    if (isFullScreenPage) {
       setIsSidebarOpen(false);
       setIsRightExpanded(false);
+    } else {
+      setIsSidebarOpen(true);
+      setIsRightExpanded(false);
     }
-  }, [isProfilePage]);
+  }, [isFullScreenPage]);
 
-  const sidebarWidth = isProfilePage ? 0 : (isSidebarOpen ? 280 : 80);
-  const rightSidebarWidth = isProfilePage ? 0 : (isRightExpanded ? 320 : 80);
+  const sidebarWidth = isFullScreenPage ? 0 : (isSidebarOpen ? 280 : 80);
+  const rightSidebarWidth = isFullScreenPage ? 0 : (isRightExpanded ? 320 : 80);
 
   return (
     <Row
       fillWidth
-      background={isProfilePage ? "surface" : "page"}
+      background={isFullScreenPage ? "surface" : "page"}
       overflow="hidden"
       style={{ height: "100vh", color: "#1C1C1E" }}
     >
@@ -182,15 +211,20 @@ export default function DashboardLayout({
         borderRight="neutral-alpha-weak"
         radius="none"
         style={{
-          width: `${sidebarWidth}px`,
-          minWidth: `${sidebarWidth}px`,
-          padding: isProfilePage ? "0" : (isSidebarOpen ? "24px 20px" : "24px 12px"),
+          width: isFullScreenPage ? "0px" : `${sidebarWidth}px`,
+          minWidth: isFullScreenPage ? "0px" : `${sidebarWidth}px`,
+          paddingTop: isFullScreenPage ? "0" : "24px",
+          paddingBottom: isFullScreenPage ? "0" : "24px",
+          paddingLeft: isFullScreenPage ? "0" : (isSidebarOpen ? "20px" : "12px"),
+          paddingRight: isFullScreenPage ? "0" : (isSidebarOpen ? "20px" : "12px"),
           flexShrink: 0,
           overflowX: "hidden",
           overflowY: "auto",
           transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-          gap: "28px",
-          display: isProfilePage ? 'none' : 'flex',
+          gap: isFullScreenPage ? "0" : "28px",
+          borderRightWidth: isFullScreenPage ? "0" : "1px",
+          borderRightStyle: "solid",
+          borderRightColor: isFullScreenPage ? "transparent" : "rgba(0,0,0,0.06)",
         }}
       >
         {/* Logo + Toggle */}
@@ -230,8 +264,20 @@ export default function DashboardLayout({
               width: "36px",
               height: "36px",
               cursor: "pointer",
-              border: "1px solid #E5E5EA",
-              transition: "background-color 0.2s",
+              borderTopWidth: "1px",
+              borderBottomWidth: "1px",
+              borderLeftWidth: "1px",
+              borderRightWidth: "1px",
+              borderTopStyle: "solid",
+              borderBottomStyle: "solid",
+              borderLeftStyle: "solid",
+              borderRightStyle: "solid",
+              borderTopColor: "#E5E5EA",
+              borderBottomColor: "#E5E5EA",
+              borderLeftColor: "#E5E5EA",
+              borderRightColor: "#E5E5EA",
+              transitionProperty: "background-color",
+              transitionDuration: "0.2s",
             }}
           />
         </Row>
@@ -257,7 +303,7 @@ export default function DashboardLayout({
             label="Discover"
             active
             collapsed={!isSidebarOpen}
-            onClick={() => {}}
+            onClick={() => { }}
           />
           <SidebarItem
             icon={<Hand size={20} />}
@@ -304,7 +350,7 @@ export default function DashboardLayout({
         </Column>
 
         {/* Spacer */}
-        <div style={{ flex: 1 }} />
+        <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: "0%" }} />
 
         {/* Gamification Card */}
         {isSidebarOpen ? (
@@ -312,8 +358,22 @@ export default function DashboardLayout({
             style={{
               backgroundColor: "#F2F2F7",
               borderRadius: "16px",
-              border: "1px solid #E5E5EA",
-              padding: "16px",
+              borderTopWidth: "1px",
+              borderBottomWidth: "1px",
+              borderLeftWidth: "1px",
+              borderRightWidth: "1px",
+              borderTopStyle: "solid",
+              borderBottomStyle: "solid",
+              borderLeftStyle: "solid",
+              borderRightStyle: "solid",
+              borderTopColor: "#E5E5EA",
+              borderBottomColor: "#E5E5EA",
+              borderLeftColor: "#E5E5EA",
+              borderRightColor: "#E5E5EA",
+              paddingTop: "16px",
+              paddingBottom: "16px",
+              paddingLeft: "16px",
+              paddingRight: "16px",
               gap: "12px",
               flexShrink: 0,
               overflow: "hidden",
@@ -342,26 +402,39 @@ export default function DashboardLayout({
                 height: "150px",
                 marginTop: "-4px",
                 marginBottom: "-4px",
-                minWidth: 1,
-                minHeight: 1,
+                minWidth: 100,
+                minHeight: 100,
+                transform: isPulsing ? "scale(1.05)" : "scale(1)",
+                transition: "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
               }}
             >
-              <ResponsiveContainer width="100%" height="100%" minWidth={1} debounce={100}>
-                <RadarChart cx="50%" cy="50%" outerRadius="60%" data={radarData}>
-                  <PolarGrid stroke="#E5E5EA" />
-                  <PolarAngleAxis
-                    dataKey="subject"
-                    tick={{ fill: "#8E8E93", fontSize: 10 }}
-                  />
-                  <Radar
-                    name="Taste"
-                    dataKey="A"
-                    stroke="#007AFF"
-                    fill="#007AFF"
-                    fillOpacity={0.25}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+              <ClientOnly>
+                <ResponsiveContainer width="100%" height={150} minWidth={100} debounce={50}>
+                  <RadarChart cx="50%" cy="50%" outerRadius="60%" data={mergedRadarData}>
+                    <PolarGrid stroke="#E5E5EA" />
+                    <PolarAngleAxis
+                      dataKey="subject"
+                      tick={{ fill: "#8E8E93", fontSize: 10 }}
+                    />
+                    {/* Shadow Radar (Previous state) */}
+                    <Radar
+                      name="Previous Taste"
+                      dataKey="prevA"
+                      stroke="#AEAEB2"
+                      fill="#AEAEB2"
+                      fillOpacity={0.1}
+                      isAnimationActive={false}
+                    />
+                    <Radar
+                      name="Taste"
+                      dataKey="A"
+                      stroke="#007AFF"
+                      fill="#007AFF"
+                      fillOpacity={0.25}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </ClientOnly>
             </div>
             <Button
               size="s"
@@ -383,15 +456,46 @@ export default function DashboardLayout({
             <Avatar
               src={MOCK_USER.avatar}
               size="m"
-              style={{ border: "2px solid #007AFF", cursor: "pointer" }}
+              style={{
+                borderTopWidth: "2px",
+                borderBottomWidth: "2px",
+                borderLeftWidth: "2px",
+                borderRightWidth: "2px",
+                borderTopStyle: "solid",
+                borderBottomStyle: "solid",
+                borderLeftStyle: "solid",
+                borderRightStyle: "solid",
+                borderTopColor: "#007AFF",
+                borderBottomColor: "#007AFF",
+                borderLeftColor: "#007AFF",
+                borderRightColor: "#007AFF",
+                cursor: "pointer"
+              }}
             />
           </Column>
         )}
       </Column>
 
       {/* 2. CENTER PANEL (CHILDREN) */}
-      <Column flex={1} fillHeight style={{ minWidth: 0, position: "relative" }}>
-        <Column flex={1} fillWidth style={{ overflowY: "auto", overflowX: "hidden" }}>
+      <Column fillHeight horizontal="center" vertical="between" gap="0" style={{ flex: "1 1 0%", minWidth: 0, position: "relative", paddingBottom: "0", paddingTop: "0" }}>
+        <Column
+          key={pathname}
+          fillWidth
+          fillHeight
+          vertical="stretch"
+          gap="0"
+          style={{
+            maxWidth: isFullScreenPage ? "100%" : "1440px",
+            marginLeft: "auto",
+            marginRight: "auto",
+            paddingBottom: "0",
+            paddingTop: "0",
+            overflow: "hidden",
+            position: "relative",
+            minHeight: "1px",
+            flex: "1 1 0%",
+          }}
+        >
           {children}
         </Column>
         <AppStatusBar />
@@ -406,22 +510,31 @@ export default function DashboardLayout({
         borderLeft="neutral-alpha-weak"
         radius="none"
         style={{
-          width: isProfilePage ? '0px' : (isRightExpanded ? "320px" : "80px"),
-          minWidth: isProfilePage ? '0px' : (isRightExpanded ? "320px" : "80px"),
+          width: isFullScreenPage ? "0px" : (isRightExpanded ? "320px" : "80px"),
+          minWidth: isFullScreenPage ? "0px" : (isRightExpanded ? "320px" : "80px"),
+          paddingLeft: "0",
+          paddingRight: "0",
           flexShrink: 0,
           transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)",
           overflow: "hidden",
-          paddingTop: isProfilePage ? "0" : "24px",
-          display: isProfilePage ? 'none' : 'flex',
+          paddingTop: isFullScreenPage ? "0" : "24px",
+          paddingBottom: isFullScreenPage ? "0" : "24px",
+          borderLeftWidth: isFullScreenPage ? "0" : "1px",
+          borderLeftStyle: "solid",
+          borderLeftColor: isFullScreenPage ? "transparent" : "rgba(0,0,0,0.06)",
         }}
       >
         <Row
           style={{
-            padding: "0 18px 20px 18px",
+            paddingTop: "0px",
+            paddingBottom: "20px",
+            paddingLeft: "18px",
+            paddingRight: "18px",
             alignItems: "center",
             justifyContent: isRightExpanded ? "space-between" : "center",
-            borderBottom: "1px solid #E5E5EA",
-            paddingBottom: "20px",
+            borderBottomWidth: "1px",
+            borderBottomStyle: "solid",
+            borderBottomColor: "#E5E5EA",
             gap: "12px",
             minHeight: "44px",
           }}
@@ -444,83 +557,29 @@ export default function DashboardLayout({
             onClick={handleComingSoon}
             style={{
               backgroundColor: "transparent",
-              border: "1px solid rgba(255,255,255,0.12)",
+              borderTopWidth: "1px",
+              borderBottomWidth: "1px",
+              borderLeftWidth: "1px",
+              borderRightWidth: "1px",
+              borderTopStyle: "solid",
+              borderBottomStyle: "solid",
+              borderLeftStyle: "solid",
+              borderRightStyle: "solid",
+              borderTopColor: "rgba(255,255,255,0.12)",
+              borderBottomColor: "rgba(255,255,255,0.12)",
+              borderLeftColor: "rgba(255,255,255,0.12)",
+              borderRightColor: "rgba(255,255,255,0.12)",
               borderRadius: "50%",
               width: "44px",
               height: "44px",
               minWidth: "44px",
               cursor: "pointer",
-              transition: "border-color 0.2s",
+              transitionProperty: "border-color",
+              transitionDuration: "0.2s",
               flexShrink: 0,
             }}
           />
         </Row>
-
-        <Column
-          style={{
-            gap: "4px",
-            paddingTop: "16px",
-            overflowY: "auto",
-            flex: 1,
-            paddingBottom: "24px"
-          }}
-        >
-          {friends.map((f) => (
-            <Row
-              key={f.name}
-              style={{
-                padding: "10px 18px",
-                alignItems: "center",
-                gap: "14px",
-                cursor: "pointer",
-                borderRadius: "12px",
-                margin: "0 8px",
-                transition: "background-color 0.15s",
-              }}
-              onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
-                if (isRightExpanded) e.currentTarget.style.backgroundColor = "#F2F2F7";
-              }}
-              onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
-                e.currentTarget.style.backgroundColor = "transparent";
-              }}
-            >
-              <div style={{ position: "relative", flexShrink: 0 }}>
-                <Avatar src={f.avatar} size="m" />
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 1,
-                    right: -1,
-                    width: "12px",
-                    height: "12px",
-                    backgroundColor: statusDotColor(f.status),
-                    borderRadius: "50%",
-                    border: "2px solid #FFFFFF",
-                    boxShadow: `0 0 6px ${statusDotColor(f.status)}60`,
-                  }}
-                />
-              </div>
-
-              <Row
-                style={{
-                  flex: 1,
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  opacity: isRightExpanded ? 1 : 0,
-                  transition: "opacity 0.2s ease 0.1s",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  minWidth: 0,
-                }}
-              >
-                <Column style={{ gap: "2px", minWidth: 0 }}>
-                  <Text style={{ color: "#1C1C1E", fontWeight: 700, fontSize: "0.8rem" }}>{f.name}</Text>
-                  <Text style={{ color: statusTextColor(f.status), fontSize: "0.65rem", fontWeight: 600 }}>{f.statusText}</Text>
-                </Column>
-              </Row>
-            </Row>
-          ))}
-        </Column>
       </Column>
     </Row>
   );

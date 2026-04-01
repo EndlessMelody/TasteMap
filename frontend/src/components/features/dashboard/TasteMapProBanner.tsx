@@ -38,7 +38,10 @@ export const TasteMapProBanner = () => {
           <div
             style={{
               position: "absolute",
-              inset: 0,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
               background: "linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)",
               zIndex: 1
             }}
@@ -51,7 +54,10 @@ export const TasteMapProBanner = () => {
             zIndex: 10,
             height: "100%",
             justifyContent: "center",
-            padding: "48px 80px 72px 80px", // Reduced padding for 300px height
+            paddingTop: "48px",
+            paddingBottom: "72px",
+            paddingLeft: "80px",
+            paddingRight: "80px",
             gap: "18px",
             maxWidth: "800px"
           }}
@@ -59,7 +65,10 @@ export const TasteMapProBanner = () => {
           {/* Badge Row */}
           <Row style={{ gap: "10px", alignItems: "center" }}>
             <div style={{ 
-                padding: "5px 10px", 
+                paddingTop: "5px",
+                paddingBottom: "5px",
+                paddingLeft: "10px",
+                paddingRight: "10px",
                 backgroundColor: "#FFB800", 
                 borderRadius: "6px",
                 boxShadow: "0 4px 10px rgba(255, 184, 0, 0.25)"
@@ -113,7 +122,10 @@ export const TasteMapProBanner = () => {
                 backgroundColor: "white",
                 color: "black",
                 borderRadius: "14px",
-                padding: "12px 36px",
+                paddingTop: "12px",
+                paddingBottom: "12px",
+                paddingLeft: "36px",
+                paddingRight: "36px",
                 fontWeight: 800,
                 fontSize: "0.95rem",
                 boxShadow: "0 8px 25px rgba(255,255,255,0.12)"

@@ -3,7 +3,7 @@
 import React from 'react';
 import { Column, Row } from '@/components/OnceUI';
 import { Skeleton } from '@/components/Skeleton';
-import { surface, border, radius, spacing } from '../tokens';
+import { surface, text, border, radius, spacing } from '../tokens';
 
 export function TourSkeleton() {
   return (
@@ -109,7 +109,7 @@ export function EmptyState({ filledCount, totalCount }: { filledCount: number; t
       <Column style={{ alignItems: 'center', gap: spacing.xs }}>
         <span
           style={{
-            color: 'white',
+            color: text.primary,
             fontSize: '1.125rem',
             fontWeight: 700,
           }}
@@ -118,7 +118,7 @@ export function EmptyState({ filledCount, totalCount }: { filledCount: number; t
         </span>
         <span
           style={{
-            color: 'rgba(255,255,255,0.4)',
+            color: text.muted,
             fontSize: '0.85rem',
           }}
         >

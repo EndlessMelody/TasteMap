@@ -34,7 +34,12 @@ export function ContextCard({
           minWidth: "260px",
           borderRadius: "16px",
           backgroundColor: "#FFFFFF",
-          border: "1px solid #E5E5EA",
+          borderTopWidth: "1px",
+          borderBottomWidth: "1px",
+          borderLeftWidth: "1px",
+          borderRightWidth: "1px",
+          borderStyle: "solid",
+          borderColor: "#E5E5EA",
           overflow: "hidden",
           cursor: "pointer",
           transform: "translateZ(0)",
@@ -66,11 +71,16 @@ export function ContextCard({
               right: "10px",
               backgroundColor: "rgba(255,255,255,0.85)",
               backdropFilter: "blur(8px)",
-              padding: "4px 10px",
+              paddingTop: "4px",
+              paddingBottom: "4px",
+              paddingLeft: "10px",
+              paddingRight: "10px",
               borderRadius: "8px",
               gap: "4px",
               alignItems: "center",
-              border: "1px solid rgba(255,255,255,0.5)",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "rgba(255,255,255,0.5)",
             }}
           >
             <Sparkles size={11} color={accent} />
@@ -88,11 +98,16 @@ export function ContextCard({
               left: "10px",
               backgroundColor: "rgba(255,255,255,0.85)",
               backdropFilter: "blur(8px)",
-              padding: "3px 8px",
+              paddingTop: "3px",
+              paddingBottom: "3px",
+              paddingLeft: "8px",
+              paddingRight: "8px",
               borderRadius: "6px",
               gap: "4px",
               alignItems: "center",
-              border: "1px solid rgba(255,255,255,0.5)",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "rgba(255,255,255,0.5)",
             }}
           >
             <Navigation size={10} color="#636366" />
@@ -108,7 +123,7 @@ export function ContextCard({
           </Row>
         </div>
         {/* Info */}
-        <Column style={{ padding: "14px 16px", gap: "4px" }}>
+        <Column style={{ paddingTop: "14px", paddingBottom: "14px", paddingLeft: "16px", paddingRight: "16px", gap: "4px" }}>
           <Text style={{ color: "#1C1C1E", fontWeight: 700, fontSize: "0.9rem" }}>
             {title}
           </Text>

@@ -20,27 +20,27 @@ export function TimelineNode({
   isActive = false,
   isFilled = false,
 }: TimelineNodeProps) {
-  const nodeSize = 64;
+  const nodeSize = 56; // Standardized size
 
   const getStyles = () => {
     if (isFilled && color) {
       return {
         border: `3px solid ${color}`,
-        backgroundColor: 'transparent',
-        boxShadow: shadow.glow(`${color}60`),
+        backgroundColor: 'rgba(255,255,255,0.05)',
+        boxShadow: `0 0 20px ${color}40`,
       };
     }
     if (isActive) {
       return {
-        border: `2px solid ${accent.primary}80`,
-        backgroundColor: accent.primaryMuted,
-        boxShadow: undefined,
+        border: `2px solid ${accent.primary}`,
+        backgroundColor: 'white',
+        boxShadow: `0 0 16px ${accent.primary}30`,
       };
     }
     return {
-      border: `2px dashed ${border.medium}`,
-      backgroundColor: surface.base,
-      boxShadow: undefined,
+      border: `2px dashed rgba(0,0,0,0.08)`,
+      backgroundColor: 'rgba(0,0,0,0.02)',
+      boxShadow: 'none',
     };
   };
 
@@ -51,18 +51,15 @@ export function TimelineNode({
       animate={
         isActive && !isFilled
           ? {
-              boxShadow: [
-                '0 0 8px rgba(0,209,178,0.2)',
-                '0 0 20px rgba(0,209,178,0.5)',
-                '0 0 8px rgba(0,209,178,0.2)',
-              ],
+              scale: [1, 1.05, 1],
+              borderColor: [accent.primary, `${accent.primary}40`, accent.primary],
             }
           : {}
       }
       transition={
         isActive && !isFilled
           ? { duration: 2, repeat: Infinity, ease: 'easeInOut' }
-          : motionTokens.easeOut
+          : { duration: 0.4 }
       }
       style={{
         width: nodeSize,
@@ -73,7 +70,7 @@ export function TimelineNode({
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,
-        transition: 'border-color 0.4s, background-color 0.4s',
+        position: 'relative',
         ...styles,
       }}
     >
@@ -81,7 +78,6 @@ export function TimelineNode({
         <motion.img
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={motionTokens.spring}
           src={imageUrl}
           alt={`Stop ${index + 1}`}
           style={{
@@ -93,9 +89,9 @@ export function TimelineNode({
       ) : (
         <Text
           style={{
-            color: isActive ? accent.primary : text.disabled,
-            fontSize: '0.8rem',
-            fontWeight: 700,
+            color: isActive ? accent.primary : 'rgba(0,0,0,0.2)',
+            fontSize: '0.85rem',
+            fontWeight: 800,
           }}
         >
           {index + 1}
@@ -110,12 +106,11 @@ export function TimelineConnector({ isActive = false }: { isActive?: boolean }) 
   return (
     <div
       style={{
-        width: 40,
+        width: 32, // More compact connector
         height: 2,
         background: isActive
-          ? `linear-gradient(90deg, ${accent.primary}, ${accent.primary}80)`
-          : border.weak,
-        borderStyle: isActive ? 'solid' : 'dashed',
+          ? `linear-gradient(90deg, ${accent.primary}, ${accent.primary}40)`
+          : 'rgba(0,0,0,0.05)',
         transition: 'all 0.4s ease',
       }}
     />

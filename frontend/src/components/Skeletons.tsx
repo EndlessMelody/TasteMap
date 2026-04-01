@@ -24,12 +24,14 @@ export function SkeletonReelCard() {
         minWidth: "180px",
         borderRadius: "20px",
         overflow: "hidden",
-        border: "1px solid #E5E5EA",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "#E5E5EA",
         flexShrink: 0,
       }}
     >
       <div className="skeleton-shimmer" style={{ width: "100%", height: "240px", borderRadius: 0 }} />
-      <div style={{ padding: "14px 16px", backgroundColor: "#FFFFFF" }}>
+      <div style={{ paddingTop: "14px", paddingBottom: "14px", paddingLeft: "16px", paddingRight: "16px", backgroundColor: "#FFFFFF" }}>
         <div className="skeleton-shimmer" style={{ width: "80%", height: "14px", marginBottom: "8px", borderRadius: "6px" }} />
         <div className="skeleton-shimmer" style={{ width: "50%", height: "10px", borderRadius: "6px" }} />
       </div>
@@ -44,12 +46,14 @@ export function SkeletonVaultCard() {
         minWidth: "260px",
         borderRadius: "20px",
         overflow: "hidden",
-        border: "1px solid #E5E5EA",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "#E5E5EA",
         flexShrink: 0,
       }}
     >
       <div className="skeleton-shimmer" style={{ width: "100%", height: "150px", borderRadius: 0 }} />
-      <div style={{ padding: "14px 16px", backgroundColor: "#FFFFFF" }}>
+      <div style={{ paddingTop: "14px", paddingBottom: "14px", paddingLeft: "16px", paddingRight: "16px", backgroundColor: "#FFFFFF" }}>
         <div className="skeleton-shimmer" style={{ width: "70%", height: "14px", marginBottom: "6px", borderRadius: "6px" }} />
         <div className="skeleton-shimmer" style={{ width: "45%", height: "10px", borderRadius: "6px" }} />
       </div>
@@ -65,12 +69,14 @@ export function SkeletonFeedCard() {
         maxWidth: "340px",
         borderRadius: "16px",
         overflow: "hidden",
-        border: "1px solid #F2F2F7",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "#F2F2F7",
         flexShrink: 0,
       }}
     >
       <div className="skeleton-shimmer" style={{ width: "100%", height: "200px", borderRadius: 0 }} />
-      <div style={{ padding: "16px", backgroundColor: "#FFFFFF", display: "flex", flexDirection: "column", gap: "10px" }}>
+      <div style={{ paddingTop: "16px", paddingBottom: "16px", paddingLeft: "16px", paddingRight: "16px", backgroundColor: "#FFFFFF", display: "flex", flexDirection: "column", gap: "10px" }}>
         <div className="skeleton-shimmer" style={{ width: "60%", height: "14px", borderRadius: "6px" }} />
         <div className="skeleton-shimmer" style={{ width: "85%", height: "10px", borderRadius: "6px" }} />
         <div style={{ display: "flex", gap: "8px" }}>

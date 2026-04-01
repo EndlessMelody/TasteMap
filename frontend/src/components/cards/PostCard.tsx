@@ -57,7 +57,12 @@ export function PostCard({
           maxWidth: "340px",
           backgroundColor: "#FFFFFF",
           borderRadius: "16px",
-          border: "1px solid #E5E5EA",
+          borderTopWidth: "1px",
+          borderBottomWidth: "1px",
+          borderLeftWidth: "1px",
+          borderRightWidth: "1px",
+          borderStyle: "solid",
+          borderColor: "#E5E5EA",
           overflow: "hidden",
           cursor: "pointer",
           display: "flex",
@@ -92,11 +97,16 @@ export function PostCard({
               zIndex: 3,
               backgroundColor: "rgba(255,255,255,0.85)",
               backdropFilter: "blur(10px)",
-              padding: "5px 10px",
+              paddingTop: "5px",
+              paddingBottom: "5px",
+              paddingLeft: "10px",
+              paddingRight: "10px",
               borderRadius: "10px",
               gap: "8px",
               alignItems: "center",
-              border: "1px solid rgba(255,255,255,0.5)",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "rgba(255,255,255,0.5)",
               boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
             }}
           >
@@ -124,11 +134,16 @@ export function PostCard({
               zIndex: 3,
               backgroundColor: "rgba(255,255,255,0.85)",
               backdropFilter: "blur(8px)",
-              padding: "4px 8px",
+              paddingTop: "4px",
+              paddingBottom: "4px",
+              paddingLeft: "8px",
+              paddingRight: "8px",
               borderRadius: "8px",
               gap: "3px",
               alignItems: "center",
-              border: "1px solid rgba(255,255,255,0.5)",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "rgba(255,255,255,0.5)",
             }}
           >
             <Star size={11} color="#FBBF24" fill="#FBBF24" />
@@ -141,7 +156,7 @@ export function PostCard({
         </Column>
 
         {/* Bottom Half — Content */}
-        <Column style={{ padding: "16px", gap: "12px" }}>
+        <Column style={{ paddingTop: "16px", paddingBottom: "16px", paddingLeft: "16px", paddingRight: "16px", gap: "12px" }}>
           {/* Location */}
           <Row style={{ alignItems: "center", gap: "6px" }}>
             <MapPin size={14} color="#AEAEB2" />
@@ -196,9 +211,17 @@ export function PostCard({
               <span
                 key={tag}
                 style={{
-                  padding: "3px 8px",
+                  paddingTop: "3px",
+                  paddingBottom: "3px",
+                  paddingLeft: "8px",
+                  paddingRight: "8px",
                   backgroundColor: "#F2F2F7",
-                  border: "1px solid #E5E5EA",
+                  borderTopWidth: "1px",
+                  borderBottomWidth: "1px",
+                  borderLeftWidth: "1px",
+                  borderRightWidth: "1px",
+                  borderStyle: "solid",
+                  borderColor: "#E5E5EA",
                   borderRadius: "6px",
                   fontSize: "0.65rem",
                   fontWeight: 600,

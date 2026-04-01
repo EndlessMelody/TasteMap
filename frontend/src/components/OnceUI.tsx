@@ -21,7 +21,10 @@ const BG_MAP: Record<string, string> = {
   surface: "var(--surface-base)",
   overlay: "var(--surface-overlay)",
 };
-const BORDER_VAL = "1px solid var(--border-weak)";
+
+const BORDER_WIDTH = "1px";
+const BORDER_STYLE = "solid";
+const BORDER_COLOR = "var(--border-weak)";
 
 function resolvePadding(v?: string) {
   if (!v) return undefined;
@@ -37,6 +40,8 @@ export const Column = React.forwardRef<HTMLDivElement, any>(
       fill,
       align,
       justify,
+      horizontal,
+      vertical,
       padding,
       paddingX,
       paddingY,
@@ -54,6 +59,9 @@ export const Column = React.forwardRef<HTMLDivElement, any>(
       borderBottom,
       borderTop,
       flex,
+      flexGrow,
+      flexShrink,
+      flexBasis,
       className,
       style,
       children,
@@ -70,16 +78,32 @@ export const Column = React.forwardRef<HTMLDivElement, any>(
       paddingBottom: resolvePadding(paddingBottom) ?? resolvePadding(paddingY),
       backgroundColor: background ? BG_MAP[background] : undefined,
       borderRadius: radius ? RADIUS_MAP[radius] : undefined,
-      border: border === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      borderRight:
-        borderRight === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      borderLeft: borderLeft === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      borderBottom:
-        borderBottom === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      borderTop: borderTop === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      flex,
+      
+      // Hyper-Longhand Borders
+      borderTopWidth: (border === "neutral-alpha-weak" || borderTop === "neutral-alpha-weak") ? BORDER_WIDTH : undefined,
+      borderBottomWidth: (border === "neutral-alpha-weak" || borderBottom === "neutral-alpha-weak") ? BORDER_WIDTH : undefined,
+      borderLeftWidth: (border === "neutral-alpha-weak" || borderLeft === "neutral-alpha-weak") ? BORDER_WIDTH : undefined,
+      borderRightWidth: (border === "neutral-alpha-weak" || borderRight === "neutral-alpha-weak") ? BORDER_WIDTH : undefined,
+      
+      borderTopStyle: (border === "neutral-alpha-weak" || borderTop === "neutral-alpha-weak" || borderBottom === "neutral-alpha-weak" || borderLeft === "neutral-alpha-weak" || borderRight === "neutral-alpha-weak") ? BORDER_STYLE : undefined,
+      borderBottomStyle: (border === "neutral-alpha-weak" || borderBottom === "neutral-alpha-weak") ? BORDER_STYLE : undefined,
+      borderLeftStyle: (border === "neutral-alpha-weak" || borderLeft === "neutral-alpha-weak") ? BORDER_STYLE : undefined,
+      borderRightStyle: (border === "neutral-alpha-weak" || borderRight === "neutral-alpha-weak") ? BORDER_STYLE : undefined,
+      
+      borderTopColor: (border === "neutral-alpha-weak" || borderTop === "neutral-alpha-weak") ? BORDER_COLOR : undefined,
+      borderBottomColor: (border === "neutral-alpha-weak" || borderBottom === "neutral-alpha-weak") ? BORDER_COLOR : undefined,
+      borderLeftColor: (border === "neutral-alpha-weak" || borderLeft === "neutral-alpha-weak") ? BORDER_COLOR : undefined,
+      borderRightColor: (border === "neutral-alpha-weak" || borderRight === "neutral-alpha-weak") ? BORDER_COLOR : undefined,
+      
+      flex: flex,
+      flexGrow: flexGrow,
+      flexShrink: flexShrink,
+      flexBasis: flexBasis,
       ...style,
     };
+
+    const justifyVal = vertical ?? justify;
+    const alignVal = horizontal ?? align;
 
     return (
       <div
@@ -88,11 +112,11 @@ export const Column = React.forwardRef<HTMLDivElement, any>(
           "flex flex-col",
           (fillWidth || fill) && "w-full",
           (fillHeight || fill) && "h-full",
-          align === "center" && "items-center",
-          align === "end" && "items-end",
-          justify === "center" && "justify-center",
-          justify === "end" && "justify-end",
-          justify === "between" && "justify-between",
+          alignVal === "center" && "items-center",
+          alignVal === "end" && "items-end",
+          justifyVal === "center" && "justify-center",
+          justifyVal === "end" && "justify-end",
+          justifyVal === "between" && "justify-between",
           overflow === "hidden" && "overflow-hidden",
           position === "relative" && "relative",
           position === "sticky" && "sticky",
@@ -137,6 +161,9 @@ export const Row = React.forwardRef<HTMLDivElement, any>(
       borderBottom,
       borderTop,
       flex,
+      flexGrow,
+      flexShrink,
+      flexBasis,
       className,
       style,
       children,
@@ -156,14 +183,27 @@ export const Row = React.forwardRef<HTMLDivElement, any>(
       paddingBottom: resolvePadding(paddingBottom) ?? resolvePadding(paddingY),
       backgroundColor: background ? BG_MAP[background] : undefined,
       borderRadius: radius ? RADIUS_MAP[radius] : undefined,
-      border: border === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      borderRight:
-        borderRight === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      borderLeft: borderLeft === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      borderBottom:
-        borderBottom === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      borderTop: borderTop === "neutral-alpha-weak" ? BORDER_VAL : undefined,
-      flex,
+      
+      // Hyper-Longhand Borders
+      borderTopWidth: (border === "neutral-alpha-weak" || borderTop === "neutral-alpha-weak") ? BORDER_WIDTH : undefined,
+      borderBottomWidth: (border === "neutral-alpha-weak" || borderBottom === "neutral-alpha-weak") ? BORDER_WIDTH : undefined,
+      borderLeftWidth: (border === "neutral-alpha-weak" || borderLeft === "neutral-alpha-weak") ? BORDER_WIDTH : undefined,
+      borderRightWidth: (border === "neutral-alpha-weak" || borderRight === "neutral-alpha-weak") ? BORDER_WIDTH : undefined,
+      
+      borderTopStyle: (border === "neutral-alpha-weak" || borderTop === "neutral-alpha-weak" || borderBottom === "neutral-alpha-weak" || borderLeft === "neutral-alpha-weak" || borderRight === "neutral-alpha-weak") ? BORDER_STYLE : undefined,
+      borderBottomStyle: (border === "neutral-alpha-weak" || borderBottom === "neutral-alpha-weak") ? BORDER_STYLE : undefined,
+      borderLeftStyle: (border === "neutral-alpha-weak" || borderLeft === "neutral-alpha-weak") ? BORDER_STYLE : undefined,
+      borderRightStyle: (border === "neutral-alpha-weak" || borderRight === "neutral-alpha-weak") ? BORDER_STYLE : undefined,
+      
+      borderTopColor: (border === "neutral-alpha-weak" || borderTop === "neutral-alpha-weak") ? BORDER_COLOR : undefined,
+      borderBottomColor: (border === "neutral-alpha-weak" || borderBottom === "neutral-alpha-weak") ? BORDER_COLOR : undefined,
+      borderLeftColor: (border === "neutral-alpha-weak" || borderLeft === "neutral-alpha-weak") ? BORDER_COLOR : undefined,
+      borderRightColor: (border === "neutral-alpha-weak" || borderRight === "neutral-alpha-weak") ? BORDER_COLOR : undefined,
+      
+      flex: flex,
+      flexGrow: flexGrow,
+      flexShrink: flexShrink,
+      flexBasis: flexBasis,
       ...style,
     };
 
@@ -235,6 +275,7 @@ const HEADING_SIZE: Record<string, string> = {
 
 export const Heading = ({
   variant,
+  align,
   className,
   style,
   children,
@@ -245,6 +286,7 @@ export const Heading = ({
     style={{
       fontSize: HEADING_SIZE[variant] ?? "1.25rem",
       lineHeight: 1.2,
+      textAlign: align,
       ...style,
     }}
     {...props}
@@ -263,6 +305,7 @@ const TEXT_SIZE: Record<string, string> = {
 
 export const Text = ({
   variant,
+  align,
   onBackground,
   className,
   style,
@@ -271,7 +314,11 @@ export const Text = ({
 }: any) => (
   <p
     className={cn("font-sans m-0 leading-relaxed", className)}
-    style={{ fontSize: TEXT_SIZE[variant] ?? "0.9375rem", ...style }}
+    style={{ 
+      fontSize: TEXT_SIZE[variant] ?? "0.9375rem", 
+      textAlign: align, 
+      ...style 
+    }}
     {...props}
   >
     {children}
