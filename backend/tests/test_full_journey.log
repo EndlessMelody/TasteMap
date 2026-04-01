@@ -19,12 +19,12 @@
 
   [➡ POST]  /users/init
   Body: {
-    "device_id": "guest-device-1775035052",
+    "device_id": "guest-device-1775041897",
     "domain": "place"
 }
   [⬅ 200]  Init Session (Guest)
   {
-    "user_id": "guest-device-1775035052",
+    "user_id": "guest-device-1775041897",
     "current_vector": [
         0.5,
         0.5,
@@ -71,25 +71,29 @@
             "reviews_preview": [
                 "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜"
             ]
-        }
-    ]
-}
+        },
+        {
+            "id": 2,
+            "name": "Quán Cơm Nhà Làm 1775035052",
+            "image_url": "",
+            "tags": [],
+            "pric
   ------------------------------------------------------------------
 
   [➡ POST]  /interactions/swipe-batch
   Body: {
-    "user_id": "guest-device-1775035052",
+    "user_id": "guest-device-1775041897",
     "category": "place",
     "actions": [
         {
             "place_id": 1,
             "direction": "RIGHT",
-            "client_timestamp": 1775035056.3424635
+            "client_timestamp": 1775041900.6702757
         },
         {
             "place_id": 2,
             "direction": "LEFT",
-            "client_timestamp": 1775035057.8424635
+            "client_timestamp": 1775041902.1702757
         },
         {
             "place_id": 3,
@@ -97,24 +101,24 @@
   [⬅ 200]  Swipe Batch (Guest)
   {
     "status": "success",
-    "processed_count": 0,
+    "processed_count": 1,
     "penalty_triggered": false,
     "updated_vector": [
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5
+        0.42,
+        0.48,
+        0.44,
+        0.46,
+        0.45,
+        0.43,
+        0.47,
+        0.44,
+        0.45,
+        0.46,
+        0.43,
+        0.47,
+        0.42,
+        0.45,
+        0.44
     ]
 }
   ------------------------------------------------------------------
@@ -122,21 +126,21 @@
   [➡ POST]  /recommendations/
   Body: {
     "user_vector": [
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5
+        0.42,
+        0.48,
+        0.44,
+        0.46,
+        0.45,
+        0.43,
+        0.47,
+        0.44,
+        0.45,
+        0.46,
+        0.43,
+        0.47,
+        0.42,
+        0.45,
+        0.44
     ],
     "top_n": 3,
     "category": "place"
@@ -154,16 +158,16 @@
 
   [➡ POST]  /users/
   Body: {
-    "username": "alice_1775035052",
-    "email": "alice_1775035052@example.com",
+    "username": "alice_1775041897",
+    "email": "alice_1775041897@example.com",
     "password": "Password@123",
-    "device_id": "guest-device-1775035052"
+    "device_id": "guest-device-1775041897"
 }
   [⬅ 200]  Register User A
   {
-    "id": 3,
-    "username": "alice_1775035052",
-    "email": "alice_1775035052@example.com",
+    "id": 5,
+    "username": "alice_1775041897",
+    "email": "alice_1775041897@example.com",
     "display_name": null,
     "food_vector": [
         0.5,
@@ -183,38 +187,28 @@
         0.5
     ],
     "place_vector": [
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5
-    ],
-    "xp": 0,
-    "level": 1
-}
+        0.41999998688697815,
+        0.47999998927116394,
+        0.4399999976158142,
+        0.46000000834465027,
+        0.44999998807907104,
+        0.4300000071525574,
+        0.4699999988079071,
+        0.4399999976158142,
+      
   ------------------------------------------------------------------
 
   [➡ POST]  /users/
   Body: {
-    "username": "bob_1775035052",
-    "email": "bob_1775035052@example.com",
+    "username": "bob_1775041897",
+    "email": "bob_1775041897@example.com",
     "password": "Password@123"
 }
   [⬅ 200]  Register User B
   {
-    "id": 4,
-    "username": "bob_1775035052",
-    "email": "bob_1775035052@example.com",
+    "id": 6,
+    "username": "bob_1775041897",
+    "email": "bob_1775041897@example.com",
     "display_name": null,
     "food_vector": [
         0.5,
@@ -257,15 +251,15 @@
 
   [➡ POST]  /auth/login
   Body: {
-    "email": "alice_1775035052@example.com",
+    "email": "alice_1775041897@example.com",
     "password": "Password@123"
 }
   [⬅ 200]  Login (User A)
   {
-    "access_token": "dXNlcjoz",
+    "access_token": "dXNlcjo1",
     "token_type": "bearer",
-    "user_id": 3,
-    "username": "alice_1775035052",
+    "user_id": 5,
+    "username": "alice_1775041897",
     "display_name": null
 }
   ------------------------------------------------------------------
@@ -280,9 +274,9 @@
   [➡ GET]  /users/me
   [⬅ 200]  GET /users/me
   {
-    "id": 3,
-    "username": "alice_1775035052",
-    "email": "alice_1775035052@example.com",
+    "id": 5,
+    "username": "alice_1775041897",
+    "email": "alice_1775041897@example.com",
     "display_name": null,
     "avatar_url": null,
     "bio": null,
@@ -310,20 +304,16 @@
         0.5
     ],
     "place_vector": [
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-        0.5,
-   
+        0.41999998688697815,
+        0.47999998927116394,
+        0.4399999976158
   ------------------------------------------------------------------
 
-  [➡ GET]  /users/3
+  [➡ GET]  /users/5
   [⬅ 200]  GET /users/{id}
   {
-    "id": 3,
-    "username": "alice_1775035052",
+    "id": 5,
+    "username": "alice_1775041897",
     "display_name": null,
     "avatar_url": null,
     "bio": null,
@@ -332,7 +322,7 @@
     "title": null,
     "xp": 0,
     "level": 1,
-    "created_at": "2026-04-01T09:17:35.812454Z",
+    "created_at": "2026-04-01T11:11:40.033933Z",
     "stats": {
         "reviews": 0,
         "visited": 0,
@@ -343,7 +333,7 @@
 }
   ------------------------------------------------------------------
 
-  [➡ GET]  /users/3/top-spots
+  [➡ GET]  /users/5/top-spots
   [⬅ 200]  GET /users/{id}/top-spots
   []
   ------------------------------------------------------------------
@@ -355,9 +345,9 @@
 }
   [⬅ 200]  PATCH /users/me
   {
-    "id": 3,
-    "username": "alice_1775035052",
-    "email": "alice_1775035052@example.com",
+    "id": 5,
+    "username": "alice_1775041897",
+    "email": "alice_1775041897@example.com",
     "display_name": null,
     "avatar_url": null,
     "bio": "Mình là Alice, mê ẩm thực Sài Gòn!",
@@ -385,10 +375,8 @@
         0.5
     ],
     "place_vector": [
-        0.5,
-        0.5,
-        0.5,
-        0.
+        0.41999998688697815,
+        0.4799999892
   ------------------------------------------------------------------
 
 ======================================================================
@@ -398,7 +386,7 @@
 
   [➡ POST]  /locations/
   Body: {
-    "name": "Quán Cơm Nhà Làm 1775035052",
+    "name": "Quán Cơm Nhà Làm 1775041897",
     "category": "food",
     "city": "Ho Chi Minh",
     "address": "123 Nguyễn Trãi, Q.1",
@@ -422,8 +410,8 @@
         0
   [⬅ 201]  Create Location (Admin)
   {
-    "id": 2,
-    "name": "Quán Cơm Nhà Làm 1775035052",
+    "id": 3,
+    "name": "Quán Cơm Nhà Làm 1775041897",
     "lat": 10.7769,
     "lng": 106.7009,
     "address": "123 Nguyễn Trãi, Q.1",
@@ -434,7 +422,7 @@
     "open_hours": null,
     "rating": 0.0,
     "characteristics": null,
-    "created_at": "2026-04-01T09:17:57.201791Z"
+    "created_at": "2026-04-01T11:11:58.497952Z"
 }
   ------------------------------------------------------------------
 
@@ -475,11 +463,11 @@
 }
   ------------------------------------------------------------------
 
-  [➡ GET]  /locations/2
+  [➡ GET]  /locations/3
   [⬅ 200]  GET Location Detail
   {
-    "id": 2,
-    "name": "Quán Cơm Nhà Làm 1775035052",
+    "id": 3,
+    "name": "Quán Cơm Nhà Làm 1775041897",
     "lat": 10.7769,
     "lng": 106.7009,
     "address": "123 Nguyễn Trãi, Q.1",
@@ -490,7 +478,7 @@
     "open_hours": null,
     "rating": 0.0,
     "characteristics": null,
-    "created_at": "2026-04-01T09:17:57.201791Z",
+    "created_at": "2026-04-01T11:11:58.497952Z",
     "recent_posts": [],
     "active_deals": []
 }
@@ -503,27 +491,27 @@
 
   [➡ POST]  /interactions/swipe-batch
   Body: {
-    "user_id": 3,
+    "user_id": 5,
     "category": "place",
     "actions": [
         {
             "place_id": 1,
             "direction": "RIGHT",
-            "client_timestamp": 1775035083.7107313
+            "client_timestamp": 1775041924.60829
         },
         {
             "place_id": 2,
             "direction": "RIGHT",
-            "client_timestamp": 1775035085.7107313
+            "client_timestamp": 1775041926.60829
         },
         {
             "place_id": 3,
             "direction": "RIGHT",
- 
+     
   [⬅ 200]  Swipe Batch (User A)
   {
     "status": "success",
-    "processed_count": 1,
+    "processed_count": 2,
     "penalty_triggered": false,
     "updated_vector": [
         0.58,
@@ -546,7 +534,7 @@
   ------------------------------------------------------------------
 
   [➡ GET]  /interactions/history
-  Params: {'user_id': 3, 'limit': 10}
+  Params: {'user_id': 5, 'limit': 10}
   [⬅ 200]  Interaction History
   {
     "items": [],
@@ -555,7 +543,7 @@
   ------------------------------------------------------------------
 
   [➡ GET]  /interactions/history
-  Params: {'user_id': 3, 'action': 'RIGHT', 'limit': 5}
+  Params: {'user_id': 5, 'action': 'RIGHT', 'limit': 5}
   [⬅ 200]  Interaction History (RIGHT only)
   {
     "items": [],
@@ -598,7 +586,7 @@
 
   [➡ POST]  /recommendations/contextual
   Body: {
-    "user_id": 3,
+    "user_id": 5,
     "lat": 10.7769,
     "lng": 106.7009,
     "category": "food",
@@ -612,7 +600,7 @@
 
   [➡ POST]  /recommendations/rescue-me
   Body: {
-    "user_id": 3,
+    "user_id": 5,
     "lat": 10.7769,
     "lng": 106.7009,
     "category": "food"
@@ -628,11 +616,11 @@
 
   [➡ POST]  /bookmarks/
   Body: {
-    "location_id": 2
+    "location_id": 3
 }
   [⬅ 201]  Add Bookmark
   {
-    "id": 2,
+    "id": 3,
     "xp_earned": 10,
     "total_xp": 10
 }
@@ -643,24 +631,24 @@
   {
     "items": [
         {
-            "id": 2,
+            "id": 3,
             "location": {
-                "id": 2,
-                "name": "Quán Cơm Nhà Làm 1775035052",
+                "id": 3,
+                "name": "Quán Cơm Nhà Làm 1775041897",
                 "image_url": null,
                 "rating": 0.0,
                 "category": "food",
                 "price_range": "25k-50k"
             },
             "xp_earned": 10,
-            "created_at": "2026-04-01T09:18:13.557237+00:00"
+            "created_at": "2026-04-01T11:12:13.066334+00:00"
         }
     ],
     "total": 1
 }
   ------------------------------------------------------------------
 
-  [➡ DELETE]  /bookmarks/2
+  [➡ DELETE]  /bookmarks/3
   [⬅ 200]  Delete Bookmark
   {
     "status": "deleted"
@@ -674,22 +662,22 @@
 
   [➡ POST]  /posts/
   Body: {
-    "location_id": 2,
+    "location_id": 3,
     "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
     "rating": 4.5,
     "media_urls": []
 }
   [⬅ 201]  Create Post
   {
-    "id": 2,
+    "id": 3,
     "user": {
-        "id": 3,
+        "id": 5,
         "display_name": null,
         "avatar_url": null
     },
     "location": {
-        "id": 2,
-        "name": "Quán Cơm Nhà Làm 1775035052"
+        "id": 3,
+        "name": "Quán Cơm Nhà Làm 1775041897"
     },
     "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
     "rating": 4.5,
@@ -698,7 +686,7 @@
     "likes_count": 0,
     "comments_count": 0,
     "is_liked": false,
-    "created_at": "2026-04-01T09:18:18.665900+00:00"
+    "created_at": "2026-04-01T11:12:17.638881+00:00"
 }
   ------------------------------------------------------------------
 
@@ -708,15 +696,15 @@
   {
     "items": [
         {
-            "id": 2,
+            "id": 3,
             "user": {
-                "id": 3,
+                "id": 5,
                 "display_name": null,
                 "avatar_url": null
             },
             "location": {
-                "id": 2,
-                "name": "Quán Cơm Nhà Làm 1775035052"
+                "id": 3,
+                "name": "Quán Cơm Nhà Làm 1775041897"
             },
             "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
             "rating": 4.5,
@@ -729,20 +717,20 @@
   ------------------------------------------------------------------
 
   [➡ GET]  /posts/
-  Params: {'location_id': 2, 'limit': 5}
+  Params: {'location_id': 3, 'limit': 5}
   [⬅ 200]  List Posts by Location
   {
     "items": [
         {
-            "id": 2,
+            "id": 3,
             "user": {
-                "id": 3,
+                "id": 5,
                 "display_name": null,
                 "avatar_url": null
             },
             "location": {
-                "id": 2,
-                "name": "Quán Cơm Nhà Làm 1775035052"
+                "id": 3,
+                "name": "Quán Cơm Nhà Làm 1775041897"
             },
             "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
             "rating": 4.5,
@@ -754,18 +742,18 @@
             "created_at": "2
   ------------------------------------------------------------------
 
-  [➡ GET]  /posts/2
+  [➡ GET]  /posts/3
   [⬅ 200]  GET Post Detail
   {
-    "id": 2,
+    "id": 3,
     "user": {
-        "id": 3,
+        "id": 5,
         "display_name": null,
         "avatar_url": null
     },
     "location": {
-        "id": 2,
-        "name": "Quán Cơm Nhà Làm 1775035052"
+        "id": 3,
+        "name": "Quán Cơm Nhà Làm 1775041897"
     },
     "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
     "rating": 4.5,
@@ -774,11 +762,11 @@
     "likes_count": 0,
     "comments_count": 0,
     "is_liked": false,
-    "created_at": "2026-04-01T09:18:18.665900+00:00"
+    "created_at": "2026-04-01T11:12:17.638881+00:00"
 }
   ------------------------------------------------------------------
 
-  [➡ POST]  /posts/2/like
+  [➡ POST]  /posts/3/like
   [⬅ 200]  Like Post
   {
     "liked": true,
@@ -786,50 +774,50 @@
 }
   ------------------------------------------------------------------
 
-  [➡ POST]  /posts/2/comments
+  [➡ POST]  /posts/3/comments
   Body: {
     "content": "Đồng ý! Tui cũng hay ghé đây 😄"
 }
   [⬅ 200]  Add Comment
   {
-    "id": 3,
+    "id": 5,
     "user": {
-        "id": 3,
+        "id": 5,
         "display_name": null,
         "avatar_url": null
     },
     "content": "Đồng ý! Tui cũng hay ghé đây 😄",
-    "created_at": "2026-04-01T09:18:41.495618+00:00"
+    "created_at": "2026-04-01T11:12:36.735689+00:00"
 }
   ------------------------------------------------------------------
 
-  [➡ GET]  /posts/2/comments
+  [➡ GET]  /posts/3/comments
   [⬅ 200]  List Comments
   {
     "items": [
         {
-            "id": 3,
+            "id": 5,
             "user": {
-                "id": 3,
+                "id": 5,
                 "display_name": null,
                 "avatar_url": null
             },
             "content": "Đồng ý! Tui cũng hay ghé đây 😄",
-            "created_at": "2026-04-01T09:18:41.495618+00:00"
+            "created_at": "2026-04-01T11:12:36.735689+00:00"
         }
     ],
     "total": 1
 }
   ------------------------------------------------------------------
 
-  [➡ DELETE]  /comments/3
+  [➡ DELETE]  /comments/5
   [⬅ 200]  Delete Comment
   {
     "status": "deleted"
 }
   ------------------------------------------------------------------
 
-  [➡ DELETE]  /posts/2
+  [➡ DELETE]  /posts/3
   [⬅ 200]  Delete Post
   {
     "status": "deleted"
@@ -860,25 +848,26 @@
             "likes_count": 1,
             "comments_count": 1,
             "created_at": "2026-04-01T08:40:34.094894+00:00"
-        }
-    ]
-}
+        },
+        {
+            "id": 2,
+          
   ------------------------------------------------------------------
 
   [➡ POST]  /reels/
   Body: {
-    "location_id": 2,
+    "location_id": 3,
     "video_url": "https://cdn.tastemap.vn/reels/sample.mp4",
     "thumbnail_url": "https://cdn.tastemap.vn/reels/thumb.jpg",
     "title": "Bữa trưa tuyệt vời! #TasteMap #HCMC"
 }
   [⬅ 201]  Create Reel
   {
-    "id": 2,
+    "id": 3,
     "title": "Bữa trưa tuyệt vời! #TasteMap #HCMC",
     "user": {
-        "id": 3,
-        "username": "alice_1775035052",
+        "id": 5,
+        "username": "alice_1775041897",
         "avatar_url": null
     },
     "video_url": "https://cdn.tastemap.vn/reels/sample.mp4",
@@ -886,18 +875,18 @@
     "views_count": 0,
     "likes_count": 0,
     "comments_count": 0,
-    "created_at": "2026-04-01T09:18:52.806207+00:00"
+    "created_at": "2026-04-01T11:12:48.179620+00:00"
 }
   ------------------------------------------------------------------
 
-  [➡ GET]  /reels/2
+  [➡ GET]  /reels/3
   [⬅ 200]  GET Reel Detail
   {
-    "id": 2,
+    "id": 3,
     "title": "Bữa trưa tuyệt vời! #TasteMap #HCMC",
     "user": {
-        "id": 3,
-        "username": "alice_1775035052",
+        "id": 5,
+        "username": "alice_1775041897",
         "avatar_url": null
     },
     "video_url": "https://cdn.tastemap.vn/reels/sample.mp4",
@@ -905,47 +894,47 @@
     "views_count": 1,
     "likes_count": 0,
     "comments_count": 0,
-    "created_at": "2026-04-01T09:18:52.806207+00:00"
+    "created_at": "2026-04-01T11:12:48.179620+00:00"
 }
   ------------------------------------------------------------------
 
-  [➡ POST]  /reels/2/like
+  [➡ POST]  /reels/3/like
   [⬅ 200]  Like Reel
   {
     "likes_count": 1
 }
   ------------------------------------------------------------------
 
-  [➡ POST]  /reels/2/comments
+  [➡ POST]  /reels/3/comments
   Body: {
     "content": "Video đẹp quá trời! 🎬"
 }
   [⬅ 200]  Add Reel Comment
   {
-    "id": 4,
+    "id": 6,
     "user": {
-        "id": 3,
+        "id": 5,
         "display_name": null,
         "avatar_url": null
     },
     "content": "Video đẹp quá trời! 🎬",
-    "created_at": "2026-04-01T09:19:00.404735+00:00"
+    "created_at": "2026-04-01T11:12:54.180407+00:00"
 }
   ------------------------------------------------------------------
 
-  [➡ GET]  /reels/2/comments
+  [➡ GET]  /reels/3/comments
   [⬅ 200]  List Reel Comments
   {
     "items": [
         {
-            "id": 4,
+            "id": 6,
             "user": {
-                "id": 3,
+                "id": 5,
                 "display_name": null,
                 "avatar_url": null
             },
             "content": "Video đẹp quá trời! 🎬",
-            "created_at": "2026-04-01T09:19:00.404735+00:00"
+            "created_at": "2026-04-01T11:12:54.180407+00:00"
         }
     ],
     "total": 1
@@ -959,7 +948,7 @@
 
   [➡ POST]  /friends/request
   Body: {
-    "friend_id": 4
+    "friend_id": 6
 }
   [⬅ 200]  Send Friend Request (A→B)
   {
@@ -972,13 +961,13 @@
   {
     "items": [
         {
-            "friendship_id": 2,
+            "friendship_id": 3,
             "from_user": {
-                "id": 3,
+                "id": 5,
                 "display_name": null,
                 "avatar_url": null
             },
-            "created_at": "2026-04-01T09:19:06.517759+00:00"
+            "created_at": "2026-04-01T11:12:59.051434+00:00"
         }
     ]
 }
@@ -998,7 +987,7 @@
 
   [➡ POST]  /groups/
   Body: {
-    "name": "Nhóm ẩm thực 1775035052",
+    "name": "Nhóm ẩm thực 1775041897",
     "description": "Nhóm tìm quán ăn sau giờ học",
     "category": "food",
     "max_members": 5
@@ -1007,19 +996,19 @@
   {
     "route_description": null,
     "status": "active",
-    "id": 2,
+    "id": 3,
     "max_spots": 6,
     "accent_color": null,
-    "name": "Nhóm ẩm thực 1775035052",
+    "name": "Nhóm ẩm thực 1775041897",
     "scheduled_time": null,
     "cover_image_url": null,
-    "created_at": "2026-04-01T09:19:10.045901+00:00",
+    "created_at": "2026-04-01T11:13:02.491449+00:00",
     "members": [
         {
-            "group_id": 2,
-            "user_id": 3,
-            "id": 3,
-            "joined_at": "2026-04-01T09:19:10.045901+00:00",
+            "group_id": 3,
+            "user_id": 5,
+            "id": 5,
+            "joined_at": "2026-04-01T11:13:02.491449+00:00",
             "compromise_score": 0.0,
             "is_ready": false
         }
@@ -1033,18 +1022,18 @@
   {
     "items": [
         {
-            "id": 2,
-            "name": "Nhóm ẩm thực 1775035052",
+            "id": 3,
+            "name": "Nhóm ẩm thực 1775041897",
             "status": "active",
             "route_description": null,
             "scheduled_time": null,
             "max_spots": 6,
             "cover_image_url": null,
             "accent_color": null,
-            "created_at": "2026-04-01T09:19:10.045901+00:00",
+            "created_at": "2026-04-01T11:13:02.491449+00:00",
             "members": [
                 {
-                    "user_id": 3,
+                    "user_id": 5,
                     "display_name": null,
                     "avatar_url": null,
                     "is_ready": false
@@ -1053,21 +1042,21 @@
        
   ------------------------------------------------------------------
 
-  [➡ GET]  /groups/2
+  [➡ GET]  /groups/3
   [⬅ 200]  GET Group Detail
   {
-    "id": 2,
-    "name": "Nhóm ẩm thực 1775035052",
+    "id": 3,
+    "name": "Nhóm ẩm thực 1775041897",
     "status": "active",
     "route_description": null,
     "scheduled_time": null,
     "max_spots": 6,
     "cover_image_url": null,
     "accent_color": null,
-    "created_at": "2026-04-01T09:19:10.045901+00:00",
+    "created_at": "2026-04-01T11:13:02.491449+00:00",
     "members": [
         {
-            "user_id": 3,
+            "user_id": 5,
             "display_name": null,
             "avatar_url": null,
             "is_ready": false
@@ -1077,14 +1066,14 @@
 }
   ------------------------------------------------------------------
 
-  [➡ POST]  /groups/2/join
+  [➡ POST]  /groups/3/join
   [⬅ 200]  Join Group (B)
   {
     "status": "joined"
 }
   ------------------------------------------------------------------
 
-  [➡ PATCH]  /groups/2/ready
+  [➡ PATCH]  /groups/3/ready
   Body: {
     "is_ready": true
 }
@@ -1094,7 +1083,7 @@
 }
   ------------------------------------------------------------------
 
-  [➡ PATCH]  /groups/2/ready
+  [➡ PATCH]  /groups/3/ready
   Body: {
     "is_ready": true
 }
@@ -1104,7 +1093,7 @@
 }
   ------------------------------------------------------------------
 
-  [➡ POST]  /groups/2/recommend
+  [➡ POST]  /groups/3/recommend
   Body: {
     "category": "food",
     "lat": 10.7769,
@@ -1137,14 +1126,14 @@
             "group_score": 0.948,
             "member_scores": [
                 {
-                    "user_id": 3,
-                    "display_name": "alice_1775035052",
+                    "user_id": 5,
+                    "display_name": "alice_1775041897",
                     "score": 0.9479620836692002,
                     "compromise": 0.0
   
   ------------------------------------------------------------------
 
-  [➡ POST]  /groups/2/leave
+  [➡ POST]  /groups/3/leave
   [⬅ 200]  Leave Group (A)
   {
     "status": "left"
@@ -1159,10 +1148,10 @@
   [➡ POST]  /tours/
   [⬅ 201]  Create Tour
   {
-    "id": 2,
+    "id": 3,
     "estimated_cost": null,
-    "created_at": "2026-04-01T09:19:25.036909+00:00",
-    "user_id": 3,
+    "created_at": "2026-04-01T11:13:17.680036+00:00",
+    "user_id": 5,
     "total_distance": null,
     "estimated_duration": null,
     "status": "building",
@@ -1175,10 +1164,10 @@
   {
     "items": [
         {
-            "id": 2,
+            "id": 3,
             "estimated_cost": null,
-            "created_at": "2026-04-01T09:19:25.036909+00:00",
-            "user_id": 3,
+            "created_at": "2026-04-01T11:13:17.680036+00:00",
+            "user_id": 5,
             "total_distance": null,
             "estimated_duration": null,
             "status": "building",
@@ -1188,22 +1177,22 @@
 }
   ------------------------------------------------------------------
 
-  [➡ POST]  /tours/2/stops
+  [➡ POST]  /tours/3/stops
   Body: {
-    "location_id": 2,
+    "location_id": 3,
     "order": 1,
     "duration_min": 45,
     "note": "Ăn trưa ở đây"
 }
   [⬅ 200]  Add Stop 1
   {
-    "id": 3,
+    "id": 5,
     "stop_order": 1,
-    "location_id": 2
+    "location_id": 3
 }
   ------------------------------------------------------------------
 
-  [➡ POST]  /tours/2/stops
+  [➡ POST]  /tours/3/stops
   Body: {
     "location_id": 1,
     "order": 2,
@@ -1212,28 +1201,28 @@
 }
   [⬅ 200]  Add Stop 2
   {
-    "id": 4,
+    "id": 6,
     "stop_order": 2,
     "location_id": 1
 }
   ------------------------------------------------------------------
 
-  [➡ GET]  /tours/2
+  [➡ GET]  /tours/3
   [⬅ 200]  GET Tour Detail
   {
-    "id": 2,
+    "id": 3,
     "status": "building",
     "total_distance": null,
     "estimated_cost": null,
     "estimated_duration": null,
-    "created_at": "2026-04-01T09:19:25.036909+00:00",
+    "created_at": "2026-04-01T11:13:17.680036+00:00",
     "stops": [
         {
-            "id": 3,
+            "id": 5,
             "stop_order": 1,
             "location": {
-                "id": 2,
-                "name": "Quán Cơm Nhà Làm 1775035052",
+                "id": 3,
+                "name": "Quán Cơm Nhà Làm 1775041897",
                 "lat": 10.7769,
                 "lng": 106.7009,
                 "image_url": null,
@@ -1241,12 +1230,12 @@
             }
         },
         {
-            "id": 4,
+            "id": 6,
             "stop_order": 2,
           
   ------------------------------------------------------------------
 
-  [➡ POST]  /tours/2/optimize
+  [➡ POST]  /tours/3/optimize
   Body: {
     "start_lat": 10.7769,
     "start_lng": 106.7009,
@@ -1257,7 +1246,7 @@
     "optimized_stops": [
         {
             "stop_order": 1,
-            "location_id": 2,
+            "location_id": 3,
             "estimated_travel_min": 0
         },
         {
@@ -1272,18 +1261,18 @@
 }
   ------------------------------------------------------------------
 
-  [➡ PATCH]  /tours/2/status
+  [➡ PATCH]  /tours/3/status
   Body: {
     "status": "active"
 }
   [⬅ 200]  Update Tour Status (active)
   {
-    "id": 2,
+    "id": 3,
     "status": "active"
 }
   ------------------------------------------------------------------
 
-  [➡ DELETE]  /tours/2/stops/3
+  [➡ DELETE]  /tours/3/stops/5
   [⬅ 200]  Delete Stop
   {
     "status": "deleted"
@@ -1297,7 +1286,7 @@
 
   [➡ POST]  /deals/
   Body: {
-    "location_id": 2,
+    "location_id": 3,
     "title": "Giảm 20% mọi món",
     "description": "Áp dụng từ 11h-14h các ngày trong tuần",
     "discount_type": "percent",
@@ -1308,7 +1297,7 @@
 }
   [⬅ 201]  Create Deal
   {
-    "id": 2,
+    "id": 3,
     "title": "Giảm 20% mọi món",
     "description": "Áp dụng từ 11h-14h các ngày trong tuần",
     "discount_percent": null,
@@ -1316,11 +1305,11 @@
     "xp_reward": 0,
     "is_sponsored": false,
     "location": {
-        "id": 2,
-        "name": "Quán Cơm Nhà Làm 1775035052"
+        "id": 3,
+        "name": "Quán Cơm Nhà Làm 1775041897"
     },
     "expires_at": null,
-    "created_at": "2026-04-01T09:19:33.199909+00:00"
+    "created_at": "2026-04-01T11:13:24.902615+00:00"
 }
   ------------------------------------------------------------------
 
@@ -1333,17 +1322,17 @@
   ------------------------------------------------------------------
 
   [➡ GET]  /deals/
-  Params: {'location_id': 2}
+  Params: {'location_id': 3}
   [⬅ 200]  List Deals by Location
   {
     "items": []
 }
   ------------------------------------------------------------------
 
-  [➡ GET]  /deals/2
+  [➡ GET]  /deals/3
   [⬅ 200]  GET Deal Detail
   {
-    "id": 2,
+    "id": 3,
     "title": "Giảm 20% mọi món",
     "description": "Áp dụng từ 11h-14h các ngày trong tuần",
     "discount_percent": null,
@@ -1351,11 +1340,11 @@
     "xp_reward": 0,
     "is_sponsored": false,
     "location": {
-        "id": 2,
-        "name": "Quán Cơm Nhà Làm 1775035052"
+        "id": 3,
+        "name": "Quán Cơm Nhà Làm 1775041897"
     },
     "expires_at": null,
-    "created_at": "2026-04-01T09:19:33.199909+00:00"
+    "created_at": "2026-04-01T11:13:24.902615+00:00"
 }
   ------------------------------------------------------------------
 
@@ -1378,7 +1367,7 @@
 }
   ------------------------------------------------------------------
 
-  [➡ GET]  /badges/4
+  [➡ GET]  /badges/6
   [⬅ 200]  User B Badges
   {
     "items": []

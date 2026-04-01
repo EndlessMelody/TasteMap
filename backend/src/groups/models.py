@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, func
 from sqlalchemy.orm import relationship
+from pgvector.sqlalchemy import Vector
 from src.db.database import Base
 
 
@@ -34,9 +35,13 @@ class GroupMember(Base):
     """
     Bảng GroupMember — liên kết N:N giữa User và Group.
 
+    is_host: Đánh dấu người tạo phòng — có quyền bấm "Chốt danh sách" (POST /finish).
+    session_vector: Clone từ User.food_vector khi join. Mọi thao tác quẹt thẻ trong
+        phòng CHỈ thay đổi session_vector này, KHÔNG ảnh hưởng vector gốc của user.
+        Giúp user thoải mái "chiều" theo bạn bè mà không sợ AI sau này gợi ý sai.
     compromise_score: Lưu mức độ thuật toán Minimax đã "hy sinh" sở thích
-    của user này trong quyết định trước. Nếu Member A bị compromise nhiều
-    cho bữa trưa, weight của A sẽ được boost cho bữa tối.
+        của user này trong quyết định trước. Nếu Member A bị compromise nhiều
+        cho bữa trưa, weight của A sẽ được boost cho bữa tối.
 
     Công thức: min(max_i∈Group |Score_i - Score_ideal|)
     """
@@ -45,6 +50,13 @@ class GroupMember(Base):
     id = Column(Integer, primary_key=True, index=True)
     group_id = Column(Integer, ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+
+    # Host marker: Người tạo phòng, có quyền gọi POST /finish
+    is_host = Column(Boolean, default=False)
+
+    # Session Vector: Clone từ User profile khi join, mutate riêng trong session
+    # ⚠️ Thuật toán Minimax Referee PHẢI đọc cột này, KHÔNG ĐỌC user.food_vector
+    session_vector = Column(Vector(15), nullable=True)
 
     # Minimax memory: Boost weight cho user bị "thiệt" ở quyết định trước
     compromise_score = Column(Float, default=0.0)

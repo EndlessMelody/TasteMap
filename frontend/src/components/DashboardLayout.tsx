@@ -154,7 +154,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  const isProfilePage = pathname === "/profile";
+  const isProfilePage = pathname === "/profile" || pathname.startsWith("/admin");
 
   // Auto-collapse sidebars when entering the profile page
   React.useEffect(() => {

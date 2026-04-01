@@ -44,10 +44,12 @@
 - `id` (INTEGER, PK, AUTO-INCREMENT)
 - `user_id` (INTEGER, FK, NOT NULL)
 - `location_id` (INTEGER, FK, NOT NULL)
-- `action` (VARCHAR, NOT NULL) - LIKED / DISLIKED / SKIPPED / SAVED
+- `group_id` (INTEGER, FK) - Nullable. Đánh dấu quẹt khi ở trong phòng nhóm. (Dùng để query ra Group's Vault)
+- `action` (VARCHAR, NOT NULL) - LIKED / DISLIKED / SKIPPED / SAVED / STARRED
 - `context_at_time` (JSONB)
 - `timestamp` (TIMESTAMP, NOT NULL, DEFAULT NOW)
 - **Index:** `(user_id, timestamp)`
+- **Index:** `(group_id, action)` - Tối ưu tốc độ khi query danh sách Vault
 
 ## Groups
 
@@ -66,6 +68,8 @@
 - `id` (INTEGER, PK, AUTO-INCREMENT)
 - `group_id` (INTEGER, FK, NOT NULL)
 - `user_id` (INTEGER, FK, NOT NULL)
+- `is_host` (BOOLEAN, DEFAULT FALSE) - Đánh dấu người tạo phòng (Có quyền bấm nút Chốt danh sách)
+- `session_vector` (VECTOR(15)) - Clone từ Users. Cập nhật real-time khi lướt.
 - `compromise_score` (FLOAT, DEFAULT 0.0) - Điểm Minimax
 - `is_ready` (BOOLEAN, DEFAULT FALSE)
 - `joined_at` (TIMESTAMP, DEFAULT NOW)

@@ -8,6 +8,7 @@ class InteractionAction(str):
     DISLIKED = "DISLIKED"
     SKIPPED = "SKIPPED"
     SAVED = "SAVED"
+    STARRED = "STARRED"
 
 
 class SwipeAction(BaseModel):
@@ -20,6 +21,8 @@ class SwipeBatchRequest(BaseModel):
     user_id: Union[int, str]
     category: Literal["food", "place"] = "place"  # Unified: was "domain"
     actions: List[SwipeAction]
+    # Nullable — nếu swipe trong group lobby thì gửi group_id
+    group_id: Optional[int] = None
 
 
 class SwipeBatchResponse(BaseModel):
@@ -34,6 +37,7 @@ class InteractionHistoryItem(BaseModel):
     location_id: int
     location_name: Optional[str] = None
     action: str
+    group_id: Optional[int] = None
     timestamp: datetime
 
     class Config:
@@ -43,3 +47,4 @@ class InteractionHistoryItem(BaseModel):
 class InteractionHistoryResponse(BaseModel):
     items: List[InteractionHistoryItem]
     total: int
+
