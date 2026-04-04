@@ -21,7 +21,7 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { MOCK_USER } from "@/constants/mock-data";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 // ─── Design tokens (light theme) ───
 const C = {
@@ -448,10 +448,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
 // ─── Profile footer: auth-aware ───
 function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
-  const { isLoggedIn, user, logout } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const router = useRouter();
 
-  if (!isLoggedIn) {
+  if (!user) {
     return (
       <button
         onClick={() => router.push("/login")}
@@ -544,7 +544,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
     >
       <div style={{ position: "relative", flexShrink: 0 }}>
         <Avatar
-          src={user?.avatar ?? MOCK_USER.avatar}
+          src={user?.avatar_url || MOCK_USER.avatar}
           size="s"
           style={{
             border: "2px solid rgba(79,142,247,0.25)",
@@ -578,7 +578,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
                   textOverflow: "ellipsis",
                 }}
               >
-                {user?.name ?? MOCK_USER.name}
+                {user?.display_name || user?.username || MOCK_USER.name}
               </Text>
               <BadgeCheck size={12} color="#4F8EF7" />
             </Row>
@@ -589,7 +589,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              logout();
+              signOut();
               router.push("/");
             }}
             title="Sign out"

@@ -1,45 +1,43 @@
 "use client";
 
 import { useEffect } from "react";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import { Column, Row, Heading, Text } from "@/components/OnceUI";
+import { supabase } from "@/lib/supabase";
 
+/**
+ * /auth/callback — Supabase OAuth redirect handler
+ * Supabase redirects here after Google OAuth completes.
+ * The URL hash (#access_token=...) is exchanged for a session,
+ * then useAuth's onAuthStateChange fires → calls /sync → creates DB user.
+ */
 export default function AuthCallbackPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const handleAuth = async () => {
-      // Supabase's auth.onAuthStateChange or getSession will handle the hash/code in the URL
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
-      if (error) {
-        console.error("Error exchanging code for session:", error.message);
-        router.push("/login?error=" + encodeURIComponent(error.message));
-        return;
-      }
-
+    // Supabase handles the hash fragment automatically via getSession()
+    supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        // useAuth.ts hook in DashboardLayout will pick up this session and call /sync
-        router.push("/");
+        // Session established — redirect to app
+        // useAuth hook will catch onAuthStateChange and call /sync
+        router.replace("/discover");
       } else {
-        // Fallback for no session
-        router.push("/login");
+        // Something went wrong — go back to login
+        router.replace("/login");
       }
-    };
-
-    handleAuth();
+    });
   }, [router]);
 
   return (
-    <Row fill background="page" align="center" justify="center">
-      <Column padding="xl" gap={16} align="center">
-        <div className="w-12 h-12 border-4 border-[var(--brand-solid)] border-t-transparent rounded-full animate-spin" />
-        <Heading variant="heading-strong-m">Đang xác thực bảo mật...</Heading>
-        <Text variant="body-default-s" style={{ opacity: 0.5 }}>
-          Vui lòng đợi trong giây lát khi chúng tôi kết nối tài khoản.
-        </Text>
-      </Column>
-    </Row>
+    <div style={{
+      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
+      backgroundColor: "white", flexDirection: "column", gap: 16
+    }}>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style={{ animation: "spin 0.8s linear infinite" }}>
+        <circle cx="12" cy="12" r="10" stroke="rgba(0,0,0,0.1)" strokeWidth="3" />
+        <path d="M12 2a10 10 0 0 1 10 10" stroke="#007AFF" strokeWidth="3" strokeLinecap="round" />
+      </svg>
+      <p style={{ fontSize: 14, color: "rgba(0,0,0,0.4)", margin: 0 }}>Completing sign in…</p>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
   );
 }

@@ -43,15 +43,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   onNotifClick,
 }) => {
   const router = useRouter();
-  const { isLoggedIn, user, logout } = useAuth();
+  const { user, signOut } = useAuth();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
-
-  const { user } = useAuth();
-
-  // Transforms for Dynamic Island effect
   const headerWidth = useTransform(scrollY, [0, 80], ["100%", "80%"]);
   const headerRadius = useTransform(scrollY, [0, 80], ["0px", "32px"]);
   const headerTop = useTransform(scrollY, [0, 80], ["0px", "12px"]);
@@ -349,7 +345,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
         {/* Profile */}
         <div ref={profileMenuRef} style={{ position: "relative" }}>
-          {!isLoggedIn ? (
+          {!user ? (
             /* ── Guest: Sign In button ── */
             <button
               onClick={() => router.push("/login")}
@@ -396,7 +392,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               }}
               onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
             >
-              <Avatar src={user!.avatar} size="m" />
+              <Avatar src={user?.avatar_url || undefined} size="m" />
               <motion.div
                 style={{
                   opacity: profileTextOpacity,
@@ -414,10 +410,10 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                     fontSize: "0.85rem",
                   }}
                 >
-                  {user!.name}
+                  {user?.display_name || user?.username || 'User'}
                 </Text>
                 <Text style={{ color: "#AEAEB2", fontSize: "0.7rem" }}>
-                  Level {user!.level}
+                  Level {user?.level ?? 1}
                 </Text>
               </motion.div>
             </motion.div>
@@ -500,7 +496,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   label="Đăng xuất"
                   onClick={() => {
                     setIsProfileMenuOpen(false);
-                    logout();
+                    signOut();
                     router.push("/");
                   }}
                   style={{ color: "#ED1B24" }}

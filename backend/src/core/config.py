@@ -18,8 +18,11 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
 
     # --- Supabase Auth ---
-    SUPABASE_JWT_SECRET: str | None = None
+    # SUPABASE_JWT_SECRET: Lấy từ Supabase Dashboard → Project Settings → API → JWT Secret
+    # (Chỉ dùng cho anon/service-role keys — user access tokens dùng ES256 qua JWKS)
+    SUPABASE_JWT_SECRET: str  # Required — app sẽ không khởi động nếu thiếu biến này
     SUPABASE_ANON_KEY: str | None = None
+    SUPABASE_PROJECT_REF: str = "bjuikfhjrpmrpbvhduey"  # Supabase project ref
 
     class Config:
         case_sensitive = True
