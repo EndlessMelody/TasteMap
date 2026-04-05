@@ -48,6 +48,7 @@ class UserCreate(UserBase):
 
 class UserUpdate(BaseModel):
     display_name: Optional[str] = None
+    username: Optional[str] = None
     avatar_url: Optional[str] = None
     bio: Optional[str] = None
     cover_url: Optional[str] = None

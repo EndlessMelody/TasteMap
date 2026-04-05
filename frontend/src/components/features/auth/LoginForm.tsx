@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, ArrowRight, ChevronLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 type View = "login" | "signup";
 type LoadingType = null | "google" | "email";
@@ -26,14 +27,23 @@ export function LoginForm() {
     setLoading("email");
     try {
       if (view === "login") {
-        const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw err;
+        router.push("/discover");
       } else {
-        const { error: err } = await supabase.auth.signUp({ email, password });
+        const { data, error: err } = await supabase.auth.signUp({ email, password });
         if (err) throw err;
+        
+        // If email confirmation is required, Supabase returns a user but no session
+        if (data.user && !data.session) {
+          toast.success("Successfully registered! Please check your email to confirm your account.");
+          setView("login");
+          setPassword(""); // clear password for security
+        } else {
+          // Email confirmation might be disabled
+          router.push("/discover");
+        }
       }
-      // useAuth hook sẽ tự bắt onAuthStateChange → gọi /sync → update user
-      router.push("/discover");
     } catch (err: any) {
       setError(err.message || "Authentication failed.");
     } finally {

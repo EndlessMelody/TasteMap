@@ -43,7 +43,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   onNotifClick,
 }) => {
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -345,7 +345,28 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
         {/* Profile */}
         <div ref={profileMenuRef} style={{ position: "relative" }}>
-          {!user ? (
+          {/* Keyframes for skeleton pulse */}
+          <style>{`
+            @keyframes tm-pulse {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0.45; }
+            }
+          `}</style>
+
+          {loading ? (
+            /* ── Loading: circular skeleton ── */
+            <div
+              style={{
+                marginLeft: "12px",
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                backgroundColor: "#F2F2F7",
+                animation: "tm-pulse 1.4s ease-in-out infinite",
+                flexShrink: 0,
+              }}
+            />
+          ) : !user ? (
             /* ── Guest: Sign In button ── */
             <button
               onClick={() => router.push("/login")}

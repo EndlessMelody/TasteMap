@@ -55,9 +55,11 @@ import { FloatingInsight, FlavorAura } from "@/components/FloatingInsight";
 import { RouteChip as RouteChipComponent } from "./components/RouteChip";
 import { StatusBadge as StatusBadgeComponent } from "./components/StatusBadge";
 import { StopCard } from "./components/StopCard";
-import { TourSkeleton } from "./components/TourSkeleton";
+import { TourSkeleton, EmptyState } from "./components/TourSkeleton";
 import ClientOnly from "@/components/common/ClientOnly";
 import { useAuth } from "@/hooks/useAuth";
+import { apiGet } from "@/lib/api";
+import { toast } from "sonner";
 
 const MapWidget = dynamic(() => import("@/components/MapWidget"), {
   ssr: false,
@@ -86,106 +88,30 @@ const MapWidget = dynamic(() => import("@/components/MapWidget"), {
   ),
 });
 
-// ═══════════ CARD DATA ═══════════ //
-interface CardData {
-  id: number;
-  title: string;
-  subtitle: string;
-  tags: string[];
-  match: number;
-  distance: string;
-  price: string;
-  img: string;
-  color: string;
-  location: [number, number];
-}
-
-const FOOD_CARDS: CardData[] = [
-  {
-    id: 1,
-    title: "Bánh Mì Cô Thúy",
-    subtitle: "Street Food • Dĩ An",
-    tags: ["Street Food", "Budget", "Spicy"],
-    match: 98,
-    distance: "0.8km",
-    price: "25k",
-    img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=900&fit=crop",
-    color: "#FF6B35",
-    location: [10.897, 106.772],
-  },
-  {
-    id: 2,
-    title: "Neon Ramen House",
-    subtitle: "Japanese • District 1",
-    tags: ["Spicy", "Group", "Nightlife"],
-    match: 94,
-    distance: "2.1km",
-    price: "120k",
-    img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600&h=900&fit=crop",
-    color: "#E63946",
-    location: [10.905, 106.773],
-  },
-  {
-    id: 3,
-    title: "Matcha Garden",
-    subtitle: "Cafe • Thủ Đức",
-    tags: ["Quiet", "Sweet", "Aesthetic"],
-    match: 91,
-    distance: "1.5km",
-    price: "65k",
-    img: "https://images.unsplash.com/photo-1582787895088-2ff176b668d2?w=600&h=900&fit=crop",
-    color: "#2A9D8F",
-    location: [10.898, 106.769],
-  },
-  {
-    id: 4,
-    title: "Sky Lounge",
-    subtitle: "Cocktails • Rooftop",
-    tags: ["Luxury", "Group", "Nightlife"],
-    match: 87,
-    distance: "3.2km",
-    price: "200k",
-    img: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=900&fit=crop",
-    color: "#7B2FF7",
-    location: [10.902, 106.778],
-  },
-  {
-    id: 5,
-    title: "Phở Sáng Sóm",
-    subtitle: "Vietnamese • Bình Dương",
-    tags: ["Street Food", "Quiet", "Breakfast"],
-    match: 96,
-    distance: "0.5km",
-    price: "45k",
-    img: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=600&h=900&fit=crop",
-    color: "#F4A261",
-    location: [10.895, 106.771],
-  },
-  {
-    id: 6,
-    title: "BBQ Midnight",
-    subtitle: "Grill • Late Night",
-    tags: ["Group", "Spicy", "Nightlife"],
-    match: 89,
-    distance: "1.8km",
-    price: "150k",
-    img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=900&fit=crop",
-    color: "#E76F51",
-    location: [10.899, 106.775],
-  },
-];
-
 const TOTAL_NODES = 4;
+
+// ═══════════ CARD DATA ═══════════ //
+import { useTourBuilderStore, TourNode } from "@/store/useTourBuilderStore";
+// Note: Initial deck queue is populated in the store (Phase 1)
 
 export default function TourBuilderPage() {
   const pathname = usePathname();
-  const [deck, setDeck] = useState<CardData[]>(FOOD_CARDS);
-  const [filledNodes, setFilledNodes] = useState<(CardData | null)[]>(
-    Array(TOTAL_NODES).fill(null),
-  );
+  
+  const {
+    deckQueue: deck,
+    selectedNodes: filledNodes,
+    lastDiscarded,
+    addSelectedNode,
+    setDeckQueue,
+    popDeckQueue,
+    setLastDiscarded,
+    undoDiscard,
+    status,
+    setStatus
+  } = useTourBuilderStore();
+
   const [isTourReady, setIsTourReady] = useState(false);
   const [discardDir, setDiscardDir] = useState<"left" | "right" | null>(null);
-  const [lastDiscarded, setLastDiscarded] = useState<CardData | null>(null);
   const undoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { user } = useAuth();
@@ -206,6 +132,46 @@ export default function TourBuilderPage() {
     "Almost there... making it extra delicious...",
   ];
 
+  // Fetch Venues Logic
+  useEffect(() => {
+    async function fetchVenues() {
+      // Prevent running if we already have cards or we're not idle
+      if (deck.length > 0 || status !== 'idle') return;
+
+      try {
+        setStatus('loading');
+        // We use GET /api/v1/locations/ as our base for Phase 2 implementation.
+        // It brings back LocationResponse[] which satisfies our TourNode requirements.
+        const res = await apiGet<{ items: any[] }>("/api/v1/locations/?limit=15&offset=0");
+        
+        const mappedNodes: TourNode[] = res.items.map((loc, i) => ({
+          id: String(loc.id),
+          venue_id: loc.id,
+          title: loc.name,
+          subtitle: `${loc.category || "Place"} • ${loc.city || "HCM City"}`,
+          tags: loc.characteristics ? Object.keys(loc.characteristics).slice(0, 3) : ["Trending"],
+          match: Math.floor(80 + Math.random() * 19), 
+          distance: `${(Math.random() * 5 + 0.5).toFixed(1)}km`,
+          price: loc.price_range || "$$",
+          img: loc.image_url || "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=900&fit=crop",
+          color: i % 2 === 0 ? "#FF6B35" : "#2A9D8F", 
+          location: [loc.lat, loc.lng],
+          time_spent: 45,
+          order_index: i
+        }));
+
+        setDeckQueue(mappedNodes);
+        setStatus('idle');
+      } catch (error: any) {
+        setStatus('error');
+        toast.error("Failed to fetch venues: " + (error.message || "Unknown error"));
+      }
+    }
+
+    fetchVenues();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (isGenerating) {
       let i = 0;
@@ -224,12 +190,12 @@ export default function TourBuilderPage() {
 
   // Dynamic Tour DNA calculation
   const getTourDNA = useCallback(() => {
-    const selectedFoods = filledNodes.filter((n): n is CardData => n !== null);
+    const selectedFoods = filledNodes.filter((n) => n !== null) as NonNullable<typeof filledNodes[0]>[];
     if (selectedFoods.length === 0) return [{ label: "Empty", value: 100, color: 'rgba(0,0,0,0.05)' }];
     
     const tagCounts: Record<string, number> = {};
     selectedFoods.forEach(food => {
-      food.tags.forEach(tag => {
+      food.tags?.forEach(tag => {
         tagCounts[tag] = (tagCounts[tag] || 0) + 1;
       });
     });
@@ -262,36 +228,31 @@ export default function TourBuilderPage() {
 
   const handleUndo = useCallback(() => {
     if (!lastDiscarded) return;
-    setDeck((prev) => [lastDiscarded, ...prev]);
-    setLastDiscarded(null);
-  }, [lastDiscarded]);
+    undoDiscard();
+  }, [lastDiscarded, undoDiscard]);
 
   const handleManualAction = useCallback((direction: "select" | "skip") => {
     if (!activeCard) return;
     const card = activeCard;
 
     if (direction === "select" && nextEmptyIndex !== -1) {
-      updateVector(card.tags, "select");
+      updateVector(card.tags || [], "select");
       setDiscardDir("right");
-      setFilledNodes((prev) => {
-        const next = [...prev];
-        next[nextEmptyIndex] = card;
-        return next;
-      });
+      addSelectedNode(card, nextEmptyIndex);
       setTimeout(() => {
-        setDeck((prev) => prev.slice(1));
+        popDeckQueue();
         setDiscardDir(null);
       }, 300);
     } else if (direction === "skip") {
-      updateVector(card.tags, "skip");
+      updateVector(card.tags || [], "skip");
       setDiscardDir("left");
       setTimeout(() => {
-        setDeck((prev) => prev.slice(1));
+        popDeckQueue();
         setDiscardDir(null);
         setLastDiscarded(card);
       }, 300);
     }
-  }, [activeCard, nextEmptyIndex, updateVector]);
+  }, [activeCard, nextEmptyIndex, updateVector, addSelectedNode, popDeckQueue, setLastDiscarded]);
 
   // ─── Drag Logic ─── //
   const handleDragEnd = useCallback(
@@ -336,7 +297,7 @@ export default function TourBuilderPage() {
           <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
             <MapWidget 
               mapId="tour-final-background"
-              points={filledNodes.filter((n): n is CardData => n !== null).map(n => n.location)}
+              points={filledNodes.filter((n) => n !== null).map(n => n!.location as [number, number])}
               center={[10.897, 106.772]} zoom={13}
             />
           </div>
@@ -639,8 +600,12 @@ export default function TourBuilderPage() {
           onDragEnd={handleDragEnd}
         >
           <AnimatePresence>
-            {deck.length > 0 ? (
-              <div style={{ width: "100%", height: "100%", position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            {status === 'loading' ? (
+              <motion.div key="skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0 }}>
+                <TourSkeleton />
+              </motion.div>
+            ) : deck.length > 0 ? (
+              <div key="cards" style={{ width: "100%", height: "100%", position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 {deck[1] && (
                   <motion.div 
                     key={`bg-${deck[1].id}`} 
@@ -661,9 +626,8 @@ export default function TourBuilderPage() {
                 </div>
               </div>
             ) : (
-              <motion.div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "24px" }}>
-                <Activity size={64} color={accent.primary} />
-                <Heading variant="display-strong-s">Exploration Complete</Heading>
+              <motion.div key="empty" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <EmptyState filledCount={filledNodes.filter(Boolean).length} totalCount={TOTAL_NODES} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -723,7 +687,7 @@ export default function TourBuilderPage() {
                  <ClientOnly>
                     <MapWidget 
                       mapId="tour-curation-footer"
-                      points={filledNodes.filter((n): n is CardData => n !== null).map(n => n.location)}
+                      points={filledNodes.filter((n) => n !== null).map(n => n!.location as [number, number])}
                       center={activeCard ? activeCard.location : [10.897, 106.772]} zoom={14} showBanner={false}
                     />
                  </ClientOnly>
@@ -829,7 +793,7 @@ export default function TourBuilderPage() {
   );
 }
 
-function DraggableCard({ card, onDragEnd, x }: { card: CardData; onDragEnd: (e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void; x: any; }) {
+function DraggableCard({ card, onDragEnd, x }: { card: TourNode; onDragEnd: (e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void; x: any; }) {
   const y = useMotionValue(0);
   const rotate = useTransform(x, [-400, 400], [-8, 8]);
   const rotateX = useTransform(y, [-300, 300], [10, -10]);

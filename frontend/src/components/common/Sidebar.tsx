@@ -237,6 +237,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onComingSoon,
 }) => {
   const router = useRouter();
+  const { user } = useAuth();
   const sidebarWidth = isFullScreen ? 0 : isOpen ? 240 : 72;
 
   return (
@@ -279,7 +280,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {isOpen && (
           <Heading
             variant="heading-strong-l"
-            onClick={() => router.push("/")}
+            onClick={() => router.push(user ? "/discover" : "/")}
             style={{
               color: C.logo,
               fontWeight: 900,
@@ -450,6 +451,68 @@ export const Sidebar: React.FC<SidebarProps> = ({
 function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
+
+  // ── Loading: show skeleton, never flash "Sign In" ──
+  if (loading) {
+    return (
+      <>
+        <style>{`
+          @keyframes tm-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.45; }
+          }
+        `}</style>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: isOpen ? "10px 12px" : "10px 0",
+            borderRadius: "10px",
+            border: "1px solid rgba(0,0,0,0.06)",
+            justifyContent: isOpen ? "flex-start" : "center",
+            flexShrink: 0,
+          }}
+        >
+          {/* Avatar circle skeleton */}
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: "50%",
+              backgroundColor: "#F2F2F7",
+              animation: "tm-pulse 1.4s ease-in-out infinite",
+              flexShrink: 0,
+            }}
+          />
+          {isOpen && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: 1 }}>
+              {/* Name line skeleton */}
+              <div
+                style={{
+                  height: "10px",
+                  width: "70%",
+                  borderRadius: "5px",
+                  backgroundColor: "#F2F2F7",
+                  animation: "tm-pulse 1.4s ease-in-out infinite",
+                }}
+              />
+              {/* Level line skeleton */}
+              <div
+                style={{
+                  height: "8px",
+                  width: "40%",
+                  borderRadius: "4px",
+                  backgroundColor: "#F2F2F7",
+                  animation: "tm-pulse 1.4s ease-in-out infinite 0.2s",
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </>
+    );
+  }
 
   if (!user) {
     return (

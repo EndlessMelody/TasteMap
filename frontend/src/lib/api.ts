@@ -3,8 +3,10 @@
  * Centralized HTTP helpers. All API calls should go through here.
  */
 
+import { supabase } from "@/lib/supabase";
+
 const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:8000";
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8000";
 
 // ─── Custom Error ────────────────────────────────────────────────────────────
 
@@ -18,7 +20,23 @@ export class ApiError extends Error {
   }
 }
 
-// ─── Core Helpers ────────────────────────────────────────────────────────────
+// ─── Token Caching ─────────────────────────────────────────────────────────────
+let cachedToken: string | undefined;
+let initialSessionPromise: Promise<any> | null = null;
+
+if (typeof window !== "undefined") {
+  // Sync token in background with a singleton promise
+  initialSessionPromise = supabase.auth.getSession().then(({ data: { session } }) => {
+    cachedToken = session?.access_token;
+    return cachedToken;
+  });
+
+  supabase.auth.onAuthStateChange((_event, session) => {
+    cachedToken = session?.access_token;
+  });
+}
+
+// ─── Core Helpers ─────────────────────────────────────────────────────────────
 
 async function request<T>(
   path: string,
@@ -27,10 +45,13 @@ async function request<T>(
   const url = `${BASE_URL}${path}`;
   const { headers, ...restOptions } = options;
 
-  // Lấy session từ Supabase client (Client-side)
-  const { supabase } = await import("@/lib/supabase");
-  const { data: { session } } = await supabase.auth.getSession();
-  const token = session?.access_token;
+  let token: string | undefined = cachedToken;
+  
+  // Nếu chưa có cache (do request bắn ra siêu sớm), chờ chung 1 Promise duy nhất
+  // thay vì mỗi request tự gọi getSession() gây lock LocalStorage 5s.
+  if (!token && typeof window !== "undefined" && initialSessionPromise) {
+     token = await initialSessionPromise;
+  }
 
   const res = await fetch(url, {
     headers: {

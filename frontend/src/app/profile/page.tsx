@@ -16,6 +16,7 @@ import {
 } from "recharts";
 import ClientOnly from '@/components/common/ClientOnly';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabase';
 import { useUserVector } from '@/context/UserVectorContext';
 
 // ═══════════ PROFILE PAGE ═══════════ //
@@ -24,7 +25,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('Posts');
-  const { user, loading } = useAuth();
+  const { user, loading, refetch } = useAuth();
   const { radarData } = useUserVector();
 
   // Form state
@@ -34,6 +35,17 @@ export default function ProfilePage() {
   const [formEmail, setFormEmail] = useState('guest@email.com');
   const [formPhone, setFormPhone] = useState('+84 901 234 567');
 
+  // File upload state
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [saveLoading, setSaveLoading] = useState(false);
+
+  // Refs for hidden inputs
+  const avatarInputRef = React.useRef<HTMLInputElement>(null);
+  const coverInputRef = React.useRef<HTMLInputElement>(null);
+
   React.useEffect(() => {
     if (user) {
       setFormName(user.display_name || user.username || "");
@@ -41,12 +53,110 @@ export default function ProfilePage() {
       setFormBio(user.bio || "");
       setFormEmail(user.email || "");
       setFormPhone(user.phone || "");
+      
+      // Cleanup Object URLs on unmount/user change if modal was closed dirty
+      return () => {
+         if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+         if (coverPreview) URL.revokeObjectURL(coverPreview);
+      };
     }
   }, [user]);
 
-  const handleSave = () => {
-    setIsEditModalOpen(false);
-    toast.success('Profile updated successfully! ✨');
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      toast.error('Avatar must be JPEG, PNG, or WEBP (No GIFs).');
+      if (avatarInputRef.current) avatarInputRef.current.value = '';
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Avatar size must be less than 2MB.');
+      if (avatarInputRef.current) avatarInputRef.current.value = '';
+      return;
+    }
+
+    setAvatarFile(file);
+    if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+    setAvatarPreview(URL.createObjectURL(file));
+  };
+
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!validTypes.includes(file.type)) {
+      toast.error('Cover must be JPEG, PNG, WEBP, or GIF.');
+      if (coverInputRef.current) coverInputRef.current.value = '';
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Cover size must be less than 5MB.');
+      if (coverInputRef.current) coverInputRef.current.value = '';
+      return;
+    }
+
+    setCoverFile(file);
+    if (coverPreview) URL.revokeObjectURL(coverPreview);
+    setCoverPreview(URL.createObjectURL(file));
+  };
+
+  const handleSave = async () => {
+    setSaveLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("No session found");
+
+      const formData = new FormData();
+      formData.append("display_name", formName);
+      formData.append("username", formUsername);
+      formData.append("bio", formBio);
+      formData.append("phone", formPhone);
+      // NOTE: emails aren't naturally edited in simple patches unless your backend explicitly supports it
+
+      if (avatarFile) formData.append("avatar_file", avatarFile);
+      if (coverFile) formData.append("cover_file", coverFile);
+
+      const API_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8000";
+      
+      const res = await fetch(`${API_URL}/api/v1/users/me`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: formData
+      });
+
+      if (!res.ok) {
+        let errMessage = "Unknown error";
+        try {
+           const errJson = await res.json();
+           errMessage = errJson.detail || errMessage;
+        } catch {}
+        throw new Error(errMessage);
+      }
+
+      await refetch();
+      
+      toast.success('Profile updated successfully! ✨');
+      setIsEditModalOpen(false);
+
+      if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+      if (coverPreview) URL.revokeObjectURL(coverPreview);
+      setAvatarFile(null);
+      setCoverFile(null);
+      setAvatarPreview(null);
+      setCoverPreview(null);
+    } catch (e: any) {
+      toast.error(`Update failed: ${e.message}`);
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
   const handleComingSoon = () => toast('Will be updated in the next version 🚀');
@@ -488,10 +598,10 @@ export default function ProfilePage() {
                 <Column style={{ paddingTop: '32px', paddingRight: '32px', paddingBottom: '0', paddingLeft: '32px', gap: '20px' }}>
                   {/* Cover Photo */}
                   <div style={{ position: 'relative', height: '140px', borderRadius: '18px', overflow: 'hidden' }}>
-                    <img src={user?.cover_url || "https://images.unsplash.com/photo-1543353071-087092ec393a?auto=format&fit=crop&q=80"} alt="Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={coverPreview || user?.cover_url || "https://images.unsplash.com/photo-1543353071-087092ec393a?auto=format&fit=crop&q=80"} alt="Cover" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.1)' }} />
                     <div
-                      onClick={handleComingSoon}
+                      onClick={() => coverInputRef.current?.click()}
                       style={{
                         position: 'absolute', bottom: '12px', right: '12px',
                         width: '40px', height: '40px', borderRadius: '12px',
@@ -510,14 +620,14 @@ export default function ProfilePage() {
                   {/* Avatar */}
                   <Row style={{ marginTop: '-54px', marginLeft: '24px', zIndex: 2 }}>
                     <div style={{ position: 'relative' }}>
-                      <Avatar src={user?.avatar_url || ""} size="xl" style={{
+                      <Avatar src={avatarPreview || user?.avatar_url || ""} size="xl" style={{
                         width: '100px', height: '100px', borderRadius: '50%',
                         borderTopWidth: '4px', borderBottomWidth: '4px', borderLeftWidth: '4px', borderRightWidth: '4px',
                         borderStyle: 'solid', borderColor: '#FFFFFF',
                         boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
                       }} />
                       <div
-                        onClick={handleComingSoon}
+                        onClick={() => avatarInputRef.current?.click()}
                         style={{
                           position: 'absolute', bottom: '2px', right: '2px',
                           width: '32px', height: '32px', borderRadius: '50%',
@@ -699,6 +809,11 @@ export default function ProfilePage() {
                       />
                     </Column>
                   </Column>
+
+                  {/* Hidden File Inputs */}
+                  <input type="file" ref={avatarInputRef} style={{ display: 'none' }} onChange={handleAvatarChange} accept="image/jpeg, image/png, image/webp" />
+                  <input type="file" ref={coverInputRef} style={{ display: 'none' }} onChange={handleCoverChange} accept="image/jpeg, image/png, image/webp, image/gif" />
+
                 </Column>
               </div>
 
@@ -735,19 +850,20 @@ export default function ProfilePage() {
                   size="m"
                   onClick={handleSave}
                   style={{
-                    backgroundColor: '#007AFF', color: '#FFFFFF',
+                    backgroundColor: saveLoading ? '#B0CBFA' : '#007AFF', color: '#FFFFFF',
                     borderRadius: '16px', fontWeight: 700,
                     paddingTop: '12px',
                     paddingBottom: '12px',
                     paddingLeft: '32px',
                     paddingRight: '32px',
-                    cursor: 'pointer',
+                    cursor: saveLoading ? 'not-allowed' : 'pointer',
                     borderTopWidth: '0px', borderBottomWidth: '0px', borderLeftWidth: '0px', borderRightWidth: '0px',
                     borderStyle: 'none',
-                    boxShadow: '0 8px 24px rgba(0,122,255,0.3)',
+                    boxShadow: saveLoading ? 'none' : '0 8px 24px rgba(0,122,255,0.3)',
                   }}
+                  disabled={saveLoading}
                 >
-                  <Save size={16} style={{ marginRight: '8px' }} /> Save Changes
+                  <Save size={16} style={{ marginRight: '8px' }} /> {saveLoading ? "Saving..." : "Save Changes"}
                 </Button>
               </Row>
             </motion.div>
