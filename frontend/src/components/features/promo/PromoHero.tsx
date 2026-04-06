@@ -1,29 +1,108 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Sparkles, Star } from "lucide-react";
 
-const TRUST_LOGOS = [
-  { name: "Klarna", emoji: "🍜" },
-  { name: "Coinbase", emoji: "🍣" },
-  { name: "Instacart", emoji: "🌮" },
-  { name: "Shopify", emoji: "🍕" },
-];
+// ─── Paste your background image URL here ───────────────────────────────────
+const HERO_BG_URL = "https://images5.alphacoders.com/564/thumb-1920-564931.jpg";
+// ────────────────────────────────────────────────────────────────────────────
 
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
+const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
+
+const stagger = (i: number) => ({
+  initial: { opacity: 0, y: 28 },
   animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.6, ease: "easeOut" as const },
+  transition: { delay: 0.1 + i * 0.1, duration: 0.65, ease },
 });
+
+function FloatBadge({
+  top,
+  left,
+  right,
+  bottom,
+  delay = 0.5,
+  emoji,
+  title,
+  sub,
+  ampY = 6,
+}: {
+  top?: string | number;
+  left?: string | number;
+  right?: string | number;
+  bottom?: string | number;
+  delay?: number;
+  emoji: string;
+  title: string;
+  sub: string;
+  ampY?: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.75, y: 12 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ delay, duration: 0.65, ease }}
+      style={{ position: "absolute", top, left, right, bottom, zIndex: 4 }}
+    >
+      <motion.div
+        animate={{ y: [0, -ampY, 0] }}
+        transition={{
+          duration: 3 + delay,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        style={{
+          backgroundColor: "rgba(255,255,255,0.94)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          borderRadius: 14,
+          padding: "10px 14px",
+          boxShadow: "0 16px 40px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.1)",
+          border: "1px solid rgba(255,255,255,0.65)",
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          minWidth: 160,
+        }}
+      >
+        <span style={{ fontSize: 20, lineHeight: 1, flexShrink: 0 }}>
+          {emoji}
+        </span>
+        <div>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 12,
+              fontWeight: 700,
+              color: "#1C1C1E",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {title}
+          </p>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 10.5,
+              color: "rgba(0,0,0,0.45)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {sub}
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 function AppMockup() {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 32, y: 8 }}
+      initial={{ opacity: 0, x: 40, y: 16 }}
       animate={{ opacity: 1, x: 0, y: 0 }}
-      transition={{ delay: 0.3, duration: 0.7, ease: "easeOut" }}
+      transition={{ delay: 0.3, duration: 0.8, ease }}
       style={{
         position: "relative",
         width: "100%",
@@ -31,16 +110,17 @@ function AppMockup() {
         marginLeft: "auto",
       }}
     >
-      {/* Glow */}
+      {/* Glow behind card */}
       <div
         style={{
           position: "absolute",
-          inset: -32,
+          inset: -48,
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(0,122,255,0.12) 0%, transparent 65%)",
+            "radial-gradient(circle, rgba(79,142,247,0.28) 0%, transparent 65%)",
           pointerEvents: "none",
           zIndex: 0,
+          filter: "blur(20px)",
         }}
       />
 
@@ -50,14 +130,13 @@ function AppMockup() {
           position: "relative",
           zIndex: 1,
           backgroundColor: "white",
-          borderRadius: 20,
-          boxShadow:
-            "0 24px 64px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)",
+          borderRadius: 22,
+          boxShadow: "0 32px 80px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.1)",
           overflow: "hidden",
-          border: "1px solid rgba(0,0,0,0.06)",
+          border: "1px solid rgba(255,255,255,0.7)",
         }}
       >
-        {/* Header bar */}
+        {/* Header */}
         <div
           style={{
             padding: "14px 18px",
@@ -84,7 +163,7 @@ function AppMockup() {
           </div>
         </div>
 
-        {/* Match score hero */}
+        {/* Score */}
         <div
           style={{
             padding: "20px 18px 16px",
@@ -133,7 +212,6 @@ function AppMockup() {
               ▲ +3.2%
             </span>
           </div>
-          {/* Progress bar */}
           <div
             style={{
               height: 6,
@@ -142,9 +220,11 @@ function AppMockup() {
               overflow: "hidden",
             }}
           >
-            <div
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: "94%" }}
+              transition={{ delay: 0.9, duration: 1.2, ease }}
               style={{
-                width: "94%",
                 height: "100%",
                 borderRadius: 6,
                 background: "linear-gradient(90deg, #1A7AFF, #5856D6)",
@@ -153,7 +233,7 @@ function AppMockup() {
           </div>
         </div>
 
-        {/* Venue card */}
+        {/* Venue */}
         <div
           style={{
             margin: "12px 18px",
@@ -164,12 +244,12 @@ function AppMockup() {
         >
           <div
             style={{
-              height: 90,
+              height: 88,
               background: "linear-gradient(135deg, #FF6B35, #FF8C42)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 36,
+              fontSize: 34,
             }}
           >
             🍣
@@ -263,280 +343,350 @@ function AppMockup() {
         </div>
       </div>
 
-      {/* Floating badge */}
-      <motion.div
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          position: "absolute",
-          top: -16,
-          right: -16,
-          backgroundColor: "white",
-          borderRadius: 14,
-          padding: "10px 14px",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-          border: "1px solid rgba(0,0,0,0.06)",
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          zIndex: 2,
-        }}
-      >
-        <span style={{ fontSize: 18 }}>✨</span>
-        <div>
-          <p
-            style={{
-              margin: 0,
-              fontSize: 12,
-              fontWeight: 700,
-              color: "#1C1C1E",
-            }}
-          >
-            New Match!
-          </p>
-          <p style={{ margin: 0, fontSize: 10, color: "rgba(0,0,0,0.4)" }}>
-            Ramona Flowers · 94%
-          </p>
-        </div>
-      </motion.div>
-
-      {/* Floating tour badge */}
-      <motion.div
-        animate={{ y: [0, 5, 0] }}
-        transition={{
-          duration: 3.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
-        }}
-        style={{
-          position: "absolute",
-          bottom: -14,
-          left: -14,
-          backgroundColor: "white",
-          borderRadius: 14,
-          padding: "10px 14px",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-          border: "1px solid rgba(0,0,0,0.06)",
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          zIndex: 2,
-        }}
-      >
-        <span style={{ fontSize: 18 }}>🗺️</span>
-        <div>
-          <p
-            style={{
-              margin: 0,
-              fontSize: 12,
-              fontWeight: 700,
-              color: "#1C1C1E",
-            }}
-          >
-            Tour Ready
-          </p>
-          <p style={{ margin: 0, fontSize: 10, color: "rgba(0,0,0,0.4)" }}>
-            5 venues · 3.2km
-          </p>
-        </div>
-      </motion.div>
+      {/* Glass floating badges */}
+      <FloatBadge
+        top={-18}
+        right={-20}
+        emoji="✨"
+        title="New Match!"
+        sub="Ramona Flowers · 94%"
+        delay={0.65}
+        ampY={7}
+      />
+      <FloatBadge
+        bottom={-16}
+        left={-20}
+        emoji="🗺️"
+        title="Tour Ready"
+        sub="5 venues · 3.2km"
+        delay={0.8}
+        ampY={5}
+      />
     </motion.div>
   );
 }
 
 export function PromoHero() {
   const router = useRouter();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "38%"]);
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
+  const contentOp = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+
+  const hasBg = Boolean(HERO_BG_URL);
 
   return (
-    <section style={{ backgroundColor: "white", padding: "72px 0 80px" }}>
+    <section
+      ref={sectionRef}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      {/* ── Parallax background ── */}
+      <motion.div
+        style={{
+          position: "absolute",
+          inset: "-25%",
+          y: bgY,
+          backgroundImage: hasBg
+            ? `url(${HERO_BG_URL})`
+            : "linear-gradient(135deg, #060D1F 0%, #0B1A40 40%, #180828 70%, #091524 100%)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          zIndex: 0,
+        }}
+      />
+
+      {/* ── Grain texture ── */}
       <div
         style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: "0 32px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 64,
-          alignItems: "center",
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: "none",
+          opacity: 0.45,
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E\")",
+          backgroundSize: "180px",
+        }}
+      />
+
+      {/* ── Gradient overlay ── */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 2,
+          pointerEvents: "none",
+          background: hasBg
+            ? "linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.38) 55%, rgba(0,0,0,0.18) 100%)"
+            : "linear-gradient(to bottom right, rgba(0,8,30,0.5) 0%, rgba(0,0,0,0.12) 100%)",
+        }}
+      />
+
+      {/* ── Ambient glow blobs ── */}
+      <div
+        style={{
+          position: "absolute",
+          top: "18%",
+          left: "8%",
+          width: 520,
+          height: 520,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(0,122,255,0.22) 0%, transparent 65%)",
+          zIndex: 1,
+          filter: "blur(60px)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          bottom: "10%",
+          right: "20%",
+          width: 400,
+          height: 400,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(88,86,214,0.24) 0%, transparent 65%)",
+          zIndex: 1,
+          filter: "blur(60px)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* ── Content (parallax drift + fade) ── */}
+      <motion.div
+        style={{
+          y: contentY,
+          opacity: contentOp,
+          position: "relative",
+          zIndex: 5,
+          width: "100%",
+          paddingTop: 88,
+          paddingBottom: 88,
         }}
       >
-        {/* ── Left copy ── */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-          {/* AI badge */}
-          <motion.div {...fadeUp(0.05)}>
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 7,
-                padding: "6px 14px",
-                borderRadius: 20,
-                backgroundColor: "rgba(0,122,255,0.07)",
-                border: "1px solid rgba(0,122,255,0.15)",
-              }}
-            >
-              <Sparkles size={12} color="#007AFF" />
-              <span
+        <div
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "0 32px",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 64,
+            alignItems: "center",
+          }}
+        >
+          {/* ── Left copy ── */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+            {/* Badge */}
+            <motion.div {...stagger(0)}>
+              <div
                 style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "#007AFF",
-                  letterSpacing: "0.2px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 7,
+                  padding: "6px 14px",
+                  borderRadius: 20,
+                  backgroundColor: "rgba(0,122,255,0.2)",
+                  border: "1px solid rgba(0,122,255,0.38)",
+                  backdropFilter: "blur(8px)",
                 }}
               >
-                AI-powered food discovery
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            {...fadeUp(0.12)}
-            style={{
-              margin: 0,
-              fontSize: "clamp(2.4rem, 4.5vw, 3.6rem)",
-              fontWeight: 900,
-              letterSpacing: "-2.5px",
-              lineHeight: 1.05,
-              color: "#1C1C1E",
-            }}
-          >
-            Discover food,{" "}
-            <span
-              style={{
-                background: "linear-gradient(90deg, #007AFF, #5856D6, #AF52DE)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              save automatically,
-            </span>{" "}
-            eat your way.
-          </motion.h1>
-
-          {/* Sub */}
-          <motion.p
-            {...fadeUp(0.2)}
-            style={{
-              margin: 0,
-              fontSize: 16,
-              color: "rgba(0,0,0,0.5)",
-              lineHeight: 1.7,
-              maxWidth: 460,
-            }}
-          >
-            TasteMap maps your flavour DNA, matches you with the right venues
-            and foodies, and builds food tours you&apos;ll actually want to go
-            on.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            {...fadeUp(0.27)}
-            style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
-          >
-            <button
-              onClick={() => router.push("/discover")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "13px 26px",
-                borderRadius: 12,
-                background: "linear-gradient(135deg, #1A7AFF, #0057D9)",
-                border: "none",
-                cursor: "pointer",
-                color: "white",
-                fontSize: 15,
-                fontWeight: 700,
-                boxShadow: "0 6px 20px rgba(0,100,255,0.3)",
-                transition: "transform 0.15s, box-shadow 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.transform =
-                  "translateY(-1px)";
-                (e.currentTarget as HTMLElement).style.boxShadow =
-                  "0 10px 28px rgba(0,100,255,0.38)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = "";
-                (e.currentTarget as HTMLElement).style.boxShadow =
-                  "0 6px 20px rgba(0,100,255,0.3)";
-              }}
-            >
-              Get Started <ArrowRight size={15} />
-            </button>
-            <button
-              onClick={() => router.push("/discover")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "13px 22px",
-                borderRadius: 12,
-                background: "white",
-                border: "1.5px solid rgba(0,0,0,0.1)",
-                cursor: "pointer",
-                color: "#1C1C1E",
-                fontSize: 15,
-                fontWeight: 600,
-                transition: "border-color 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor =
-                  "rgba(0,122,255,0.35)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor =
-                  "rgba(0,0,0,0.1)";
-              }}
-            >
-              Explore Demo
-            </button>
-          </motion.div>
-
-          {/* Trust logos */}
-          <motion.div {...fadeUp(0.34)}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 20,
-                flexWrap: "wrap",
-              }}
-            >
-              {TRUST_LOGOS.map((t) => (
-                <div
-                  key={t.name}
+                <Sparkles size={12} color="#60A5FA" />
+                <span
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    opacity: 0.5,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "#93C5FD",
+                    letterSpacing: "0.2px",
                   }}
                 >
-                  <span style={{ fontSize: 16 }}>{t.emoji}</span>
-                  <span
+                  AI-powered food discovery
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h1
+              {...stagger(1)}
+              style={{
+                margin: 0,
+                fontSize: "clamp(2.4rem, 4.5vw, 3.6rem)",
+                fontWeight: 900,
+                letterSpacing: "-2.5px",
+                lineHeight: 1.05,
+                color: "white",
+              }}
+            >
+              Discover food,{" "}
+              <span
+                style={{
+                  background:
+                    "linear-gradient(90deg, #60A5FA, #A78BFA, #F472B6)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                save automatically,
+              </span>{" "}
+              eat your way.
+            </motion.h1>
+
+            {/* Sub */}
+            <motion.p
+              {...stagger(2)}
+              style={{
+                margin: 0,
+                fontSize: 16,
+                color: "rgba(255,255,255,0.62)",
+                lineHeight: 1.75,
+                maxWidth: 460,
+              }}
+            >
+              TasteMap maps your flavour DNA, matches you with the right venues
+              and foodies, and builds food tours you&apos;ll actually want to go
+              on.
+            </motion.p>
+
+            {/* CTAs */}
+            <motion.div
+              {...stagger(3)}
+              style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
+            >
+              <button
+                onClick={() => router.push("/discover")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "13px 26px",
+                  borderRadius: 12,
+                  background: "linear-gradient(135deg, #1A7AFF, #0057D9)",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "white",
+                  fontSize: 15,
+                  fontWeight: 700,
+                  boxShadow: "0 6px 28px rgba(0,100,255,0.45)",
+                  transition: "transform 0.15s, box-shadow 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.transform =
+                    "translateY(-2px)";
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    "0 12px 36px rgba(0,100,255,0.55)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.transform = "";
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    "0 6px 28px rgba(0,100,255,0.45)";
+                }}
+              >
+                Get Started <ArrowRight size={15} />
+              </button>
+              <button
+                onClick={() => router.push("/discover")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  padding: "13px 22px",
+                  borderRadius: 12,
+                  background: "rgba(255,255,255,0.1)",
+                  border: "1.5px solid rgba(255,255,255,0.28)",
+                  backdropFilter: "blur(8px)",
+                  cursor: "pointer",
+                  color: "white",
+                  fontSize: 15,
+                  fontWeight: 600,
+                  transition: "background 0.15s, border-color 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background =
+                    "rgba(255,255,255,0.18)";
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    "rgba(255,255,255,0.55)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background =
+                    "rgba(255,255,255,0.1)";
+                  (e.currentTarget as HTMLElement).style.borderColor =
+                    "rgba(255,255,255,0.28)";
+                }}
+              >
+                Explore Demo
+              </button>
+            </motion.div>
+
+            {/* Social proof mini */}
+            <motion.div
+              {...stagger(4)}
+              style={{ display: "flex", alignItems: "center", gap: 14 }}
+            >
+              <div style={{ display: "flex" }}>
+                {["🧑‍🍳", "👩‍🍳", "👨‍🍳", "🍱"].map((e, i) => (
+                  <div
+                    key={i}
                     style={{
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: "#1C1C1E",
-                      letterSpacing: "-0.3px",
+                      width: 32,
+                      height: 32,
+                      borderRadius: "50%",
+                      background: `hsl(${i * 50 + 200},55%,55%)`,
+                      border: "2.5px solid rgba(255,255,255,0.25)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 14,
+                      marginLeft: i === 0 ? 0 : -10,
+                      zIndex: 4 - i,
                     }}
                   >
-                    {t.name}
-                  </span>
+                    {e}
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div style={{ display: "flex", gap: 2, marginBottom: 3 }}>
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star key={i} size={11} fill="#FBBF24" color="#FBBF24" />
+                  ))}
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 12,
+                    color: "rgba(255,255,255,0.5)",
+                    fontWeight: 500,
+                  }}
+                >
+                  Loved by{" "}
+                  <strong style={{ color: "rgba(255,255,255,0.82)" }}>
+                    2,400+
+                  </strong>{" "}
+                  foodies
+                </p>
+              </div>
+            </motion.div>
+          </div>
 
-        {/* ── Right mockup ── */}
-        <AppMockup />
-      </div>
+          {/* ── Right: mockup ── */}
+          <AppMockup />
+        </div>
+      </motion.div>
     </section>
   );
 }
