@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface ReelData {
   id: number;
   title: string;
@@ -79,7 +81,7 @@ export interface UserProfile {
   xp: number;
   nextLevelXp: number;
   badges: {
-    icon: string;
+    icon: React.ReactNode;
     label: string;
     color: string;
   }[];

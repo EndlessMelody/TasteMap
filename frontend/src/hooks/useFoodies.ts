@@ -23,6 +23,20 @@ export interface PendingRequest {
   created_at: string;
 }
 
+export interface SentRequest {
+  friendship_id: number;
+  id: number;
+  username: string;
+  display_name?: string;
+  avatar_url?: string;
+  cover_url?: string;
+  bio?: string;
+  location?: string;
+  title?: string;
+  match_score: number;
+  created_at: string;
+}
+
 export interface FoodieFriendRaw {
   id: number;
   username: string;
@@ -46,6 +60,7 @@ function mapToFriend(f: FoodieFriendRaw): Friend {
     cover: f.cover_url || DEFAULT_COVER,
     match: f.match_score,
     isOnline: false,
+    friendshipId: f.friendship_id,
   };
 }
 
@@ -53,6 +68,7 @@ export function useFoodies() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [discover, setDiscover] = useState<Friend[]>([]);
   const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([]);
+  const [sentRequests, setSentRequests] = useState<SentRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,14 +76,16 @@ export function useFoodies() {
     setLoading(true);
     setError(null);
     try {
-      const [friendsRes, discoverRes, pendingRes] = await Promise.all([
+      const [friendsRes, discoverRes, pendingRes, sentRes] = await Promise.all([
         apiGet<{ items: FoodieFriendRaw[] }>("/api/v1/friends/foodies"),
         apiGet<{ items: FoodieFriendRaw[] }>("/api/v1/friends/discover"),
         apiGet<{ items: PendingRequest[] }>("/api/v1/friends/requests"),
+        apiGet<{ items: SentRequest[] }>("/api/v1/friends/sent"),
       ]);
       setFriends((friendsRes.items ?? []).map(mapToFriend));
       setDiscover((discoverRes.items ?? []).map(mapToFriend));
       setPendingRequests(pendingRes.items ?? []);
+      setSentRequests(sentRes.items ?? []);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load foodies");
     } finally {
@@ -102,15 +120,33 @@ export function useFoodies() {
     );
   }, []);
 
+  const cancelRequest = useCallback(async (friendshipId: number) => {
+    await apiDelete(`/api/v1/friends/${friendshipId}`);
+    setSentRequests((prev) =>
+      prev.filter((r) => r.friendship_id !== friendshipId),
+    );
+  }, []);
+
+  const unfriend = useCallback(
+    async (friendshipId: number, friendId: number) => {
+      await apiDelete(`/api/v1/friends/${friendshipId}`);
+      setFriends((prev) => prev.filter((f) => f.id !== friendId));
+    },
+    [],
+  );
+
   return {
     friends,
     discover,
     pendingRequests,
+    sentRequests,
     loading,
     error,
     refresh: load,
     sendRequest,
     acceptRequest,
     declineRequest,
+    cancelRequest,
+    unfriend,
   };
 }

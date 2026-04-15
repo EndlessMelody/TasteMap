@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Form, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
-from src.users.schemas import UserCreate, UserResponse, UserProfile, UserMe, UserUpdate, TopSpotResponse
+from src.users.schemas import UserCreate, UserResponse, UserProfile, UserMe, UserUpdate, TopSpotResponse, SocialContextResponse
 from src.users.service import UserService
 from src.core.dependencies import get_current_user_id
 from src.db.supabase_client import supabase_storage
@@ -97,6 +97,19 @@ async def search_users(
     service: UserService = Depends(get_user_service),
 ):
     return await service.search_users(user_id, q, limit)
+
+
+@router.get(
+    "/{user_id}/social-context",
+    response_model=SocialContextResponse,
+    summary="Viewer-aware social context for a profile page",
+)
+async def get_social_context(
+    user_id: int,
+    viewer_id: int = Depends(get_current_user_id),
+    service: UserService = Depends(get_user_service),
+):
+    return await service.get_social_context(viewer_id, user_id)
 
 
 @router.get(

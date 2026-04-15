@@ -43,20 +43,19 @@ export function useNotifications() {
 
   useEffect(() => {
     fetchNotifications();
+    const interval = setInterval(fetchNotifications, 30_000);
+    return () => clearInterval(interval);
   }, [fetchNotifications]);
 
-  const markRead = useCallback(
-    async (id: number) => {
-      try {
-        await apiPatch(`/api/v1/notifications/${id}/read`);
-        setNotifications((prev) =>
-          prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
-        );
-        setUnreadCount((c) => Math.max(0, c - 1));
-      } catch {}
-    },
-    [],
-  );
+  const markRead = useCallback(async (id: number) => {
+    try {
+      await apiPatch(`/api/v1/notifications/${id}/read`);
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)),
+      );
+      setUnreadCount((c) => Math.max(0, c - 1));
+    } catch {}
+  }, []);
 
   const markAllRead = useCallback(async () => {
     try {

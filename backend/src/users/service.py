@@ -127,6 +127,78 @@ class UserService:
             raise HTTPException(status_code=400, detail=str(e))
         return await self.get_me(user_id)
 
+    async def get_social_context(self, viewer_id: int, target_id: int) -> dict:
+        """Return friendship status, mutual friends, and target food vector for the profile page."""
+        # Friendship status
+        fs_res = await self.db.execute(
+            select(Friendship).where(
+                or_(
+                    (Friendship.user_id == viewer_id) & (Friendship.friend_id == target_id),
+                    (Friendship.user_id == target_id) & (Friendship.friend_id == viewer_id),
+                )
+            )
+        )
+        fs = fs_res.scalars().first()
+        if fs is None:
+            friendship_status = "none"
+            friendship_id = None
+        elif fs.status == "accepted":
+            friendship_status = "accepted"
+            friendship_id = fs.id
+        elif fs.status == "blocked":
+            friendship_status = "blocked"
+            friendship_id = fs.id
+        elif fs.user_id == viewer_id:
+            friendship_status = "pending_sent"
+            friendship_id = fs.id
+        else:
+            friendship_status = "pending_received"
+            friendship_id = fs.id
+
+        # Target user food vector
+        target_res = await self.db.execute(select(User).where(User.id == target_id))
+        target = target_res.scalars().first()
+        food_vector = list(target.food_vector) if target and target.food_vector is not None else None
+
+        # Mutual friends
+        def _friend_ids(rows, me):
+            return {fs.friend_id if fs.user_id == me else fs.user_id for fs in rows}
+
+        viewer_fs = (await self.db.execute(
+            select(Friendship).where(
+                or_(Friendship.user_id == viewer_id, Friendship.friend_id == viewer_id),
+                Friendship.status == "accepted",
+            )
+        )).scalars().all()
+        target_fs = (await self.db.execute(
+            select(Friendship).where(
+                or_(Friendship.user_id == target_id, Friendship.friend_id == target_id),
+                Friendship.status == "accepted",
+            )
+        )).scalars().all()
+
+        mutual_ids = _friend_ids(viewer_fs, viewer_id) & _friend_ids(target_fs, target_id)
+        mutual_friends = []
+        if mutual_ids:
+            mf_res = await self.db.execute(
+                select(User).where(User.id.in_(list(mutual_ids))).limit(6)
+            )
+            for u in mf_res.scalars().all():
+                mutual_friends.append({
+                    "id": u.id,
+                    "username": u.username,
+                    "display_name": u.display_name,
+                    "avatar_url": u.avatar_url,
+                })
+
+        return {
+            "friendship_status": friendship_status,
+            "friendship_id": friendship_id,
+            "food_vector": food_vector,
+            "mutual_friends_count": len(mutual_ids),
+            "mutual_friends": mutual_friends,
+        }
+
     async def get_top_spots(self, user_id: int, limit: int = 3) -> list:
         from src.locations.models import Location
         # Join bookmarks → locations, sorted by rating desc

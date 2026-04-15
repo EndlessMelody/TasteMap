@@ -23,6 +23,11 @@ class Settings(BaseSettings):
     SUPABASE_ANON_KEY: str | None = None
     SUPABASE_PROJECT_REF: str = "bjuikfhjrpmrpbvhduey"
 
+    # --- Groq LLM ---
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    GROQ_VISION_MODEL: str = "llama-3.2-11b-vision-preview"
+
     # --- Email / SMTP ---
     SMTP_HOST: str | None = None
     SMTP_PORT: int = 587

@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Row,
   Column,
@@ -10,7 +11,21 @@ import {
   IconButton,
   Button,
 } from "@/components/OnceUI";
-import { MessageSquare, MapPin } from "lucide-react";
+import {
+  MessageSquare,
+  MapPin,
+  MoreHorizontal,
+  Eye,
+  UserX,
+  Clock,
+  UserPlus,
+  Fish,
+  Soup,
+  Coffee,
+  Sandwich,
+  Flame,
+  Pizza,
+} from "lucide-react";
 
 export interface Friend {
   id: number;
@@ -21,13 +36,111 @@ export interface Friend {
   cover: string;
   match?: number;
   isOnline?: boolean;
+  friendshipId?: number;
 }
+
+export type FriendVariant = "friend" | "discover" | "sent";
 
 interface FriendRowProps {
   friend: Friend;
+  variant?: FriendVariant;
   onMessage: (friend: Friend) => void;
-  onInvite: (friend: Friend) => void;
+  onInvite?: (friend: Friend) => void;
+  onUnfriend?: (friend: Friend) => void;
+  onCancel?: (friend: Friend) => void;
   isCompact?: boolean;
+}
+
+// ─── More dropdown menu (friend variant) ───
+const menuItemStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "10px 16px",
+  background: "none",
+  border: "none",
+  width: "100%",
+  textAlign: "left",
+  fontSize: 13,
+  fontWeight: 600,
+  cursor: "pointer",
+  color: "#1C1C1E",
+  transition: "background 0.12s",
+};
+
+function MoreMenu({
+  onViewProfile,
+  onUnfriend,
+}: {
+  onViewProfile: () => void;
+  onUnfriend: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <IconButton
+        icon={<MoreHorizontal size={16} />}
+        onClick={() => setOpen((o) => !o)}
+        variant="tertiary"
+        style={{
+          width: 36,
+          height: 36,
+          backgroundColor: "#F2F2F7",
+          color: "#8E8E93",
+        }}
+      />
+      {open && (
+        <div
+          style={{
+            position: "absolute",
+            right: 0,
+            top: "calc(100% + 6px)",
+            backgroundColor: "white",
+            borderRadius: 12,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
+            border: "1px solid rgba(0,0,0,0.07)",
+            overflow: "hidden",
+            zIndex: 100,
+            minWidth: 160,
+          }}
+        >
+          <button
+            onClick={() => {
+              onViewProfile();
+              setOpen(false);
+            }}
+            style={menuItemStyle}
+          >
+            <Eye size={14} />
+            View Profile
+          </button>
+          <div style={{ height: 1, backgroundColor: "rgba(0,0,0,0.06)" }} />
+          <button
+            onClick={() => {
+              onUnfriend();
+              setOpen(false);
+            }}
+            style={{ ...menuItemStyle, color: "#FF3B30" }}
+          >
+            <UserX size={14} />
+            Unfriend
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ─── SVG circular match gauge ───
@@ -97,20 +210,55 @@ function MatchGauge({ pct }: { pct: number }) {
 }
 
 // ─── Activity chip (emoji → color mapping) ───
-const ACTIVITY_MAP: { emoji: string; color: string; bg: string }[] = [
-  { emoji: "🍣", color: "#C2410C", bg: "rgba(239,68,68,0.09)" },
-  { emoji: "🍜", color: "#B45309", bg: "rgba(245,158,11,0.10)" },
-  { emoji: "☕", color: "#78350F", bg: "rgba(180,83,9,0.10)" },
-  { emoji: "🍔", color: "#854D0E", bg: "rgba(234,179,8,0.10)" },
-  { emoji: "🌶️", color: "#B91C1C", bg: "rgba(239,68,68,0.09)" },
-  { emoji: "🍕", color: "#C2410C", bg: "rgba(249,115,22,0.10)" },
+const ACTIVITY_MAP: {
+  emoji: string;
+  icon: React.ReactElement;
+  color: string;
+  bg: string;
+}[] = [
+  {
+    emoji: "🍣",
+    icon: <Fish size={12} />,
+    color: "#C2410C",
+    bg: "rgba(239,68,68,0.09)",
+  },
+  {
+    emoji: "🍜",
+    icon: <Soup size={12} />,
+    color: "#B45309",
+    bg: "rgba(245,158,11,0.10)",
+  },
+  {
+    emoji: "☕",
+    icon: <Coffee size={12} />,
+    color: "#78350F",
+    bg: "rgba(180,83,9,0.10)",
+  },
+  {
+    emoji: "🍔",
+    icon: <Sandwich size={12} />,
+    color: "#854D0E",
+    bg: "rgba(234,179,8,0.10)",
+  },
+  {
+    emoji: "🌶️",
+    icon: <Flame size={12} />,
+    color: "#B91C1C",
+    bg: "rgba(239,68,68,0.09)",
+  },
+  {
+    emoji: "🍕",
+    icon: <Pizza size={12} />,
+    color: "#C2410C",
+    bg: "rgba(249,115,22,0.10)",
+  },
 ];
 
 function ActivityChip({ status }: { status: string }) {
   const found = ACTIVITY_MAP.find((a) => status.includes(a.emoji));
   const color = found?.color ?? "rgba(0,0,0,0.5)";
   const bg = found?.bg ?? "rgba(0,0,0,0.04)";
-  const emoji = found?.emoji ?? "📍";
+  const icon = found?.icon ?? <MapPin size={12} />;
   const label = status
     .replace(/[\u{1F300}-\u{1FFFF}]|\u{1F32E}|\u{1F336}\uFE0F/gu, "")
     .trim();
@@ -128,7 +276,7 @@ function ActivityChip({ status }: { status: string }) {
         maxWidth: "100%",
       }}
     >
-      <span style={{ fontSize: 13 }}>{emoji}</span>
+      <span style={{ color }}>{icon}</span>
       <Text
         variant="body-default-xs"
         style={{
@@ -148,10 +296,15 @@ function ActivityChip({ status }: { status: string }) {
 // ─── Main component ───
 export const FriendRow: React.FC<FriendRowProps> = ({
   friend,
+  variant = "discover",
   onMessage,
   onInvite,
+  onUnfriend,
+  onCancel,
   isCompact = false,
 }) => {
+  const router = useRouter();
+  const handleViewProfile = () => router.push(`/foodies/${friend.id}`);
   /* ── COMPACT (chat sidebar) ── */
   if (isCompact) {
     return (
@@ -375,31 +528,107 @@ export const FriendRow: React.FC<FriendRowProps> = ({
           <ActivityChip status={friend.status} />
 
           <Row gap="8" vertical="center" style={{ flexShrink: 0 }}>
-            <IconButton
-              icon={<MessageSquare size={16} />}
-              onClick={() => onMessage(friend)}
-              variant="tertiary"
-              style={{
-                width: 36,
-                height: 36,
-                backgroundColor: "#F2F2F7",
-                color: "#8E8E93",
-              }}
-            />
-            <Button
-              variant="primary"
-              onClick={() => onInvite(friend)}
-              style={{
-                borderRadius: 10,
-                fontWeight: 700,
-                padding: "0 18px",
-                height: 36,
-                backgroundColor: "#007AFF",
-                fontSize: "13px",
-              }}
-            >
-              Invite
-            </Button>
+            {variant === "friend" && (
+              <>
+                <IconButton
+                  icon={<MessageSquare size={16} />}
+                  onClick={() => onMessage(friend)}
+                  variant="tertiary"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    backgroundColor: "#F2F2F7",
+                    color: "#8E8E93",
+                  }}
+                />
+                <Button
+                  variant="secondary"
+                  onClick={() => onInvite && onInvite(friend)}
+                  style={{
+                    borderRadius: 10,
+                    fontWeight: 700,
+                    padding: "0 16px",
+                    height: 36,
+                    fontSize: "13px",
+                  }}
+                >
+                  Invite to Tour
+                </Button>
+                <MoreMenu
+                  onViewProfile={handleViewProfile}
+                  onUnfriend={() => onUnfriend && onUnfriend(friend)}
+                />
+              </>
+            )}
+            {variant === "discover" && (
+              <>
+                <IconButton
+                  icon={<MessageSquare size={16} />}
+                  onClick={() => onMessage(friend)}
+                  variant="tertiary"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    backgroundColor: "#F2F2F7",
+                    color: "#8E8E93",
+                  }}
+                />
+                <Button
+                  variant="primary"
+                  onClick={() => onInvite && onInvite(friend)}
+                  style={{
+                    borderRadius: 10,
+                    fontWeight: 700,
+                    padding: "0 16px",
+                    height: 36,
+                    backgroundColor: "#007AFF",
+                    fontSize: "13px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <UserPlus size={14} />
+                  Add Friend
+                </Button>
+              </>
+            )}
+            {variant === "sent" && (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "7px 14px",
+                    borderRadius: 10,
+                    backgroundColor: "rgba(0,0,0,0.04)",
+                    border: "1px solid rgba(0,0,0,0.08)",
+                    color: "rgba(0,0,0,0.45)",
+                    fontSize: 13,
+                    fontWeight: 600,
+                  }}
+                >
+                  <Clock size={13} />
+                  Pending
+                </div>
+                <Button
+                  variant="secondary"
+                  onClick={() => onCancel && onCancel(friend)}
+                  style={{
+                    borderRadius: 10,
+                    fontWeight: 600,
+                    padding: "0 16px",
+                    height: 36,
+                    fontSize: "13px",
+                    color: "#FF3B30",
+                    border: "1.5px solid rgba(255,59,48,0.2)",
+                  }}
+                >
+                  Cancel
+                </Button>
+              </>
+            )}
           </Row>
         </Row>
       </div>

@@ -111,7 +111,7 @@ async def group_sync(
 async def group_vault(
     group_id: int,
     limit: int = Query(50, ge=1, le=200),
-    sort_by: str = Query("votes", regex="^(votes|recent)$"),
+    sort_by: str = Query("votes", pattern="^(votes|recent)$"),
     db: AsyncSession = Depends(get_db)
 ):
     return await service.group_vault(db, group_id, limit, sort_by)

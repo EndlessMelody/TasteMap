@@ -22,6 +22,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   BadgeCheck,
+  BookOpen,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -418,6 +419,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
           collapsed={!isOpen}
           badge="AI"
           onClick={() => router.push("/ai-planner")}
+        />
+        <SidebarItem
+          icon={<BookOpen size={17} />}
+          label="Culture Guide"
+          active={currentPath === "/culture"}
+          collapsed={!isOpen}
+          badge="New"
+          onClick={() => router.push("/culture")}
         />
       </Column>
 

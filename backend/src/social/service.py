@@ -204,6 +204,34 @@ async def list_friends_foodies(db: AsyncSession, user_id: int) -> dict:
     return {"items": items}
 
 
+async def list_sent_requests(db: AsyncSession, user_id: int) -> dict:
+    me_res = await db.execute(select(User).where(User.id == user_id))
+    me = me_res.scalars().first()
+
+    result = await db.execute(
+        select(Friendship, User)
+        .join(User, User.id == Friendship.friend_id)
+        .where(Friendship.user_id == user_id, Friendship.status == "pending")
+    )
+    rows = result.all()
+    items = []
+    for fs, u in rows:
+        items.append({
+            "friendship_id": fs.id,
+            "id": u.id,
+            "username": u.username,
+            "display_name": u.display_name,
+            "avatar_url": u.avatar_url,
+            "cover_url": u.cover_url,
+            "bio": u.bio,
+            "location": u.location,
+            "title": u.title,
+            "match_score": round(_cosine_sim(me.food_vector if me else None, u.food_vector) * 100),
+            "created_at": fs.created_at,
+        })
+    return {"items": items}
+
+
 async def list_discover_foodies(db: AsyncSession, user_id: int, limit: int = 20) -> dict:
     me_res = await db.execute(select(User).where(User.id == user_id))
     me = me_res.scalars().first()

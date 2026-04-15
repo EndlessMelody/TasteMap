@@ -11,6 +11,13 @@ import {
   Flame,
   ChevronLeft,
   TrendingUp,
+  Coffee,
+  Beer,
+  Utensils,
+  Sandwich,
+  Croissant,
+  Map,
+  SearchX,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -162,13 +169,13 @@ const TRAFFIC_COLORS: Record<TrafficLevel, string> = {
   heavy: "#FF3B30",
 };
 
-function amenityIcon(type: string): string {
-  if (type === "cafe") return "☕";
-  if (type === "bar") return "🍺";
-  if (type === "restaurant") return "🍽️";
-  if (type === "fast_food") return "🍔";
-  if (type === "bakery") return "🥐";
-  return "📍";
+function amenityIcon(type: string): React.ReactElement {
+  if (type === "cafe") return <Coffee size={22} />;
+  if (type === "bar") return <Beer size={22} />;
+  if (type === "restaurant") return <Utensils size={22} />;
+  if (type === "fast_food") return <Sandwich size={22} />;
+  if (type === "bakery") return <Croissant size={22} />;
+  return <MapPin size={22} />;
 }
 
 function formatDistance(m?: number) {
@@ -299,7 +306,15 @@ function PlaceCard({ place, index }: { place: NearbyPlace; index: number }) {
         transform: hovered ? "translateY(-3px)" : "translateY(0)",
       }}
     >
-      <div style={{ fontSize: "1.6rem", marginBottom: "8px", lineHeight: 1 }}>
+      <div
+        style={{
+          marginBottom: "8px",
+          color: "#636366",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {amenityIcon(place.type)}
       </div>
       <div
@@ -490,12 +505,12 @@ export default function HotRoutesPage() {
   const tabs: {
     id: "all" | "restaurant" | "cafe" | "bar";
     label: string;
-    icon: string;
+    icon: React.ReactElement;
   }[] = [
-    { id: "all", label: "All", icon: "🗺️" },
-    { id: "restaurant", label: "Restaurants", icon: "🍽️" },
-    { id: "cafe", label: "Cafés", icon: "☕" },
-    { id: "bar", label: "Bars", icon: "🍺" },
+    { id: "all", label: "All", icon: <Map size={14} /> },
+    { id: "restaurant", label: "Restaurants", icon: <Utensils size={14} /> },
+    { id: "cafe", label: "Cafés", icon: <Coffee size={14} /> },
+    { id: "bar", label: "Bars", icon: <Beer size={14} /> },
   ];
 
   return (
@@ -1126,7 +1141,7 @@ export default function HotRoutesPage() {
                 fontSize: "0.8rem",
               }}
             >
-              <span style={{ fontSize: "1.5rem" }}>🔍</span>
+              <SearchX size={24} style={{ marginBottom: "4px" }} />
               <span>
                 No {activeTab === "all" ? "places" : activeTab + "s"} found
                 nearby

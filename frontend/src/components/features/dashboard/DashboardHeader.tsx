@@ -38,10 +38,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   const { user, isInitializing: loading, logout: signOut } = useAuth();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
   const {
     notifications,
     unreadCount,
     loading: notifsLoading,
+    markRead,
     markAllRead,
     acceptFriendRequest,
     declineFriendRequest,
@@ -74,6 +76,17 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
   // Transforms for Search Expansion
   const searchWidth = useTransform(scrollY, [0, 80], ["420px", "480px"]);
+
+  // Click-outside to close notification panel
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setIsNotifOpen(false);
+      }
+    };
+    if (isNotifOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isNotifOpen]);
 
   // Click-outside to close profile menu
   useEffect(() => {
@@ -255,7 +268,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
       <Row style={{ gap: "8px", alignItems: "center" }}>
         {/* Notifications */}
-        <div style={{ position: "relative" }}>
+        <div ref={notifRef} style={{ position: "relative" }}>
           <IconButton
             icon={
               <Bell size={20} color={isNotifOpen ? "#FBBF24" : "#8E8E93"} />
@@ -368,6 +381,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                       return (
                         <div
                           key={n.id}
+                          onClick={() => !n.is_read && markRead(n.id)}
                           style={{
                             padding: "12px 20px",
                             borderBottom: "1px solid #F2F2F7",
@@ -377,6 +391,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                             display: "flex",
                             flexDirection: "column",
                             gap: 6,
+                            cursor: n.is_read ? "default" : "pointer",
                           }}
                         >
                           <div

@@ -43,6 +43,11 @@ async def list_foodies(user_id: int = Depends(get_current_user_id), db: AsyncSes
     return await service.list_friends_foodies(db, user_id)
 
 
+@router.get("/sent", summary="Outgoing pending friend requests")
+async def sent_requests(user_id: int = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)):
+    return await service.list_sent_requests(db, user_id)
+
+
 @router.get("/discover", summary="Discover foodies with high taste match (not yet friends)")
 async def discover_foodies(user_id: int = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)):
     return await service.list_discover_foodies(db, user_id)

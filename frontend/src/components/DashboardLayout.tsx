@@ -202,7 +202,6 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const sidebarWidth = isFullScreenPage ? 0 : isSidebarOpen ? 240 : 80;
   const isFoodies = pathname.startsWith("/foodies");
 
   const rightExpandedWidth = isFoodies ? "100%" : "320px";

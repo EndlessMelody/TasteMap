@@ -31,6 +31,13 @@ import {
   Image as ImageIcon,
   Map as MapIcon,
   TrendingUp,
+  Flame,
+  Cake,
+  Gem,
+  Feather,
+  PartyPopper,
+  Users,
+  Handshake,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -108,6 +115,7 @@ export default function ProfilePage() {
   const [formBio, setFormBio] = useState("");
   const [formEmail, setFormEmail] = useState("guest@email.com");
   const [formPhone, setFormPhone] = useState("+84 901 234 567");
+  const [formLocation, setFormLocation] = useState("");
 
   // File upload state
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -127,6 +135,7 @@ export default function ProfilePage() {
       setFormBio(user.bio || "");
       setFormEmail(user.email || "");
       setFormPhone(user.phone || "");
+      setFormLocation(user.location || "");
 
       // Cleanup Object URLs on unmount/user change if modal was closed dirty
       return () => {
@@ -193,6 +202,7 @@ export default function ProfilePage() {
       formData.append("username", formUsername);
       formData.append("bio", formBio);
       formData.append("phone", formPhone);
+      if (formLocation) formData.append("location", formLocation);
       // NOTE: emails aren't naturally edited in simple patches unless your backend explicitly supports it
 
       if (avatarFile) formData.append("avatar_file", avatarFile);
@@ -239,6 +249,61 @@ export default function ProfilePage() {
 
   const handleComingSoon = () =>
     toast("Will be updated in the next version 🚀");
+
+  const TRAIT_META: Record<
+    string,
+    {
+      icon: React.ReactNode;
+      label: string;
+      desc: string;
+      bg: string;
+      iconColor: string;
+    }
+  > = {
+    "Street Food": {
+      icon: <Utensils size={20} />,
+      label: "Street Food Guru",
+      desc: "Local street eats enthusiast",
+      bg: "#FDFCF2",
+      iconColor: "#B45309",
+    },
+    Spicy: {
+      icon: <Flame size={20} />,
+      label: "Spice Specialist",
+      desc: "Loves bold, fiery flavors",
+      bg: "#FFF5F5",
+      iconColor: "#DC2626",
+    },
+    Sweet: {
+      icon: <Cake size={20} />,
+      label: "Sweet Tooth",
+      desc: "Desserts & café connoisseur",
+      bg: "#FFF0F6",
+      iconColor: "#DB2777",
+    },
+    Luxury: {
+      icon: <Gem size={20} />,
+      label: "Fine Dining Fan",
+      desc: "Premium culinary experiences",
+      bg: "#F5F3FF",
+      iconColor: "#7C3AED",
+    },
+    Quiet: {
+      icon: <Feather size={20} />,
+      label: "Peaceful Eater",
+      desc: "Cozy & calm dining spots",
+      bg: "#F0FFF4",
+      iconColor: "#059669",
+    },
+    Group: {
+      icon: <PartyPopper size={20} />,
+      label: "Social Foodie",
+      desc: "Food is better with friends",
+      bg: "#FFF8E1",
+      iconColor: "#D97706",
+    },
+  };
+  const topTraits = [...radarData].sort((a, b) => b.A - a.A).slice(0, 3);
 
   return (
     <div
@@ -393,7 +458,7 @@ export default function ProfilePage() {
             right: 0,
             bottom: 0,
             background:
-              "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 100%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.52) 100%)",
           }}
         />
 
@@ -643,52 +708,82 @@ export default function ProfilePage() {
         </Column>
 
         {/* ── STATS ROW ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "12px",
+            marginBottom: "32px",
+          }}
         >
-          <Row style={{ gap: "0px", marginBottom: "40px", paddingTop: "4px" }}>
-            {(
-              [
-                {
-                  value: user?.stats?.followers ?? 0,
-                  label: "Followers",
-                  delay: 150,
-                },
-                {
-                  value: user?.stats?.following ?? 0,
-                  label: "Following",
-                  delay: 300,
-                },
-                {
-                  value: user?.stats?.reviews ?? 0,
-                  label: "Reviews",
-                  delay: 450,
-                },
-                {
-                  value: user?.stats?.visited ?? 0,
-                  label: "Visited",
-                  delay: 600,
-                },
-              ] as { value: number; label: string; delay: number }[]
-            ).map((s, i) => (
-              <React.Fragment key={s.label}>
-                <StatItem value={s.value} label={s.label} delay={s.delay} />
-                {i < 3 && (
-                  <div
-                    style={{
-                      width: "1px",
-                      backgroundColor: "#E5E5EA",
-                      margin: "4px 28px",
-                      alignSelf: "stretch",
-                    }}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </Row>
-        </motion.div>
+          {[
+            {
+              label: "Followers",
+              value: user?.stats?.followers ?? 0,
+              icon: <Users size={18} />,
+              color: "#007AFF",
+            },
+            {
+              label: "Following",
+              value: user?.stats?.following ?? 0,
+              icon: <Handshake size={18} />,
+              color: "#34C759",
+            },
+            {
+              label: "Reviews",
+              value: user?.stats?.reviews ?? 0,
+              icon: <Star size={18} />,
+              color: "#FBBF24",
+            },
+            {
+              label: "Visited",
+              value: user?.stats?.visited ?? 0,
+              icon: <MapPin size={18} />,
+              color: "#FF3B30",
+            },
+          ].map((s) => (
+            <div
+              key={s.label}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "16px 8px",
+                backgroundColor: "#FFFFFF",
+                borderRadius: "16px",
+                border: "1px solid rgba(0,0,0,0.05)",
+                gap: "4px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+              }}
+            >
+              <span style={{ color: s.color }}>{s.icon}</span>
+              <Text
+                style={{
+                  fontSize: "1.3rem",
+                  fontWeight: 800,
+                  color: "#1C1C1E",
+                  letterSpacing: "-0.5px",
+                  lineHeight: 1,
+                }}
+              >
+                {typeof s.value === "number" && s.value >= 1000
+                  ? `${(s.value / 1000).toFixed(1)}K`
+                  : s.value}
+              </Text>
+              <Text
+                style={{
+                  color: "rgba(0,0,0,0.4)",
+                  fontSize: "0.72rem",
+                  fontWeight: 600,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.5px",
+                }}
+              >
+                {s.label}
+              </Text>
+            </div>
+          ))}
+        </div>
 
         {/* ═══ TASTE DNA SECTION ═══ */}
         <Row fillWidth style={{ gap: "24px", marginBottom: "48px" }}>
@@ -831,85 +926,88 @@ export default function ProfilePage() {
               Top Highlights
             </Heading>
             <Column style={{ gap: "12px" }}>
-              {[
-                {
-                  icon: "🌶️",
-                  label: "Spice Specialist",
-                  desc: "Top 5% Spicy Reviewer",
-                  color: "#FFF5F5",
-                  bg: "#FFF5F5",
-                },
-                {
-                  icon: "🍜",
-                  label: "Street Food Guru",
-                  desc: "142 local stalls visited",
-                  color: "#FDFCF2",
-                  bg: "#FDFCF2",
-                },
-                {
-                  icon: "💎",
-                  label: "Hidden Gem Finder",
-                  desc: "Discovered 12 hotspots",
-                  color: "#F5F3FF",
-                  bg: "#F5F3FF",
-                },
-              ].map((trait) => (
-                <Row
-                  key={trait.label}
+              {topTraits.length > 0 ? (
+                topTraits.map((trait) => {
+                  const meta = TRAIT_META[trait.subject] ?? {
+                    icon: <Utensils size={20} />,
+                    label: trait.subject,
+                    desc: "A key taste preference",
+                    bg: "#F9F9FB",
+                    iconColor: "#8E8E93",
+                  };
+                  return (
+                    <Row
+                      key={trait.subject}
+                      style={{
+                        paddingTop: "16px",
+                        paddingBottom: "16px",
+                        paddingLeft: "20px",
+                        paddingRight: "20px",
+                        backgroundColor: "#FFFFFF",
+                        borderRadius: "18px",
+                        gap: "16px",
+                        alignItems: "center",
+                        borderTopWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderStyle: "solid",
+                        borderColor: meta.bg,
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.02)",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "44px",
+                          height: "44px",
+                          borderRadius: "12px",
+                          backgroundColor: meta.bg,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: meta.iconColor,
+                        }}
+                      >
+                        {meta.icon}
+                      </div>
+                      <Column style={{ gap: "2px" }}>
+                        <Text
+                          style={{
+                            color: "#1C1C1E",
+                            fontWeight: 700,
+                            fontSize: "0.95rem",
+                          }}
+                        >
+                          {meta.label}
+                        </Text>
+                        <Text
+                          style={{
+                            color: "#8E8E93",
+                            fontSize: "0.8rem",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {meta.desc} ·{" "}
+                          {Math.round(
+                            (trait.A / (trait.fullMark ?? 100)) * 100,
+                          )}
+                          %
+                        </Text>
+                      </Column>
+                    </Row>
+                  );
+                })
+              ) : (
+                <Text
                   style={{
-                    paddingTop: "16px",
-                    paddingBottom: "16px",
-                    paddingLeft: "20px",
-                    paddingRight: "20px",
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "18px",
-                    gap: "16px",
-                    alignItems: "center",
-                    borderTopWidth: "1px",
-                    borderBottomWidth: "1px",
-                    borderLeftWidth: "1px",
-                    borderRightWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: trait.bg,
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.02)",
+                    color: "#8E8E93",
+                    fontSize: "0.85rem",
+                    paddingTop: "12px",
                   }}
                 >
-                  <div
-                    style={{
-                      width: "44px",
-                      height: "44px",
-                      borderRadius: "12px",
-                      backgroundColor: trait.bg,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "1.2rem",
-                    }}
-                  >
-                    {trait.icon}
-                  </div>
-                  <Column style={{ gap: "2px" }}>
-                    <Text
-                      style={{
-                        color: "#1C1C1E",
-                        fontWeight: 700,
-                        fontSize: "0.95rem",
-                      }}
-                    >
-                      {trait.label}
-                    </Text>
-                    <Text
-                      style={{
-                        color: "#8E8E93",
-                        fontSize: "0.8rem",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {trait.desc}
-                    </Text>
-                  </Column>
-                </Row>
-              ))}
+                  Complete the taste quiz to unlock your top traits!
+                </Text>
+              )}
             </Column>
             <div style={{ flexGrow: 1, flexShrink: 1, flexBasis: "0%" }} />
             <Row
@@ -1547,6 +1645,55 @@ export default function ProfilePage() {
                           resize: "none",
                           fontFamily: "inherit",
                           lineHeight: 1.6,
+                          transition: "all 0.2s",
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = "#007AFF";
+                          e.target.style.backgroundColor = "#FFFFFF";
+                          e.target.style.boxShadow =
+                            "0 0 0 4px rgba(0, 122, 255, 0.1)";
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = "#E5E5EA";
+                          e.target.style.backgroundColor = "#F9F9FB";
+                          e.target.style.boxShadow = "none";
+                        }}
+                      />
+                    </Column>
+
+                    {/* Location */}
+                    <Column style={{ gap: "8px" }}>
+                      <Text
+                        style={{
+                          color: "#1C1C1E",
+                          fontSize: "0.85rem",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Location
+                      </Text>
+                      <input
+                        type="text"
+                        value={formLocation}
+                        onChange={(e) => setFormLocation(e.target.value)}
+                        placeholder="e.g. Ho Chi Minh City"
+                        style={{
+                          width: "100%",
+                          paddingTop: "14px",
+                          paddingRight: "20px",
+                          paddingBottom: "14px",
+                          paddingLeft: "20px",
+                          backgroundColor: "#F9F9FB",
+                          borderTopWidth: "1px",
+                          borderBottomWidth: "1px",
+                          borderLeftWidth: "1px",
+                          borderRightWidth: "1px",
+                          borderStyle: "solid",
+                          borderColor: "#E5E5EA",
+                          borderRadius: "16px",
+                          color: "#1C1C1E",
+                          fontSize: "0.95rem",
+                          outline: "none",
                           transition: "all 0.2s",
                         }}
                         onFocus={(e) => {

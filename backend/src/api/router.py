@@ -41,6 +41,9 @@ from src.media.router import router as media_router
 # ─── Messages ────────────────────────────────────────────────────────────────
 from src.messages.router import router as messages_router
 
+# ─── Culture Guide ────────────────────────────────────────────────────────
+from src.culture.router import router as culture_router
+
 # ─── Health ──────────────────────────────────────────────────────────────
 from src.health.router import router as health_router
 
@@ -69,3 +72,4 @@ api_router.include_router(badges_router,           prefix="/badges",           t
 api_router.include_router(settings_router,         prefix="/settings",         tags=["settings"])
 api_router.include_router(media_router,            prefix="/media",            tags=["media"])
 api_router.include_router(messages_router,         prefix="/messages",         tags=["messages"])
+api_router.include_router(culture_router,          prefix="/culture",          tags=["culture"])

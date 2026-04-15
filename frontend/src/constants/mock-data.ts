@@ -1,9 +1,28 @@
-import { ReelData, PostData, AIPickData, HeroBannerData, ProBannerData, UserProfile } from "@/types/dashboard";
+import React from "react";
+import {
+  Flame,
+  Moon,
+  Camera,
+  Crown,
+  Utensils,
+  Coffee,
+  MoonStar,
+  Croissant,
+} from "lucide-react";
+import {
+  ReelData,
+  PostData,
+  AIPickData,
+  HeroBannerData,
+  ProBannerData,
+  UserProfile,
+} from "@/types/dashboard";
 
 export const MOCK_HERO_BANNER: HeroBannerData = {
   title: "Weekend Street Food Tour",
   description: "Discover hidden gems and earn massive rewards this weekend.",
-  image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop",
+  image:
+    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop",
   tags: ["100XP / spot", "Light Rain • 1.2km"],
   xpBonus: "100XP / spot",
   ctaText: "Book Now",
@@ -26,7 +45,8 @@ export const MOCK_REELS: ReelData[] = [
     title: "Crispy Pork Belly ASMR 🔥",
     user: "@foodie_ramona",
     views: "1.2M",
-    userAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop",
+    userAvatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop",
     img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=700&fit=crop",
   },
   {
@@ -34,7 +54,8 @@ export const MOCK_REELS: ReelData[] = [
     title: "Hidden Ramen Spot in District 1",
     user: "@noodle_king",
     views: "890K",
-    userAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop",
+    userAvatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop",
     img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=700&fit=crop",
   },
   {
@@ -42,7 +63,8 @@ export const MOCK_REELS: ReelData[] = [
     title: "Vietnamese Coffee Art ☕",
     user: "@cafe_hunter",
     views: "2.1M",
-    userAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop",
+    userAvatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop",
     img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=700&fit=crop",
   },
   {
@@ -50,7 +72,8 @@ export const MOCK_REELS: ReelData[] = [
     title: "Street Bánh Mì at 3AM 🌙",
     user: "@midnight_bites",
     views: "567K",
-    userAvatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=64&h=64&fit=crop",
+    userAvatar:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=64&h=64&fit=crop",
     img: "https://images.unsplash.com/photo-1600454021915-de1c1cb0e91f?w=400&h=700&fit=crop",
   },
   {
@@ -58,7 +81,8 @@ export const MOCK_REELS: ReelData[] = [
     title: "Dragon Fruit Smoothie Bowl",
     user: "@healthy_vibes",
     views: "340K",
-    userAvatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=64&h=64&fit=crop",
+    userAvatar:
+      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=64&h=64&fit=crop",
     img: "https://images.unsplash.com/photo-1590301157890-4810ed352733?w=400&h=700&fit=crop",
   },
   {
@@ -66,59 +90,72 @@ export const MOCK_REELS: ReelData[] = [
     title: "Seafood Hot Pot Mukbang 🦐",
     user: "@ocean_eats",
     views: "1.8M",
-    userAvatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop",
+    userAvatar:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop",
     img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=700&fit=crop",
   },
 ];
 
 export const MOCK_POSTS: PostData[] = [
   {
+    id: 1,
     name: "Minh T.",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=128&h=128&fit=crop",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=128&h=128&fit=crop",
     time: "2h",
     location: "Dĩ An",
     spotName: "Bún Bò O Trắng",
     rating: 4.8,
-    review: "Tìm được quán bún bò chân ái mới ở Dĩ An! Nước dùng thanh, siêu nhiều thịt. Mọi người nên thử nhé. 🍜🔥",
+    review:
+      "Tìm được quán bún bò chân ái mới ở Dĩ An! Nước dùng thanh, siêu nhiều thịt. Mọi người nên thử nhé. 🍜🔥",
     img: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=680&h=480&fit=crop",
     tags: ["Street Food", "Spicy"],
     likes: 42,
     comments: 8,
   },
   {
+    id: 2,
     name: "Lê Hương",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=128&h=128&fit=crop",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=128&h=128&fit=crop",
     time: "5h",
     location: "Thủ Đức",
     spotName: "Cafe Rooftop Sunset",
     rating: 4.5,
-    review: "View đẹp, cà phê ổn, giá hơi cao nhưng đáng để trải nghiệm vào chiều cuối tuần. Chỗ ngồi ngoài trời mát lắm! ☕🌅",
+    review:
+      "View đẹp, cà phê ổn, giá hơi cao nhưng đáng để trải nghiệm vào chiều cuối tuần. Chỗ ngồi ngoài trời mát lắm! ☕🌅",
     img: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=680&h=480&fit=crop",
     tags: ["Cafe", "Rooftop"],
     likes: 128,
     comments: 24,
   },
   {
+    id: 3,
     name: "Phúc Nguyễn",
-    avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=128&h=128&fit=crop",
+    avatar:
+      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=128&h=128&fit=crop",
     time: "8h",
     location: "Dĩ An",
     spotName: "Hủ Tiếu Nam Vang Chú Sáu",
     rating: 4.9,
-    review: "Hủ tiếu khô ở đây xịn nhất vùng, nước lèo thơm béo, hoành thánh giòn tan. Quán đông nhưng phục vụ nhanh. Sẽ quay lại! 🤤",
+    review:
+      "Hủ tiếu khô ở đây xịn nhất vùng, nước lèo thơm béo, hoành thánh giòn tan. Quán đông nhưng phục vụ nhanh. Sẽ quay lại! 🤤",
     img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=680&h=480&fit=crop",
     tags: ["Noodles", "Budget"],
     likes: 89,
     comments: 15,
   },
   {
+    id: 4,
     name: "Thanh Vũ",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=128&h=128&fit=crop",
+    avatar:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=128&h=128&fit=crop",
     time: "12h",
     location: "Bình Dương",
     spotName: "BBQ Garden Night",
     rating: 4.3,
-    review: "Thịt nướng ướp khói thơm phức, bia đá lạnh. Không gian ngoài trời thoáng mát, nhạc acoustic live nữa. 🍖🍻",
+    review:
+      "Thịt nướng ướp khói thơm phức, bia đá lạnh. Không gian ngoài trời thoáng mát, nhạc acoustic live nữa. 🍖🍻",
     img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=680&h=480&fit=crop",
     tags: ["BBQ", "Night Life"],
     likes: 67,
@@ -162,12 +199,36 @@ export const AI_PICKS: AIPickData[] = [
 ];
 
 export const STATIC_CATEGORIES = [
-  { id: "all", label: "All Items", icon: "🍱" },
-  { id: "street", label: "Street Food", icon: "🍜" },
-  { id: "cafe", label: "Cafes", icon: "☕" },
-  { id: "night", label: "Late Night", icon: "🌙" },
-  { id: "healthy", label: "Healthy", icon: "🥗" },
-  { id: "bakery", label: "Bakeries", icon: "🥐" },
+  {
+    id: "all",
+    label: "All Items",
+    icon: React.createElement(Utensils, { size: 14 }),
+  },
+  {
+    id: "street",
+    label: "Street Food",
+    icon: React.createElement(Utensils, { size: 14 }),
+  },
+  {
+    id: "cafe",
+    label: "Cafes",
+    icon: React.createElement(Coffee, { size: 14 }),
+  },
+  {
+    id: "night",
+    label: "Late Night",
+    icon: React.createElement(MoonStar, { size: 14 }),
+  },
+  {
+    id: "healthy",
+    label: "Healthy",
+    icon: React.createElement(Flame, { size: 14 }),
+  },
+  {
+    id: "bakery",
+    label: "Bakeries",
+    icon: React.createElement(Croissant, { size: 14 }),
+  },
 ];
 
 export const STATIC_TAGS = [
@@ -197,10 +258,26 @@ export const MOCK_USER: UserProfile = {
   xp: 750,
   nextLevelXp: 1000,
   badges: [
-    { icon: "🔥", label: "Spice Master", color: "#E63946" },
-    { icon: "🌙", label: "Night Owl", color: "#7B2FF7" },
-    { icon: "📸", label: "Photo Pro", color: "#2A9D8F" },
-    { icon: "👑", label: "Top Reviewer", color: "#FBBF24" },
+    {
+      icon: React.createElement(Flame, { size: 16 }),
+      label: "Spice Master",
+      color: "#E63946",
+    },
+    {
+      icon: React.createElement(Moon, { size: 16 }),
+      label: "Night Owl",
+      color: "#7B2FF7",
+    },
+    {
+      icon: React.createElement(Camera, { size: 16 }),
+      label: "Photo Pro",
+      color: "#2A9D8F",
+    },
+    {
+      icon: React.createElement(Crown, { size: 16 }),
+      label: "Top Reviewer",
+      color: "#FBBF24",
+    },
   ],
   radarData: [
     { subject: "Street Food", A: 100, fullMark: 150 },

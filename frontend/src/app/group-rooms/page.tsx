@@ -18,6 +18,19 @@ import {
   Check,
   X,
   Save,
+  Flame,
+  Coffee,
+  Utensils,
+  Gem,
+  Moon,
+  Sunrise,
+  Soup,
+  IceCreamCone,
+  Sparkles,
+  Home,
+  Users,
+  AlertTriangle,
+  SearchX,
 } from "lucide-react";
 import { toast } from "sonner";
 import { apiGet, apiPost } from "@/lib/api";
@@ -118,16 +131,16 @@ const ALL_CATEGORIES: Array<LobbyCategory | "All"> = [
   "Dessert Crawl",
 ];
 
-const CATEGORY_EMOJI: Record<string, string> = {
-  "Food Challenge": "🌶️",
-  "Coffee Tour": "☕",
-  "Street Food": "🍜",
-  "Hidden Gems": "💎",
-  "Night Market": "🌙",
-  Brunch: "🥑",
-  "Ramen Hunt": "🍜",
-  "Dessert Crawl": "🍮",
-  All: "✨",
+const CATEGORY_ICON: Record<string, React.ReactElement> = {
+  "Food Challenge": <Flame size={12} />,
+  "Coffee Tour": <Coffee size={12} />,
+  "Street Food": <Utensils size={12} />,
+  "Hidden Gems": <Gem size={12} />,
+  "Night Market": <Moon size={12} />,
+  Brunch: <Sunrise size={12} />,
+  "Ramen Hunt": <Soup size={12} />,
+  "Dessert Crawl": <IceCreamCone size={12} />,
+  All: <Sparkles size={12} />,
 };
 
 const STATUS_CONFIG: Record<
@@ -329,7 +342,7 @@ function RoomCard({
               border: "1px solid rgba(255,255,255,0.25)",
             }}
           >
-            <span>{CATEGORY_EMOJI[lobby.category]}</span>
+            {CATEGORY_ICON[lobby.category]}
             {lobby.category}
           </div>
         )}
@@ -649,7 +662,7 @@ function CreateRoomModal({
                         }
                   }
                 >
-                  <span>{CATEGORY_EMOJI[cat]}</span> {cat}
+                  {CATEGORY_ICON[cat]} {cat}
                 </button>
               ))}
             </div>
@@ -995,19 +1008,19 @@ export default function GroupRoomsPage() {
             {
               label: "Active Rooms",
               value: counts.All,
-              icon: "🏠",
+              icon: <Home size={20} />,
               color: "#007AFF",
             },
             {
               label: "Explorers Online",
               value: totalMembers,
-              icon: "👥",
+              icon: <Users size={20} />,
               color: "#34C759",
             },
             {
               label: "In Progress Now",
               value: inProgressCount,
-              icon: "⚡",
+              icon: <Zap size={20} />,
               color: "#FF9500",
             },
           ].map((stat, i) => (
@@ -1023,8 +1036,11 @@ export default function GroupRoomsPage() {
               }}
             >
               <div
-                className="w-11 h-11 rounded-[14px] flex items-center justify-center text-xl"
-                style={{ backgroundColor: stat.color + "18" }}
+                className="w-11 h-11 rounded-[14px] flex items-center justify-center"
+                style={{
+                  backgroundColor: stat.color + "18",
+                  color: stat.color,
+                }}
               >
                 {stat.icon}
               </div>
@@ -1127,7 +1143,7 @@ export default function GroupRoomsPage() {
                     }
               }
             >
-              <span>{CATEGORY_EMOJI[cat]}</span>
+              {CATEGORY_ICON[cat]}
               {cat === "All" ? "All Categories" : cat}
             </motion.button>
           ))}
@@ -1169,7 +1185,15 @@ export default function GroupRoomsPage() {
               exit={{ opacity: 0 }}
               className="flex flex-col items-center justify-center py-24 text-center"
             >
-              <div className="text-5xl mb-4">⚠️</div>
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                style={{
+                  backgroundColor: "rgba(255,59,48,0.1)",
+                  color: "#FF3B30",
+                }}
+              >
+                <AlertTriangle size={32} />
+              </div>
               <p className="text-[18px] font-bold text-[#1C1C1E]">
                 Could not load rooms
               </p>
@@ -1195,7 +1219,15 @@ export default function GroupRoomsPage() {
               exit={{ opacity: 0 }}
               className="flex flex-col items-center justify-center py-24 text-center"
             >
-              <div className="text-5xl mb-4">🔍</div>
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
+                style={{
+                  backgroundColor: "rgba(142,142,147,0.1)",
+                  color: "#8E8E93",
+                }}
+              >
+                <SearchX size={32} />
+              </div>
               <p className="text-[18px] font-bold text-[#1C1C1E]">
                 No rooms found
               </p>

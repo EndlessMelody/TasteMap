@@ -238,3 +238,24 @@ class ProfileResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ─── Social Context (for public profile page) ───────────────────────────────
+
+class MutualFriendStub(BaseModel):
+    id: int
+    username: str
+    display_name: Optional[str] = None
+    avatar_url: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class SocialContextResponse(BaseModel):
+    """Viewer-aware context for a user's public profile page."""
+    friendship_status: str = "none"  # none / pending_sent / pending_received / accepted / blocked
+    friendship_id: Optional[int] = None
+    food_vector: Optional[List[float]] = None
+    mutual_friends_count: int = 0
+    mutual_friends: List[MutualFriendStub] = []

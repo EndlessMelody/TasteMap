@@ -15,8 +15,31 @@ import {
   CheckCircle,
   Navigation,
   Star,
+  Smile,
+  Flame,
+  Heart,
+  Users,
+  User,
+  PartyPopper,
+  Map,
+  Utensils,
+  Coffee,
+  Soup,
+  IceCreamCone,
+  Fish,
 } from "lucide-react";
+
 import Link from "next/link";
+
+const STOP_CATEGORY_ICON: Record<string, React.ReactElement> = {
+  "Street Food": <Utensils size={16} />,
+  Vietnamese: <Soup size={16} />,
+  Cafe: <Coffee size={16} />,
+  Ramen: <Soup size={16} />,
+  Dessert: <IceCreamCone size={16} />,
+  Japanese: <Fish size={16} />,
+  BBQ: <Flame size={16} />,
+};
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -109,33 +132,58 @@ const MOCK_ITINERARIES: Record<string, ItineraryStop[]> = {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const MOODS = [
-  { id: "casual", label: "Casual", emoji: "😌", desc: "Relaxed, no rush" },
+  {
+    id: "casual",
+    label: "Casual",
+    icon: <Smile size={28} />,
+    desc: "Relaxed, no rush",
+  },
   {
     id: "adventurous",
     label: "Adventurous",
-    emoji: "🔥",
+    icon: <Flame size={28} />,
     desc: "New & unexpected",
   },
-  { id: "romantic", label: "Romantic", emoji: "💫", desc: "Date-night vibes" },
-  { id: "family", label: "Family", emoji: "👨‍👩‍👧", desc: "All-ages friendly" },
+  {
+    id: "romantic",
+    label: "Romantic",
+    icon: <Heart size={28} />,
+    desc: "Date-night vibes",
+  },
+  {
+    id: "family",
+    label: "Family",
+    icon: <Users size={28} />,
+    desc: "All-ages friendly",
+  },
 ];
 
 const CUISINES = [
-  "🍜 Vietnamese",
-  "☕ Cafe",
-  "🍜 Ramen",
-  "🥖 Street Food",
-  "🍖 BBQ",
-  "🍣 Japanese",
-  "🍮 Dessert",
-  "🥗 Healthy",
+  "Vietnamese",
+  "Cafe",
+  "Ramen",
+  "Street Food",
+  "BBQ",
+  "Japanese",
+  "Dessert",
+  "Healthy",
 ];
 
 const GROUPS = [
-  { id: "solo", label: "Solo", emoji: "🚶", desc: "Just me" },
-  { id: "duo", label: "Couple", emoji: "👫", desc: "2 people" },
-  { id: "small", label: "Small Group", emoji: "👥", desc: "3–5 people" },
-  { id: "large", label: "Large Group", emoji: "🎉", desc: "6+ people" },
+  { id: "solo", label: "Solo", icon: <User size={24} />, desc: "Just me" },
+  { id: "duo", label: "Couple", icon: <Heart size={24} />, desc: "2 people" },
+  {
+    id: "small",
+    label: "Small Group",
+    icon: <Users size={24} />,
+    desc: "3–5 people",
+  },
+  {
+    id: "large",
+    label: "Large Group",
+    icon: <PartyPopper size={24} />,
+    desc: "6+ people",
+  },
 ];
 
 const DURATIONS = ["2 hours", "4 hours", "Half Day", "Full Day"];
@@ -193,7 +241,9 @@ function StepPreferences({
                   : { backgroundColor: "#F9F9FB", borderColor: "transparent" }
               }
             >
-              <span className="text-[28px]">{m.emoji}</span>
+              <span style={{ color: mood === m.id ? "#007AFF" : "#636366" }}>
+                {m.icon}
+              </span>
               <div>
                 <p className="text-[14px] font-bold text-[#1C1C1E]">
                   {m.label}
@@ -260,7 +310,13 @@ function StepPreferences({
                   : { backgroundColor: "#F9F9FB", borderColor: "transparent" }
               }
             >
-              <span className="text-[24px]">{g.emoji}</span>
+              <span
+                style={{
+                  color: group === g.id ? "#007AFF" : "#636366",
+                }}
+              >
+                {g.icon}
+              </span>
               <p className="text-[12px] font-bold text-[#1C1C1E]">{g.label}</p>
               <p className="text-[10px] text-[#8E8E93]">{g.desc}</p>
             </motion.button>
@@ -530,7 +586,7 @@ function StepResult({
           className="w-12 h-12 rounded-[16px] flex items-center justify-center"
           style={{ background: "rgba(255,193,7,0.18)" }}
         >
-          <span className="text-[24px]">🗺️</span>
+          <Map size={24} style={{ color: "rgba(255,193,7,0.9)" }} />
         </div>
         <div className="flex-1">
           <h3 className="text-[18px] font-extrabold text-white">
@@ -568,13 +624,13 @@ function StepResult({
             {/* Timeline line */}
             <div className="flex flex-col items-center w-10 flex-shrink-0">
               <div
-                className="w-9 h-9 rounded-full flex items-center justify-center text-[16px] font-extrabold text-white flex-shrink-0"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-white flex-shrink-0"
                 style={{
                   backgroundColor: stop.accent,
                   boxShadow: `0 4px 12px ${stop.accent}44`,
                 }}
               >
-                {stop.emoji}
+                {STOP_CATEGORY_ICON[stop.category] ?? <Utensils size={16} />}
               </div>
               {i < stops.length - 1 && (
                 <div className="flex flex-col items-center gap-0.5 mt-1 mb-1">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Column, Row, Heading, Text, Avatar } from "@/components/OnceUI";
 import {
   Search,
@@ -10,12 +10,38 @@ import {
   X,
   TrendingUp,
   UserPlus,
+  Clock,
+  Send,
+  AlertTriangle,
+  SearchX,
+  Target,
+  Moon,
+  MailOpen,
 } from "lucide-react";
 import { FriendRow, Friend } from "@/components/features/foodies/FriendRow";
 import { useChat } from "@/context/ChatContext";
 import { useFoodies } from "@/hooks/useFoodies";
-import type { PendingRequest } from "@/hooks/useFoodies";
+import type { PendingRequest, SentRequest } from "@/hooks/useFoodies";
 import { AddFriendSearch } from "@/components/features/foodies/AddFriendSearch";
+
+const DEFAULT_COVER =
+  "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80";
+const DEFAULT_AVATAR =
+  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop";
+
+function mapSentToFriend(s: SentRequest): Friend {
+  return {
+    id: s.id,
+    name: s.display_name || s.username,
+    status: s.title || s.bio || "TasteMap Explorer",
+    note: s.location || "Vietnam",
+    avatar: s.avatar_url || DEFAULT_AVATAR,
+    cover: s.cover_url || DEFAULT_COVER,
+    match: s.match_score,
+    isOnline: false,
+    friendshipId: s.friendship_id,
+  };
+}
 
 // ── Pending Request Card ──────────────────────────────────────────────────────
 function PendingRequestCard({
@@ -165,27 +191,37 @@ function PendingRequestCard({
   );
 }
 
-type FilterTab = "all" | "online" | "high-match";
+type FilterTab = "all" | "online" | "high-match" | "sent";
 
 const TAB_CONFIG: { id: FilterTab; label: string; icon: React.ReactNode }[] = [
   { id: "all", label: "All", icon: <Users size={13} /> },
   { id: "online", label: "Online", icon: <Wifi size={13} /> },
   { id: "high-match", label: "High Match", icon: <Flame size={13} /> },
+  { id: "sent", label: "Sent", icon: <Send size={13} /> },
 ];
 
 export default function FoodiesPage() {
   const { isChatOpen, setIsChatOpen, setActiveFriend } = useChat();
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query), 250);
+    return () => clearTimeout(t);
+  }, [query]);
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
   const {
     friends,
     discover,
     pendingRequests,
+    sentRequests,
     loading,
     error,
     sendRequest,
     acceptRequest,
     declineRequest,
+    cancelRequest,
+    unfriend,
   } = useFoodies();
 
   const handleMessageUser = (friend: Friend) => {
@@ -196,18 +232,19 @@ export default function FoodiesPage() {
   const onlineCount = friends.filter((f) => f.isOnline).length;
 
   const filtered = useMemo(() => {
+    if (activeTab === "sent") return [];
     let list = friends;
     if (activeTab === "online") list = list.filter((f) => f.isOnline);
     if (activeTab === "high-match")
       list = list.filter((f) => (f.match ?? 0) >= 80);
-    if (query.trim())
+    if (debouncedQuery.trim())
       list = list.filter(
         (f) =>
-          f.name.toLowerCase().includes(query.toLowerCase()) ||
-          f.status.toLowerCase().includes(query.toLowerCase()),
+          f.name.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+          f.status.toLowerCase().includes(debouncedQuery.toLowerCase()),
       );
     return list;
-  }, [query, activeTab, friends]);
+  }, [debouncedQuery, activeTab, friends]);
 
   /* ── Compact (chat-open) mode keeps the old behaviour ── */
   if (isChatOpen) {
@@ -346,7 +383,20 @@ export default function FoodiesPage() {
           backgroundColor: "#F2F2F7",
         }}
       >
-        <Text style={{ fontSize: "2rem" }}>⚠️</Text>
+        <div
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            backgroundColor: "rgba(255,59,48,0.08)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#FF3B30",
+          }}
+        >
+          <AlertTriangle size={24} />
+        </div>
         <Heading variant="heading-strong-s" style={{ color: "#1C1C1E" }}>
           Could not load foodies
         </Heading>
@@ -384,6 +434,12 @@ export default function FoodiesPage() {
       label: "Avg Match",
       value: `${avgMatch}%`,
       color: "#AF52DE",
+    },
+    {
+      icon: <Clock size={14} />,
+      label: "Sent",
+      value: sentRequests.length,
+      color: "#6C6C70",
     },
   ];
 
@@ -691,6 +747,16 @@ export default function FoodiesPage() {
                 color: "#1C1C1E",
                 outline: "none",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+                transition: "border-color 0.15s, box-shadow 0.15s",
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "rgba(0,122,255,0.4)";
+                e.target.style.boxShadow =
+                  "0 0 0 4px rgba(0,122,255,0.08), 0 2px 8px rgba(0,0,0,0.04)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "rgba(0,0,0,0.07)";
+                e.target.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)";
               }}
             />
             {query && (
@@ -722,7 +788,9 @@ export default function FoodiesPage() {
                   ? friends.length
                   : tab.id === "online"
                     ? friends.filter((f) => f.isOnline).length
-                    : friends.filter((f) => (f.match ?? 0) >= 80).length;
+                    : tab.id === "high-match"
+                      ? friends.filter((f) => (f.match ?? 0) >= 80).length
+                      : sentRequests.length;
               return (
                 <button
                   key={tab.id}
@@ -770,13 +838,112 @@ export default function FoodiesPage() {
               variant="body-default-xs"
               style={{ marginLeft: "auto", color: "rgba(0,0,0,0.3)" }}
             >
-              {filtered.length} result{filtered.length !== 1 ? "s" : ""}
+              {activeTab === "sent" ? sentRequests.length : filtered.length}{" "}
+              result
+              {(activeTab === "sent"
+                ? sentRequests.length
+                : filtered.length) !== 1
+                ? "s"
+                : ""}
             </Text>
           </Row>
         </Column>
 
-        {/* ── Friend Grid — 3 columns on wide screens ── */}
-        {filtered.length > 0 ? (
+        {/* ══ Sent Requests Grid ══ */}
+        {activeTab === "sent" && (
+          <Column style={{ gap: 14 }}>
+            <Row style={{ alignItems: "center", gap: 10 }}>
+              <div
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  backgroundColor: "#8E8E93",
+                  boxShadow: "0 0 0 3px rgba(142,142,147,0.2)",
+                }}
+              />
+              <Heading variant="heading-strong-s" style={{ color: "#1C1C1E" }}>
+                Sent Requests
+              </Heading>
+              <div
+                style={{
+                  padding: "2px 10px",
+                  borderRadius: 20,
+                  backgroundColor: "rgba(142,142,147,0.1)",
+                  border: "1px solid rgba(142,142,147,0.2)",
+                }}
+              >
+                <Text
+                  style={{ fontSize: 12, fontWeight: 700, color: "#8E8E93" }}
+                >
+                  {sentRequests.length}
+                </Text>
+              </div>
+            </Row>
+            {sentRequests.length > 0 ? (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                  gap: 16,
+                }}
+              >
+                {sentRequests.map((req) => (
+                  <FriendRow
+                    key={req.friendship_id}
+                    friend={mapSentToFriend(req)}
+                    variant="sent"
+                    isCompact={false}
+                    onMessage={() => handleMessageUser(mapSentToFriend(req))}
+                    onCancel={(f) => cancelRequest(f.friendshipId!)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <Column
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "64px 24px",
+                  gap: 12,
+                  backgroundColor: "white",
+                  borderRadius: 20,
+                  border: "1px solid rgba(0,0,0,0.04)",
+                }}
+              >
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(142,142,147,0.08)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#8E8E93",
+                  }}
+                >
+                  <MailOpen size={24} />
+                </div>
+                <Heading
+                  variant="heading-strong-s"
+                  style={{ color: "#1C1C1E" }}
+                >
+                  No sent requests
+                </Heading>
+                <Text
+                  variant="body-default-s"
+                  style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
+                >
+                  Add some foodies to grow your network!
+                </Text>
+              </Column>
+            )}
+          </Column>
+        )}
+
+        {/* ══ Friend Grid — 3 columns on wide screens ══ */}
+        {activeTab !== "sent" && filtered.length > 0 && (
           <div
             style={{
               display: "grid",
@@ -788,39 +955,156 @@ export default function FoodiesPage() {
               <FriendRow
                 key={friend.id}
                 friend={friend}
+                variant="friend"
                 isCompact={false}
                 onMessage={() => handleMessageUser(friend)}
                 onInvite={(f) => alert(`Invited ${f.name} to a new Food Tour!`)}
+                onUnfriend={(f) =>
+                  f.friendshipId ? unfriend(f.friendshipId, f.id) : undefined
+                }
               />
             ))}
           </div>
-        ) : (
-          <Column
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
+        )}
+        {activeTab !== "sent" &&
+          filtered.length === 0 &&
+          (() => {
+            const base = {
+              alignItems: "center" as const,
+              justifyContent: "center" as const,
               padding: "64px 24px",
               gap: 12,
               backgroundColor: "white",
               borderRadius: 20,
               border: "1px solid rgba(0,0,0,0.04)",
-            }}
-          >
-            <Text style={{ fontSize: "2rem" }}>🔍</Text>
-            <Heading variant="heading-strong-s" style={{ color: "#1C1C1E" }}>
-              No foodies found
-            </Heading>
-            <Text
-              variant="body-default-s"
-              style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
-            >
-              Try a different search term or filter.
-            </Text>
-          </Column>
-        )}
+            };
+            if (activeTab === "online")
+              return (
+                <Column style={base}>
+                  <div
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: "50%",
+                      backgroundColor: "rgba(52,199,89,0.08)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#34C759",
+                    }}
+                  >
+                    <Moon size={24} />
+                  </div>
+                  <Heading
+                    variant="heading-strong-s"
+                    style={{ color: "#1C1C1E" }}
+                  >
+                    No one online right now
+                  </Heading>
+                  <Text
+                    variant="body-default-s"
+                    style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
+                  >
+                    Check back later to see who&apos;s active.
+                  </Text>
+                </Column>
+              );
+            if (activeTab === "high-match")
+              return (
+                <Column style={base}>
+                  <div
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: "50%",
+                      backgroundColor: "rgba(175,82,222,0.08)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#AF52DE",
+                    }}
+                  >
+                    <Target size={24} />
+                  </div>
+                  <Heading
+                    variant="heading-strong-s"
+                    style={{ color: "#1C1C1E" }}
+                  >
+                    No high-match foodies yet
+                  </Heading>
+                  <Text
+                    variant="body-default-s"
+                    style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
+                  >
+                    Discover and add foodies to find your taste twins!
+                  </Text>
+                </Column>
+              );
+            if (query.trim())
+              return (
+                <Column style={base}>
+                  <div
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: "50%",
+                      backgroundColor: "rgba(142,142,147,0.08)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#8E8E93",
+                    }}
+                  >
+                    <SearchX size={24} />
+                  </div>
+                  <Heading
+                    variant="heading-strong-s"
+                    style={{ color: "#1C1C1E" }}
+                  >
+                    No results for &ldquo;{query}&rdquo;
+                  </Heading>
+                  <Text
+                    variant="body-default-s"
+                    style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
+                  >
+                    Try a different name or clear the search.
+                  </Text>
+                </Column>
+              );
+            return (
+              <Column style={base}>
+                <div
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: "50%",
+                    backgroundColor: "rgba(0,122,255,0.08)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#007AFF",
+                  }}
+                >
+                  <Users size={24} />
+                </div>
+                <Heading
+                  variant="heading-strong-s"
+                  style={{ color: "#1C1C1E" }}
+                >
+                  Your foodies list is empty
+                </Heading>
+                <Text
+                  variant="body-default-s"
+                  style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
+                >
+                  Search by username above to add your first foodie!
+                </Text>
+              </Column>
+            );
+          })()}
 
-        {/* ── Discover Section ── */}
-        {discover.length > 0 && (
+        {/* ══ Discover Section ══ */}
+        {activeTab !== "sent" && discover.length > 0 && (
           <Column style={{ gap: 16 }}>
             <Row style={{ alignItems: "center", gap: 8 }}>
               <div
@@ -868,6 +1152,7 @@ export default function FoodiesPage() {
                 <FriendRow
                   key={person.id}
                   friend={person}
+                  variant="discover"
                   isCompact={false}
                   onMessage={() => handleMessageUser(person)}
                   onInvite={(f) => sendRequest(f.id)}
