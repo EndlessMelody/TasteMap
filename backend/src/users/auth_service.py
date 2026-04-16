@@ -28,7 +28,7 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(user_id: int, expires_delta: Optional[timedelta] = None) -> Token:
+def create_access_token(user_id: int, role: str = "user", expires_delta: Optional[timedelta] = None) -> Token:
     """Create a JWT access token for a user."""
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -37,6 +37,7 @@ def create_access_token(user_id: int, expires_delta: Optional[timedelta] = None)
     
     to_encode = {
         "sub": str(user_id),
+        "role": role,
         "exp": expire,
         "type": "access",
         "iat": datetime.utcnow()
@@ -56,13 +57,14 @@ def decode_token(token: str) -> Optional[TokenPayload]:
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         user_id = int(payload.get("sub"))
+        role = payload.get("role", "user")
         exp = datetime.fromtimestamp(payload.get("exp"))
         token_type = payload.get("type", "access")
         
         if token_type != "access":
             return None
             
-        return TokenPayload(sub=user_id, exp=exp, type=token_type)
+        return TokenPayload(sub=user_id, role=role, exp=exp, type=token_type)
     except (JWTError, ValueError, KeyError):
         return None
 

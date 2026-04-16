@@ -101,6 +101,46 @@ async def get_current_user_id(
         raise HTTPException(status_code=401, detail=f"Lỗi xác thực: {str(e)}")
 
 
+async def get_current_user(
+    http_auth: HTTPAuthorizationCredentials = Depends(reusable_oauth2),
+    db: AsyncSession = Depends(get_db),
+) -> User:
+    """Xác thực token và trả về object User đầy đủ."""
+    token = http_auth.credentials
+    try:
+        payload = _decode_supabase_token(token)
+        supabase_uid = payload.get("sub")
+        if not supabase_uid:
+            raise HTTPException(status_code=401, detail="Token không hợp lệ: thiếu 'sub'")
+
+        result = await db.execute(select(User).where(User.supabase_uid == supabase_uid))
+        user = result.scalar_one_or_none()
+
+        if not user:
+            raise HTTPException(
+                status_code=401,
+                detail="User chưa được đồng bộ.",
+            )
+        return user
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token đã hết hạn")
+    except jwt.InvalidTokenError as e:
+        raise HTTPException(status_code=401, detail=f"Token không hợp lệ: {str(e)}")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Lỗi xác thực: {str(e)}")
+
+
+async def get_current_admin(
+    current_user: User = Depends(get_current_user),
+) -> User:
+    """Dependency cho các route admin: yêu cầu user có role='admin'."""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Không có quyền truy cập. Yêu cầu quyền admin.")
+    return current_user
+
+
 async def get_optional_user_id(
     request: Request,
     db: AsyncSession = Depends(get_db),

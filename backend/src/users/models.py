@@ -18,6 +18,7 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     supabase_uid = Column(String, unique=True, index=True, nullable=True) # UUID từ Supabase Auth
     password_hash = Column(String, nullable=True)  # Nullable cho giai đoạn chưa có auth
+    role = Column(String, default="user", nullable=False) # admin hoặc user
     display_name = Column(String, nullable=True)
     avatar_url = Column(String, nullable=True)
 

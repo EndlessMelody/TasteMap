@@ -2,15 +2,16 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  // 1. Kiểm tra Admin routes (Logic cũ)
   const pathname = request.nextUrl.pathname;
+
+  // 1. Kiểm tra Admin routes (RBAC qua cookie)
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
-    const adminToken = request.cookies.get("admin_token")?.value;
-    const adminSecret = process.env.NEXT_PUBLIC_ADMIN_SECRET || "tastemap-admin-2026";
-    if (adminToken !== adminSecret) {
+    const userRole = request.cookies.get("user_role")?.value;
+    
+    // Nếu không phải admin (có thể là undefined hoặc "user"), đá văng ra ngoài
+    if (userRole !== "admin") {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
-    // Nếu là admin và đã đăng nhập, có thể kệ supabase session nếu không cần
   }
 
   // 2. Supabase SSR Session Refresh

@@ -1,30 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Column, Row, Heading, Text, Button } from "@/components/OnceUI";
-import { ShieldCheck, Eye, EyeOff } from "lucide-react";
+import { ShieldCheck, ShieldAlert } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [showPw, setShowPw] = useState(false);
+  const { user, isInitializing } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    setLoading(true);
-    setError("");
-    const secret = process.env.NEXT_PUBLIC_ADMIN_SECRET || "tastemap-admin-2026";
+  useEffect(() => {
+    // Nếu chưa load auth xong thì chờ
+    if (isInitializing) return;
 
-    if (password === secret) {
-      // Set cookie (30 ngày)
-      document.cookie = `admin_token=${secret}; path=/; max-age=${60 * 60 * 24 * 30}`;
+    // Nếu user đã có role admin trong state nhưng cookie bị thiếu (do refresh hoặc lý do nào đó)
+    // thì set lại cookie và đẩy tự động vào trong
+    if (user && user.role === "admin") {
+      document.cookie = `user_role=admin; path=/; max-age=86400`;
       router.push("/admin/locations");
-    } else {
-      setError("Sai mật khẩu. Liên hệ Admin để được cấp quyền.");
-      setLoading(false);
     }
+  }, [user, isInitializing, router]);
+
+  const handleGoHome = () => {
+    router.push("/");
+  };
+
+  const handleLoginClick = () => {
+    router.push("/login?redirect=/admin");
   };
 
   return (
@@ -51,91 +55,60 @@ export default function AdminLoginPage() {
             width: 64,
             height: 64,
             borderRadius: "50%",
-            background: "linear-gradient(135deg, #007AFF, #5856D6)",
+            background: user && user.role !== "admin" 
+              ? "linear-gradient(135deg, #FF3B30, #FF9500)" 
+              : "linear-gradient(135deg, #007AFF, #5856D6)",
             boxShadow: "0 8px 32px rgba(0,122,255,0.3)",
           }}
         >
-          <ShieldCheck size={28} color="#fff" />
+          {user && user.role !== "admin" ? (
+            <ShieldAlert size={28} color="#fff" />
+          ) : (
+            <ShieldCheck size={28} color="#fff" />
+          )}
         </Row>
 
         <Column gap={6} align="center">
           <Heading variant="heading-strong-l">Admin Panel</Heading>
-          <Text
-            variant="body-default-s"
-            style={{ color: "var(--text-secondary)", textAlign: "center" }}
-          >
-            Nhập mật khẩu quản trị để truy cập
-          </Text>
-        </Column>
-
-        {/* Input */}
-        <Column gap={12} fillWidth>
-          <Row
-            fillWidth
-            vertical="center"
-            style={{
-              background: "#F2F2F7",
-              borderRadius: 16,
-              border: error ? "1.5px solid #FF3B30" : "1px solid #E5E5EA",
-              overflow: "hidden",
-              transition: "border-color 0.2s",
-            }}
-          >
-            <input
-              type={showPw ? "text" : "password"}
-              placeholder="Mật khẩu quản trị..."
-              value={password}
-              onChange={(e) => { setPassword(e.target.value); setError(""); }}
-              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-              style={{
-                flex: 1,
-                padding: "14px 16px",
-                fontSize: "0.9rem",
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                fontFamily: "inherit",
-                color: "var(--text-primary)",
-              }}
-            />
-            <button
-              onClick={() => setShowPw(!showPw)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "0 14px",
-                color: "var(--text-tertiary)",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {showPw ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </Row>
-
-          {error && (
-            <Text variant="body-default-xs" style={{ color: "#FF3B30", paddingLeft: 4 }}>
-              {error}
+          
+          {isInitializing ? (
+            <Text variant="body-default-s" style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+              Đang kiểm tra quyền truy cập...
+            </Text>
+          ) : !user ? (
+            <Text variant="body-default-s" style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+              Vui lòng đăng nhập để kiểm tra quyền quản trị
+            </Text>
+          ) : user.role !== "admin" ? (
+            <Column gap={8} align="center">
+              <Text variant="body-default-s" style={{ color: "#FF3B30", textAlign: "center", fontWeight: 500 }}>
+                Truy cập bị từ chối
+              </Text>
+              <Text variant="body-default-s" style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+                Tài khoản <b>{user.username}</b> không có quyền quản trị viên.
+              </Text>
+            </Column>
+          ) : (
+            <Text variant="body-default-s" style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+              Đang chuyển hướng...
             </Text>
           )}
-
-          <Button
-            size="l"
-            fillWidth
-            onClick={handleLogin}
-            disabled={loading || !password}
-          >
-            {loading ? "Đang xác thực..." : "Đăng nhập Admin"}
-          </Button>
         </Column>
 
-        <Text
-          variant="body-default-xs"
-          style={{ color: "var(--text-tertiary)", textAlign: "center", marginTop: 8 }}
-        >
-          🔒 Trang này chỉ dành cho quản trị viên TasteMap
-        </Text>
+        {/* Buttons */}
+        <Column gap={12} fillWidth paddingTop={16}>
+          {!isInitializing && !user && (
+            <Button size="l" fillWidth onClick={handleLoginClick}>
+              Đăng nhập tài khoản
+            </Button>
+          )}
+          
+          {!isInitializing && user && user.role !== "admin" && (
+            <Button size="l" fillWidth onClick={handleGoHome}>
+              Quay lại Trang chủ
+            </Button>
+          )}
+        </Column>
       </Column>
     </Column>
   );

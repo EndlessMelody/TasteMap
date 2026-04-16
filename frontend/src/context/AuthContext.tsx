@@ -20,6 +20,7 @@ export interface UserData {
   bio?: string;
   location?: string;
   title?: string;
+  role: string;
   xp: number;
   level: number;
 }
@@ -80,7 +81,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (session) {
             try {
               const userData = await apiPost<UserData>("/api/v1/auth/sync");
-              if (isMounted) setUser(userData);
+              if (isMounted) {
+                setUser(userData);
+                document.cookie = `user_role=${userData.role}; path=/; max-age=86400`;
+              }
             } catch {
               // Backend unreachable — keep user logged in via Supabase session
               if (isMounted && session.user) {
@@ -94,9 +98,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   email: session.user.email ?? "",
                   display_name: meta.display_name ?? meta.username ?? undefined,
                   avatar_url: meta.avatar_url ?? undefined,
+                  role: "user",
                   xp: 0,
                   level: 1,
                 });
+                document.cookie = `user_role=user; path=/; max-age=86400`;
               }
             }
           }
@@ -105,6 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (isMounted) {
             setUser(null);
             setAuthChecked(true);
+            document.cookie = "user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
           }
         }
       } catch (err) {
@@ -161,6 +168,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     setError(null);
+    document.cookie = "user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
   };
 
   return (

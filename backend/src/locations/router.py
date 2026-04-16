@@ -35,11 +35,18 @@ async def get_location(location_id: int, db: AsyncSession = Depends(get_db)):
     return await service.get_location_detail(db, location_id)
 
 
+from src.core.dependencies import get_current_admin
+from src.users.models import User
+
 @router.post(
     "/",
     response_model=LocationResponse,
     summary="Tạo địa điểm mới (Admin)",
     status_code=201
 )
-async def create_location(body: LocationCreate, db: AsyncSession = Depends(get_db)):
+async def create_location(
+    body: LocationCreate,
+    admin: User = Depends(get_current_admin),
+    db: AsyncSession = Depends(get_db)
+):
     return await service.create_location(db, body)

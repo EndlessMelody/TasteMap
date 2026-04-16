@@ -67,6 +67,7 @@ class UserResponse(BaseModel):
     display_name: Optional[str] = None
     food_vector: Optional[List[float]] = None
     place_vector: Optional[List[float]] = None
+    role: str = "user"
     xp: int = 0
     level: int = 1
 
@@ -110,6 +111,7 @@ class UserMe(BaseModel):
     level: int = 1
     food_vector: Optional[List[float]] = None
     place_vector: Optional[List[float]] = None
+    role: str = "user"
     settings: Optional[dict] = None
     created_at: Optional[datetime] = None
     stats: UserStats = UserStats()
@@ -128,6 +130,7 @@ class Token(BaseModel):
 
 class TokenPayload(BaseModel):
     sub: int  # user_id
+    role: str = "user"
     exp: datetime
     type: str = "access"
 
