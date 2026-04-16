@@ -42,6 +42,10 @@ from src.interactions.models import Interaction            # noqa: F401
 from src.groups.models import Group, GroupMember           # noqa: F401
 from src.social.models import Friendship                   # noqa: F401
 from src.gamification.models import Badge, UserBadge       # noqa: F401
+from src.challenges.models import (                             # noqa: F401
+    Challenge, UserChallenge, UserStreak, 
+    XpTransaction, ChallengeProgressLog
+)
 
 # Tier 3 — Social content (phụ thuộc users + locations)
 from src.reels.models import Reel                          # noqa: F401

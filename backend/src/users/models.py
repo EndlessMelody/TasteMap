@@ -36,6 +36,8 @@ class User(Base):
     # Gamification
     xp = Column(Integer, default=0)
     level = Column(Integer, default=1)
+    next_level_xp = Column(Integer, default=1000)
+    total_xp_earned = Column(Integer, default=0)
 
     # User settings — JSONB cho linh hoạt, không cần table riêng
     # VD: {"theme": "dark", "language": "vi", "notif_friends": true, "notif_deals": true, ...}
@@ -63,3 +65,6 @@ class User(Base):
 
     # Relationships — gamification
     user_badges = relationship("UserBadge", back_populates="user", lazy="selectin")
+    user_challenges = relationship("UserChallenge", back_populates="user", lazy="selectin")
+    user_streaks = relationship("UserStreak", back_populates="user", lazy="selectin", uselist=False)
+    xp_transactions = relationship("XpTransaction", back_populates="user", lazy="selectin")
