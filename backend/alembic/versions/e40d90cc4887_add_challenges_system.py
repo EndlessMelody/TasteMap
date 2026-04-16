@@ -114,7 +114,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_user_challenges_challenge_id'), 'user_challenges', ['challenge_id'], unique=False)
     op.create_index(op.f('ix_user_challenges_id'), 'user_challenges', ['id'], unique=False)
     op.create_index(op.f('ix_user_challenges_user_id'), 'user_challenges', ['user_id'], unique=False)
-    op.drop_table('spatial_ref_sys')
+
     op.drop_index(op.f('ix_groups_is_public'), table_name='groups')
     op.add_column('users', sa.Column('next_level_xp', sa.Integer(), nullable=True))
     op.add_column('users', sa.Column('total_xp_earned', sa.Integer(), nullable=True))
@@ -127,15 +127,6 @@ def downgrade() -> None:
     op.drop_column('users', 'total_xp_earned')
     op.drop_column('users', 'next_level_xp')
     op.create_index(op.f('ix_groups_is_public'), 'groups', ['is_public'], unique=False)
-    op.create_table('spatial_ref_sys',
-    sa.Column('srid', sa.INTEGER(), autoincrement=False, nullable=False),
-    sa.Column('auth_name', sa.VARCHAR(length=256), autoincrement=False, nullable=True),
-    sa.Column('auth_srid', sa.INTEGER(), autoincrement=False, nullable=True),
-    sa.Column('srtext', sa.VARCHAR(length=2048), autoincrement=False, nullable=True),
-    sa.Column('proj4text', sa.VARCHAR(length=2048), autoincrement=False, nullable=True),
-    sa.CheckConstraint('srid > 0 AND srid <= 998999', name=op.f('spatial_ref_sys_srid_check')),
-    sa.PrimaryKeyConstraint('srid', name=op.f('spatial_ref_sys_pkey'))
-    )
     op.drop_index(op.f('ix_user_challenges_user_id'), table_name='user_challenges')
     op.drop_index(op.f('ix_user_challenges_id'), table_name='user_challenges')
     op.drop_index(op.f('ix_user_challenges_challenge_id'), table_name='user_challenges')

@@ -31,6 +31,7 @@ from src.notifications.router import router as notifications_router
 # ─── Deals & Gamification ────────────────────────────────────────────────
 from src.deals.router import router as deals_router
 from src.gamification.router import router as badges_router
+from src.challenges.router import router as challenges_router
 
 # ─── Settings ────────────────────────────────────────────────────────────
 from src.users.settings_router import router as settings_router
@@ -69,6 +70,7 @@ api_router.include_router(friends_router,          prefix="/friends",          t
 api_router.include_router(notifications_router,    prefix="/notifications",    tags=["notifications"])
 api_router.include_router(deals_router,            prefix="/deals",            tags=["deals"])
 api_router.include_router(badges_router,           prefix="/badges",           tags=["gamification"])
+api_router.include_router(challenges_router,                                      tags=["challenges"])
 api_router.include_router(settings_router,         prefix="/settings",         tags=["settings"])
 api_router.include_router(media_router,            prefix="/media",            tags=["media"])
 api_router.include_router(messages_router,         prefix="/messages",         tags=["messages"])

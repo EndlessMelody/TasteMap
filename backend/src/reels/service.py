@@ -8,6 +8,7 @@ from typing import Optional
 from src.reels.models import Reel, ReelLike
 from src.users.models import User
 from src.reels.schemas import ReelCreate
+from src.challenges import service as challenges_service
 
 
 async def list_reels(db: AsyncSession, sort: str = "trending", limit: int = 10, viewer_id: Optional[int] = None) -> dict:
@@ -52,6 +53,19 @@ async def create_reel(db: AsyncSession, user_id: int, data: ReelCreate) -> dict:
     db.add(reel)
     await db.commit()
     await db.refresh(reel)
+    
+    # Challenge Tracking Hook
+    await challenges_service.track_user_action(
+        db=db,
+        user_id=user_id,
+        action_type="reel_create",
+        ref_type="reel",
+        ref_id=reel.id,
+        metadata={
+            "has_caption": bool(reel.title)
+        }
+    )
+    
     return await _reel_to_dict(db, reel)
 
 

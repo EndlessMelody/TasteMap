@@ -9,6 +9,7 @@ from src.posts.models import Post, PostLike, Comment
 from src.users.models import User
 from src.locations.models import Location
 from src.posts.schemas import PostCreate, CommentCreate
+from src.challenges import service as challenges_service
 
 
 async def create_post(db: AsyncSession, user_id: int, data: PostCreate) -> dict:
@@ -16,6 +17,22 @@ async def create_post(db: AsyncSession, user_id: int, data: PostCreate) -> dict:
     db.add(post)
     await db.commit()
     await db.refresh(post)
+    
+    # Challenge Tracking Hook
+    await challenges_service.track_user_action(
+        db=db,
+        user_id=user_id,
+        action_type="post_create",
+        ref_type="post",
+        ref_id=post.id,
+        metadata={
+            "has_photo": bool(post.image_url),
+            "has_rating": post.rating is not None,
+            "rating": post.rating,
+            "tags": post.tags or []
+        }
+    )
+    
     return await _post_to_dict(db, post, user_id)
 
 
