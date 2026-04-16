@@ -25,7 +25,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useVoiceRoom } from "@/hooks/useVoiceRoom";
-import { apiGet, apiPost } from "@/lib/api";
+import { apiGet, apiPost, apiPatch } from "@/lib/api";
+import { useAuth } from "@/context/AuthContext";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -365,6 +366,7 @@ function CountdownDisplay({ seconds }: { seconds: number }) {
 export default function GroupRoomPage() {
   const params = useParams();
   const roomId = String(params?.id ?? "");
+  const { user } = useAuth();
 
   const [room, setRoom] = useState<RoomData | null>(null);
   const [loadingRoom, setLoadingRoom] = useState(true);
@@ -393,10 +395,23 @@ export default function GroupRoomPage() {
         setRoom(data);
         const mapped = data.members.map(mapMember);
         setMembers(mapped);
-        const me = data.members.find((m) => m.is_host);
-        myUserIdRef.current = me?.user_id ?? null;
-        const myMember = data.members.find((m) => m.is_host);
+        myUserIdRef.current = user?.id ?? null;
+        const myMember = data.members.find((m) => m.user_id === user?.id);
         if (myMember) setMeReady(myMember.is_ready);
+
+        // Fetch messages
+        try {
+          const msgs = await apiGet<{items: any[]}>(`/api/v1/groups/${roomId}/messages`);
+          setMessages(msgs.items.map(m => ({
+            id: String(m.id),
+            user: m.username,
+            avatar: `https://api.dicebear.com/9.x/thumbs/svg?seed=${m.user_id}`,
+            text: m.content,
+            ts: new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          })));
+        } catch (err) {
+          // Ignore if messages fail
+        }
       } catch (err: unknown) {
         if (!cancelled)
           toast.error(
@@ -419,6 +434,15 @@ export default function GroupRoomPage() {
         const data = await apiGet<RoomData>(`/api/v1/groups/${roomId}`);
         setRoom(data);
         setMembers(data.members.map(mapMember));
+
+        const msgs = await apiGet<{items: any[]}>(`/api/v1/groups/${roomId}/messages`);
+        setMessages(msgs.items.map(m => ({
+          id: String(m.id),
+          user: m.username,
+          avatar: `https://api.dicebear.com/9.x/thumbs/svg?seed=${m.user_id}`,
+          text: m.content,
+          ts: new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        })));
       } catch {
         // silently ignore poll failures
       }
@@ -444,7 +468,7 @@ export default function GroupRoomPage() {
       ),
     );
     try {
-      await apiPost(`/api/v1/groups/${roomId}/ready`, { is_ready: next });
+      await apiPatch(`/api/v1/groups/${roomId}/ready`, { is_ready: next });
     } catch (err: unknown) {
       toast.error(
         err instanceof Error ? err.message : "Failed to update ready state.",
@@ -472,20 +496,25 @@ export default function GroupRoomPage() {
     }, 1000);
   }, [allReady]);
 
-  const handleSendMessage = (text: string) => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: Date.now().toString(),
-        user: "You",
-        avatar: `https://api.dicebear.com/9.x/thumbs/svg?seed=${myUserIdRef.current ?? 0}`,
-        text,
-        ts: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      },
-    ]);
+  const handleSendMessage = async (text: string) => {
+    try {
+      await apiPost(`/api/v1/groups/${roomId}/messages`, { content: text });
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          user: user?.username || "You",
+          avatar: `https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.id ?? 0}`,
+          text,
+          ts: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+      ]);
+    } catch (err: unknown) {
+      toast.error("Failed to send message.");
+    }
   };
 
   const handleCopyCode = () => {

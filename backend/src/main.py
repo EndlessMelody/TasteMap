@@ -99,10 +99,10 @@ async def lifespan(app: FastAPI):
         r = redis.from_url(settings.REDIS_URL, decode_responses=True)
         await r.ping()
         app.state.redis = r
-        print("✅ Đã kết nối Redis thành công!")
+        print("[OK] Redis connected successfully!")
     except Exception:
         app.state.redis = InMemoryRedis()
-        print("⚠️  Redis không khả dụng — dùng bộ nhớ tạm (InMemoryRedis) để test.")
+        print("[WARN] Redis unavailable -- using InMemoryRedis fallback.")
 
     # Khởi động cronjob dọn dẹp interaction (3:00 AM hàng ngày)
     from src.tasks.interaction_cleanup import schedule_cleanup

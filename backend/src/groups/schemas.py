@@ -17,6 +17,7 @@ class MemberSummary(BaseModel):
 
 class GroupCreate(BaseModel):
     name: str
+    description: Optional[str] = None
     route_description: Optional[str] = None
     scheduled_time: Optional[datetime] = None
     max_spots: int = 6
@@ -29,6 +30,7 @@ class GroupResponse(BaseModel):
     id: int
     name: str
     status: str
+    description: Optional[str] = None
     route_description: Optional[str] = None
     scheduled_time: Optional[datetime] = None
     max_spots: int = 6
@@ -163,3 +165,28 @@ class UndoResponse(BaseModel):
     status: str
     undone_interaction_id: Optional[int] = None
     reverted_vector: List[float] = []
+
+
+# ─── Chat ─────────────────────────────────────────────────────────────────
+
+class ChatMessageBase(BaseModel):
+    content: str
+
+
+class ChatMessageCreate(ChatMessageBase):
+    pass
+
+
+class ChatMessageResponse(ChatMessageBase):
+    id: int
+    group_id: int
+    user_id: int
+    username: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ChatMessageList(BaseModel):
+    items: List[ChatMessageResponse]

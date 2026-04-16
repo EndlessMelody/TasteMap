@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, func
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, func, Text
 from sqlalchemy.orm import relationship
 from pgvector.sqlalchemy import Vector
 from src.db.database import Base
@@ -71,3 +71,16 @@ class GroupMember(Base):
     # Relationships
     group = relationship("Group", back_populates="members")
     user = relationship("User", back_populates="group_memberships")
+
+
+class GroupChatMessage(Base):
+    __tablename__ = "group_chat_messages"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    group_id = Column(Integer, ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    group = relationship("Group")
+    user = relationship("User")

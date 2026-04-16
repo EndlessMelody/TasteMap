@@ -2,7 +2,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { X, MapPin, Clock, Crown, Plus } from "lucide-react";
+import { X, MapPin, Clock, Crown, Plus, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { apiPost } from "@/lib/api";
 import type { LobbyModalProps } from "./types";
 import { LivePing } from "./LobbyUI";
 
@@ -11,7 +14,21 @@ import { LivePing } from "./LobbyUI";
  * Shows participant list, empty spots, and a join CTA button.
  */
 export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
+  const router = useRouter();
+  const [joining, setJoining] = React.useState(false);
   const spotsLeft = lobby.spots - lobby.members.length;
+
+  const handleJoin = async () => {
+    if (!lobby.id) return toast.error("Invalid lobby ID");
+    setJoining(true);
+    try {
+      await apiPost(`/api/v1/groups/${lobby.id}/join`);
+      router.push(`/group-rooms/${lobby.id}`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to join lobby");
+      setJoining(false);
+    }
+  };
 
   return (
     <motion.div
@@ -126,11 +143,13 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
         {/* Footer — Action */}
         <div className="p-6 pt-2">
           <button
-            onClick={onClose}
-            className="w-full bg-[#007AFF] hover:bg-[#0062CC] text-white text-[17px] font-semibold py-4 rounded-[16px] transition-transform active:scale-[0.98] cursor-pointer"
+            onClick={handleJoin}
+            disabled={joining}
+            className="w-full flex items-center justify-center gap-2 bg-[#007AFF] hover:bg-[#0062CC] text-white text-[17px] font-semibold py-4 rounded-[16px] transition-transform active:scale-[0.98] cursor-pointer disabled:opacity-70 disabled:pointer-events-none"
             style={{ boxShadow: "0 4px 14px rgb(0 122 255 / 0.3)" }}
           >
-            Confirm & Join Lobby
+            {joining && <Loader2 size={18} className="animate-spin" />}
+            {joining ? "Joining..." : "Confirm & Join Lobby"}
           </button>
         </div>
       </motion.div>

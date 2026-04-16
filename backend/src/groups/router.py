@@ -7,6 +7,7 @@ from src.groups.schemas import (
     GroupRecommendRequest,
     FinishRequest,
     JoinByCodeRequest,
+    ChatMessageCreate,
 )
 from src.core.dependencies import get_current_user_id
 from typing import Optional
@@ -142,3 +143,23 @@ async def group_undo(
     db: AsyncSession = Depends(get_db)
 ):
     return await service.group_undo(db, group_id, user_id)
+
+
+@router.get("/{group_id}/messages", summary="Lấy tin nhắn chat", description="Lấy lịch sử tin nhắn trong phòng lobby")
+async def get_group_messages(
+    group_id: int,
+    limit: int = Query(50, ge=1, le=200),
+    db: AsyncSession = Depends(get_db),
+    user_id: int = Depends(get_current_user_id)
+):
+    return await service.get_group_messages(db, group_id, limit)
+
+
+@router.post("/{group_id}/messages", summary="Gửi tin nhắn chat", description="Gửi tin nhắn vào phòng lobby")
+async def create_group_message(
+    group_id: int,
+    body: ChatMessageCreate,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db)
+):
+    return await service.create_group_message(db, group_id, user_id, body.content)

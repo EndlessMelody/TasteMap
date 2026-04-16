@@ -50,6 +50,10 @@ def _generate_invite_code() -> str:
 async def create_group(db: AsyncSession, data, creator_id: int) -> dict:
     """Tạo phòng nhóm mới. Creator tự động join với is_host=True."""
     payload = data.model_dump()
+    desc = payload.pop("description", None)
+    if desc and not payload.get("route_description"):
+        payload["route_description"] = desc
+    
     if not payload.get("is_public", True):
         # Generate unique invite code for private rooms
         for _ in range(10):
@@ -69,7 +73,7 @@ async def create_group(db: AsyncSession, data, creator_id: int) -> dict:
     if not user:
         raise HTTPException(status_code=404, detail="User không tồn tại")
 
-    session_vec = list(user.food_vector or [0.5] * 15)
+    session_vec = list(user.food_vector) if user.food_vector is not None else [0.5] * 15
 
     member = GroupMember(
         group_id=group.id,
@@ -134,14 +138,14 @@ async def join_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
 
     existing = next((m for m in members if m.user_id == user_id), None)
     if existing:
-        raise HTTPException(status_code=400, detail="Đã tham gia lobby rồi")
+        return {"status": "already_joined"}
 
     # Clone user vector gốc thành session_vector
     user = await db.scalar(select(User).where(User.id == user_id))
     if not user:
         raise HTTPException(status_code=404, detail="User không tồn tại")
 
-    session_vec = list(user.food_vector or [0.5] * 15)
+    session_vec = list(user.food_vector) if user.food_vector is not None else [0.5] * 15
 
     new_member = GroupMember(
         group_id=group_id,
@@ -516,7 +520,7 @@ async def group_finish(db: AsyncSession, group_id: int, user_id: int, top_n: int
     for gm, user in rows:
         vec = gm.session_vector
         if vec is None:
-            vec = user.food_vector or [0.5] * 15
+            vec = user.food_vector if user.food_vector is not None else [0.5] * 15
         member_data.append({
             "user_id": user.id,
             "display_name": user.display_name or user.username,
@@ -659,7 +663,54 @@ async def group_undo(db: AsyncSession, group_id: int, user_id: int) -> dict:
     }
 
 
+# ─── Chat ─────────────────────────────────────────────────────────────────
+
+async def get_group_messages(db: AsyncSession, group_id: int, limit: int = 50) -> dict:
+    from src.groups.models import GroupChatMessage
+    
+    query = (
+        select(GroupChatMessage, User)
+        .join(User, User.id == GroupChatMessage.user_id)
+        .where(GroupChatMessage.group_id == group_id)
+        .order_by(GroupChatMessage.created_at.asc())
+        .limit(limit)
+    )
+    result = await db.execute(query)
+    rows = result.all()
+    
+    items = []
+    for msg, user in rows:
+        items.append({
+            "id": msg.id,
+            "group_id": msg.group_id,
+            "user_id": msg.user_id,
+            "username": user.display_name or user.username,
+            "content": msg.content,
+            "created_at": msg.created_at,
+        })
+    return {"items": items}
+
+async def create_group_message(db: AsyncSession, group_id: int, user_id: int, content: str) -> dict:
+    from src.groups.models import GroupChatMessage
+    
+    msg = GroupChatMessage(group_id=group_id, user_id=user_id, content=content)
+    db.add(msg)
+    await db.commit()
+    await db.refresh(msg)
+    
+    user = await db.scalar(select(User).where(User.id == user_id))
+    
+    return {
+        "id": msg.id,
+        "group_id": msg.group_id,
+        "user_id": msg.user_id,
+        "username": user.display_name or user.username,
+        "content": msg.content,
+        "created_at": msg.created_at,
+    }
+
 # ─── Helper ──────────────────────────────────────────────────────────────
+
 
 async def _group_to_dict(db: AsyncSession, group: Group) -> dict:
     members_q = await db.execute(
