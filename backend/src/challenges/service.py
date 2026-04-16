@@ -12,14 +12,28 @@ from src.challenges import xp_service
 async def get_user_xp_info(db: AsyncSession, user_id: int) -> dict:
     """Get current user's XP, level and progress towards next level."""
     res = await db.execute(select(User).where(User.id == user_id))
-    user = res.scalar_one()
+    user = res.scalar_one_or_none()
     
+    if not user:
+        return {
+            "current_xp": 0,
+            "level": 1,
+            "next_level_xp": 100,
+            "total_xp_earned": 0,
+            "progress_percentage": 0
+        }
+
+    current_xp = user.xp if user.xp is not None else 0
+    current_level = user.level if user.level is not None else 1
+    next_threshold = user.next_level_xp if user.next_level_xp is not None else 100
+    total_xp = user.total_xp_earned if user.total_xp_earned is not None else 0
+
     return {
-        "current_xp": user.xp,
-        "level": user.level,
-        "next_level_xp": user.next_level_xp,
-        "total_xp_earned": user.total_xp_earned,
-        "progress_percentage": min(int((user.xp / user.next_level_xp) * 100), 100) if user.next_level_xp > 0 else 0
+        "current_xp": current_xp,
+        "level": current_level,
+        "next_level_xp": next_threshold,
+        "total_xp_earned": total_xp,
+        "progress_percentage": min(int((current_xp / next_threshold) * 100), 100) if next_threshold > 0 else 0
     }
 
 async def join_challenge(db: AsyncSession, user_id: int, challenge_id: int) -> dict:
@@ -156,23 +170,34 @@ async def get_user_challenges(
     user_id: int,
     status: Optional[str] = None
 ) -> List[dict]:
-    """Get all challenges for a user with their current progress."""
-    query = (
-        select(UserChallenge, Challenge)
-        .join(Challenge, UserChallenge.challenge_id == Challenge.id)
-        .where(UserChallenge.user_id == user_id)
-    )
+    """
+    Get all active challenges for a user, merging templates with existing progress.
+    Implements 'Frictionless UX': Every active template is returned even if not joined.
+    """
+    # 1. Fetch all active challenge templates
+    template_query = select(Challenge).where(Challenge.is_active == True)
+    template_res = await db.execute(template_query)
+    templates = template_res.scalars().all()
     
-    if status:
-        query = query.where(UserChallenge.status == status)
-        
-    result = await db.execute(query)
-    rows = result.all()
+    # 2. Fetch user's actual progress records
+    progress_query = select(UserChallenge).where(UserChallenge.user_id == user_id)
+    progress_res = await db.execute(progress_query)
+    user_progress = {row.challenge_id: row for row in progress_res.scalars().all()}
     
     output = []
-    for uc, c in rows:
+    
+    for c in templates:
+        uc = user_progress.get(c.id)
+        
+        # If status filter is applied and mismatch, skip
+        current_status = uc.status if uc else "active"
+        if status and status != current_status:
+            continue
+            
+        progress_val = uc.progress if uc else 0
+        
         output.append({
-            "id": str(uc.id),
+            "id": str(uc.id) if uc else f"temp_{c.id}",
             "challenge": {
                 "id": str(c.id),
                 "title": c.title,
@@ -184,12 +209,13 @@ async def get_user_challenges(
                 "icon": c.icon,
                 "accent_color": c.accent_color
             },
-            "progress": uc.progress,
+            "progress": progress_val,
             "target": c.target_count,
-            "status": uc.status,
-            "percentage": min(int((uc.progress / c.target_count) * 100), 100) if c.target_count > 0 else 0,
-            "completed_at": uc.completed_at.isoformat() if uc.completed_at else None,
-            "claimed_at": uc.claimed_at.isoformat() if uc.claimed_at else None,
-            "expires_at": uc.expires_at.isoformat() if uc.expires_at else None
+            "status": current_status,
+            "percentage": min(int((progress_val / c.target_count) * 100), 100) if c.target_count > 0 else 0,
+            "completed_at": uc.completed_at.isoformat() if uc and uc.completed_at else None,
+            "claimed_at": uc.claimed_at.isoformat() if uc and uc.claimed_at else None,
+            "expires_at": uc.expires_at.isoformat() if uc and uc.expires_at else None
         })
+    
     return output

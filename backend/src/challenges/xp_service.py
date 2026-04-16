@@ -1,19 +1,14 @@
-"""
-XP Service — Handles awarding XP, leveling logic, and Redis leaderboard synchronization.
-"""
-import math
 from datetime import datetime
 from sqlalchemy import update, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.users.models import User
-from src.challenges.models import XpTransaction
+from src.challenges.models import XpTransaction, LevelConfig
 from src.db.redis import RedisClient
 
-def get_xp_threshold(level: int) -> int:
-    """Calculate XP required to pass CURRENT level."""
-    base = 100
-    growth = 1.15
-    return int(base * (growth ** (level - 1)))
+async def get_level_config(db: AsyncSession, level: int):
+    """Fetch config for a specific level."""
+    res = await db.execute(select(LevelConfig).where(LevelConfig.level == level))
+    return res.scalar_one_or_none()
 
 async def award_xp(
     db: AsyncSession,
@@ -24,35 +19,33 @@ async def award_xp(
     description: str = None
 ) -> dict:
     """
-    Award XP to a user with atomic SQL updates and Redis dual-write.
-    CRITICAL: Uses update().returning() for concurrency safety.
+    Award XP to a user with dynamic leveling based on LevelConfig.
     """
     if amount <= 0:
         return {"amount": 0, "leveled_up": False}
 
-    # 1. Fetch current status (to calculate level ups)
-    # We do a SELECT first to get current state, but the UPDATE itself is atomic.
-    # To handle multiple level ups in one go, we need the current total.
+    # 1. Fetch current status
     res = await db.execute(select(User).where(User.id == user_id))
     user = res.scalar_one()
 
-    old_level = user.level
-    new_total_xp = user.total_xp_earned + amount
+    old_level = user.level or 1
+    old_total = user.total_xp_earned or 0
+    new_total_xp = old_total + amount
     
-    # 2. Level up logic
+    # 2. Level up logic using LevelConfig
     current_level = old_level
-    current_threshold = user.next_level_xp
+    # next_level_xp stores the TOTAL CUMULATIVE XP required to reach Level L+1
+    current_threshold = user.next_level_xp or 100
     
-    # Check for multiple level ups
-    temp_total = user.total_xp_earned + amount
-    while temp_total >= current_threshold:
-        # We don't subtract from total, we just increase the threshold for the next level
-        # Total XP is cumulative.
-        # Actually, let's redefine: total_xp_earned is the target.
-        # Level 1: 0-99 XP. Level 2: 100-214 XP.
-        # So threshold to reach Level L+1 is Sum(xp_for_level(i) for i in 1..L)
+    # Check if we need to advance levels
+    while new_total_xp >= current_threshold:
         current_level += 1
-        current_threshold += get_xp_threshold(current_level)
+        # Fetch the requirement for the NEW level to reach the one after it
+        next_config = await get_level_config(db, current_level)
+        if not next_config:
+            # Reached max level or missing config
+            break
+        current_threshold += next_config.xp_required
 
     leveled_up = current_level > old_level
 
@@ -61,7 +54,8 @@ async def award_xp(
         update(User)
         .where(User.id == user_id)
         .values(
-            total_xp_earned=User.total_xp_earned + amount,
+            total_xp_earned=new_total_xp,
+            xp=User.xp + amount, # Current XP in level (optional field, but we use total mostly)
             level=current_level,
             next_level_xp=current_threshold
         )

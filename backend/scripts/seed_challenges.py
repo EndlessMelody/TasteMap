@@ -1,4 +1,10 @@
 import asyncio
+import os
+import sys
+
+# Add project root to sys.path to allow imports from 'src'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from sqlalchemy.future import select
 from src.db.database import AsyncSessionLocal, engine
 from src.challenges.models import Challenge

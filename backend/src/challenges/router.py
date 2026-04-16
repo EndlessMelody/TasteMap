@@ -11,7 +11,7 @@ from src.challenges.schemas import UserChallengeProgress, LeaderboardEntry, Stre
 
 router = APIRouter(prefix="/challenges", tags=["Challenges & Leaderboard"])
 
-@router.get("/me", response_model=List[dict])
+@router.get("/me")
 async def get_my_challenges(
     status: Optional[str] = Query(None, regex="^(active|completed|claimed|expired)$"),
     db: AsyncSession = Depends(get_db),

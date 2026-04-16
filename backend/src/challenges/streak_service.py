@@ -82,8 +82,13 @@ async def checkin(db: AsyncSession, user_id: int) -> dict:
 async def get_streak_status(db: AsyncSession, user_id: int) -> dict:
     """Get current streak status for the user."""
     streak = await get_or_create_streak(db, user_id)
+    now_utc = datetime.now(timezone.utc)
+    local_now = now_utc + timedelta(hours=streak.timezone_offset)
+    today = local_now.date()
+    is_active_today = streak.last_active_date.date() == today and streak.current_streak > 0
     return {
         "current_streak": streak.current_streak,
         "longest_streak": streak.longest_streak,
-        "last_active_date": streak.last_active_date
+        "last_active_date": streak.last_active_date,
+        "is_active_today": is_active_today,
     }

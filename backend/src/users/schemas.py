@@ -70,6 +70,8 @@ class UserResponse(BaseModel):
     role: str = "user"
     xp: int = 0
     level: int = 1
+    next_level_xp: int = 100
+    total_xp_earned: int = 0
 
     class Config:
         from_attributes = True
@@ -87,6 +89,8 @@ class UserProfile(BaseModel):
     title: Optional[str] = None
     xp: int = 0
     level: int = 1
+    next_level_xp: int = 100
+    total_xp_earned: int = 0
     created_at: Optional[datetime] = None
     stats: UserStats = UserStats()
     badges: List[BadgeSummary] = []
@@ -109,6 +113,8 @@ class UserMe(BaseModel):
     phone: Optional[str] = None
     xp: int = 0
     level: int = 1
+    next_level_xp: int = 100
+    total_xp_earned: int = 0
     food_vector: Optional[List[float]] = None
     place_vector: Optional[List[float]] = None
     role: str = "user"

@@ -143,3 +143,18 @@ class ChallengeProgressLog(Base):
             postgresql_where=(text("action_ref_id IS NOT NULL"))
         ),
     )
+
+
+class LevelConfig(Base):
+    """
+    Bảng level_configs — cấu hình XP cần thiết cho từng level và danh hiệu.
+    """
+    __tablename__ = "level_configs"
+
+    level = Column(Integer, primary_key=True)
+    xp_required = Column(Integer, nullable=False)  # XP needed to reach Level + 1
+    title = Column(String(100), nullable=True)
+    icon_url = Column(String(255), nullable=True)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

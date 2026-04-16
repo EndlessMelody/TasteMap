@@ -48,47 +48,61 @@ class ChallengeTracker:
             return
 
         # 2. Lấy danh sách thử thách CÓ THỂ bị ảnh hưởng (dựa trên action_type và status active)
-        # Chỉ fetch những challenge mà user đang tham gia và có status 'active'
+        # BÚN: Logic mới - Fetch tất cả active Challenge templates matching action_type
+        # Sau đó chúng ta sẽ tìm hoặc tạo UserChallenge record tương ứng.
         query = (
-            select(UserChallenge, Challenge)
-            .join(Challenge, UserChallenge.challenge_id == Challenge.id)
+            select(Challenge)
             .where(
                 and_(
-                    UserChallenge.user_id == user_id,
-                    UserChallenge.status == "active",
                     Challenge.action_type == action_type,
                     Challenge.is_active == True
                 )
             )
         )
         result = await db.execute(query)
-        active_user_challenges = result.all()
+        challenges = result.scalars().all()
 
-        for user_challenge, challenge in active_user_challenges:
+        for challenge in challenges:
             # 3. Kiểm tra filter (Python-side matching)
             if not matches_filter(challenge.action_filter, metadata):
                 continue
 
-            # 4. Kiểm tra deduplication (đã tính cho entity này chưa?)
+            # 4. Tìm hoặc tạo UserChallenge (Auto-enrollment)
+            uc_query = select(UserChallenge).where(
+                and_(
+                    UserChallenge.user_id == user_id,
+                    UserChallenge.challenge_id == challenge.id
+                )
+            )
+            uc_result = await db.execute(uc_query)
+            user_challenge = uc_result.scalar_one_or_none()
+
+            if not user_challenge:
+                # Lazy Create
+                user_challenge = UserChallenge(
+                    user_id=user_id,
+                    challenge_id=challenge.id,
+                    progress=0,
+                    status="active"
+                )
+                db.add(user_challenge)
+                # Flush to get ID if needed, but we can just use the object
+                await db.flush()
+            elif user_challenge.status != "active":
+                # Only track for active challenges
+                continue
+
+            # 5. Kiểm tra deduplication (đã tính cho entity này chưa?)
             if ref_id and ref_type:
                 if await ChallengeTracker._is_already_tracked(db, user_id, challenge.id, ref_type, ref_id):
                     continue
 
-            # 5. Cập nhật tiến độ ATOMIC SQL
+            # 6. Cập nhật tiến độ ATOMIC SQL
             # SET progress = progress + 1
-            stmt = (
-                update(UserChallenge)
-                .where(UserChallenge.id == user_challenge.id)
-                .values(
-                    progress=UserChallenge.progress + 1,
-                    last_progress_at=func.now()
-                )
-                .returning(UserChallenge.progress)
-            )
-            res = await db.execute(stmt)
-            new_progress = res.scalar()
+            user_challenge.progress += 1
+            user_challenge.last_progress_at = func.now()
 
-            # 6. Ghi log tiến độ (Audit trail + Dedup source)
+            # 7. Ghi log tiến độ (Audit trail + Dedup source)
             progress_log = ChallengeProgressLog(
                 user_id=user_id,
                 challenge_id=challenge.id,
@@ -99,17 +113,10 @@ class ChallengeTracker:
             )
             db.add(progress_log)
 
-            # 7. Kiểm tra hoàn thành
-            if new_progress >= challenge.target_count:
-                # Đánh dấu hoàn thành
-                await db.execute(
-                    update(UserChallenge)
-                    .where(UserChallenge.id == user_challenge.id)
-                    .values(
-                        status="completed",
-                        completed_at=func.now()
-                    )
-                )
+            # 8. Kiểm tra hoàn thành
+            if user_challenge.progress >= challenge.target_count:
+                user_challenge.status = "completed"
+                user_challenge.completed_at = func.now()
                 # TODO: Gửi notification cho user
 
         await db.commit()

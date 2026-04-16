@@ -30,14 +30,14 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { apiGet, apiPost } from "@/lib/api";
 import { toast } from "sonner";
-import { 
-  ChallengeStatus, 
-  ChallengeCategory, 
-  Difficulty, 
-  ChallengeResponse, 
-  LeaderboardEntry, 
-  UserGamificationInfo, 
-  StreakInfo 
+import {
+  ChallengeStatus,
+  ChallengeCategory,
+  Difficulty,
+  ChallengeResponse,
+  LeaderboardEntry,
+  UserGamificationInfo,
+  StreakInfo
 } from "@/types/gamification";
 
 // ─── Config & Mappings ───────────────────────────────────────────────────────
@@ -77,16 +77,16 @@ const DIFF_CONFIG: Record<
 const CAT_TABS = ["All", "Active", "Completed", "Claimed", "Upcoming"] as const;
 type CatTab = (typeof CAT_TABS)[number];
 
-type LeaderboardPeriod = "weekly" | "monthly" | "all_time";
+type LeaderboardPeriod = "weekly" | "monthly" | "alltime";
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function ChallengeCard({ 
-  c, 
-  index, 
-  onAction 
-}: { 
-  c: ChallengeResponse; 
+function ChallengeCard({
+  c,
+  index,
+  onAction
+}: {
+  c: ChallengeResponse;
   index: number;
   onAction: (action: "join" | "claim", id: string) => void;
 }) {
@@ -94,7 +94,7 @@ function ChallengeCard({
   const isCompleted = c.status === "completed";
   const isClaimed = c.status === "claimed";
   const isUpcoming = c.status === "upcoming" || c.status === "requires_opt_in";
-  
+
   const icon = ICON_MAP[c.challenge.icon] || <Trophy size={20} />;
   const accentColor = c.challenge.accent_color || "#007AFF";
 
@@ -193,7 +193,7 @@ function ChallengeCard({
             </span>
           )}
         </div>
-        
+
         {isClaimed ? (
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[13px] font-bold text-[#34C759] bg-[#EAF9EE]">
             <CheckCircle size={14} /> Completed
@@ -213,10 +213,10 @@ function ChallengeCard({
           </motion.button>
         ) : isUpcoming ? (
           <motion.button
-             whileHover={{ scale: 1.05 }}
-             whileTap={{ scale: 0.95 }}
-             onClick={() => onAction("join", c.challenge.id)}
-             className="flex items-center gap-2 px-5 py-2 rounded-full text-[13px] font-bold bg-[#1C1C1E] text-white shadow-md"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => onAction("join", c.challenge.id)}
+            className="flex items-center gap-2 px-5 py-2 rounded-full text-[13px] font-bold bg-[#1C1C1E] text-white shadow-md"
           >
             Join Challenge <ArrowRight size={14} />
           </motion.button>
@@ -362,7 +362,7 @@ export default function ChallengesPage() {
   const { user, refreshUser } = useAuth();
   const [activeTab, setActiveTab] = useState<CatTab>("All");
   const [leaderboardPeriod, setLeaderboardPeriod] = useState<LeaderboardPeriod>("monthly");
-  
+
   const [challenges, setChallenges] = useState<ChallengeResponse[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [userStats, setUserStats] = useState<UserGamificationInfo | null>(null);
@@ -426,7 +426,7 @@ export default function ChallengesPage() {
 
   const activeCount = challenges.filter((c) => c.status === "active").length;
   const completedCount = challenges.filter((c) => c.status === "completed" || c.status === "claimed").length;
-  
+
   const maxXp = leaderboard.length > 0 ? Math.max(...leaderboard.map((e) => e.xp)) : 0;
 
   const tabCounts: Record<CatTab, number> = {
@@ -546,10 +546,10 @@ export default function ChallengesPage() {
                 }}
               >
                 <div className="w-10 h-10 rounded-full border-4 border-[#007AFF] flex items-center justify-center bg-black/20">
-                    <span className="text-white font-black text-xs">{user?.level || 1}</span>
+                  <span className="text-white font-black text-xs">{user?.level || 1}</span>
                 </div>
                 <div>
-                   <p className="text-[20px] font-black text-white leading-none">
+                  <p className="text-[20px] font-black text-white leading-none">
                     LEVEL
                   </p>
                   <div className="mt-1.5 w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
@@ -600,8 +600,8 @@ export default function ChallengesPage() {
                 }}
               >
                 <div className="flex items-center gap-2" style={{ color: "rgba(255,255,255,0.4)" }}>
-                   {s.icon}
-                   <span className="text-[11px] font-bold uppercase tracking-widest">{s.label}</span>
+                  {s.icon}
+                  <span className="text-[11px] font-bold uppercase tracking-widest">{s.label}</span>
                 </div>
                 <p className="text-[26px] font-black text-white leading-none mt-2">
                   {s.value}
@@ -624,14 +624,14 @@ export default function ChallengesPage() {
                   style={
                     activeTab === tab
                       ? {
-                          backgroundColor: "#1C1C1E",
-                          color: "#fff",
-                          boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
-                        }
+                        backgroundColor: "#1C1C1E",
+                        color: "#fff",
+                        boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+                      }
                       : {
-                          backgroundColor: "transparent",
-                          color: "#8E8E93",
-                        }
+                        backgroundColor: "transparent",
+                        color: "#8E8E93",
+                      }
                   }
                 >
                   {tab}
@@ -649,7 +649,7 @@ export default function ChallengesPage() {
               ))}
             </div>
             <div className="text-[13px] text-[#8E8E93] font-semibold flex items-center gap-2">
-                 <Target size={15} /> All progress is synced across devices
+              <Target size={15} /> All progress is synced across devices
             </div>
           </div>
 
@@ -659,7 +659,7 @@ export default function ChallengesPage() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-5"
+              className="grid grid-cols-1 gap-5"
             >
               {filtered.map((c, i) => (
                 <ChallengeCard key={c.id} c={c} index={i} onAction={handleAction} />
@@ -682,31 +682,31 @@ export default function ChallengesPage() {
             style={{ border: "1px solid rgba(0,0,0,0.04)" }}
           >
             <div className="flex flex-col gap-5">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#FBBF24]/10 flex items-center justify-center">
-                             <Award size={20} className="text-[#FBBF24]" />
-                        </div>
-                        <h3 className="text-[18px] font-black text-[#1C1C1E] tracking-tight">Leaderboard</h3>
-                    </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#FBBF24]/10 flex items-center justify-center">
+                    <Award size={20} className="text-[#FBBF24]" />
+                  </div>
+                  <h3 className="text-[18px] font-black text-[#1C1C1E] tracking-tight">Leaderboard</h3>
                 </div>
+              </div>
 
-                {/* Period Switcher */}
-                <div className="flex p-1 bg-[#F2F2F7] rounded-xl">
-                    {(["weekly", "monthly", "all_time"] as LeaderboardPeriod[]).map((p) => (
-                        <button
-                            key={p}
-                            onClick={() => setLeaderboardPeriod(p)}
-                            className="flex-1 py-2 text-[11px] font-black uppercase tracking-widest rounded-lg transition-all"
-                            style={leaderboardPeriod === p 
-                                ? { backgroundColor: "white", color: "#1C1C1E", boxShadow: "0 2px 6px rgba(0,0,0,0.06)" }
-                                : { color: "#8E8E93" }
-                            }
-                        >
-                            {p.replace('_', ' ')}
-                        </button>
-                    ))}
-                </div>
+              {/* Period Switcher */}
+              <div className="flex p-1 bg-[#F2F2F7] rounded-xl">
+                {(["weekly", "monthly", "alltime"] as LeaderboardPeriod[]).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setLeaderboardPeriod(p)}
+                    className="flex-1 py-2 text-[11px] font-black uppercase tracking-widest rounded-lg transition-all"
+                    style={leaderboardPeriod === p
+                      ? { backgroundColor: "white", color: "#1C1C1E", boxShadow: "0 2px 6px rgba(0,0,0,0.06)" }
+                      : { color: "#8E8E93" }
+                    }
+                  >
+                    {p.replace('_', ' ')}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="flex flex-col gap-2 -mx-2">
@@ -719,38 +719,37 @@ export default function ChallengesPage() {
             </div>
 
             <button className="w-full py-4 rounded-2xl bg-[#F2F2F7] text-[13px] font-bold text-[#1C1C1E] hover:bg-[#E5E5EB] transition-colors flex items-center justify-center gap-2">
-                View Global Ranks <ChevronRight size={16} />
+              View Global Ranks <ChevronRight size={16} />
             </button>
           </div>
-          
+
           {/* Daily Streak Card */}
           <div className="bg-white rounded-[32px] p-6 flex flex-col gap-4" style={{ border: "1px solid rgba(0,0,0,0.04)" }}>
-             <div className="flex items-center gap-3">
-                 <div className="w-10 h-10 rounded-full bg-[#FF6B35]/10 flex items-center justify-center">
-                    <Star size={20} className="text-[#FF6B35]" />
-                 </div>
-                 <h4 className="text-[16px] font-black text-[#1C1C1E]">Daily Streak</h4>
-             </div>
-             <p className="text-[13px] text-[#8E8E93] leading-relaxed">
-                Check in every day to keep your streak alive and earn more XP bonus! Currently at <span className="text-[#FF6B35] font-bold">{streakInfo?.current_streak} days</span>.
-             </p>
-             <button
-                onClick={async () => {
-                    const res = await apiPost<{ success: boolean; data: any }>("/api/v1/challenges/streaks/checkin", {});
-                    if (res.success) {
-                        toast.success("Checked in for today!");
-                        fetchData();
-                    }
-                }}
-                disabled={streakInfo?.is_active_today}
-                className={`w-full py-4 rounded-2xl text-[14px] font-black transition-all ${
-                    streakInfo?.is_active_today 
-                    ? "bg-[#F2F2F7] text-[#8E8E93] cursor-default" 
-                    : "bg-[#FF6B35] text-white shadow-lg shadow-[#FF6B35]/20 hover:scale-[1.02]"
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#FF6B35]/10 flex items-center justify-center">
+                <Star size={20} className="text-[#FF6B35]" />
+              </div>
+              <h4 className="text-[16px] font-black text-[#1C1C1E]">Daily Streak</h4>
+            </div>
+            <p className="text-[13px] text-[#8E8E93] leading-relaxed">
+              Check in every day to keep your streak alive and earn more XP bonus! Currently at <span className="text-[#FF6B35] font-bold">{streakInfo?.current_streak} days</span>.
+            </p>
+            <button
+              onClick={async () => {
+                const res = await apiPost<{ success: boolean; data: any }>("/api/v1/challenges/streaks/checkin", {});
+                if (res.success) {
+                  toast.success("Checked in for today!");
+                  fetchData();
+                }
+              }}
+              disabled={streakInfo?.is_active_today}
+              className={`w-full py-4 rounded-2xl text-[14px] font-black transition-all ${streakInfo?.is_active_today
+                  ? "bg-[#F2F2F7] text-[#8E8E93] cursor-default"
+                  : "bg-[#FF6B35] text-white shadow-lg shadow-[#FF6B35]/20 hover:scale-[1.02]"
                 }`}
-             >
-                {streakInfo?.is_active_today ? "Already Checked In" : "Daily Check-in"}
-             </button>
+            >
+              {streakInfo?.is_active_today ? "Already Checked In" : "Daily Check-in"}
+            </button>
           </div>
         </div>
       </div>

@@ -13,6 +13,7 @@ from sqlalchemy.future import select
 from src.db.database import get_db
 from src.users.models import User
 from src.users.schemas import UserMe
+from src.challenges.models import LevelConfig
 from src.core.dependencies import get_token_payload
 from src.auth.schemas import (
     SendOTPRequest, SendOTPResponse, VerifyOTPRequest, VerifyOTPResponse,
@@ -67,11 +68,35 @@ async def sync_user(
     )
     user: User | None = result.scalar_one_or_none()
 
-    # ── 3a. Đã tồn tại → trả về ngay ──────────────────────────────────────
+    # ── 3. Đối tượng xử lý chung cho Gamification Stats ────────────────────
+    level1_res = await db.execute(select(LevelConfig).where(LevelConfig.level == 1))
+    level1 = level1_res.scalar_one_or_none()
+    default_xp_req = level1.xp_required if level1 else 100
+
+    async def repair_stats(u: User):
+        changed = False
+        if u.xp is None: 
+            u.xp = 0
+            changed = True
+        if u.level is None: 
+            u.level = 1
+            changed = True
+        if u.total_xp_earned is None: 
+            u.total_xp_earned = 0
+            changed = True
+        if u.next_level_xp is None:
+            u.next_level_xp = default_xp_req
+            changed = True
+        return changed
+
+    # ── 4a. Đã tồn tại → kiểm tra repair và trả về ─────────────────────────
     if user is not None:
+        if await repair_stats(user):
+            await db.commit()
+            await db.refresh(user)
         return UserMe.model_validate(user)
 
-    # ── 3b. Chưa tồn tại theo supabase_uid → kiểm tra orphaned row theo email ─
+    # ── 4b. Chưa tồn tại theo supabase_uid → kiểm tra orphaned row theo email ─
     orphaned_result = await db.execute(select(User).where(User.email == email))
     orphaned_user: User | None = orphaned_result.scalar_one_or_none()
 
@@ -96,6 +121,10 @@ async def sync_user(
             orphaned_user.display_name = display_name
         if avatar_url:
             orphaned_user.avatar_url = avatar_url
+            
+        # Repair stats for orphaned user
+        await repair_stats(orphaned_user)
+        
         await db.commit()
         await db.refresh(orphaned_user)
         return UserMe.model_validate(orphaned_user)
@@ -110,6 +139,8 @@ async def sync_user(
         place_vector=_DEFAULT_VECTOR,
         xp=0,
         level=1,
+        next_level_xp=default_xp_req,
+        total_xp_earned=0,
         settings={},
     )
     db.add(new_user)
