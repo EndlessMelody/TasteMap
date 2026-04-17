@@ -140,11 +140,29 @@ async def award_xp(
     # 5. Commit dữ liệu cứng trước khi đồng bộ sang Redis (Tránh Race Condition)
     await db.commit()
 
-    # 6. Redis Dual-Write (Giữ nguyên logic của ông)
+    # 6. Redis Dual-Write (High Performance Leaderboard Sync)
     try:
         redis = RedisClient.get_client()
         now = datetime.utcnow()
-        # ... logic redis pipeline ...
+        
+        # Key patterns matched with leaderboard_service.py
+        month_key = f"leaderboard:monthly:{now.strftime('%Y-%m')}"
+        week_key = f"leaderboard:weekly:{now.strftime('%Y-W%U')}"
+        alltime_key = "leaderboard:alltime"
+
+        pipe = redis.pipeline()
+        
+        # 1. Update All-time leaderboard (Absolute value)
+        pipe.zadd(alltime_key, {str(user_id): new_total_xp})
+        
+        # 2. Update Period leaderboards (Incremental values)
+        pipe.zincrby(month_key, float(amount), str(user_id))
+        pipe.zincrby(week_key, float(amount), str(user_id))
+        
+        # 3. Set expiry for period keys to keep Redis clean (optional)
+        pipe.expire(month_key, 60*60*24*60) # 60 days
+        pipe.expire(week_key, 60*60*24*14)  # 14 days
+        
         await pipe.execute()
     except Exception as e:
         print(f"Leaderboard Sync Error: {e}")
