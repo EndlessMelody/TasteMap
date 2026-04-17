@@ -58,12 +58,23 @@ class UserService:
 
     async def _get_badges(self, user_id: int) -> List[BadgeSummary]:
         result = await self.db.execute(
-            select(Badge)
+            select(Badge, UserBadge.earned_at)
             .join(UserBadge, UserBadge.badge_id == Badge.id)
             .where(UserBadge.user_id == user_id)
         )
-        badges = result.scalars().all()
-        return [BadgeSummary(icon=b.icon, label=b.label, color=b.color) for b in badges]
+        rows = result.all()
+        return [
+            BadgeSummary(
+                id=b.id,
+                name=b.name,
+                description=b.description,
+                icon_name=b.icon_name,
+                rarity=b.rarity,
+                accent_color=b.accent_color,
+                is_hidden=b.is_hidden,
+                earned_at=earned_at
+            ) for b, earned_at in rows
+        ]
 
     # ─── Public API ───────────────────────────────────────────────────────
 

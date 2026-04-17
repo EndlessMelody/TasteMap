@@ -11,6 +11,7 @@ import {
   IconButton,
   Input,
   Avatar,
+  Grid,
 } from "@/components/OnceUI";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -38,6 +39,9 @@ import {
   PartyPopper,
   Users,
   Handshake,
+  Shield,
+  Medal,
+  Trophy,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -1117,63 +1121,33 @@ export default function ProfilePage() {
               )}
 
               {activeTab === "Achievements" && (
-                <Column style={{ gap: "32px" }}>
-                  <Row style={{ gap: "16px", flexWrap: "wrap" }}>
-                    {(user?.badges || []).map((badge: any) => (
-                      <Row
-                        key={badge.label}
-                        style={{
-                          gap: "16px",
-                          alignItems: "center",
-                          paddingTop: "18px",
-                          paddingBottom: "18px",
-                          paddingLeft: "32px",
-                          paddingRight: "32px",
-                          backgroundColor: "#EAF2FF",
-                          borderTopWidth: "1px",
-                          borderBottomWidth: "1px",
-                          borderLeftWidth: "1px",
-                          borderRightWidth: "1px",
-                          borderStyle: "solid",
-                          borderColor: "rgba(0,122,255,0.08)",
-                          borderRadius: "24px",
-                        }}
-                      >
-                        <span style={{ fontSize: "1.5rem" }}>{badge.icon}</span>
-                        <Column>
-                          <Text
-                            style={{
-                              color: "#007AFF",
-                              fontWeight: 700,
-                              fontSize: "0.95rem",
-                            }}
-                          >
-                            {badge.label}
-                          </Text>
-                          <Text
-                            style={{
-                              color: "rgba(0,122,255,0.6)",
-                              fontSize: "0.75rem",
-                              fontWeight: 600,
-                            }}
-                          >
-                            Unlocked recently
-                          </Text>
-                        </Column>
-                      </Row>
-                    ))}
-                    {!user?.badges?.length && (
-                      <Text
-                        style={{
-                          color: "#8E8E93",
-                          paddingTop: "16px",
-                          paddingBottom: "16px",
-                        }}
-                      >
-                        No achievements unlocked yet.
+                <Column fillWidth gap="24">
+                  <Row fillWidth horizontal="between" vertical="center" paddingX="8">
+                    <Column gap="4">
+                      <Heading variant="display-strong-s">Kho Huy Hiệu</Heading>
+                      <Text variant="body-default-xs" onBackground="neutral-weak">
+                        Sưu tập và phô diễn hành trình ẩm thực của bạn
                       </Text>
-                    )}
+                    </Column>
+                    <div style={{ padding: '8px 16px', borderRadius: '12px', background: 'rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.05)' }}>
+                      <Text variant="body-strong-xs">{(user?.badges || []).length} / 50</Text>
+                    </div>
                   </Row>
+
+                  <Grid columns={3} gap="20" s={{ columns: 2 }} m={{ columns: 3 }}>
+                    {(user?.badges || []).map((badge: any, index: number) => (
+                      <BadgeCard key={badge.id || index} badge={badge} delay={index * 0.05} />
+                    ))}
+                    {(!user?.badges || user.badges.length === 0) && (
+                      <Column fillWidth horizontal="center" vertical="center" padding="64" gap="16" background="neutral-alpha-weak" radius="xl" style={{ border: '2px dashed rgba(0,0,0,0.05)', gridColumn: 'span 3' }}>
+                        <div style={{ opacity: 0.2 }}>
+                          <Award size={48} />
+                        </div>
+                        <Text variant="body-default-s" onBackground="neutral-weak">Chưa có huy hiệu nào. Hãy tham gia thử thách ngay!</Text>
+                        <Button variant="secondary" size="s">Khám phá thử thách</Button>
+                      </Column>
+                    )}
+                  </Grid>
                 </Column>
               )}
 
@@ -1901,3 +1875,140 @@ export default function ProfilePage() {
     </div>
   );
 }
+// ═══════════════════════════════════════════════════════════════════════
+//  BADGE CARD COMPONENT
+// ═══════════════════════════════════════════════════════════════════════
+
+const BadgeCard = ({ badge, delay }: { badge: any; delay: number }) => {
+  const IconMap: any = {
+    Star, Utensils, Award, Heart, TrendingUp, Flame, Cake, Gem, Feather, PartyPopper, Users, Handshake, Shield, Medal, Trophy
+  };
+
+  const IconComponent = IconMap[badge.icon_name] || Award;
+
+  const rarityStyles: any = {
+    Common: {
+      border: 'rgba(0,0,0,0.05)',
+      glow: 'transparent',
+      text: 'neutral-strong',
+      bg: 'rgba(0,0,0,0.02)'
+    },
+    Rare: {
+      border: 'rgba(0,122,255,0.2)',
+      glow: 'rgba(0,122,255,0.1)',
+      text: 'info-strong',
+      bg: 'rgba(0,122,255,0.03)'
+    },
+    Epic: {
+      border: 'rgba(175,82,222,0.3)',
+      glow: 'rgba(175,82,222,0.15)',
+      text: 'brand-strong',
+      bg: 'rgba(175,82,222,0.05)'
+    },
+    Legendary: {
+      border: 'rgba(251,191,36,0.5)',
+      glow: 'rgba(251,191,36,0.25)',
+      text: 'warning-strong',
+      bg: 'rgba(251,191,36,0.08)',
+      animate: true
+    }
+  };
+
+  const style = rarityStyles[badge.rarity] || rarityStyles.Common;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.4, delay }}
+      whileHover={{ y: -5, scale: 1.02 }}
+      style={{
+        position: 'relative',
+        height: '100%',
+        zIndex: 1
+      }}
+    >
+      {/* Glow Aura for Epic and Legendary */}
+      {(badge.rarity === 'Epic' || badge.rarity === 'Legendary') && (
+        <div 
+          style={{
+            position: 'absolute',
+            inset: '-4px',
+            background: style.glow,
+            filter: 'blur(20px)',
+            borderRadius: '24px',
+            zIndex: -1,
+          }}
+        />
+      )}
+
+      <Column
+        fill
+        padding="20"
+        gap="12"
+        radius="xl"
+        horizontal="center"
+        vertical="center"
+        style={{
+          background: style.bg,
+          border: `1px solid ${style.border}`,
+          backdropFilter: 'blur(10px)',
+          textAlign: 'center',
+          transition: 'all 0.3s ease',
+          boxShadow: badge.rarity === 'Legendary' ? '0 10px 30px rgba(251,191,36,0.15)' : 'none'
+        }}
+      >
+        <div 
+          style={{ 
+            padding: '12px', 
+            borderRadius: '16px', 
+            background: '#fff',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+            color: badge.accent_color || '#007AFF',
+            position: 'relative'
+          }}
+        >
+          {badge.rarity === 'Legendary' && (
+             <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+              style={{
+                position: 'absolute',
+                inset: -2,
+                borderRadius: 'inherit',
+                border: '2px dashed #FBBF24',
+                opacity: 0.5
+              }}
+             />
+          )}
+          <IconComponent size={28} />
+        </div>
+
+        <Column gap="4" horizontal="center">
+          <Text variant="body-strong-s">{badge.name}</Text>
+          <div style={{
+            padding: '2px 8px',
+            borderRadius: '100px',
+            background: style.border,
+            marginBottom: '4px'
+          }}>
+            <Text variant="body-default-xs" style={{ fontSize: '10px', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.5px' }}>
+              {badge.rarity}
+            </Text>
+          </div>
+          {badge.description && (
+            <Text variant="body-default-xs" onBackground="neutral-weak" style={{ fontSize: '11px', lineHeight: '1.4' }}>
+              {badge.description}
+            </Text>
+          )}
+        </Column>
+
+        {badge.earned_at && (
+          <Text variant="body-default-xs" style={{ color: 'rgba(0,0,0,0.3)', marginTop: 'auto' }}>
+            {new Date(badge.earned_at).toLocaleDateString()}
+          </Text>
+        )}
+      </Column>
+    </motion.div>
+  );
+};

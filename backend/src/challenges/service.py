@@ -168,12 +168,21 @@ async def claim_challenge_reward(
         description=f"Completed challenge: {challenge.title}"
     )
     
+    # Award Badge if applicable
+    badge_awarded = None
+    if challenge.badge_id:
+        from src.gamification.service import award_badge
+        res_badge = await award_badge(db, user_id, challenge.badge_id)
+        if res_badge.get("status") == "awarded":
+            badge_awarded = challenge.badge_id
+            
     return {
         "success": True,
         "challenge_title": challenge.title,
         "xp_awarded": challenge.xp_reward,
         "new_level": xp_res["new_level"],
-        "leveled_up": xp_res["leveled_up"]
+        "leveled_up": xp_res["leveled_up"],
+        "badge_awarded": badge_awarded
     }
 
 async def get_user_challenges(

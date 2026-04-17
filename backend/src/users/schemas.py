@@ -11,9 +11,14 @@ class UserStats(BaseModel):
 
 
 class BadgeSummary(BaseModel):
-    icon: str
-    label: str
-    color: str
+    id: int
+    name: str
+    description: Optional[str] = None
+    icon_name: str
+    rarity: str
+    accent_color: str
+    is_hidden: bool
+    earned_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

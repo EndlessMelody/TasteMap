@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, UniqueConstraint, func
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, UniqueConstraint, func, Text, Boolean
 from sqlalchemy.orm import relationship
 from src.db.database import Base
 
@@ -6,21 +6,22 @@ from src.db.database import Base
 class Badge(Base):
     """
     Bảng Badges — danh sách huy hiệu có thể nhận.
-    VD: 🔥 Spice Master, 🌙 Night Owl, 📸 Photo Pro, 👑 Top Reviewer
+    VD: Spice Master, Night Owl, Photo Pro, Top Reviewer
     """
     __tablename__ = "badges"
 
     id = Column(Integer, primary_key=True, index=True)
-    icon = Column(String, nullable=False)     # Emoji: "🔥", "🌙", "📸", "👑"
-    label = Column(String, nullable=False)    # "Spice Master", "Night Owl"
-    color = Column(String, nullable=False)    # Hex: "#E63946", "#7B2FF7"
-    description = Column(String, nullable=True)
+    name = Column(String(100), nullable=False)
+    description = Column(Text, nullable=True)
+    icon_name = Column(String(50), nullable=False) 
+    rarity = Column(String(20), nullable=False, default="Common") 
+    accent_color = Column(String(20), nullable=False, default="#007AFF")
+    is_hidden = Column(Boolean, nullable=False, default=False)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationships
     user_badges = relationship("UserBadge", back_populates="badge", lazy="selectin")
-
 
 class UserBadge(Base):
     """

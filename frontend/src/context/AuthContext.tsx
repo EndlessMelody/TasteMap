@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { supabase } from "@/lib/supabase";
 import { apiPost } from "@/lib/api";
+import { BadgeSummary } from "@/types/gamification";
 
 export interface UserData {
   id: number;
@@ -33,6 +34,7 @@ export interface UserData {
     followers: number;
     following: number;
   };
+  badges?: BadgeSummary[];
 }
 
 interface AuthContextValue {
