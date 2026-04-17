@@ -42,3 +42,13 @@ async def delete_badge(badge_id: int, admin = Depends(get_current_admin), db: As
     success = await service.delete_badge(db, badge_id)
     if not success:
         raise HTTPException(status_code=404, detail="Badge not found")
+
+@router.post("/admin/award/{user_id}/{badge_id}", summary="Admin: Cấp huy hiệu cho user")
+async def admin_award_badge(
+    user_id: int, 
+    badge_id: int, 
+    admin=Depends(get_current_admin), 
+    db: AsyncSession=Depends(get_db)
+):
+    result = await service.award_badge(db, user_id, badge_id)
+    return {"success": True, "message": result["status"]}

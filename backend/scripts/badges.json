@@ -1,0 +1,274 @@
+[
+  {
+    "name": "First Bite",
+    "description": "Welcome to TasteMap! You've successfully completed your very first check-in.",
+    "icon_name": "Utensils",
+    "rarity": "Common",
+    "accent_color": "#8E8E93",
+    "is_hidden": false
+  },
+  {
+    "name": "Neighborhood Watch",
+    "description": "Checked in at 10 different locations within the same district.",
+    "icon_name": "MapPin",
+    "rarity": "Rare",
+    "accent_color": "#007AFF",
+    "is_hidden": false
+  },
+  {
+    "name": "City Explorer",
+    "description": "A true wanderer. You've explored and checked in at 50 different locations.",
+    "icon_name": "Map",
+    "rarity": "Epic",
+    "accent_color": "#AF52DE",
+    "is_hidden": false
+  },
+  {
+    "name": "Night Owl",
+    "description": "The city never sleeps, and neither do you. Completed 10 check-ins after 10 PM.",
+    "icon_name": "Moon",
+    "rarity": "Rare",
+    "accent_color": "#5856D6",
+    "is_hidden": false
+  },
+  {
+    "name": "Early Bird",
+    "description": "Caught the worm! Completed 10 check-ins before 8 AM.",
+    "icon_name": "Sun",
+    "rarity": "Common",
+    "accent_color": "#FF9500",
+    "is_hidden": false
+  },
+  {
+    "name": "Coffee Connoisseur",
+    "description": "Fueled by caffeine. Visited 15 different coffee shops.",
+    "icon_name": "Coffee",
+    "rarity": "Rare",
+    "accent_color": "#A2845E",
+    "is_hidden": false
+  },
+  {
+    "name": "Caffeine Fiend",
+    "description": "Your blood is 90% espresso. Visited 50 coffee shops.",
+    "icon_name": "Zap",
+    "rarity": "Epic",
+    "accent_color": "#D2B48C",
+    "is_hidden": false
+  },
+  {
+    "name": "Spice Seeker",
+    "description": "Can handle the heat! Checked in at 5 restaurants with the 'Spicy' tag.",
+    "icon_name": "Flame",
+    "rarity": "Common",
+    "accent_color": "#FF3B30",
+    "is_hidden": false
+  },
+  {
+    "name": "Fire Breather",
+    "description": "Nothing is too hot for you. Checked in at 25 'Spicy' locations.",
+    "icon_name": "FlameKindling",
+    "rarity": "Epic",
+    "accent_color": "#FF2D55",
+    "is_hidden": false
+  },
+  {
+    "name": "Sweet Tooth",
+    "description": "Life is short, eat dessert first. Visited 10 dessert or pastry shops.",
+    "icon_name": "IceCream",
+    "rarity": "Common",
+    "accent_color": "#FF69B4",
+    "is_hidden": false
+  },
+  {
+    "name": "Sushi Master",
+    "description": "Arigato! Checked in at 15 Japanese restaurants.",
+    "icon_name": "Fish",
+    "rarity": "Rare",
+    "accent_color": "#FF4500",
+    "is_hidden": false
+  },
+  {
+    "name": "Ice Breaker",
+    "description": "Joined your very first Group Room. Let the food hunt begin!",
+    "icon_name": "Users",
+    "rarity": "Common",
+    "accent_color": "#34C759",
+    "is_hidden": false
+  },
+  {
+    "name": "Party Animal",
+    "description": "A true social butterfly. Successfully joined and checked in with 10 Group Rooms.",
+    "icon_name": "PartyPopper",
+    "rarity": "Rare",
+    "accent_color": "#FF2D55",
+    "is_hidden": false
+  },
+  {
+    "name": "Squad Leader",
+    "description": "Born to lead. Hosted 20 Group Rooms that ended in successful check-ins.",
+    "icon_name": "Crown",
+    "rarity": "Epic",
+    "accent_color": "#FFD700",
+    "is_hidden": false
+  },
+  {
+    "name": "Taste Matchmaker",
+    "description": "Master of algorithms! Your groups accepted the AI's 1st recommendation 50 times.",
+    "icon_name": "Sparkles",
+    "rarity": "Legendary",
+    "accent_color": "#FBBF24",
+    "is_hidden": false
+  },
+  {
+    "name": "Local Guide",
+    "description": "Helping others find good food. Left 5 text reviews.",
+    "icon_name": "MessageSquare",
+    "rarity": "Common",
+    "accent_color": "#34A853",
+    "is_hidden": false
+  },
+  {
+    "name": "Snapshot Guru",
+    "description": "The camera eats first. Uploaded 25 food photos to your reviews.",
+    "icon_name": "Camera",
+    "rarity": "Rare",
+    "accent_color": "#5AC8FA",
+    "is_hidden": false
+  },
+  {
+    "name": "Food Critic",
+    "description": "Your opinion matters. Wrote 50 highly-rated, detailed reviews.",
+    "icon_name": "PenTool",
+    "rarity": "Epic",
+    "accent_color": "#AF52DE",
+    "is_hidden": false
+  },
+  {
+    "name": "Michelin Inspector",
+    "description": "The ultimate authority. Your reviews have received 1000+ helpful votes from the community.",
+    "icon_name": "Star",
+    "rarity": "Legendary",
+    "accent_color": "#E5C07B",
+    "is_hidden": true
+  },
+  {
+    "name": "Weekend Warrior",
+    "description": "Active and checking in for 4 consecutive weekends.",
+    "icon_name": "Calendar",
+    "rarity": "Rare",
+    "accent_color": "#FF9500",
+    "is_hidden": false
+  },
+  {
+    "name": "Unstoppable",
+    "description": "Maintained an active streak of 30 days without missing a single day.",
+    "icon_name": "TrendingUp",
+    "rarity": "Epic",
+    "accent_color": "#FF3B30",
+    "is_hidden": false
+  },
+  {
+    "name": "TasteMap Addict",
+    "description": "100-day streak! TasteMap is officially your lifestyle.",
+    "icon_name": "HeartPulse",
+    "rarity": "Legendary",
+    "accent_color": "#FF0000",
+    "is_hidden": true
+  },
+  {
+    "name": "Trend Setter",
+    "description": "You checked in at a location before it went viral (Top 10 trending).",
+    "icon_name": "Rocket",
+    "rarity": "Epic",
+    "accent_color": "#00C7BE",
+    "is_hidden": false
+  },
+  {
+    "name": "Ghost Hunter",
+    "description": "Discovered and checked in at a location that had zero previous reviews.",
+    "icon_name": "Ghost",
+    "rarity": "Epic",
+    "accent_color": "#8E8E93",
+    "is_hidden": true
+  },
+  {
+    "name": "The Pioneer",
+    "description": "Awarded to the first 1,000 alpha testers of TasteMap. Thank you for believing in us!",
+    "icon_name": "ShieldAlert",
+    "rarity": "Legendary",
+    "accent_color": "#000000",
+    "is_hidden": true
+  },
+  {
+    "name": "Genesis",
+    "description": "You were here on Day 1. A true founding member who witnessed the birth of TasteMap.",
+    "icon_name": "Fingerprint",
+    "rarity": "Legendary",
+    "accent_color": "#E5C07B",
+    "is_hidden": true
+  },
+  {
+    "name": "The First 100",
+    "description": "One of the first 100 foodies to ever join the platform. Your legacy is forever secured.",
+    "icon_name": "Award",
+    "rarity": "Legendary",
+    "accent_color": "#FBBF24",
+    "is_hidden": true
+  },
+  {
+    "name": "Beta Voyager",
+    "description": "Participated in the TasteMap Beta testing phase. Thank you for your invaluable feedback!",
+    "icon_name": "TestTube",
+    "rarity": "Epic",
+    "accent_color": "#34C759",
+    "is_hidden": true
+  },
+  {
+    "name": "The Architect",
+    "description": "Creator and builder of the TasteMap universe. (Admin Exclusive)",
+    "icon_name": "Terminal",
+    "rarity": "Legendary",
+    "accent_color": "#007AFF",
+    "is_hidden": true
+  },
+  {
+    "name": "The Overseer",
+    "description": "Keeping the TasteMap community safe, clean, and thriving. (Moderator Exclusive)",
+    "icon_name": "ShieldCheck",
+    "rarity": "Epic",
+    "accent_color": "#5856D6",
+    "is_hidden": true
+  },
+  {
+    "name": "Bug Smasher",
+    "description": "Helped the Dev team identify and squash a critical bug in the system. You saved the day!",
+    "icon_name": "Bug",
+    "rarity": "Epic",
+    "accent_color": "#FF3B30",
+    "is_hidden": true
+  },
+  {
+    "name": "Community Champion",
+    "description": "The official voice of TasteMap. Hosting events, creating challenges, and keeping vibes high.",
+    "icon_name": "Megaphone",
+    "rarity": "Legendary",
+    "accent_color": "#AF52DE",
+    "is_hidden": true
+  },
+  {
+    "name": "Admin",
+    "description": "TasteMap's Final Boss. I have the power to 'DROP TABLE' at any moment, so please behave.",
+    "icon_name": "Shield",
+    "rarity": "Legendary",
+    "accent_color": "#1C1C1E",
+    "is_hidden": true
+  },
+  {
+    "name": "Tester",
+    "description": "Professional App Breaker. I click buttons in the wrong order just to watch the Devs cry.",
+    "icon_name": "Wrench",
+    "rarity": "Epic",
+    "accent_color": "#FF9500",
+    "is_hidden": true
+  }
+]
