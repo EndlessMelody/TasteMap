@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
 from src.posts import service
-from src.posts.schemas import PostCreate, CommentCreate
+from src.posts.schemas import PostCreate, CommentCreate, PostResponse
 from src.core.dependencies import get_current_user_id, get_optional_user_id
 from typing import Optional
 
@@ -10,7 +10,7 @@ router = APIRouter()
 comments_router = APIRouter()
 
 
-@router.post("/", summary="Tạo bài review mới", status_code=201)
+@router.post("/", summary="Tạo bài review mới", status_code=201, response_model=PostResponse)
 async def create_post(body: PostCreate, user_id: int = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)):
     return await service.create_post(db, user_id, body)
 

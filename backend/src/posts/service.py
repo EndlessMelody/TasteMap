@@ -33,7 +33,7 @@ async def create_post(db: AsyncSession, user_id: int, data: PostCreate) -> dict:
         }
     )
     
-    return await _post_to_dict(db, post, user_id)
+    return post 
 
 
 from sqlalchemy.orm import selectinload

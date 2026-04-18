@@ -324,9 +324,8 @@ export function CreatePostModal({
                           key={tab.value}
                           type="button"
                           onClick={() => setPostType(tab.value)}
-                          className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-full text-sm font-semibold transition-colors duration-150 ${
-                            isActive ? "text-orange-500" : "text-zinc-400 hover:text-zinc-600"
-                          }`}
+                          className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-full text-sm font-semibold transition-colors duration-150 ${isActive ? "text-orange-500" : "text-zinc-400 hover:text-zinc-600"
+                            }`}
                         >
                           <Icon size={15} />
                           {tab.label}
@@ -435,11 +434,10 @@ export function CreatePostModal({
                   disabled={isSubmitting || isUploadingMedia || !canSubmit}
                   whileHover={canSubmit ? { scale: 1.03 } : undefined}
                   whileTap={canSubmit ? { scale: 0.97 } : undefined}
-                  className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all ${
-                    canSubmit && !isSubmitting && !isUploadingMedia
+                  className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all ${canSubmit && !isSubmitting && !isUploadingMedia
                       ? "bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-200"
                       : "bg-slate-300 cursor-not-allowed"
-                  }`}
+                    }`}
                 >
                   {submitLabel}
                 </motion.button>

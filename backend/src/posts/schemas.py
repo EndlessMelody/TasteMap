@@ -24,16 +24,8 @@ class LocationStub(BaseModel):
 
 class PostResponse(BaseModel):
     id: int
-    user: Optional[UserStub] = None
-    location: Optional[LocationStub] = None
-    review: str
-    rating: Optional[float] = None
-    image_url: Optional[str] = None
-    tags: Optional[List[str]] = None
-    likes_count: int = 0
-    comments_count: int = 0
-    is_liked: bool = False
-    created_at: Optional[datetime] = None
+    review: Optional[str]
+    created_at: datetime
 
     class Config:
         from_attributes = True
