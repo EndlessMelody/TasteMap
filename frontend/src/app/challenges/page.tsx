@@ -102,33 +102,35 @@ function ChallengeCard({
     <motion.div
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4, scale: 1.01 }}
       transition={{
         delay: index * 0.04,
         type: "spring",
         stiffness: 260,
         damping: 24,
       }}
-      className="bg-white rounded-[22px] p-5 flex flex-col gap-4"
+      className="bg-white rounded-[24px] p-6 flex flex-col gap-4 relative overflow-hidden group"
       style={{
-        border: "1px solid rgba(0,0,0,0.05)",
+        border: "1px solid rgba(0,0,0,0.04)",
         boxShadow:
           isCompleted || isClaimed
-            ? `0 4px 20px ${accentColor}22`
-            : "0 4px 16px rgba(0,0,0,0.04)",
+            ? `0 12px 30px ${accentColor}1A`
+            : "0 8px 24px rgba(0,0,0,0.05)",
         opacity: isUpcoming ? 0.72 : 1,
       }}
     >
-      <div className="flex items-start justify-between">
+      <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none z-0" />
+      <div className="relative z-10 flex items-start justify-between">
         <div className="flex items-center gap-4">
           <div
-            className="w-12 h-12 rounded-[16px] flex items-center justify-center transition-transform hover:scale-105"
-            style={{ backgroundColor: accentColor + "18", color: accentColor }}
+            className="w-13 h-13 rounded-[16px] flex items-center justify-center transition-transform group-hover:scale-110 duration-300"
+            style={{ backgroundColor: accentColor + "18", color: accentColor, minWidth: '52px', minHeight: '52px' }}
           >
             {icon}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-[16px] font-bold text-[#1C1C1E] leading-none">
+              <h3 className="text-[17px] font-black text-[#1C1C1E] tracking-tight">
                 {c.challenge.title}
               </h3>
               {isClaimed && (
@@ -140,7 +142,7 @@ function ChallengeCard({
               )}
               {isUpcoming && <Lock size={13} className="text-[#8E8E93]" />}
             </div>
-            <p className="text-[13px] text-[#8E8E93] mt-1.5 leading-relaxed">
+            <p className="text-[13.5px] text-[#8E8E93] mt-1.5 leading-relaxed font-medium">
               {c.challenge.description}
             </p>
           </div>
@@ -196,44 +198,46 @@ function ChallengeCard({
         </div>
       )}
 
-      <div className="flex items-center justify-between mt-1">
+      <div className="relative z-10 flex items-center justify-between mt-1">
         <div className="flex items-center gap-3">
           <span
-            className="text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+            className="text-[11px] font-black px-3 py-1.5 rounded-lg uppercase tracking-wider transition-colors"
             style={{ backgroundColor: diff.bg, color: diff.color }}
           >
             {diff.label}
           </span>
           {c.deadline_display && (
-            <span className="flex items-center gap-1.5 text-[12px] text-[#8E8E93] font-medium">
-              <Clock size={12} /> {c.deadline_display}
+            <span className="flex items-center gap-1.5 text-[12.5px] text-[#8E8E93] font-bold">
+              <Clock size={14} /> {c.deadline_display}
             </span>
           )}
         </div>
 
         {isClaimed ? (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[13px] font-bold text-[#34C759] bg-[#EAF9EE]">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-[13px] font-bold text-[#34C759] border border-[#34C759]/20" style={{backgroundColor: '#34C75910'}}>
             <CheckCircle size={14} /> Completed
           </div>
         ) : isCompleted ? (
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => onAction("claim", c.id)}
-            className="flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-extrabold text-white shadow-lg"
+            className="relative flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-extrabold text-white overflow-hidden group/btn"
             style={{
-              background: "linear-gradient(135deg, #34C759, #30D158)",
-              boxShadow: "0 6px 15px rgba(52,199,89,0.3)",
+              background: `linear-gradient(135deg, ${accentColor}, ${accentColor}dd)`,
+              boxShadow: `0 8px 20px ${accentColor}40`,
             }}
           >
-            <Trophy size={14} /> Claim Reward
+            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+            <Trophy size={14} className="relative z-10" /> 
+            <span className="relative z-10">Claim Reward</span>
           </motion.button>
         ) : isUpcoming ? (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onAction("join", c.challenge.id)}
-            className="flex items-center gap-2 px-5 py-2 rounded-full text-[13px] font-bold bg-[#1C1C1E] text-white shadow-md"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-bold bg-[#1C1C1E] text-white shadow-xl shadow-black/10"
           >
             Join Challenge <ArrowRight size={14} />
           </motion.button>
@@ -273,7 +277,7 @@ function LeaderboardRow({
         stiffness: 260,
         damping: 24,
       }}
-      className="flex items-center gap-4 px-4 py-3 rounded-[18px] transition-all hover:bg-black/5"
+      className="flex items-center gap-4 px-4 py-3 rounded-[20px] transition-all cursor-pointer group"
       style={{
         backgroundColor: entry.is_current_user
           ? "rgba(0,122,255,0.06)"
@@ -281,6 +285,12 @@ function LeaderboardRow({
         border: entry.is_current_user
           ? "1px solid rgba(0,122,255,0.15)"
           : "1px solid transparent",
+      }}
+      whileHover={{
+        scale: 1.02,
+        backgroundColor: "#fff",
+        boxShadow: "0 10px 25px rgba(0,0,0,0.06)",
+        border: "1px solid rgba(0,0,0,0.04)"
       }}
     >
       <div className="w-8 text-center flex-shrink-0">
@@ -601,32 +611,38 @@ export default function ChallengesPage() {
           overflow: "hidden",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            top: -60,
-            right: -60,
-            width: 250,
-            height: 250,
-            borderRadius: "50%",
-            background: "rgba(251,191,36,0.15)",
-            filter: "blur(70px)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: -40,
-            left: 100,
-            width: 200,
-            height: 200,
-            borderRadius: "50%",
-            background: "rgba(0,122,255,0.12)",
-            filter: "blur(60px)",
-          }}
-        />
-
-        <div className="relative max-w-[1400px] mx-auto w-full flex flex-col">
+        <motion.div
+           animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
+           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+           style={{
+             position: "absolute",
+             top: -60,
+             right: -60,
+             width: 350,
+             height: 350,
+             borderRadius: "50%",
+             background: "rgba(255,107,53,1)",
+             filter: "blur(90px)",
+             zIndex: 0,
+           }}
+         />
+         <motion.div
+           animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.2, 0.1] }}
+           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+           style={{
+             position: "absolute",
+             bottom: -40,
+             left: 100,
+             width: 300,
+             height: 300,
+             borderRadius: "50%",
+             background: "rgba(0,122,255,1)",
+             filter: "blur(100px)",
+             zIndex: 0,
+           }}
+         />
+ 
+        <div className="relative z-10 max-w-[1400px] mx-auto w-full flex flex-col">
           <div className="flex items-start justify-between mb-8 w-full">
             <div>
               <div className="flex items-center gap-4 mb-3">
@@ -760,42 +776,41 @@ export default function ChallengesPage() {
       <div className="max-w-[1400px] mx-auto w-full px-12 py-10 flex gap-8">
         <div className="flex-1 min-w-0 flex flex-col gap-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {CAT_TABS.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[14px] font-bold transition-all"
-                  style={
-                    activeTab === tab
-                      ? {
-                          backgroundColor: "#1C1C1E",
-                          color: "#fff",
-                          boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
-                        }
-                      : {
-                        backgroundColor: "#fcfcfeff",
-                        color: "#8E8E93",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                      }
-                  }
-                >
-                  {tab}
-                  <span
-                    className="text-[11px] font-black px-2 py-0.5 rounded-lg"
-                    style={
-                      activeTab === tab
-                        ? {
-                            backgroundColor: "rgba(255,255,255,0.2)",
-                            color: "#fff",
-                          }
-                        : { backgroundColor: "#E5E5EB", color: "#8E8E93" }
-                    }
-                  >
-                    {tabCounts[tab]}
-                  </span>
-                </button>
-              ))}
+            <div className="flex items-center gap-2 p-1.5 bg-[#E5E5EA]/50 backdrop-blur-md rounded-2xl w-fit border border-black/5">
+              {CAT_TABS.map((tab) => {
+                const isActive = activeTab === tab;
+                return (
+                 <button
+                   key={tab}
+                   onClick={() => setActiveTab(tab)}
+                   className={`relative flex items-center gap-2 px-5 py-2.5 rounded-xl text-[14px] font-bold transition-colors z-10 ${isActive ? "text-white" : "text-[#8E8E93] hover:text-[#1C1C1E]"}`}
+                 >
+                   {isActive && (
+                      <motion.div
+                        layoutId="activeTabChallenges"
+                        className="absolute inset-0 rounded-xl z-[-1]"
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        style={{ background: "linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 100%)", boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
+                      />
+                   )}
+                   <span className="relative z-10">{tab}</span>
+                   <span
+                     className="relative z-10 text-[11px] font-black px-2 py-0.5 rounded-lg transition-colors border border-transparent"
+                     style={
+                       isActive
+                         ? {
+                             backgroundColor: "rgba(255,255,255,0.15)",
+                             borderColor: "rgba(255,255,255,0.1)",
+                             color: "#fff",
+                           }
+                         : { backgroundColor: "white", color: "#8E8E93", boxShadow: "0 2px 4px rgba(0,0,0,0.02)" }
+                     }
+                   >
+                     {tabCounts[tab]}
+                   </span>
+                 </button>
+                )
+              })}
             </div>
           </div>
 

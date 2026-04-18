@@ -8,6 +8,8 @@ import {
   Clock,
   ChevronRight,
   ChevronLeft,
+  ChevronsRight,
+  ChevronsLeft,
   Zap,
   RotateCcw,
   Wallet,
@@ -31,9 +33,14 @@ import {
   RefreshCw,
   Trash2,
   Send,
+  Wind,
+  Droplets,
+  Lightbulb,
+  History,
 } from "lucide-react";
 
-import Link from "next/link";
+import { useWeather } from "@/hooks/useWeather";
+import { useAuth } from "@/context/AuthContext";
 
 const STOP_CATEGORY_ICON: Record<string, React.ReactElement> = {
   "Street Food": <Utensils size={16} />,
@@ -141,57 +148,81 @@ const MOODS = [
     label: "Casual",
     icon: <Smile size={28} />,
     desc: "Relaxed, no rush",
+    emoji: "😌",
+    gradient: "linear-gradient(135deg, #FFF5E6, #FFE8CC)",
+    accentColor: "#FF9500",
   },
   {
     id: "adventurous",
     label: "Adventurous",
     icon: <Flame size={28} />,
     desc: "New & unexpected",
+    emoji: "🔥",
+    gradient: "linear-gradient(135deg, #FFF0E6, #FFE0CC)",
+    accentColor: "#FF6B35",
   },
   {
     id: "romantic",
     label: "Romantic",
     icon: <Heart size={28} />,
     desc: "Date-night vibes",
+    emoji: "💕",
+    gradient: "linear-gradient(135deg, #FFF0F5, #FFE0EB)",
+    accentColor: "#FF2D78",
   },
   {
     id: "family",
     label: "Family",
     icon: <Users size={28} />,
     desc: "All-ages friendly",
+    emoji: "👨‍👩‍👧‍👦",
+    gradient: "linear-gradient(135deg, #E8F8F0, #D0F0E0)",
+    accentColor: "#34C759",
   },
 ];
 
 const CUISINES = [
-  "Vietnamese",
-  "Cafe",
-  "Ramen",
-  "Street Food",
-  "BBQ",
-  "Japanese",
-  "Dessert",
-  "Healthy",
+  { label: "Vietnamese", emoji: "🍜", color: "#ED1B24" },
+  { label: "Cafe", emoji: "☕", color: "#8B6914" },
+  { label: "Ramen", emoji: "🍥", color: "#F97316" },
+  { label: "Street Food", emoji: "🥖", color: "#F59E0B" },
+  { label: "BBQ", emoji: "🔥", color: "#DC2626" },
+  { label: "Japanese", emoji: "🍣", color: "#E11D48" },
+  { label: "Dessert", emoji: "🍰", color: "#A855F7" },
+  { label: "Healthy", emoji: "🥗", color: "#22C55E" },
 ];
 
 const GROUPS = [
-  { id: "solo", label: "Solo", icon: <User size={24} />, desc: "Just me" },
-  { id: "duo", label: "Couple", icon: <Heart size={24} />, desc: "2 people" },
+  { id: "solo", label: "Solo", icon: <User size={24} />, desc: "Just me", emoji: "🧑" },
+  { id: "duo", label: "Couple", icon: <Heart size={24} />, desc: "2 people", emoji: "💑" },
   {
     id: "small",
     label: "Small Group",
     icon: <Users size={24} />,
     desc: "3–5 people",
+    emoji: "👥",
   },
   {
     id: "large",
     label: "Large Group",
     icon: <PartyPopper size={24} />,
     desc: "6+ people",
+    emoji: "🎉",
   },
 ];
 
-const DURATIONS = ["2 hours", "4 hours", "Half Day", "Full Day"];
-const BUDGETS = ["< 100k", "100–300k", "300–500k", "500k+"];
+const DURATIONS = [
+  { label: "2 hours", icon: "⚡", desc: "Quick bite" },
+  { label: "4 hours", icon: "☀️", desc: "Afternoon" },
+  { label: "Half Day", icon: "🌤️", desc: "5–6 hours" },
+  { label: "Full Day", icon: "🌅", desc: "8+ hours" },
+];
+const BUDGETS = [
+  { label: "< 100k", icon: "💰", desc: "Thrifty" },
+  { label: "100–300k", icon: "💳", desc: "Mid-range" },
+  { label: "300–500k", icon: "💎", desc: "Premium" },
+  { label: "500k+", icon: "👑", desc: "No limits" },
+];
 
 const THINKING_MSGS = [
   "Analysing your Taste DNA...",
@@ -476,107 +507,268 @@ function StepPreferences({
       initial={{ opacity: 0, x: 24 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -24 }}
-      className="flex flex-col gap-8"
+      style={{ display: "flex", flexDirection: "column", gap: 32 }}
     >
       {/* Mood */}
       <div>
-        <h3 className="text-[15px] font-bold text-[#1C1C1E] mb-3">
+        <h3
+          style={{
+            fontSize: 15,
+            fontWeight: 800,
+            color: "#1C1C1E",
+            marginBottom: 12,
+          }}
+        >
           What&apos;s the vibe today?
         </h3>
-        <div className="grid grid-cols-2 gap-3">
-          {MOODS.map((m) => (
-            <motion.button
-              key={m.id}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => setMood(m.id)}
-              className="flex items-center gap-3 p-4 rounded-[18px] text-left border-2 transition-all"
-              style={
-                mood === m.id
-                  ? { backgroundColor: "#FFF0E6", borderColor: "#ff6b35" }
-                  : { backgroundColor: "#F9F9FB", borderColor: "transparent" }
-              }
-            >
-              <span style={{ color: mood === m.id ? "#ff6b35" : "#636366" }}>
-                {m.icon}
-              </span>
-              <div>
-                <p className="text-[14px] font-bold text-[#1C1C1E]">
-                  {m.label}
-                </p>
-                <p className="text-[12px] text-[#8E8E93]">{m.desc}</p>
-              </div>
-              {mood === m.id && (
-                <CheckCircle size={16} className="text-[#ff6b35] ml-auto" />
-              )}
-            </motion.button>
-          ))}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: 12,
+          }}
+        >
+          {MOODS.map((m) => {
+            const selected = mood === m.id;
+            return (
+              <motion.button
+                key={m.id}
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setMood(m.id)}
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 14,
+                  padding: "18px 20px",
+                  borderRadius: 20,
+                  textAlign: "left",
+                  border: selected
+                    ? `2px solid ${m.accentColor}`
+                    : "1px solid rgba(255,255,255,0.8)",
+                  background: selected ? m.gradient : "linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.3))",
+                  backdropFilter: "blur(16px)",
+                  boxShadow: selected
+                    ? `0 12px 32px ${m.accentColor}33, inset 0 2px 4px rgba(255,255,255,0.4)`
+                    : "0 4px 16px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,1)",
+                  cursor: "pointer",
+                  transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
+                  overflow: "hidden",
+                }}
+              >
+                {/* Emoji background glow */}
+                <motion.span
+                  animate={selected ? { scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] } : {}}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  style={{
+                    position: "absolute",
+                    right: -10,
+                    top: "40%",
+                    transform: "translateY(-50%)",
+                    fontSize: 68,
+                    opacity: selected ? 0.25 : 0.04,
+                    transition: "opacity 0.4s",
+                    pointerEvents: "none",
+                    filter: selected ? "blur(4px)" : "blur(0px)",
+                  }}
+                >
+                  {m.emoji}
+                </motion.span>
+                <span
+                  style={{
+                    color: selected ? m.accentColor : "#8E8E93",
+                    transition: "color 0.3s",
+                    position: "relative",
+                    zIndex: 1,
+                  }}
+                >
+                  {m.icon}
+                </span>
+                <div>
+                  <p
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 800,
+                      color: "#1C1C1E",
+                      margin: 0,
+                    }}
+                  >
+                    {m.label}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: 12,
+                      color: "#8E8E93",
+                      margin: 0,
+                    }}
+                  >
+                    {m.desc}
+                  </p>
+                </div>
+                {selected && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    style={{ marginLeft: "auto", zIndex: 1 }}
+                  >
+                    <CheckCircle size={18} color={m.accentColor} />
+                  </motion.div>
+                )}
+              </motion.button>
+            );
+          })}
         </div>
       </div>
 
       {/* Cuisines */}
       <div>
-        <h3 className="text-[15px] font-bold text-[#1C1C1E] mb-1">
+        <h3
+          style={{
+            fontSize: 15,
+            fontWeight: 800,
+            color: "#1C1C1E",
+            marginBottom: 4,
+          }}
+        >
           Cuisine preferences{" "}
-          <span className="text-[#8E8E93] font-normal">(pick any)</span>
+          <span style={{ color: "#8E8E93", fontWeight: 500, fontSize: 13 }}>
+            (pick any)
+          </span>
         </h3>
-        <div className="flex flex-wrap gap-2 mt-2">
-          {CUISINES.map((c) => (
-            <motion.button
-              key={c}
-              whileTap={{ scale: 0.93 }}
-              onClick={() => toggleCuisine(c)}
-              className="px-3.5 py-2 rounded-full text-[13px] font-semibold border transition-all"
-              style={
-                cuisines.includes(c)
-                  ? {
-                      backgroundColor: "#1C1C1E",
-                      borderColor: "#1C1C1E",
-                      color: "#fff",
-                    }
-                  : {
-                      backgroundColor: "#F2F2F7",
-                      borderColor: "transparent",
-                      color: "#3C3C43",
-                    }
-              }
-            >
-              {c}
-            </motion.button>
-          ))}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+            marginTop: 10,
+          }}
+        >
+          {CUISINES.map((c) => {
+            const selected = cuisines.includes(c.label);
+            return (
+              <motion.button
+                key={c.label}
+                whileTap={{ scale: 0.93 }}
+                whileHover={{ scale: 1.05 }}
+                onClick={() => toggleCuisine(c.label)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "8px 16px",
+                  borderRadius: 24,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
+                  ...(selected
+                    ? {
+                        backgroundColor: c.color,
+                        color: "#fff",
+                        boxShadow: `0 8px 20px ${c.color}55, inset 0 1px 1px rgba(255,255,255,0.3)`,
+                      }
+                    : {
+                        background: "linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.5))",
+                        backdropFilter: "blur(8px)",
+                        color: "#3C3C43",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,1)",
+                        border: "1px solid rgba(255,255,255,0.6)",
+                      }),
+                }}
+              >
+                <span style={{ fontSize: 16 }}>{c.emoji}</span>
+                {c.label}
+                <AnimatePresence>
+                  {selected && (
+                    <motion.div
+                      initial={{ scale: 0, width: 0, opacity: 0 }}
+                      animate={{ scale: 1, width: "auto", opacity: 1 }}
+                      exit={{ scale: 0, width: 0, opacity: 0 }}
+                      style={{ overflow: "hidden", display: "flex", alignItems: "center" }}
+                    >
+                      <CheckCircle size={14} color="white" style={{ marginLeft: 4 }} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            );
+          })}
         </div>
       </div>
 
       {/* Group size */}
       <div>
-        <h3 className="text-[15px] font-bold text-[#1C1C1E] mb-3">
+        <h3
+          style={{
+            fontSize: 15,
+            fontWeight: 800,
+            color: "#1C1C1E",
+            marginBottom: 12,
+          }}
+        >
           Who&apos;s coming?
         </h3>
-        <div className="grid grid-cols-4 gap-2">
-          {GROUPS.map((g) => (
-            <motion.button
-              key={g.id}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.94 }}
-              onClick={() => setGroup(g.id)}
-              className="flex flex-col items-center gap-1.5 p-3.5 rounded-[16px] border-2 transition-all"
-              style={
-                group === g.id
-                  ? { backgroundColor: "#FFF0E6", borderColor: "#ff6b35" }
-                  : { backgroundColor: "#F9F9FB", borderColor: "transparent" }
-              }
-            >
-              <span
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 10,
+          }}
+        >
+          {GROUPS.map((g) => {
+            const selected = group === g.id;
+            return (
+              <motion.button
+                key={g.id}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setGroup(g.id)}
                 style={{
-                  color: group === g.id ? "#ff6b35" : "#636366",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "16px 8px",
+                  borderRadius: 18,
+                  border: selected
+                    ? "2px solid #ff6b35"
+                    : "1px solid rgba(255,255,255,0.8)",
+                  background: selected
+                    ? "linear-gradient(135deg, #FFF0E6, #FFE8D6)"
+                    : "linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.3))",
+                  backdropFilter: "blur(12px)",
+                  boxShadow: selected
+                    ? "0 10px 24px rgba(255,107,53,0.3), inset 0 2px 4px rgba(255,255,255,0.5)"
+                    : "0 4px 12px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,1)",
+                  cursor: "pointer",
+                  transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
                 }}
               >
-                {g.icon}
-              </span>
-              <p className="text-[12px] font-bold text-[#1C1C1E]">{g.label}</p>
-              <p className="text-[10px] text-[#8E8E93]">{g.desc}</p>
-            </motion.button>
-          ))}
+                <span style={{ fontSize: 28 }}>{g.emoji}</span>
+                <p
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 800,
+                    color: "#1C1C1E",
+                    margin: 0,
+                  }}
+                >
+                  {g.label}
+                </p>
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "#8E8E93",
+                    margin: 0,
+                  }}
+                >
+                  {g.desc}
+                </p>
+              </motion.button>
+            );
+          })}
         </div>
       </div>
     </motion.div>
@@ -605,111 +797,240 @@ function StepSettings({
       initial={{ opacity: 0, x: 24 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -24 }}
-      className="flex flex-col gap-8"
+      style={{ display: "flex", flexDirection: "column", gap: 32 }}
     >
       {/* Duration */}
       <div>
-        <h3 className="text-[15px] font-bold text-[#1C1C1E] mb-3 flex items-center gap-2">
-          <Clock size={16} className="text-[#ff6b35]" /> How long?
+        <h3
+          style={{
+            fontSize: 15,
+            fontWeight: 800,
+            color: "#1C1C1E",
+            marginBottom: 12,
+          }}
+        >
+          How long?
         </h3>
-        <div className="grid grid-cols-4 gap-2">
-          {DURATIONS.map((d) => (
-            <motion.button
-              key={d}
-              whileTap={{ scale: 0.94 }}
-              onClick={() => setDuration(d)}
-              className="py-3 rounded-[14px] text-[13px] font-bold border-2 transition-all"
-              style={
-                duration === d
-                  ? {
-                      backgroundColor: "#1C1C1E",
-                      borderColor: "#1C1C1E",
-                      color: "#fff",
-                    }
-                  : {
-                      backgroundColor: "#F9F9FB",
-                      borderColor: "transparent",
-                      color: "#3C3C43",
-                    }
-              }
-            >
-              {d}
-            </motion.button>
-          ))}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 10,
+          }}
+        >
+          {DURATIONS.map((d) => {
+            const selected = duration === d.label;
+            return (
+              <motion.button
+                key={d.label}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setDuration(d.label)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "16px 8px",
+                  borderRadius: 18,
+                  border: selected
+                    ? "2px solid #ff6b35"
+                    : "1px solid rgba(255,255,255,0.8)",
+                  background: selected
+                    ? "linear-gradient(135deg, #1C1C1E, #2C2C2E)"
+                    : "linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.3))",
+                  backdropFilter: "blur(12px)",
+                  boxShadow: selected
+                    ? "0 10px 24px rgba(28,28,30,0.35), inset 0 2px 4px rgba(255,255,255,0.1)"
+                    : "0 4px 12px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,1)",
+                  cursor: "pointer",
+                  transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
+                }}
+              >
+                <span style={{ fontSize: 24 }}>{d.icon}</span>
+                <p
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 800,
+                    color: selected ? "#fff" : "#1C1C1E",
+                    margin: 0,
+                  }}
+                >
+                  {d.label}
+                </p>
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: selected ? "rgba(255,255,255,0.5)" : "#8E8E93",
+                    margin: 0,
+                  }}
+                >
+                  {d.desc}
+                </p>
+              </motion.button>
+            );
+          })}
         </div>
       </div>
 
       {/* Budget */}
       <div>
-        <h3 className="text-[15px] font-bold text-[#1C1C1E] mb-3 flex items-center gap-2">
-          <Wallet size={16} className="text-[#34C759]" /> Budget per person
+        <h3
+          style={{
+            fontSize: 15,
+            fontWeight: 800,
+            color: "#1C1C1E",
+            marginBottom: 12,
+          }}
+        >
+          Budget per person
         </h3>
-        <div className="grid grid-cols-4 gap-2">
-          {BUDGETS.map((b) => (
-            <motion.button
-              key={b}
-              whileTap={{ scale: 0.94 }}
-              onClick={() => setBudget(b)}
-              className="py-3 rounded-[14px] text-[13px] font-bold border-2 transition-all"
-              style={
-                budget === b
-                  ? {
-                      backgroundColor: "#34C759",
-                      borderColor: "#34C759",
-                      color: "#fff",
-                    }
-                  : {
-                      backgroundColor: "#F9F9FB",
-                      borderColor: "transparent",
-                      color: "#3C3C43",
-                    }
-              }
-            >
-              {b}
-            </motion.button>
-          ))}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 10,
+          }}
+        >
+          {BUDGETS.map((b) => {
+            const selected = budget === b.label;
+            return (
+              <motion.button
+                key={b.label}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setBudget(b.label)}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "16px 8px",
+                  borderRadius: 18,
+                  border: selected
+                    ? "2px solid #34C759"
+                    : "1px solid rgba(255,255,255,0.8)",
+                  background: selected
+                    ? "linear-gradient(135deg, #34C759, #2DB550)"
+                    : "linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.3))",
+                  backdropFilter: "blur(12px)",
+                  boxShadow: selected
+                    ? "0 10px 24px rgba(52,199,89,0.35), inset 0 2px 4px rgba(255,255,255,0.3)"
+                    : "0 4px 12px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,1)",
+                  cursor: "pointer",
+                  transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
+                }}
+              >
+                <span style={{ fontSize: 24 }}>{b.icon}</span>
+                <p
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 800,
+                    color: selected ? "#fff" : "#1C1C1E",
+                    margin: 0,
+                  }}
+                >
+                  {b.label}
+                </p>
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: selected ? "rgba(255,255,255,0.6)" : "#8E8E93",
+                    margin: 0,
+                  }}
+                >
+                  {b.desc}
+                </p>
+              </motion.button>
+            );
+          })}
         </div>
       </div>
 
       {/* Location */}
       <div>
-        <h3 className="text-[15px] font-bold text-[#1C1C1E] mb-3 flex items-center gap-2">
-          <Navigation size={16} className="text-[#FF9500]" /> Starting point
+        <h3
+          style={{
+            fontSize: 15,
+            fontWeight: 800,
+            color: "#1C1C1E",
+            marginBottom: 12,
+          }}
+        >
+          Starting point
         </h3>
-        <div className="relative">
-          <MapPin
-            size={16}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8E93]"
-          />
+        <div style={{ position: "relative" }}>
           <input
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="e.g. District 1, Ho Chi Minh City"
-            className="w-full pl-11 pr-4 py-3.5 rounded-[16px] text-[15px] outline-none transition-all"
             style={{
-              backgroundColor: "#F9F9FB",
+              width: "100%",
+              padding: "14px 16px",
+              borderRadius: 18,
+              fontSize: 15,
+              outline: "none",
+              fontFamily: "inherit",
+              backgroundColor: "rgba(255,255,255,0.8)",
+              backdropFilter: "blur(8px)",
               border: "1.5px solid #E5E5EA",
               color: "#1C1C1E",
+              transition: "all 0.2s",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
             }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = "#ff6b35")}
-            onBlur={(e) => (e.currentTarget.style.borderColor = "#E5E5EA")}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "#ff6b35";
+              e.currentTarget.style.boxShadow = "0 4px 16px rgba(255,107,53,0.15)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = "#E5E5EA";
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)";
+            }}
           />
         </div>
-        <div className="flex gap-2 mt-2">
-          {["District 1", "Bình Thạnh", "Phú Nhuận", "Thủ Đức"].map((loc) => (
-            <button
-              key={loc}
-              onClick={() => setLocation(loc)}
-              className="px-3 py-1.5 rounded-full text-[12px] font-semibold border transition-all"
-              style={{
-                backgroundColor: location === loc ? "#FFF3E0" : "#F2F2F7",
-                borderColor: location === loc ? "#FF9500" : "transparent",
-                color: location === loc ? "#FF9500" : "#8E8E93",
-              }}
-            >
-              {loc}
-            </button>
-          ))}
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            marginTop: 10,
+          }}
+        >
+          {[
+            { name: "District 1", emoji: "📍" },
+            { name: "Bình Thạnh", emoji: "🏙️" },
+            { name: "Phú Nhuận", emoji: "🌿" },
+            { name: "Thủ Đức", emoji: "🏫" },
+          ].map((loc) => {
+            const selected = location === loc.name;
+            return (
+              <motion.button
+                key={loc.name}
+                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05 }}
+                onClick={() => setLocation(loc.name)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                  padding: "6px 14px",
+                  borderRadius: 20,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                  backgroundColor: selected ? "#FFF3E0" : "rgba(255,255,255,0.7)",
+                  color: selected ? "#FF9500" : "#8E8E93",
+                  boxShadow: selected
+                    ? "0 2px 8px rgba(255,149,0,0.2)"
+                    : "0 1px 3px rgba(0,0,0,0.04)",
+                }}
+              >
+                <span>{loc.emoji}</span>
+                {loc.name}
+              </motion.button>
+            );
+          })}
         </div>
       </div>
     </motion.div>
@@ -717,6 +1038,8 @@ function StepSettings({
 }
 
 // ─── Step 3: Generating ───────────────────────────────────────────────────────
+
+const FOOD_PARTICLES = ["🍜", "🥖", "🍵", "🍰", "🍣", "🥟", "🧋", "🍤", "🍚", "🔥"];
 
 function StepGenerating({ onDone }: { onDone: () => void }) {
   const [msgIdx, setMsgIdx] = useState(0);
@@ -731,35 +1054,130 @@ function StepGenerating({ onDone }: { onDone: () => void }) {
   }, [onDone]);
 
   const msg = THINKING_MSGS[Math.min(msgIdx, THINKING_MSGS.length - 1)];
+  const progress = Math.min(((msgIdx + 1) / THINKING_MSGS.length) * 100, 100);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center py-20 gap-8"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: 60,
+        paddingBottom: 60,
+        gap: 32,
+        position: "relative",
+        overflow: "hidden",
+      }}
     >
-      {/* AI orb */}
-      <div className="relative">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-          className="w-24 h-24 rounded-full"
+      {/* Floating food particles */}
+      {FOOD_PARTICLES.map((emoji, i) => (
+        <motion.span
+          key={i}
+          initial={{
+            opacity: 0,
+            x: Math.random() * 600 - 300,
+            y: Math.random() * 400 - 200,
+          }}
+          animate={{
+            opacity: [0, 0.4, 0],
+            y: [0, -120 - Math.random() * 80],
+            x: Math.random() * 100 - 50,
+          }}
+          transition={{
+            duration: 3 + Math.random() * 2,
+            repeat: Infinity,
+            delay: i * 0.5,
+            ease: "easeOut",
+          }}
           style={{
-            background:
-              "conic-gradient(from 0deg, #ff6b35, #A855F7, #FF6B35, #34C759, #ff6b35)",
-            padding: "3px",
+            position: "absolute",
+            fontSize: 24 + Math.random() * 12,
+            pointerEvents: "none",
+            top: `${40 + Math.random() * 40}%`,
+            left: `${10 + Math.random() * 80}%`,
           }}
         >
-          <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-            <Sparkles size={32} className="text-[#ff6b35]" />
-          </div>
+          {emoji}
+        </motion.span>
+      ))}
+
+      {/* Multi-ring AI orb */}
+      <div style={{ position: "relative", width: 120, height: 120 }}>
+        {/* Outer ring */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: "absolute",
+            inset: -8,
+            borderRadius: "50%",
+            border: "2px dashed rgba(168,85,247,0.3)",
+          }}
+        />
+        {/* Mid ring */}
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: "50%",
+            background:
+              "conic-gradient(from 0deg, #ff6b35, #A855F7, #FF6B35, #34C759, #ff6b35)",
+            padding: 3,
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              backgroundColor: "white",
+            }}
+          />
         </motion.div>
+        {/* Inner ring */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: "absolute",
+            inset: 12,
+            borderRadius: "50%",
+            border: "1.5px solid rgba(255,107,53,0.2)",
+          }}
+        />
+        {/* Center icon */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <motion.div
+            animate={{ scale: [1, 1.15, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <Brain size={32} color="#ff6b35" />
+          </motion.div>
+        </div>
+        {/* Pulse rings */}
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
-            className="absolute inset-0 rounded-full"
-            style={{ border: "1.5px solid rgba(0,122,255,0.2)" }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: "50%",
+              border: "1.5px solid rgba(255,107,53,0.2)",
+            }}
             animate={{ scale: [1, 1.8 + i * 0.3], opacity: [0.5, 0] }}
             transition={{
               duration: 2,
@@ -771,8 +1189,17 @@ function StepGenerating({ onDone }: { onDone: () => void }) {
         ))}
       </div>
 
-      <div className="text-center">
-        <h3 className="text-[22px] font-extrabold text-[#1C1C1E]">
+      {/* Title + message */}
+      <div style={{ textAlign: "center", zIndex: 1 }}>
+        <h3
+          style={{
+            fontSize: 24,
+            fontWeight: 900,
+            color: "#1C1C1E",
+            letterSpacing: -0.5,
+            margin: 0,
+          }}
+        >
           Crafting your itinerary
         </h3>
         <AnimatePresence mode="wait">
@@ -781,32 +1208,100 @@ function StepGenerating({ onDone }: { onDone: () => void }) {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
-            className="text-[14px] text-[#8E8E93] mt-2"
+            style={{
+              fontSize: 14,
+              color: "#8E8E93",
+              marginTop: 8,
+            }}
           >
             {msg}
           </motion.p>
         </AnimatePresence>
       </div>
 
-      {/* Progress dots */}
-      <div className="flex gap-2">
-        {THINKING_MSGS.map((_, i) => (
+      {/* Breathing thoughts progress */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 360,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 12,
+          zIndex: 1,
+          marginTop: 16,
+        }}
+      >
+        {/* Floating text stack */}
+        <div style={{ height: 80, position: "relative", width: "100%" }}>
+          <AnimatePresence>
+            {THINKING_MSGS.map((m, i) => {
+              if (i < msgIdx - 1 || i > msgIdx + 1) return null; // Only show window of 3
+              
+              const isCurrent = i === msgIdx;
+              const isPast = i < msgIdx;
+              const isFuture = i > msgIdx;
+              
+              return (
+                <motion.div
+                  key={m}
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                  animate={{
+                    opacity: isCurrent ? 1 : isPast ? 0 : 0.4,
+                    y: isCurrent ? 0 : isPast ? -20 : 20,
+                    scale: isCurrent ? 1 : 0.95,
+                  }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  style={{
+                    position: "absolute",
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    fontSize: isCurrent ? 15 : 13,
+                    fontWeight: isCurrent ? 700 : 500,
+                    color: isCurrent ? "#ff6b35" : "#8E8E93",
+                  }}
+                >
+                  {isCurrent && (
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    >
+                      <Sparkles size={14} color="#ff6b35" />
+                    </motion.div>
+                  )}
+                  {m}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+
+        {/* Ambient Progress bar */}
+        <div
+          style={{
+            width: "80%",
+            height: 4,
+            backgroundColor: "rgba(0,0,0,0.05)",
+            borderRadius: 4,
+            overflow: "hidden",
+            boxShadow: "inset 0 1px 3px rgba(0,0,0,0.04)",
+          }}
+        >
           <motion.div
-            key={i}
-            className="h-1.5 rounded-full"
-            animate={{
-              width:
-                i <= Math.min(msgIdx, THINKING_MSGS.length - 1)
-                  ? "20px"
-                  : "6px",
-              backgroundColor:
-                i <= Math.min(msgIdx, THINKING_MSGS.length - 1)
-                  ? "#ff6b35"
-                  : "#D1D1D6",
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            style={{
+              height: "100%",
+              background: "linear-gradient(90deg, #ff6b35, #A855F7, #4FACFE)",
+              backgroundSize: "200% 200%",
+              borderRadius: 4,
             }}
-            transition={{ duration: 0.3 }}
           />
-        ))}
+        </div>
       </div>
     </motion.div>
   );
@@ -876,11 +1371,12 @@ function StopCard({
         {index < total - 1 && (
           <div
             style={{
-              width: 1,
+              width: 2,
               flex: 1,
-              background: "#E5E5EA",
+              background: active ? `linear-gradient(to bottom, ${stop.accent}88, rgba(229,229,234,0.3))` : "#E5E5EA",
               margin: "4px 0",
               minHeight: 16,
+              borderRadius: 2,
             }}
           />
         )}
@@ -923,17 +1419,19 @@ function StopCard({
               key={stop.name}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -4, boxShadow: `0 12px 32px ${stop.accent}33` }}
+              transition={{ duration: 0.3 }}
               style={{
                 backgroundColor: "#fff",
                 borderRadius: 18,
                 overflow: "hidden",
                 border: active
-                  ? `1.5px solid ${stop.accent}55`
-                  : "1px solid rgba(0,0,0,0.05)",
+                  ? `1.5px solid ${stop.accent}66`
+                  : "1px solid rgba(0,0,0,0.06)",
                 boxShadow: active
-                  ? `0 8px 24px rgba(0,0,0,0.09)`
-                  : "0 2px 8px rgba(0,0,0,0.04)",
-                transition: "all 0.2s",
+                  ? `0 12px 32px ${stop.accent}25`
+                  : "0 4px 16px rgba(0,0,0,0.03)",
+                transition: "border 0.3s",
               }}
             >
               {/* Image */}
@@ -1229,71 +1727,169 @@ function StepResult({
       animate={{ opacity: 1, y: 0 }}
       style={{ display: "flex", flexDirection: "column", gap: 16 }}
     >
-      {/* Summary banner */}
+      {/* Summary banner - Premium Hero */}
       <div
         style={{
-          borderRadius: 22,
-          padding: "16px 20px",
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-          background: "linear-gradient(135deg, #1C1C1E, #2C2C2E)",
-          border: "1px solid rgba(255,255,255,0.06)",
+          borderRadius: 24,
+          overflow: "hidden",
+          position: "relative",
+          border: "1px solid rgba(255,255,255,0.08)",
         }}
       >
+        {/* Background gradient */}
         <div
           style={{
-            width: 48,
-            height: 48,
-            borderRadius: 14,
-            backgroundColor: "rgba(255,193,7,0.18)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
+            background:
+              "linear-gradient(135deg, #0F0F12 0%, #1A1A2E 40%, #16213E 70%, #0F3460 100%)",
+            padding: "24px 28px",
+            position: "relative",
           }}
         >
-          <Map size={22} color="rgba(255,193,7,0.9)" />
-        </div>
-        <div style={{ flex: 1 }}>
-          <h3
-            style={{
-              fontSize: 17,
-              fontWeight: 800,
-              color: "white",
-              lineHeight: 1.2,
-            }}
-          >
-            Afternoon Street Food Sprint
-          </h3>
-          <p
-            style={{
-              fontSize: 12,
-              color: "rgba(255,255,255,0.45)",
-              marginTop: 2,
-            }}
-          >
-            {stops.length} stops · ~4.5 hours · Ho Chi Minh City
-          </p>
-        </div>
-        <div style={{ textAlign: "right" }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: "white" }}>
-            305,000đ
-          </p>
-          <p
+          {/* Sparkle particles */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{
+                opacity: [0, 0.6, 0],
+                scale: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 2 + i * 0.3,
+                repeat: Infinity,
+                delay: i * 0.4,
+              }}
+              style={{
+                position: "absolute",
+                width: 3,
+                height: 3,
+                borderRadius: "50%",
+                backgroundColor: "#FFC107",
+                top: `${15 + Math.random() * 70}%`,
+                left: `${10 + Math.random() * 80}%`,
+              }}
+            />
+          ))}
+
+          <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 3,
-              fontSize: 12,
-              justifyContent: "flex-end",
-              color: "rgba(255,193,7,0.9)",
-              marginTop: 2,
+              gap: 16,
+              position: "relative",
+              zIndex: 1,
             }}
           >
-            <Zap size={11} fill="currentColor" />
-            {totalXp} XP
-          </p>
+            {/* Animated icon */}
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: 16,
+                background: "linear-gradient(135deg, rgba(255,193,7,0.25), rgba(255,107,53,0.25))",
+                backdropFilter: "blur(8px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+                border: "1px solid rgba(255,193,7,0.2)",
+              }}
+            >
+              <Map size={24} color="#FFC107" />
+            </motion.div>
+
+            <div style={{ flex: 1 }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 4,
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 900,
+                    color: "white",
+                    lineHeight: 1.2,
+                    margin: 0,
+                    letterSpacing: -0.3,
+                  }}
+                >
+                  Afternoon Street Food Sprint
+                </h3>
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 3,
+                    fontSize: 10,
+                    fontWeight: 800,
+                    padding: "3px 8px",
+                    borderRadius: 20,
+                    background: "linear-gradient(135deg, #FF6B35, #A855F7)",
+                    color: "#fff",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  <Sparkles size={9} /> AI Generated
+                </span>
+              </div>
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "rgba(255,255,255,0.5)",
+                  margin: 0,
+                }}
+              >
+                {stops.length} stops · ~4.5 hours · Ho Chi Minh City
+              </p>
+            </div>
+
+            {/* Price + XP */}
+            <div style={{ textAlign: "right" }}>
+              <p
+                style={{
+                  fontSize: 18,
+                  fontWeight: 900,
+                  color: "white",
+                  margin: 0,
+                }}
+              >
+                305,000đ
+              </p>
+              <p
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 3,
+                  fontSize: 12,
+                  justifyContent: "flex-end",
+                  margin: 0,
+                  marginTop: 2,
+                }}
+              >
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 3,
+                    padding: "2px 8px",
+                    borderRadius: 12,
+                    backgroundColor: "rgba(255,193,7,0.15)",
+                    color: "#FFC107",
+                    fontWeight: 800,
+                  }}
+                >
+                  <Zap size={11} fill="currentColor" />
+                  +{totalXp} XP
+                </span>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1337,7 +1933,7 @@ function StepResult({
         >
           <RouteMap stops={stops} activeStop={activeStop} />
 
-          {/* Mini stat grid */}
+          {/* Mini stat grid - upgraded */}
           <div
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}
           >
@@ -1346,34 +1942,67 @@ function StepResult({
                 label: "Total Stops",
                 value: `${stops.length} places`,
                 color: "#ff6b35",
+                emoji: "📍",
               },
-              { label: "Est. Duration", value: "~4.5 hours", color: "#FF9500" },
-              { label: "Budget", value: "305,000đ", color: "#34C759" },
-              { label: "XP Earned", value: `+${totalXp} XP`, color: "#A855F7" },
-            ].map(({ label, value, color }) => (
+              {
+                label: "Est. Duration",
+                value: "~4.5 hours",
+                color: "#FF9500",
+                emoji: "⏱️",
+              },
+              {
+                label: "Budget",
+                value: "305,000đ",
+                color: "#34C759",
+                emoji: "💰",
+              },
+              {
+                label: "XP Earned",
+                value: `+${totalXp} XP`,
+                color: "#A855F7",
+                emoji: "⚡",
+              },
+            ].map(({ label, value, color, emoji }) => (
               <div
                 key={label}
                 style={{
-                  backgroundColor: "#fff",
-                  borderRadius: 14,
-                  padding: "12px 14px",
-                  border: "1px solid rgba(0,0,0,0.05)",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+                  backgroundColor: "rgba(255,255,255,0.8)",
+                  backdropFilter: "blur(8px)",
+                  borderRadius: 16,
+                  padding: "14px 16px",
+                  border: "1px solid rgba(0,0,0,0.04)",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                 }}
               >
-                <p
+                <div
                   style={{
-                    fontSize: 10,
-                    color: "#8E8E93",
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.04em",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    marginBottom: 4,
                   }}
                 >
-                  {label}
-                </p>
+                  <span style={{ fontSize: 14 }}>{emoji}</span>
+                  <p
+                    style={{
+                      fontSize: 10,
+                      color: "#8E8E93",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.04em",
+                      margin: 0,
+                    }}
+                  >
+                    {label}
+                  </p>
+                </div>
                 <p
-                  style={{ fontSize: 15, fontWeight: 800, color, marginTop: 2 }}
+                  style={{
+                    fontSize: 17,
+                    fontWeight: 900,
+                    color,
+                    margin: 0,
+                  }}
                 >
                   {value}
                 </p>
@@ -1383,7 +2012,7 @@ function StepResult({
         </div>
       </div>
 
-      {/* Actions */}
+      {/* Actions - 3-button layout */}
       <div style={{ display: "flex", gap: 10, paddingBottom: 24 }}>
         <motion.button
           whileHover={{ scale: 1.02 }}
@@ -1393,17 +2022,40 @@ function StepResult({
             display: "flex",
             alignItems: "center",
             gap: 8,
-            padding: "12px 20px",
-            borderRadius: 16,
+            padding: "14px 22px",
+            borderRadius: 18,
             fontSize: 14,
             fontWeight: 700,
             color: "#1C1C1E",
-            backgroundColor: "#F2F2F7",
-            border: "none",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            backdropFilter: "blur(8px)",
+            border: "1.5px solid rgba(0,0,0,0.06)",
             cursor: "pointer",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
           }}
         >
           <RotateCcw size={15} /> Regenerate
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "14px 22px",
+            borderRadius: 18,
+            fontSize: 14,
+            fontWeight: 700,
+            color: "#636366",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            backdropFilter: "blur(8px)",
+            border: "1.5px solid rgba(0,0,0,0.06)",
+            cursor: "pointer",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+          }}
+        >
+          <Send size={14} /> Share
         </motion.button>
         <motion.button
           whileHover={{ scale: 1.02 }}
@@ -1414,13 +2066,14 @@ function StepResult({
             alignItems: "center",
             justifyContent: "center",
             gap: 8,
-            padding: "12px 20px",
-            borderRadius: 16,
+            padding: "14px 22px",
+            borderRadius: 18,
             fontSize: 15,
             fontWeight: 800,
             color: "white",
-            background: "linear-gradient(135deg, #1A7AFF, #0057D9)",
-            boxShadow: "0 6px 20px rgba(0,122,255,0.32)",
+            background: "linear-gradient(135deg, #FF6B35, #A855F7)",
+            boxShadow:
+              "0 8px 24px rgba(255,107,53,0.3), 0 2px 8px rgba(168,85,247,0.2)",
             border: "none",
             cursor: "pointer",
           }}
@@ -1434,10 +2087,341 @@ function StepResult({
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+// ─── Mock data ───────────────────────────────────────────────────────────────
+const RECENT_PLANS = [
+  { name: "Street Food Night", stops: 3, cost: "120,000đ", emoji: "🌃" },
+  { name: "Cafe Hopping", stops: 5, cost: "250,000đ", emoji: "☕" },
+  { name: "Phở Family Lunch", stops: 2, cost: "180,000đ", emoji: "🍜" },
+];
+
+const MOOD_TIPS: Record<string, string> = {
+  casual: "Morning bánh mì combos are trending in your area!",
+  romantic: "Japanese cuisine pairs perfectly with date-night ambience.",
+  adventurous: "A hidden gem 600m from you hasn't been reviewed in 2 weeks.",
+  family: "Look for spots with shaded seating — great for kids this afternoon.",
+};
+
+const CUISINE_PREDICTIONS: Record<string, Array<{ label: string; score: number }>> = {
+  casual: [
+    { label: "Bánh mì street spots", score: 92 },
+    { label: "Egg coffee", score: 87 },
+    { label: "Street phở", score: 84 },
+  ],
+  romantic: [
+    { label: "Japanese omakase", score: 94 },
+    { label: "Rooftop cocktail bars", score: 89 },
+    { label: "French-fusion bistros", score: 81 },
+  ],
+  adventurous: [
+    { label: "Hidden alley BBQ", score: 96 },
+    { label: "Fusion street tacos", score: 88 },
+    { label: "Night market picks", score: 85 },
+  ],
+  family: [
+    { label: "Dim sum restaurants", score: 91 },
+    { label: "Buffet all-you-can-eat", score: 86 },
+    { label: "Pizza & pasta", score: 80 },
+  ],
+};
+
+// ─── Unified Planner Sidebar ──────────────────────────────────────────────────
+function PlannerSidebar({
+  collapsed,
+  onToggle,
+  mood,
+  cuisines,
+  group,
+  duration,
+  budget,
+  location,
+  step,
+  username,
+  avatarUrl,
+}: {
+  collapsed: boolean;
+  onToggle: () => void;
+  mood: string | null;
+  cuisines: string[];
+  group: string | null;
+  duration: string;
+  budget: string;
+  location: string;
+  step: number;
+  username: string;
+  avatarUrl?: string | null;
+}) {
+  const { weather, loading: weatherLoading } = useWeather();
+
+  const fields = [
+    { key: "Mood", value: mood ? (MOODS.find((m) => m.id === mood)?.label ?? null) : null },
+    { key: "Cuisines", value: cuisines.length > 0 ? cuisines.slice(0, 2).join(", ") + (cuisines.length > 2 ? ` +${cuisines.length - 2}` : "") : null },
+    { key: "Group", value: group ? (GROUPS.find((g) => g.id === group)?.label ?? null) : null },
+    ...(step >= 2
+      ? [
+          { key: "Duration", value: duration || null },
+          { key: "Budget", value: budget || null },
+          { key: "Location", value: location || null },
+        ]
+      : []),
+  ];
+  const filled = fields.filter((f) => f.value).length;
+  const total = step === 1 ? 3 : 6;
+  const pct = Math.round((filled / total) * 100);
+
+  return (
+    <motion.div
+      animate={{ width: collapsed ? 56 : 280 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      style={{
+        flexShrink: 0,
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        overflowX: "hidden",
+        overflowY: "hidden",
+        padding: collapsed ? "16px 0" : "16px 14px",
+        borderLeft: "1px solid rgba(0,0,0,0.05)",
+        backgroundColor: "rgba(255,255,255,0.65)",
+        backdropFilter: "blur(16px)",
+        gap: 10,
+      }}
+    >
+      {/* Toggle */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: collapsed ? "center" : "space-between", padding: collapsed ? 0 : "0 4px", marginBottom: collapsed ? 0 : 4 }}>
+        {!collapsed && <span style={{ fontSize: 13, fontWeight: 800, color: "#1C1C1E" }}>Workspace</span>}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onToggle}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: 8,
+            backgroundColor: collapsed ? "rgba(255,255,255,0.9)" : "transparent",
+            border: collapsed ? "1px solid rgba(0,0,0,0.08)" : "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            flexShrink: 0,
+          }}
+        >
+          {collapsed ? <ChevronsLeft size={15} color="#636366" /> : <ChevronsRight size={15} color="#8E8E93" />}
+        </motion.button>
+      </div>
+
+      {/* ── COLLAPSED icon rail ── */}
+      {collapsed && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}
+        >
+          {/* Weather dot */}
+          {weather && (
+            <motion.div
+              whileHover={{ scale: 1.15, rotate: 5 }}
+              title={`${weather.temp}° ${weather.label}`}
+              style={{
+                width: 38, height: 38, borderRadius: 14,
+                background: weather.outdoor ? "linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,149,0,0.1))" : "linear-gradient(135deg, rgba(59,130,246,0.15), rgba(99,102,241,0.1))",
+                border: weather.outdoor ? "1px solid rgba(255,193,7,0.3)" : "1px solid rgba(59,130,246,0.3)",
+                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
+                cursor: "pointer", flexShrink: 0,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.03)"
+              }}
+            >
+              {weather.emoji}
+            </motion.div>
+          )}
+
+          {/* Plans dot */}
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            title="Recent Plans"
+            style={{
+              width: 38, height: 38, borderRadius: 14,
+              backgroundColor: "rgba(0,122,255,0.08)",
+              border: "1px solid rgba(0,122,255,0.1)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", flexShrink: 0,
+            }}
+          >
+            <History size={18} color="#007AFF" />
+          </motion.div>
+
+          {/* Plan preview dot */}
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            title="Live Plan Preview"
+            style={{
+              width: 38, height: 38, borderRadius: 14,
+              backgroundColor: "rgba(255,107,53,0.08)",
+              border: "1px solid rgba(255,107,53,0.1)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", flexShrink: 0,
+            }}
+          >
+            <Star size={18} color="#FF6B35" />
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* ── EXPANDED state ── */}
+      {!collapsed && (
+        <>
+          {/* ── Real Weather ── */}
+          {(step === 1 || step === 2) && (
+            <div
+              style={{
+                borderRadius: 18, padding: "14px", flexShrink: 0,
+                background: weatherLoading
+                  ? "rgba(255,255,255,0.6)"
+                  : weather?.outdoor
+                  ? "linear-gradient(135deg, rgba(255,193,7,0.1), rgba(255,149,0,0.07))"
+                  : "linear-gradient(135deg, rgba(59,130,246,0.08), rgba(99,102,241,0.06))",
+                border: weatherLoading
+                  ? "1px solid rgba(0,0,0,0.05)"
+                  : weather?.outdoor
+                  ? "1px solid rgba(255,193,7,0.2)"
+                  : "1px solid rgba(59,130,246,0.18)",
+              }}
+            >
+              {weatherLoading ? (
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    style={{ width: 14, height: 14, borderRadius: "50%", border: "2px solid #FF9500", borderTopColor: "transparent" }}
+                  />
+                  <span style={{ fontSize: 11, color: "#8E8E93" }}>Getting local weather...</span>
+                </div>
+              ) : weather ? (
+                <>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 6 }}>
+                    <div>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: "#8E8E93", margin: "0 0 1px" }}>Right Now in</p>
+                      <p style={{ fontSize: 11, fontWeight: 800, color: "#1C1C1E", margin: 0, maxWidth: 160, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {weather.locationName}
+                      </p>
+                    </div>
+                    <span style={{ fontSize: 24, lineHeight: 1 }}>{weather.emoji}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 4 }}>
+                    <span style={{ fontSize: 22, fontWeight: 900, color: "#1C1C1E", lineHeight: 1 }}>{weather.temp}°</span>
+                    <span style={{ fontSize: 11, color: "#636366", fontWeight: 600 }}>{weather.label}</span>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+                    <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10, color: "#8E8E93" }}>
+                      <Wind size={9} /> {weather.windspeed} km/h
+                    </span>
+                    <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10, color: "#8E8E93" }}>
+                      <Droplets size={9} /> {weather.humidity}%
+                    </span>
+                  </div>
+                  <div style={{
+                    padding: "7px 9px", borderRadius: 10,
+                    backgroundColor: weather.outdoor ? "rgba(255,193,7,0.12)" : "rgba(59,130,246,0.1)",
+                    fontSize: 10.5, color: weather.outdoor ? "#B45309" : "#2563EB",
+                    fontWeight: 600, lineHeight: 1.4,
+                  }}>
+                    {weather.diningTip}
+                  </div>
+                </>
+              ) : (
+                <p style={{ fontSize: 11, color: "#8E8E93", margin: 0 }}>Weather unavailable</p>
+              )}
+            </div>
+          )}
+
+          {/* ── Recent Plans ── */}
+          <div style={{ borderRadius: 18, padding: "14px", backgroundColor: "rgba(255,255,255,0.85)", border: "1px solid rgba(0,0,0,0.05)", flexShrink: 0 }}>
+            <p style={{ fontSize: 12, fontWeight: 800, color: "#1C1C1E", margin: "0 0 10px" }}>Recent Plans</p>
+            <div className="no-scrollbar" style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 180, overflowY: "auto", paddingRight: 2 }}>
+              {RECENT_PLANS.map((p) => (
+                <div
+                  key={p.name}
+                  style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 12, backgroundColor: "rgba(0,0,0,0.02)", cursor: "pointer", transition: "background 0.2s" }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.backgroundColor = "rgba(255,107,53,0.06)")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.backgroundColor = "rgba(0,0,0,0.02)")}
+                >
+                  <span style={{ fontSize: 18, flexShrink: 0 }}>{p.emoji}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: "#1C1C1E", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{p.name}</p>
+                    <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>{p.stops} stops · {p.cost}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Live Plan Preview ── */}
+          {(step === 1 || step === 2) && (
+            <div style={{ borderRadius: 18, padding: "14px", backgroundColor: "rgba(255,255,255,0.85)", border: "1px solid rgba(0,0,0,0.05)", flexShrink: 0 }}>
+              <p style={{ fontSize: 12, fontWeight: 800, color: "#1C1C1E", margin: "0 0 10px" }}>Your Plan So Far</p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                {fields.map(({ key, value }) => (
+                  <div
+                    key={key}
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: 8,
+                      fontSize: 10,
+                      fontWeight: value ? 700 : 600,
+                      color: value ? "#1C1C1E" : "#8E8E93",
+                      backgroundColor: value ? "rgba(255,107,53,0.1)" : "rgba(0,0,0,0.03)",
+                      border: value ? "1px solid rgba(255,107,53,0.2)" : "1px dashed rgba(0,0,0,0.1)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4
+                    }}
+                  >
+                    <span style={{ opacity: value ? 0.7 : 1 }}>{key}:</span>
+                    {value ? (
+                      <span style={{ color: "#FF6B35" }}>{value}</span>
+                    ) : (
+                      <span>...</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+                  <span style={{ fontSize: 10, color: "#8E8E93", fontWeight: 600 }}>Completeness</span>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: pct === 100 ? "#34C759" : "#FF6B35" }}>{pct}%</span>
+                </div>
+                <div style={{ height: 5, backgroundColor: "#F2F2F7", borderRadius: 4, overflow: "hidden" }}>
+                  <motion.div
+                    animate={{ width: `${pct}%`, backgroundColor: pct === 100 ? "#34C759" : "#FF6B35" }}
+                    transition={{ duration: 0.5 }}
+                    style={{ height: "100%", borderRadius: 4 }}
+                  />
+                </div>
+                <p style={{ fontSize: 11, color: "#8E8E93", margin: "6px 0 0 0", lineHeight: 1.4 }}>
+                  {pct === 0 && "Start selecting to see your plan!"}
+                  {pct > 0 && pct < 50 && "Looking good — keep going!"}
+                  {pct >= 50 && pct < 100 && "Almost there!"}
+                  {pct === 100 && "Ready to generate! 🚀"}
+                </p>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </motion.div>
+  );
+}
+
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 export default function AIPlanner() {
   const [step, setStep] = useState(1);
   const [prompt, setPrompt] = useState("");
   const [parsedHints, setParsedHints] = useState<Record<string, string>>({});
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
   const [mood, setMood] = useState<string | null>(null);
   const [cuisines, setCuisines] = useState<string[]>([]);
@@ -1445,6 +2429,10 @@ export default function AIPlanner() {
   const [duration, setDuration] = useState("4 hours");
   const [budget, setBudget] = useState("100–300k");
   const [location, setLocation] = useState("District 1");
+
+  const { user } = useAuth();
+  const username = user?.user_metadata?.full_name ?? user?.email?.split("@")[0] ?? "Foodie";
+  const avatarUrl = user?.user_metadata?.avatar_url ?? null;
 
   const toggleCuisine = (c: string) =>
     setCuisines((prev) =>
@@ -1479,8 +2467,8 @@ export default function AIPlanner() {
         flexDirection: "column",
         width: "100%",
         height: "100%",
-        backgroundColor: "#F2F2F7",
-        overflowY: "auto",
+        backgroundColor: "#FAF8F5",
+        overflow: "hidden",
         fontFamily:
           '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
       }}
@@ -1506,7 +2494,7 @@ export default function AIPlanner() {
           position: "sticky",
           top: 0,
           zIndex: 30,
-          backgroundColor: "rgba(242,242,247,0.88)",
+          backgroundColor: "rgba(250,248,245,0.88)",
           backdropFilter: "blur(20px)",
           borderBottom: "1px solid rgba(0,0,0,0.06)",
         }}
@@ -1522,17 +2510,6 @@ export default function AIPlanner() {
                 <ChevronLeft size={18} /> Back
               </motion.button>
             )}
-            {(step === 1 || step >= 3) && (
-              <Link href="/discover">
-                <motion.button
-                  whileTap={{ scale: 0.93 }}
-                  className="flex items-center gap-1 text-[#ff6b35] text-[15px] font-semibold"
-                >
-                  <ChevronLeft size={18} /> Discover
-                </motion.button>
-              </Link>
-            )}
-            <div className="w-px h-5 bg-[#D1D1D6]" />
             <div className="flex items-center gap-2">
               <div
                 className="w-8 h-8 rounded-[10px] flex items-center justify-center"
@@ -1597,19 +2574,36 @@ export default function AIPlanner() {
         )}
       </div>
 
-      {/* ── CONTENT ── */}
+      {/* ── CONTENT: 3-column grid ── */}
       <div
         style={{
           flex: 1,
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: "32px",
           position: "relative",
           zIndex: 1,
+          overflow: "hidden",
         }}
       >
-        <div style={{ width: "100%", maxWidth: step === 4 ? 1100 : 680 }}>
+        {/* Center content */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: step === 3 ? "center" : "flex-start",
+            padding: step === 3 ? "32px" : "24px 28px",
+            minWidth: 0,
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              maxWidth: step === 4 ? "100%" : 680,
+              margin: "0 auto",
+            }}
+          >
           {/* ── Natural Language Prompt Bar (steps 1–2) ── */}
           {step < 3 && (
             <motion.div
@@ -1855,7 +2849,34 @@ export default function AIPlanner() {
               </motion.button>
             </motion.div>
           )}
-        </div>
+          </div>  {/* closes maxWidth wrapper */}
+        </div>  {/* closes center content */}
+
+        {/* ── Right: Planner Sidebar — hidden during generating step ── */}
+        <AnimatePresence>
+          {step !== 3 && (
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 24 }}
+              style={{ height: "100%", overflowY: "auto", flexShrink: 0 }}
+            >
+              <PlannerSidebar
+                collapsed={sidebarCollapsed}
+                onToggle={() => setSidebarCollapsed((v) => !v)}
+                mood={mood}
+                cuisines={cuisines}
+                group={group}
+                duration={duration}
+                budget={budget}
+                location={location}
+                step={step}
+                username={username}
+                avatarUrl={avatarUrl}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

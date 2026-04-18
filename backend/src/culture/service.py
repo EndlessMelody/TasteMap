@@ -9,15 +9,17 @@ import json
 import logging
 import os
 import base64
+import urllib.parse
 from typing import Optional
 
 import httpx
+from src.core.config import settings
 
 log = logging.getLogger(__name__)
 
-GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
-GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
-GROQ_VISION_MODEL: str = os.getenv("GROQ_VISION_MODEL", "llama-3.2-11b-vision-preview")
+GROQ_API_KEY: str = settings.GROQ_API_KEY
+GROQ_MODEL: str = settings.GROQ_MODEL
+GROQ_VISION_MODEL: str = settings.GROQ_VISION_MODEL
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 
@@ -26,6 +28,34 @@ def _groq_headers() -> dict:
         "Authorization": f"Bearer {GROQ_API_KEY}",
         "Content-Type": "application/json",
     }
+
+
+async def _fetch_wikipedia_context(food_name: str, language: str = "vi") -> str:
+    """
+    RAG Retrieval: Fetch the factual summary of the food dish from Wikipedia.
+    """
+    lang_code = "vi" if language == "vi" else "en"
+    search_query = urllib.parse.quote(food_name)
+    url = f"https://{lang_code}.wikipedia.org/api/rest_v1/page/summary/{search_query}"
+    
+    try:
+        async with httpx.AsyncClient(timeout=5) as client:
+            resp = await client.get(url)
+            if resp.status_code == 200:
+                data = resp.json()
+                return data.get("extract", "")
+            
+            # Fallback to English if Vietnamese fails
+            if language == "vi":
+                url_en = f"https://en.wikipedia.org/api/rest_v1/page/summary/{search_query}"
+                resp_en = await client.get(url_en)
+                if resp_en.status_code == 200:
+                    data = resp_en.json()
+                    return data.get("extract", "")
+    except Exception as exc:
+        log.warning(f"[Culture] RAG Wikipedia fetch failed for {food_name}: {exc}")
+    
+    return ""
 
 
 async def identify_food_from_image(
@@ -90,6 +120,44 @@ async def identify_food_from_image(
         return {"food_name": "Unknown", "confidence": 0.0}
 
 
+def parse_food_vector(vector: list | None) -> dict:
+    """
+    Extract meaningful traits from the user's food vector (15 dimensions).
+    Maps index -> trait name and returns only significant preferences.
+    """
+    if vector is None or len(vector) != 15:
+        return {}
+
+    traits = {
+        0: "Spicy food",
+        1: "Sweet flavors",
+        2: "Salty/Savory flavors",
+        3: "Street food style",
+        4: "Luxury dining experiences",
+        5: "Chill & relaxing vibes",
+        6: "Crowded/lively places",
+        7: "Romantic atmospheres",
+        8: "Family-friendly environments",
+        9: "Late-night dining",
+    }
+    
+    preferences = {}
+    for i, trait_name in traits.items():
+        try:
+            score = float(vector[i])
+        except (TypeError, ValueError):
+            continue
+            
+        if score >= 0.7:
+            preferences[f"Strong preference for {trait_name}"] = score
+        elif score <= 0.3:
+            preferences[f"Dislikes {trait_name}"] = score
+            
+    if not preferences and all(0.4 <= float(v) <= 0.6 for v in vector):
+        return {"Balanced and versatile tastes": 0.5}
+
+    return preferences
+
 async def generate_culture_story(
     food_name: str,
     food_name_local: Optional[str] = None,
@@ -106,51 +174,72 @@ async def generate_culture_story(
 
     taste_context = ""
     if user_taste_profile:
-        top_traits = sorted(
-            user_taste_profile.items(), key=lambda x: x[1], reverse=True
-        )[:5]
-        traits_str = ", ".join(f"{k} ({v:.1f})" for k, v in top_traits)
-        taste_context = f"""
-The user's taste profile (top traits): {traits_str}
-Personalize the story: connect the dish to what this user already enjoys. 
-For example, if they love spicy food, emphasize the spice elements. If they prefer chill_vibe, mention the atmosphere.
+        # If user has a neutral/balanced taste, handle specifically
+        if "Balanced and versatile tastes" in user_taste_profile:
+            taste_context = """
+The user has a balanced, adaptable taste profile.
+Personalize the story by emphasizing the harmonious balance of flavors in this dish, and suggest ways they could explore both bold and subtle variations of it!
+"""
+        else:
+            top_traits = sorted(
+                user_taste_profile.items(), key=lambda x: x[1], reverse=True
+            )[:5]
+            traits_str = ", ".join(f"{k} (Score: {v:.1f})" for k, v in top_traits)
+            taste_context = f"""
+[USER PREFERENCE CONTEXT]
+The user requesting this analysis has these primary taste preferences: {traits_str}
+Personalize your analysis:
+- In "The Science of Flavor", analyze the dish's ingredients explicitly highlighting connections to their preferences.
+- In "How Locals Eat It", suggest consumption environments that match their preferred dining vibe.
 """
 
-    prompt = f"""You are a culinary culture expert specializing in Vietnamese and Asian food.
-Generate a rich, engaging cultural story about the dish: **{food_name}**
+    # ── RAG RETRIEVAL ──
+    rag_context = await _fetch_wikipedia_context(food_name, language)
+    rag_block = ""
+    if rag_context:
+        rag_block = f"""
+[FACTUAL KNOWLEDGE BASE ENTRY]
+The following is an authoritative encyclopedia excerpt regarding the subject:
+"{rag_context}"
+Use this context strictly to ensure absolute historical and culinary accuracy in your response. Do not hallucinate history.
+"""
+
+    prompt = f"""You are an elite Culinary Historian and Gastronomy Expert specializing in Michelin-level dining analysis.
+Your task is to provide a highly professional, factual, and authoritative cultural and culinary analysis of the dish: **{food_name}**
 {local_name_line}
-Language: Write the response in {lang_label}.
+Target Output Language: English
 
 {taste_context}
+{rag_block}
+
+CRITICAL RULES:
+- Ground all facts strictly in the [FACTUAL KNOWLEDGE BASE ENTRY] provided.
+- Maintain a highly sophisticated, academic, yet articulate tone (similar to a Michelin guide or an authoritative gastronomy review). Do NOT use conversational fluff, emojis in the text body, or colloquialisms.
+- Keep each analytical section dense with expertise, concise (3-4 sentences maximum), but highly detailed. 
+- Taste tags must be precise culinary terms (e.g., "umami-rich", "herbaceous", "astringent", "caramelized").
+- **API OUTPUT RESTRAINT**: YOU MUST ONLY OUTPUT A RAW, VALID JSON OBJECT. DO NOT ADD ANY PREAMBLE, POSTSCRIPT, OR CONVERSATIONAL TEXT OUTSIDE THE JSON BLOCK.
 
 Return a JSON object with this exact structure:
 {{
   "food_name": "{food_name}",
   "food_name_local": "Vietnamese name here or null",
   "sections": [
-    {{"title": "Origin Story", "content": "2-3 sentences about where this dish originated, its historical context", "icon": "🏛️"}},
-    {{"title": "Cultural Significance", "content": "2-3 sentences about what this dish means to the culture, when/why it's eaten", "icon": "🎭"}},
-    {{"title": "How Locals Eat It", "content": "2-3 sentences about proper way to eat, common pairings, etiquette", "icon": "🥢"}},
-    {{"title": "The Science of Flavor", "content": "2-3 sentences about the flavor profile, key ingredients, what makes it unique", "icon": "🔬"}}
+    {{"title": "Origin Analysis", "content": "Professional analysis of its historical and geographical inception.", "icon": "🏛️"}},
+    {{"title": "Cultural Significance", "content": "The sociopolitical or cultural weight this dish carries within the region.", "icon": "🎭"}},
+    {{"title": "Gastronomic Etiquette", "content": "Authoritative etiquette, common pairings, and consumption environment.", "icon": "🥢"}},
+    {{"title": "The Science of Flavor", "content": "Advanced flavor profile breakdown using precise culinary terminology.", "icon": "🔬"}}
   ],
   "taste_tags": ["tag1", "tag2", "tag3", "tag4", "tag5"],
-  "pairing_suggestions": ["suggested drink or side dish 1", "suggested 2", "suggested 3"],
-  "when_to_eat": "When locals typically eat this (time of day, season, occasion)",
-  "fun_fact": "One surprising or interesting fact about this dish"
-}}
-
-Rules:
-- Be accurate but engaging, like a knowledgeable local friend telling a story
-- Keep each section concise (2-3 sentences) but rich in detail
-- If the dish is not Vietnamese/Asian, still provide cultural context
-- taste_tags should be flavor descriptors (spicy, sour, umami, etc.)
-- Only return valid JSON, no markdown fences"""
+  "pairing_suggestions": ["expert pairing 1", "expert pairing 2", "expert pairing 3"],
+  "when_to_eat": "Authoritative context on seasonal or daily timing",
+  "fun_fact": "One obscure but historically verified piece of trivia"
+}}"""
 
     body = {
         "model": GROQ_MODEL,
         "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.7,
-        "max_tokens": 1024,
+        "temperature": 0.5,
+        "max_tokens": 3000,
         "response_format": {"type": "json_object"},
     }
 

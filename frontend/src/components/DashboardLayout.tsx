@@ -155,8 +155,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const isFullScreenPage =
     pathname.startsWith("/profile") ||
     pathname.startsWith("/tour-builder") ||
-    pathname.startsWith("/explore") ||
-    pathname.startsWith("/ai-planner");
+    pathname.startsWith("/explore");
 
   // ─── Route guard ─────────────────────────────────────────────────────────────
   React.useEffect(() => {
@@ -203,9 +202,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   }
 
   const isFoodies = pathname.startsWith("/foodies");
+  const isAIPlanner = pathname.startsWith("/ai-planner");
 
   const rightExpandedWidth = isFoodies ? "100%" : "320px";
-  const rightSidebarWidth = isFullScreenPage
+  const rightSidebarWidth = isFullScreenPage || isAIPlanner
     ? "0px"
     : isFoodies
       ? isChatOpen

@@ -158,6 +158,8 @@ export default function CulturePage() {
     <div
       style={{
         minHeight: "100vh",
+        height: "100vh",
+        overflowY: "auto",
         backgroundColor: "#FAFAFA",
         padding: "0 24px 40px",
       }}
@@ -406,112 +408,232 @@ export default function CulturePage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ type: "spring", stiffness: 260, damping: 25 }}
-            style={{ maxWidth: 680, margin: "0 auto" }}
+            style={{ 
+              maxWidth: 960, 
+              margin: "0 auto",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+              gap: 24,
+              alignItems: "start"
+            }}
           >
-            {/* Food Header */}
-            <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: 20,
-                padding: "28px 28px 20px",
-                border: "1px solid #E5E5EA",
-                marginBottom: 12,
-              }}
-            >
-              <Row
+            {/* ─── Left Column: Core Identity & Quick Tips ─── */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {/* Food Header */}
+              <div
                 style={{
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: 4,
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: 20,
+                  padding: "28px 28px 20px",
+                  border: "1px solid #E5E5EA",
                 }}
               >
-                <Row style={{ alignItems: "center", gap: 12 }}>
-                  {story.identified_from_image && (
-                    <div
-                      style={{
-                        padding: "4px 10px",
-                        borderRadius: 8,
-                        backgroundColor: "rgba(255,107,53,0.08)",
-                        fontSize: "0.7rem",
-                        fontWeight: 700,
-                        color: "#ff6b35",
-                      }}
-                    >
-                      📸 Identified
-                    </div>
-                  )}
-                  {story.confidence != null && (
+                <Row
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: 4,
+                  }}
+                >
+                  <Row style={{ alignItems: "center", gap: 12 }}>
+                    {story.identified_from_image && (
+                      <div
+                        style={{
+                          padding: "4px 10px",
+                          borderRadius: 8,
+                          backgroundColor: "rgba(255,107,53,0.08)",
+                          fontSize: "0.7rem",
+                          fontWeight: 700,
+                          color: "#ff6b35",
+                        }}
+                      >
+                        📸 Identified
+                      </div>
+                    )}
+                    {story.confidence != null && (
+                      <Text
+                        style={{
+                          fontSize: "0.7rem",
+                          color: "#8E8E93",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {Math.round(story.confidence * 100)}% confidence
+                      </Text>
+                    )}
+                  </Row>
+                  <IconButton
+                    icon={<X size={16} />}
+                    variant="tertiary"
+                    onClick={() => {
+                      setStory(null);
+                      setSearchQuery("");
+                    }}
+                    style={{ borderRadius: 10, width: 32, height: 32 }}
+                  />
+                </Row>
+
+                <Heading
+                  variant="heading-strong-xl"
+                  style={{
+                    color: "#1C1C1E",
+                    fontWeight: 800,
+                    letterSpacing: "-0.3px",
+                    marginBottom: 2,
+                  }}
+                >
+                  {story.food_name}
+                </Heading>
+                {story.food_name_local &&
+                  story.food_name_local !== story.food_name && (
                     <Text
                       style={{
-                        fontSize: "0.7rem",
                         color: "#8E8E93",
-                        fontWeight: 600,
+                        fontSize: "0.9rem",
+                        marginBottom: 16,
                       }}
                     >
-                      {Math.round(story.confidence * 100)}% confidence
+                      {story.food_name_local}
                     </Text>
                   )}
-                </Row>
-                <IconButton
-                  icon={<X size={16} />}
-                  variant="tertiary"
-                  onClick={() => {
-                    setStory(null);
-                    setSearchQuery("");
-                  }}
-                  style={{ borderRadius: 10, width: 32, height: 32 }}
-                />
-              </Row>
 
-              <Heading
-                variant="heading-strong-xl"
-                style={{
-                  color: "#1C1C1E",
-                  fontWeight: 800,
-                  letterSpacing: "-0.3px",
-                  marginBottom: 2,
-                }}
-              >
-                {story.food_name}
-              </Heading>
-              {story.food_name_local &&
-                story.food_name_local !== story.food_name && (
-                  <Text
-                    style={{
-                      color: "#8E8E93",
-                      fontSize: "0.9rem",
-                      marginBottom: 16,
-                    }}
-                  >
-                    {story.food_name_local}
-                  </Text>
+                {/* Taste Tags */}
+                {story.taste_tags.length > 0 && (
+                  <Row style={{ flexWrap: "wrap", gap: 6, marginTop: 12 }}>
+                    {story.taste_tags.map((tag) => (
+                      <span
+                        key={tag}
+                        style={{
+                          padding: "4px 12px",
+                          borderRadius: 20,
+                          backgroundColor: "rgba(255,107,53,0.06)",
+                          border: "1px solid rgba(255,107,53,0.12)",
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          color: "#ff6b35",
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </Row>
                 )}
+              </div>
 
-              {/* Taste Tags */}
-              {story.taste_tags.length > 0 && (
-                <Row style={{ flexWrap: "wrap", gap: 6, marginTop: 12 }}>
-                  {story.taste_tags.map((tag) => (
-                    <span
-                      key={tag}
+              {/* When to Eat */}
+              {story.when_to_eat && (
+                <div
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: 16,
+                    padding: "18px 20px",
+                    border: "1px solid #E5E5EA",
+                  }}
+                >
+                  <Row style={{ alignItems: "center", gap: 8, marginBottom: 8 }}>
+                    <Clock size={16} color="#FF9500" />
+                    <Text
                       style={{
-                        padding: "4px 12px",
-                        borderRadius: 20,
-                        backgroundColor: "rgba(255,107,53,0.06)",
-                        border: "1px solid rgba(255,107,53,0.12)",
                         fontSize: "0.75rem",
-                        fontWeight: 600,
-                        color: "#ff6b35",
+                        fontWeight: 700,
+                        color: "#FF9500",
+                        textTransform: "uppercase",
                       }}
                     >
-                      {tag}
-                    </span>
+                      When to Eat
+                    </Text>
+                  </Row>
+                  <Text
+                    style={{
+                      color: "#3C3C43",
+                      fontSize: "0.85rem",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {story.when_to_eat}
+                  </Text>
+                </div>
+              )}
+
+              {/* Pairing Suggestions */}
+              {story.pairing_suggestions.length > 0 && (
+                <div
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    borderRadius: 16,
+                    padding: "18px 20px",
+                    border: "1px solid #E5E5EA",
+                  }}
+                >
+                  <Row style={{ alignItems: "center", gap: 8, marginBottom: 8 }}>
+                    <Wine size={16} color="#AF52DE" />
+                    <Text
+                      style={{
+                        fontSize: "0.75rem",
+                        fontWeight: 700,
+                        color: "#AF52DE",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Pairs Well With
+                    </Text>
+                  </Row>
+                  {story.pairing_suggestions.map((s) => (
+                    <Text
+                      key={s}
+                      style={{
+                        color: "#3C3C43",
+                        fontSize: "0.85rem",
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      • {s}
+                    </Text>
                   ))}
-                </Row>
+                </div>
+              )}
+
+              {/* Fun Fact */}
+              {story.fun_fact && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  style={{
+                    backgroundColor: "rgba(255,149,0,0.04)",
+                    borderRadius: 16,
+                    padding: "18px 24px",
+                    border: "1px solid rgba(255,149,0,0.12)",
+                  }}
+                >
+                  <Row style={{ alignItems: "center", gap: 8, marginBottom: 6 }}>
+                    <Lightbulb size={16} color="#FF9500" />
+                    <Text
+                      style={{
+                        fontSize: "0.75rem",
+                        fontWeight: 700,
+                        color: "#FF9500",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Fun Fact
+                    </Text>
+                  </Row>
+                  <Text
+                    style={{
+                      color: "#3C3C43",
+                      fontSize: "0.85rem",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {story.fun_fact}
+                  </Text>
+                </motion.div>
               )}
             </div>
 
-            {/* Story Sections */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {/* ─── Right Column: Information Sections ─── */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {story.sections.map((section, idx) => (
                 <motion.div
                   key={section.title}
@@ -600,135 +722,6 @@ export default function CulturePage() {
                 </motion.div>
               ))}
             </div>
-
-            {/* Bottom Info Cards */}
-            <Row
-              style={{
-                gap: 8,
-                marginTop: 8,
-                flexWrap: "wrap",
-              }}
-            >
-              {/* When to Eat */}
-              {story.when_to_eat && (
-                <div
-                  style={{
-                    flex: 1,
-                    minWidth: 200,
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: 16,
-                    padding: "18px 20px",
-                    border: "1px solid #E5E5EA",
-                  }}
-                >
-                  <Row
-                    style={{ alignItems: "center", gap: 8, marginBottom: 8 }}
-                  >
-                    <Clock size={16} color="#FF9500" />
-                    <Text
-                      style={{
-                        fontSize: "0.75rem",
-                        fontWeight: 700,
-                        color: "#FF9500",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      When to Eat
-                    </Text>
-                  </Row>
-                  <Text
-                    style={{
-                      color: "#3C3C43",
-                      fontSize: "0.85rem",
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {story.when_to_eat}
-                  </Text>
-                </div>
-              )}
-
-              {/* Pairing Suggestions */}
-              {story.pairing_suggestions.length > 0 && (
-                <div
-                  style={{
-                    flex: 1,
-                    minWidth: 200,
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: 16,
-                    padding: "18px 20px",
-                    border: "1px solid #E5E5EA",
-                  }}
-                >
-                  <Row
-                    style={{ alignItems: "center", gap: 8, marginBottom: 8 }}
-                  >
-                    <Wine size={16} color="#AF52DE" />
-                    <Text
-                      style={{
-                        fontSize: "0.75rem",
-                        fontWeight: 700,
-                        color: "#AF52DE",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Pairs Well With
-                    </Text>
-                  </Row>
-                  {story.pairing_suggestions.map((s) => (
-                    <Text
-                      key={s}
-                      style={{
-                        color: "#3C3C43",
-                        fontSize: "0.85rem",
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      • {s}
-                    </Text>
-                  ))}
-                </div>
-              )}
-            </Row>
-
-            {/* Fun Fact */}
-            {story.fun_fact && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                style={{
-                  marginTop: 8,
-                  backgroundColor: "rgba(255,149,0,0.04)",
-                  borderRadius: 16,
-                  padding: "18px 24px",
-                  border: "1px solid rgba(255,149,0,0.12)",
-                }}
-              >
-                <Row style={{ alignItems: "center", gap: 8, marginBottom: 6 }}>
-                  <Lightbulb size={16} color="#FF9500" />
-                  <Text
-                    style={{
-                      fontSize: "0.75rem",
-                      fontWeight: 700,
-                      color: "#FF9500",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Fun Fact
-                  </Text>
-                </Row>
-                <Text
-                  style={{
-                    color: "#3C3C43",
-                    fontSize: "0.85rem",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {story.fun_fact}
-                </Text>
-              </motion.div>
-            )}
           </motion.div>
         )}
       </AnimatePresence>
