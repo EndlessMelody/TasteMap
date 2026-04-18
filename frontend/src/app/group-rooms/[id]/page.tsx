@@ -423,20 +423,29 @@ export default function GroupRoomPage() {
 
         // Fetch tin nhắn
         try {
-          const msgs = await apiGet<{ items: any[] }>(`/api/v1/groups/${roomId}/messages`);
-          setMessages(msgs.items.map(m => ({
-            id: String(m.id),
-            user: m.username,
-            avatar: `https://api.dicebear.com/9.x/thumbs/svg?seed=${m.user_id}`,
-            text: m.content,
-            ts: new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          })));
+          const msgs = await apiGet<{ items: any[] }>(
+            `/api/v1/groups/${roomId}/messages`,
+          );
+          setMessages(
+            msgs.items.map((m) => ({
+              id: String(m.id),
+              user: m.username,
+              avatar: `https://api.dicebear.com/9.x/thumbs/svg?seed=${m.user_id}`,
+              text: m.content,
+              ts: new Date(m.created_at).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+            })),
+          );
         } catch (err) {
           // Ignore tin nhắn nếu lỗi
         }
       } catch (err: unknown) {
         if (!cancelled)
-          toast.error(err instanceof Error ? err.message : "Failed to load room.");
+          toast.error(
+            err instanceof Error ? err.message : "Failed to load room.",
+          );
       } finally {
         if (!cancelled) setLoadingRoom(false);
       }
@@ -455,14 +464,21 @@ export default function GroupRoomPage() {
         setRoom(data);
         setMembers(data.members.map(mapMember));
 
-        const msgs = await apiGet<{ items: any[] }>(`/api/v1/groups/${roomId}/messages`);
-        setMessages(msgs.items.map(m => ({
-          id: String(m.id),
-          user: m.username,
-          avatar: `https://api.dicebear.com/9.x/thumbs/svg?seed=${m.user_id}`,
-          text: m.content,
-          ts: new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        })));
+        const msgs = await apiGet<{ items: any[] }>(
+          `/api/v1/groups/${roomId}/messages`,
+        );
+        setMessages(
+          msgs.items.map((m) => ({
+            id: String(m.id),
+            user: m.username,
+            avatar: `https://api.dicebear.com/9.x/thumbs/svg?seed=${m.user_id}`,
+            text: m.content,
+            ts: new Date(m.created_at).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          })),
+        );
       } catch {
         // silently ignore poll failures
       }
@@ -553,7 +569,7 @@ export default function GroupRoomPage() {
       >
         {loadingRoom ? (
           <>
-            <div className="w-10 h-10 border-4 border-[#007AFF]/30 border-t-[#007AFF] rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-[#ff6b35]/30 border-t-[#ff6b35] rounded-full animate-spin" />
             <p className="text-[15px] text-[#8E8E93] font-medium">
               Joining room…
             </p>
@@ -566,7 +582,7 @@ export default function GroupRoomPage() {
             </p>
             <Link
               href="/group-rooms"
-              className="text-[14px] text-[#007AFF] font-semibold"
+              className="text-[14px] text-[#ff6b35] font-semibold"
             >
               Back to rooms
             </Link>
@@ -576,7 +592,7 @@ export default function GroupRoomPage() {
     );
   }
 
-  const accentColor = room.accent_color ?? "#007AFF";
+  const accentColor = room.accent_color ?? "#ff6b35";
   const coverImage =
     room.cover_image_url ??
     "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=400&fit=crop";
@@ -700,15 +716,15 @@ export default function GroupRoomPage() {
                 style={
                   meReady
                     ? {
-                      backgroundColor: "rgba(52,199,89,0.1)",
-                      borderColor: "#34C759",
-                      color: "#1FAD45",
-                    }
+                        backgroundColor: "rgba(52,199,89,0.1)",
+                        borderColor: "#34C759",
+                        color: "#1FAD45",
+                      }
                     : {
-                      backgroundColor: "#F9F9FB",
-                      borderColor: "#E5E5EA",
-                      color: "#3C3C43",
-                    }
+                        backgroundColor: "#F9F9FB",
+                        borderColor: "#E5E5EA",
+                        color: "#3C3C43",
+                      }
                 }
               >
                 {meReady ? (
@@ -805,7 +821,7 @@ export default function GroupRoomPage() {
                 className="flex-1 flex items-center justify-center gap-1.5 py-3 text-[13px] font-semibold transition-colors"
                 style={
                   activeTab === tab
-                    ? { color: "#007AFF", borderBottom: "2px solid #007AFF" }
+                    ? { color: "#ff6b35", borderBottom: "2px solid #ff6b35" }
                     : { color: "#8E8E93" }
                 }
               >

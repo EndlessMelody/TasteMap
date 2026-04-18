@@ -49,7 +49,7 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
         style={{ boxShadow: "0 20px 50px rgb(0 0 0 / 0.1)" }}
       >
         {/* Header — Pastel Blue */}
-        <div className="bg-[#EAF2FF] p-6 relative">
+        <div className="bg-[#FFF0E6] p-6 relative">
           {/* Close Button */}
           <button
             onClick={onClose}
@@ -70,7 +70,7 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
           <h2 className="text-[24px] font-bold tracking-tight text-[#1C1C1E] leading-snug">
             {lobby.name}
           </h2>
-          <p className="text-[#007AFF] font-medium text-[15px] mt-1">
+          <p className="text-[#ff6b35] font-medium text-[15px] mt-1">
             {lobby.spots} Spots Total •{" "}
             {spotsLeft > 0 ? `${spotsLeft} Left` : "Full"}
           </p>
@@ -112,7 +112,7 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
                 </div>
                 <div className="flex items-center gap-2">
                   {i === 0 && (
-                    <span className="text-[12px] bg-[#EAF2FF] text-[#007AFF] px-2.5 py-1 rounded-md font-semibold flex items-center gap-1">
+                    <span className="text-[12px] bg-[#FFF0E6] text-[#ff6b35] px-2.5 py-1 rounded-md font-semibold flex items-center gap-1">
                       <Crown size={11} /> Creator
                     </span>
                   )}
@@ -129,8 +129,8 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
                 key={`empty-${i}`}
                 className="flex items-center gap-3 opacity-40"
               >
-                <div className="w-10 h-10 rounded-full border-2 border-dashed border-[#D6E6FF] bg-[#EAF2FF] flex items-center justify-center">
-                  <Plus size={14} className="text-[#007AFF]" />
+                <div className="w-10 h-10 rounded-full border-2 border-dashed border-[#FFE0CC] bg-[#FFF0E6] flex items-center justify-center">
+                  <Plus size={14} className="text-[#ff6b35]" />
                 </div>
                 <p className="text-[14px] text-[#8E8E93]">
                   Waiting for explorer...
@@ -145,8 +145,8 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
           <button
             onClick={handleJoin}
             disabled={joining}
-            className="w-full flex items-center justify-center gap-2 bg-[#007AFF] hover:bg-[#0062CC] text-white text-[17px] font-semibold py-4 rounded-[16px] transition-transform active:scale-[0.98] cursor-pointer disabled:opacity-70 disabled:pointer-events-none"
-            style={{ boxShadow: "0 4px 14px rgb(0 122 255 / 0.3)" }}
+            className="w-full flex items-center justify-center gap-2 bg-[#ff6b35] hover:bg-[#e65721] text-white text-[17px] font-semibold py-4 rounded-[16px] transition-transform active:scale-[0.98] cursor-pointer disabled:opacity-70 disabled:pointer-events-none"
+            style={{ boxShadow: "0 4px 14px rgb(255 107 53 / 0.3)" }}
           >
             {joining && <Loader2 size={18} className="animate-spin" />}
             {joining ? "Joining..." : "Confirm & Join Lobby"}

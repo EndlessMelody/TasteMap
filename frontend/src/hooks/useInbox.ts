@@ -14,43 +14,68 @@ export interface InboxConversation {
   is_sent_by_me: boolean;
 }
 
+const BASE_POLL_INTERVAL = 15_000;  // 15 seconds (was 5s)
+const MAX_POLL_INTERVAL = 120_000;  // 2 minutes max on repeated failures
+const BACKOFF_MULTIPLIER = 2;
+
 export function useInbox() {
   const [conversations, setConversations] = useState<InboxConversation[]>([]);
   const [loading, setLoading] = useState(true);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const failCountRef = useRef(0);
+  const mountedRef = useRef(true);
 
   const fetchInbox = useCallback(async () => {
     try {
       const data = await apiGet<InboxConversation[]>("/api/v1/messages/inbox");
-      setConversations(Array.isArray(data) ? data : []);
+      if (mountedRef.current) {
+        setConversations(Array.isArray(data) ? data : []);
+        failCountRef.current = 0; // reset on success
+      }
     } catch {
-      // silently fail on poll errors
+      // Increment fail counter for backoff — don't log to avoid console flood
+      failCountRef.current = Math.min(failCountRef.current + 1, 6);
     }
   }, []);
 
+  // Schedule next poll with exponential backoff on failures
+  const scheduleNextPoll = useCallback(() => {
+    if (pollRef.current) clearTimeout(pollRef.current);
+    const delay = Math.min(
+      BASE_POLL_INTERVAL * Math.pow(BACKOFF_MULTIPLIER, failCountRef.current),
+      MAX_POLL_INTERVAL,
+    );
+    pollRef.current = setTimeout(async () => {
+      if (mountedRef.current) {
+        await fetchInbox();
+        scheduleNextPoll();
+      }
+    }, delay);
+  }, [fetchInbox]);
+
   // Initial load
   useEffect(() => {
-    let mounted = true;
+    mountedRef.current = true;
     const load = async () => {
-      const data = await apiGet<InboxConversation[]>("/api/v1/messages/inbox");
-      if (mounted) {
-        setConversations(Array.isArray(data) ? data : []);
-        setLoading(false);
+      try {
+        const data = await apiGet<InboxConversation[]>("/api/v1/messages/inbox");
+        if (mountedRef.current) {
+          setConversations(Array.isArray(data) ? data : []);
+        }
+      } catch {
+        // Backend unreachable — start with empty, polling will retry
+        failCountRef.current = 1;
+      } finally {
+        if (mountedRef.current) setLoading(false);
       }
     };
-    load();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    load().then(scheduleNextPoll);
 
-  // Polling
-  useEffect(() => {
-    pollRef.current = setInterval(fetchInbox, 5000);
     return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
+      mountedRef.current = false;
+      if (pollRef.current) clearTimeout(pollRef.current);
     };
-  }, [fetchInbox]);
+  }, [fetchInbox, scheduleNextPoll]);
 
   const totalUnread = conversations.reduce((sum, c) => sum + c.unread_count, 0);
 

@@ -256,7 +256,7 @@ function MatchGauge({ pct }: { pct: number }) {
 function ActionButton({
   onClick,
   disabled,
-  color = "#007AFF",
+  color = "#ff6b35",
   bg,
   border,
   children,
@@ -718,7 +718,7 @@ export default function FoodieProfilePage() {
                 <ActionButton
                   onClick={handleAddFriend}
                   disabled={actionBusy}
-                  bg="#007AFF"
+                  bg="#ff6b35"
                 >
                   <UserPlus size={16} />
                   Add Friend
@@ -867,8 +867,8 @@ export default function FoodieProfilePage() {
                 <Radar
                   name="You"
                   dataKey="you"
-                  stroke="#007AFF"
-                  fill="#007AFF"
+                  stroke="#ff6b35"
+                  fill="#ff6b35"
                   fillOpacity={0.12}
                   strokeWidth={2}
                 />
@@ -925,12 +925,12 @@ export default function FoodieProfilePage() {
                 style={{
                   padding: "2px 10px",
                   borderRadius: 20,
-                  backgroundColor: "rgba(0,122,255,0.08)",
-                  border: "1px solid rgba(0,122,255,0.15)",
+                  backgroundColor: "rgba(255,107,53,0.08)",
+                  border: "1px solid rgba(255,107,53,0.15)",
                 }}
               >
                 <Text
-                  style={{ fontSize: 12, fontWeight: 700, color: "#007AFF" }}
+                  style={{ fontSize: 12, fontWeight: 700, color: "#ff6b35" }}
                 >
                   {social.mutual_friends_count}
                 </Text>

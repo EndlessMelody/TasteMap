@@ -15,7 +15,7 @@ import {
   Input,
   Avatar,
 } from "@/components/OnceUI";
-import { MapPin, Bell, MessageSquare } from "lucide-react";
+import { Bell, MessageSquare } from "lucide-react";
 import { ProfileMenuItem } from "@/components/common/ProfileMenuItem";
 import { LogOut, User, Settings, Info } from "lucide-react";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useInbox } from "@/hooks/useInbox";
+import { LocationSelector } from "./LocationSelector";
 
 interface DashboardHeaderProps {
   scrollY: MotionValue<number>;
@@ -59,6 +60,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   } = useInbox();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const [selectedLocation, setSelectedLocation] = useState("");
   const headerWidth = useTransform(scrollY, [0, 80], ["100%", "80%"]);
   const headerRadius = useTransform(scrollY, [0, 80], ["0px", "32px"]);
   const headerTop = useTransform(scrollY, [0, 80], ["0px", "12px"]);
@@ -156,40 +158,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       }}
     >
       <Row style={{ gap: "16px", alignItems: "center" }}>
-        {/* Location Pill */}
-        <Row
-          style={{
-            backgroundColor: "#F2F2F7",
-            paddingTop: "8px",
-            paddingBottom: "8px",
-            paddingLeft: "18px",
-            paddingRight: "18px",
-            borderRadius: "999px",
-            borderTopWidth: "1px",
-            borderBottomWidth: "1px",
-            borderLeftWidth: "1px",
-            borderRightWidth: "1px",
-            borderStyle: "solid",
-            borderColor: "#E5E5EA",
-            cursor: "pointer",
-            gap: "8px",
-            alignItems: "center",
-            transitionProperty: "all",
-            transitionDuration: "0.2s",
-          }}
-        >
-          <MapPin size={16} color="#ED1B24" />
-          <Text
-            style={{ color: "#1C1C1E", fontWeight: 600, fontSize: "0.82rem" }}
-          >
-            {user?.location || "Khám phá"}
-          </Text>
-          <span
-            style={{ color: "#C7C7CC", fontSize: "0.7rem", marginLeft: "2px" }}
-          >
-            ▼
-          </span>
-        </Row>
+        {/* Location Selector */}
+        <LocationSelector
+          value={selectedLocation}
+          onChange={setSelectedLocation}
+        />
 
         {/* Search */}
         <motion.div style={{ width: searchWidth, position: "relative" }}>
@@ -212,14 +185,14 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               borderBottomStyle: "solid",
               borderLeftStyle: "solid",
               borderRightStyle: "solid",
-              borderTopColor: isSearchFocused ? "#007AFF" : "#E5E5EA",
-              borderBottomColor: isSearchFocused ? "#007AFF" : "#E5E5EA",
-              borderLeftColor: isSearchFocused ? "#007AFF" : "#E5E5EA",
-              borderRightColor: isSearchFocused ? "#007AFF" : "#E5E5EA",
+              borderTopColor: isSearchFocused ? "#ff6b35" : "#E5E5EA",
+              borderBottomColor: isSearchFocused ? "#ff6b35" : "#E5E5EA",
+              borderLeftColor: isSearchFocused ? "#ff6b35" : "#E5E5EA",
+              borderRightColor: isSearchFocused ? "#ff6b35" : "#E5E5EA",
               transitionProperty: "all",
               transitionDuration: "0.2s",
               boxShadow: isSearchFocused
-                ? "0 0 0 4px rgba(0, 122, 255, 0.1)"
+                ? "0 0 0 4px rgba(255, 107, 53, 0.1)"
                 : "none",
             }}
           />
@@ -364,7 +337,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                       style={{
                         fontSize: 12,
                         fontWeight: 600,
-                        color: "#007AFF",
+                        color: "#ff6b35",
                         background: "none",
                         border: "none",
                         cursor: "pointer",
@@ -427,7 +400,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                                   width: 7,
                                   height: 7,
                                   borderRadius: "50%",
-                                  backgroundColor: "#007AFF",
+                                  backgroundColor: "#ff6b35",
                                   marginTop: 4,
                                   flexShrink: 0,
                                 }}
@@ -476,7 +449,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                                   padding: "6px 0",
                                   borderRadius: 8,
                                   border: "none",
-                                  backgroundColor: "#007AFF",
+                                  backgroundColor: "#ff6b35",
                                   color: "white",
                                   fontSize: 12,
                                   fontWeight: 700,
@@ -521,7 +494,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             icon={
               <MessageSquare
                 size={20}
-                color={isMsgOpen ? "#007AFF" : "#8E8E93"}
+                color={isMsgOpen ? "#ff6b35" : "#8E8E93"}
               />
             }
             variant="tertiary"
@@ -537,7 +510,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 minWidth: msgUnreadCount > 9 ? "16px" : "14px",
                 height: "14px",
                 borderRadius: "9px",
-                backgroundColor: "#007AFF",
+                backgroundColor: "#ff6b35",
                 border: "2px solid #FFFFFF",
                 display: "flex",
                 alignItems: "center",
@@ -683,7 +656,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                                   minWidth: 18,
                                   height: 18,
                                   borderRadius: "9px",
-                                  backgroundColor: "#007AFF",
+                                  backgroundColor: "#ff6b35",
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",

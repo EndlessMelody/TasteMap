@@ -179,7 +179,7 @@ function ReviewCard({ review }: { review: Review }) {
               {review.name}
             </p>
             {review.verified && (
-              <BadgeCheck size={14} color="#007AFF" style={{ flexShrink: 0 }} />
+              <BadgeCheck size={14} color="#ff6b35" style={{ flexShrink: 0 }} />
             )}
           </div>
           <p
@@ -349,7 +349,7 @@ export function PromoSocialProof() {
               margin: "0 0 10px",
               fontSize: 11,
               fontWeight: 700,
-              color: "#007AFF",
+              color: "#ff6b35",
               textTransform: "uppercase",
               letterSpacing: "1.2px",
             }}

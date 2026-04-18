@@ -39,8 +39,8 @@ const TYPE_CFG: Record<
 > = {
   friend_request: {
     icon: <UserPlus size={14} />,
-    color: "#007AFF",
-    bg: "rgba(0,122,255,0.1)",
+    color: "#ff6b35",
+    bg: "rgba(255,107,53,0.1)",
   },
   friend_accepted: {
     icon: <UserPlus size={14} />,
@@ -189,7 +189,7 @@ function NotifItem({ notif, onMarkRead, onAccept, onDecline }: NotifItemProps) {
                   padding: "5px 14px",
                   borderRadius: 8,
                   border: "none",
-                  backgroundColor: busy ? "#A8C7FA" : "#007AFF",
+                  backgroundColor: busy ? "#FFD4A3" : "#ff6b35",
                   color: "white",
                   fontSize: 12,
                   fontWeight: 700,
@@ -239,7 +239,7 @@ function NotifItem({ notif, onMarkRead, onAccept, onDecline }: NotifItemProps) {
               width: 7,
               height: 7,
               borderRadius: "50%",
-              backgroundColor: "#007AFF",
+              backgroundColor: "#ff6b35",
               flexShrink: 0,
               marginTop: 5,
             }}

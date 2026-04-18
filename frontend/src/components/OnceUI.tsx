@@ -453,12 +453,12 @@ export const Button = ({
           ? "px-4 py-2 text-[0.8rem]"
           : "px-5 py-[10px] text-[0.875rem]",
       variant === "secondary"
-        ? "bg-[#EAF2FF] text-[#007AFF] hover:bg-[#D6E6FF]"
+        ? "bg-[#FFF0E6] text-[#ff6b35] hover:bg-[#FFE0CC]"
         : variant === "tertiary"
           ? "bg-[#F2F2F7] text-[#1C1C1E] hover:bg-[#E5E5EA]"
           : variant === "danger"
-            ? "bg-[#FFF0F0] text-[#FF3B30] hover:bg-[#FFE5E5]"
-            : "bg-[#007AFF] text-[#FFFFFF] hover:bg-[#0062CC]",
+            ? "bg-[#FFF0F0] text-[#ff4757] hover:bg-[#FFE5E5]"
+            : "bg-[#ff6b35] text-[#FFFFFF] hover:bg-[#e65721]",
       disabled &&
         "bg-[#E5E5EA] text-[#8E8E93] cursor-not-allowed hover:bg-[#E5E5EA]",
       fillWidth && "w-full",
@@ -492,12 +492,12 @@ export const IconButton = ({
       "rounded-full",
       size === "l" ? "w-12 h-12" : size === "s" ? "w-7 h-7" : "w-9 h-9",
       variant === "secondary"
-        ? "bg-[#EAF2FF] text-[#007AFF] hover:bg-[#D6E6FF]"
+        ? "bg-[#FFF0E6] text-[#ff6b35] hover:bg-[#FFE0CC]"
         : variant === "tertiary"
           ? "bg-transparent text-[#8E8E93] hover:bg-[#F2F2F7]"
           : variant === "danger"
-            ? "bg-[#FFF0F0] text-[#FF3B30] hover:bg-[#FFE5E5]"
-            : "bg-[#007AFF] text-[#FFFFFF] hover:bg-[#0062CC]",
+            ? "bg-[#FFF0F0] text-[#ff4757] hover:bg-[#FFE5E5]"
+            : "bg-[#ff6b35] text-[#FFFFFF] hover:bg-[#e65721]",
       disabled &&
         "bg-[#E5E5EA] text-[#8E8E93] cursor-not-allowed hover:bg-[#E5E5EA]",
       className,
@@ -518,7 +518,7 @@ export const Input = ({ placeholder, className, style, ...props }: any) => (
       "px-4 py-3 rounded-[16px]",
       "bg-[#F2F2F7] border border-[#E5E5EA]",
       "placeholder:text-[#8E8E93] transition-colors duration-[var(--duration-fast)]",
-      "focus:border-[#007AFF] focus:bg-[#FFFFFF]",
+      "focus:border-[#ff6b35] focus:bg-[#FFFFFF]",
       className,
     )}
     style={style}
@@ -536,14 +536,14 @@ const AVATAR_SIZE: Record<string, string> = {
 };
 
 const AVATAR_COLORS = [
-  "#007AFF",
-  "#34C759",
-  "#FF9500",
-  "#FF3B30",
-  "#AF52DE",
-  "#5AC8FA",
-  "#FF6B6B",
-  "#FF9F0A",
+  "#ff6b35",
+  "#ff4757",
+  "#ffd700",
+  "#ff8c42",
+  "#ff6348",
+  "#ffa502",
+  "#ff7f50",
+  "#ff6b81",
 ];
 
 function colorFromName(name: string): string {

@@ -1,3 +1,4 @@
 {
-  "python.defaultInterpreterPath": "\"C:\\Python313\\python.exe\""
+  "python.defaultInterpreterPath": "\"C:\\Python313\\python.exe\"",
+  "git.ignoreLimitWarning": true
 }

@@ -75,7 +75,7 @@ export default function DiscoverPage() {
           flex: 1,
           minWidth: 0,
           position: "relative",
-          backgroundColor: "#F2F2F7",
+          backgroundColor: "#fff5f0",
         }}
       >
         <DashboardHeader

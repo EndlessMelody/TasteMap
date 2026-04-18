@@ -55,10 +55,11 @@ export default function AdminLoginPage() {
             width: 64,
             height: 64,
             borderRadius: "50%",
-            background: user && user.role !== "admin" 
-              ? "linear-gradient(135deg, #FF3B30, #FF9500)" 
-              : "linear-gradient(135deg, #007AFF, #5856D6)",
-            boxShadow: "0 8px 32px rgba(0,122,255,0.3)",
+            background:
+              user && user.role !== "admin"
+                ? "linear-gradient(135deg, #FF3B30, #FF9500)"
+                : "linear-gradient(135deg, #ff6b35, #ff8c5f)",
+            boxShadow: "0 8px 32px rgba(255,107,53,0.3)",
           }}
         >
           {user && user.role !== "admin" ? (
@@ -70,26 +71,45 @@ export default function AdminLoginPage() {
 
         <Column gap={6} align="center">
           <Heading variant="heading-strong-l">Admin Panel</Heading>
-          
+
           {isInitializing ? (
-            <Text variant="body-default-s" style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+            <Text
+              variant="body-default-s"
+              style={{ color: "var(--text-secondary)", textAlign: "center" }}
+            >
               Đang kiểm tra quyền truy cập...
             </Text>
           ) : !user ? (
-            <Text variant="body-default-s" style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+            <Text
+              variant="body-default-s"
+              style={{ color: "var(--text-secondary)", textAlign: "center" }}
+            >
               Vui lòng đăng nhập để kiểm tra quyền quản trị
             </Text>
           ) : user.role !== "admin" ? (
             <Column gap={8} align="center">
-              <Text variant="body-default-s" style={{ color: "#FF3B30", textAlign: "center", fontWeight: 500 }}>
+              <Text
+                variant="body-default-s"
+                style={{
+                  color: "#FF3B30",
+                  textAlign: "center",
+                  fontWeight: 500,
+                }}
+              >
                 Truy cập bị từ chối
               </Text>
-              <Text variant="body-default-s" style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+              <Text
+                variant="body-default-s"
+                style={{ color: "var(--text-secondary)", textAlign: "center" }}
+              >
                 Tài khoản <b>{user.username}</b> không có quyền quản trị viên.
               </Text>
             </Column>
           ) : (
-            <Text variant="body-default-s" style={{ color: "var(--text-secondary)", textAlign: "center" }}>
+            <Text
+              variant="body-default-s"
+              style={{ color: "var(--text-secondary)", textAlign: "center" }}
+            >
               Đang chuyển hướng...
             </Text>
           )}
@@ -102,7 +122,7 @@ export default function AdminLoginPage() {
               Đăng nhập tài khoản
             </Button>
           )}
-          
+
           {!isInitializing && user && user.role !== "admin" && (
             <Button size="l" fillWidth onClick={handleGoHome}>
               Quay lại Trang chủ

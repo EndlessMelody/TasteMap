@@ -52,7 +52,7 @@ function adaptGroup(g: ApiGroup): LobbyData {
     bg:
       normalizeMediaUrl(g.cover_image_url) ??
       "https://images.unsplash.com/photo-1552611052-33e04de081de?w=600&h=320&fit=crop",
-    accent: g.accent_color ?? "#007AFF",
+    accent: g.accent_color ?? "#ff6b35",
     members: (g.members ?? []).map((m) => ({
       name: m.display_name,
       avatar:

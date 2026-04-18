@@ -158,7 +158,7 @@ function PendingRequestCard({
               padding: "9px 0",
               borderRadius: 12,
               border: "none",
-              backgroundColor: busy ? "#A8C7FA" : "#007AFF",
+              backgroundColor: busy ? "#FFD4A3" : "#ff6b35",
               color: "white",
               fontSize: 13,
               fontWeight: 700,
@@ -415,7 +415,7 @@ export default function FoodiesPage() {
       icon: <Users size={14} />,
       label: "Total Foodies",
       value: friends.length,
-      color: "#007AFF",
+      color: "#ff6b35",
     },
     {
       icon: <Wifi size={14} />,
@@ -802,12 +802,12 @@ export default function FoodiesPage() {
                     padding: "8px 16px",
                     borderRadius: 10,
                     border: isActive
-                      ? "1.5px solid #007AFF"
+                      ? "1.5px solid #ff6b35"
                       : "1.5px solid rgba(0,0,0,0.07)",
                     backgroundColor: isActive
-                      ? "rgba(0,122,255,0.06)"
+                      ? "rgba(255,107,53,0.06)"
                       : "#FFFFFF",
-                    color: isActive ? "#007AFF" : "rgba(0,0,0,0.5)",
+                    color: isActive ? "#ff6b35" : "rgba(0,0,0,0.5)",
                     cursor: "pointer",
                     fontWeight: isActive ? 700 : 500,
                     fontSize: 13,
@@ -822,11 +822,11 @@ export default function FoodiesPage() {
                       padding: "1px 7px",
                       borderRadius: 10,
                       backgroundColor: isActive
-                        ? "rgba(0,122,255,0.12)"
+                        ? "rgba(255,107,53,0.12)"
                         : "rgba(0,0,0,0.05)",
                       fontSize: 11,
                       fontWeight: 700,
-                      color: isActive ? "#007AFF" : "rgba(0,0,0,0.4)",
+                      color: isActive ? "#ff6b35" : "rgba(0,0,0,0.4)",
                     }}
                   >
                     {count}
@@ -1078,11 +1078,11 @@ export default function FoodiesPage() {
                     width: 48,
                     height: 48,
                     borderRadius: "50%",
-                    backgroundColor: "rgba(0,122,255,0.08)",
+                    backgroundColor: "rgba(255,107,53,0.08)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "#007AFF",
+                    color: "#ff6b35",
                   }}
                 >
                   <Users size={24} />

@@ -143,10 +143,10 @@ export function ReelCard({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 4px 20px rgba(0,122,255,0.25)",
+              boxShadow: "0 4px 20px rgba(255,107,53,0.25)",
             }}
           >
-            <Play size={18} color="#007AFF" fill="#007AFF" />
+            <Play size={18} color="#ff6b35" fill="#ff6b35" />
           </motion.div>
         </Column>
       </div>

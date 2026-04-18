@@ -346,14 +346,14 @@ function PlaceCard({ place, index }: { place: NearbyPlace; index: number }) {
             display: "inline-flex",
             alignItems: "center",
             gap: "3px",
-            backgroundColor: "rgba(0,122,255,0.07)",
+            backgroundColor: "rgba(255,107,53,0.07)",
             borderRadius: "8px",
             padding: "3px 7px",
           }}
         >
-          <MapPin size={9} color="#007AFF" />
+          <MapPin size={9} color="#ff6b35" />
           <span
-            style={{ fontSize: "0.62rem", color: "#007AFF", fontWeight: 600 }}
+            style={{ fontSize: "0.62rem", color: "#ff6b35", fontWeight: 600 }}
           >
             {formatDistance(place.distance)}
           </span>
@@ -859,7 +859,7 @@ export default function HotRoutesPage() {
               label: "Weather",
               value: weather ? `${weather.temp}°C` : "—",
               sub: wInfo?.label ?? "Loading",
-              accent: "#007AFF",
+              accent: "#ff6b35",
             },
             {
               icon: (
@@ -1082,10 +1082,10 @@ export default function HotRoutesPage() {
                   gap: "4px",
                   padding: "5px 11px",
                   borderRadius: "20px",
-                  border: `1px solid ${activeTab === tab.id ? "#007AFF" : "rgba(0,0,0,0.08)"}`,
+                  border: `1px solid ${activeTab === tab.id ? "#ff6b35" : "rgba(0,0,0,0.08)"}`,
                   backgroundColor:
-                    activeTab === tab.id ? "rgba(0,122,255,0.08)" : "white",
-                  color: activeTab === tab.id ? "#007AFF" : "#636366",
+                    activeTab === tab.id ? "rgba(255,107,53,0.08)" : "white",
+                  color: activeTab === tab.id ? "#ff6b35" : "#636366",
                   fontSize: "0.7rem",
                   fontWeight: activeTab === tab.id ? 700 : 400,
                   cursor: "pointer",
@@ -1166,7 +1166,7 @@ export default function HotRoutesPage() {
             href="https://www.openstreetmap.org/copyright"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#007AFF", textDecoration: "none" }}
+            style={{ color: "#ff6b35", textDecoration: "none" }}
           >
             OpenStreetMap
           </a>{" "}

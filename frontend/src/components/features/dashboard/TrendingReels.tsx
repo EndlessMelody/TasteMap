@@ -13,7 +13,9 @@ interface TrendingReelsProps {
   isLoading?: boolean;
 }
 
-export const TrendingReels: React.FC<TrendingReelsProps> = ({ onReelClick }) => {
+export const TrendingReels: React.FC<TrendingReelsProps> = ({
+  onReelClick,
+}) => {
   const { reels, loading, error } = useReels(10);
 
   return (
@@ -43,7 +45,7 @@ export const TrendingReels: React.FC<TrendingReelsProps> = ({ onReelClick }) => 
           <Text
             onClick={() => {}}
             style={{
-              color: "#007AFF",
+              color: "#ff6b35",
               fontSize: "0.85rem",
               fontWeight: 600,
               cursor: "pointer",
@@ -72,7 +74,9 @@ export const TrendingReels: React.FC<TrendingReelsProps> = ({ onReelClick }) => 
             }}
           >
             {loading ? (
-              <Text style={{ color: "#8E8E93", padding: "20px" }}>Loading reels...</Text>
+              <Text style={{ color: "#8E8E93", padding: "20px" }}>
+                Loading reels...
+              </Text>
             ) : error ? (
               <Text style={{ color: "red", padding: "20px" }}>{error}</Text>
             ) : reels.length > 0 ? (
@@ -94,7 +98,9 @@ export const TrendingReels: React.FC<TrendingReelsProps> = ({ onReelClick }) => 
                 </StaggerItem>
               ))
             ) : (
-              <Text style={{ color: "#8E8E93", padding: "20px" }}>No trending reels found.</Text>
+              <Text style={{ color: "#8E8E93", padding: "20px" }}>
+                No trending reels found.
+              </Text>
             )}
           </StaggerContainer>
         </Row>

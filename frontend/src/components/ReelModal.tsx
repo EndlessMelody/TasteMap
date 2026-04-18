@@ -1,8 +1,22 @@
 "use client";
 
 import React from "react";
-import { Column, Row, Text, Avatar, IconButton, Input } from "@/components/OnceUI";
-import { Heart, Share2, MessageCircle, Play, Send, Bookmark } from "lucide-react";
+import {
+  Column,
+  Row,
+  Text,
+  Avatar,
+  IconButton,
+  Input,
+} from "@/components/OnceUI";
+import {
+  Heart,
+  Share2,
+  MessageCircle,
+  Play,
+  Send,
+  Bookmark,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { ReelData } from "@/types/dashboard";
@@ -16,10 +30,17 @@ interface ReelModalProps {
   onClose: () => void;
 }
 
-export default function ReelModal({ isOpen, data: initialData, onClose }: ReelModalProps) {
+export default function ReelModal({
+  isOpen,
+  data: initialData,
+  onClose,
+}: ReelModalProps) {
   const { user: currentUser } = useAuth();
   const updateReel = useSocialStore((state) => state.updateReel);
-  const data = useSocialStore((state) => state.reels.find((r) => r.id === initialData.id)) || initialData;
+  const data =
+    useSocialStore((state) =>
+      state.reels.find((r) => r.id === initialData.id),
+    ) || initialData;
   const [isSaved, setIsSaved] = React.useState(false);
   const [comments, setComments] = React.useState<any[]>([]);
   const [newComment, setNewComment] = React.useState("");
@@ -29,7 +50,7 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
     if (isOpen && data?.id) {
       // Trigger API to increment view count natively
       apiGet(`/api/v1/reels/${data.id}`).catch(console.error);
-      
+
       setIsLoadingComments(true);
       apiGet(`/api/v1/reels/${data.id}/comments`)
         .then((res: any) => setComments(res.items || []))
@@ -41,7 +62,9 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
   const handlePostComment = async () => {
     if (!newComment.trim() || !data?.id) return;
     try {
-      const res = await apiPost(`/api/v1/reels/${data.id}/comments`, { content: newComment });
+      const res = await apiPost(`/api/v1/reels/${data.id}/comments`, {
+        content: newComment,
+      });
       setComments([res, ...comments]);
       setNewComment("");
       updateReel(data.id, { comments: (data.comments || 0) + 1 });
@@ -174,7 +197,7 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
             >
               {/* Header */}
               <Row
-                 style={{
+                style={{
                   paddingTop: "18px",
                   paddingBottom: "18px",
                   paddingLeft: "24px",
@@ -205,7 +228,11 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
                   </Column>
                 </Row>
                 <IconButton
-                  icon={<Text style={{ fontSize: "20px", color: "#1C1C1E" }}>×</Text>}
+                  icon={
+                    <Text style={{ fontSize: "20px", color: "#1C1C1E" }}>
+                      ×
+                    </Text>
+                  }
                   variant="tertiary"
                   onClick={onClose}
                   style={{ width: "36px", height: "36px", borderRadius: "50%" }}
@@ -215,7 +242,7 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
               {/* Scrollable Content (Caption + Comments) */}
               <Column
                 className="no-scrollbar"
-                 style={{
+                style={{
                   flex: 1,
                   overflowY: "auto",
                   paddingTop: "24px",
@@ -254,14 +281,22 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
                 {/* Comments List */}
                 <Column style={{ gap: "16px" }}>
                   {isLoadingComments ? (
-                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>Loading comments...</Text>
+                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>
+                      Loading comments...
+                    </Text>
                   ) : comments.length > 0 ? (
                     comments.map((c: any) => (
                       <Row
                         key={c.id || Math.random()}
                         style={{ gap: "12px", alignItems: "flex-start" }}
                       >
-                        <Avatar src={c.user?.avatar_url || "https://i.pinimg.com/736x/46/83/99/46839974515f6ca59a6023ef5e061d3e.jpg"} size="s" />
+                        <Avatar
+                          src={
+                            c.user?.avatar_url ||
+                            "https://i.pinimg.com/736x/46/83/99/46839974515f6ca59a6023ef5e061d3e.jpg"
+                          }
+                          size="s"
+                        />
                         <Column style={{ gap: "4px" }}>
                           <Text
                             style={{
@@ -270,14 +305,22 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
                               lineHeight: 1.6,
                             }}
                           >
-                            <span style={{ fontWeight: 700, marginRight: "6px" }}>
-                              {c.user?.display_name || c.user?.username || "Unknown"}
+                            <span
+                              style={{ fontWeight: 700, marginRight: "6px" }}
+                            >
+                              {c.user?.display_name ||
+                                c.user?.username ||
+                                "Unknown"}
                             </span>
                             {c.content}
                           </Text>
                           <Row style={{ gap: "12px", alignItems: "center" }}>
-                            <Text style={{ color: "#AEAEB2", fontSize: "0.7rem" }}>
-                              {c.created_at ? new Date(c.created_at).toLocaleDateString() : "Just now"}
+                            <Text
+                              style={{ color: "#AEAEB2", fontSize: "0.7rem" }}
+                            >
+                              {c.created_at
+                                ? new Date(c.created_at).toLocaleDateString()
+                                : "Just now"}
                             </Text>
                             <Text
                               style={{
@@ -294,12 +337,18 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
                         <Heart
                           size={12}
                           color="#AEAEB2"
-                          style={{ marginLeft: "auto", cursor: "pointer", marginTop: "4px" }}
+                          style={{
+                            marginLeft: "auto",
+                            cursor: "pointer",
+                            marginTop: "4px",
+                          }}
                         />
                       </Row>
                     ))
                   ) : (
-                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>No comments yet. Be the first!</Text>
+                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>
+                      No comments yet. Be the first!
+                    </Text>
                   )}
                 </Column>
               </Column>
@@ -320,37 +369,73 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
                       onClick={async () => {
                         if (!data?.id) return;
                         const newIsLiked = !data.isLiked;
-                        const newLikes = newIsLiked ? (data.likes || 0) + 1 : Math.max(0, (data.likes || 0) - 1);
-                        
-                        updateReel(data.id, { isLiked: newIsLiked, likes: newLikes });
+                        const newLikes = newIsLiked
+                          ? (data.likes || 0) + 1
+                          : Math.max(0, (data.likes || 0) - 1);
+
+                        updateReel(data.id, {
+                          isLiked: newIsLiked,
+                          likes: newLikes,
+                        });
                         try {
                           await apiPost(`/api/v1/reels/${data.id}/like`, {});
                         } catch (err) {
-                          updateReel(data.id, { isLiked: data.isLiked, likes: data.likes });
+                          updateReel(data.id, {
+                            isLiked: data.isLiked,
+                            likes: data.likes,
+                          });
                           console.error(err);
                         }
                       }}
                     >
                       <Heart
                         size={24}
-                        color={data.isLiked ? "var(--brand-solid-strong)" : "var(--neutral-alpha-medium)"}
-                        fill={data.isLiked ? "var(--brand-solid-strong)" : "none"}
+                        color={
+                          data.isLiked
+                            ? "var(--brand-solid-strong)"
+                            : "var(--neutral-alpha-medium)"
+                        }
+                        fill={
+                          data.isLiked ? "var(--brand-solid-strong)" : "none"
+                        }
                       />
-                      <Text variant="label-default-l" weight="strong" onBackground="neutral-strong">
+                      <Text
+                        variant="label-default-l"
+                        weight="strong"
+                        onBackground="neutral-strong"
+                      >
                         {data.likes || 0}
                       </Text>
                     </Row>
-                    <Row gap="8" vertical="center" style={{ cursor: "pointer" }}>
-                      <MessageCircle size={24} color="var(--neutral-alpha-medium)" />
-                      <Text variant="label-default-l" weight="strong" onBackground="neutral-strong">
+                    <Row
+                      gap="8"
+                      vertical="center"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <MessageCircle
+                        size={24}
+                        color="var(--neutral-alpha-medium)"
+                      />
+                      <Text
+                        variant="label-default-l"
+                        weight="strong"
+                        onBackground="neutral-strong"
+                      >
                         {comments.length}
                       </Text>
                     </Row>
                   </Row>
-                  <Row style={{ cursor: "pointer" }} onClick={() => setIsSaved(!isSaved)}>
+                  <Row
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setIsSaved(!isSaved)}
+                  >
                     <Bookmark
                       size={24}
-                      color={isSaved ? "var(--brand-solid-strong)" : "var(--neutral-alpha-medium)"}
+                      color={
+                        isSaved
+                          ? "var(--brand-solid-strong)"
+                          : "var(--neutral-alpha-medium)"
+                      }
                       fill={isSaved ? "var(--brand-solid-strong)" : "none"}
                     />
                   </Row>
@@ -358,7 +443,7 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
               </Column>
 
               {/* Input Footer */}
-               <Row
+              <Row
                 style={{
                   paddingTop: "16px",
                   paddingBottom: "16px",
@@ -372,11 +457,11 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
                   flexShrink: 0,
                 }}
               >
-                 <Input
+                <Input
                   value={newComment}
                   onChange={(e: any) => setNewComment(e.target.value)}
                   onKeyPress={(e: any) => {
-                    if (e.key === 'Enter') handlePostComment();
+                    if (e.key === "Enter") handlePostComment();
                   }}
                   placeholder="Add a comment..."
                   style={{
@@ -394,7 +479,7 @@ export default function ReelModal({ isOpen, data: initialData, onClose }: ReelMo
                 <Text
                   onClick={handlePostComment}
                   style={{
-                    color: newComment.trim() ? "#007AFF" : "#AEAEB2",
+                    color: newComment.trim() ? "#ff6b35" : "#AEAEB2",
                     fontWeight: 600,
                     fontSize: "0.85rem",
                     cursor: newComment.trim() ? "pointer" : "default",

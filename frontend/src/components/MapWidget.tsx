@@ -12,7 +12,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 // ─── CUSTOM PULSE MARKER ───
-const createPulseIcon = (color: string = "#007AFF") => {
+const createPulseIcon = (color: string = "#ff6b35") => {
   return L.divIcon({
     className: "custom-pulse-marker",
     html: `
@@ -116,7 +116,7 @@ export default function MapWidget({
   const uid = useId();
   const instanceKey = `map-instance-${mapId}-${uid}`;
 
-  const pulseIcon = useMemo(() => createPulseIcon("#007AFF"), []);
+  const pulseIcon = useMemo(() => createPulseIcon("#ff6b35"), []);
   const activePulseIcon = useMemo(() => createPulseIcon("#FF2D55"), []);
 
   // Return a stable placeholder if not mounted or in a transition state
@@ -167,7 +167,7 @@ export default function MapWidget({
           <Polyline
             positions={points}
             pathOptions={{
-              color: "#007AFF",
+              color: "#ff6b35",
               weight: 5,
               opacity: 0.3,
               dashArray: "1, 12",
@@ -220,9 +220,9 @@ export default function MapWidget({
             style={{
               width: "8px",
               height: "8px",
-              backgroundColor: "#007AFF",
+              backgroundColor: "#ff6b35",
               borderRadius: "50%",
-              boxShadow: "0 0 12px rgba(0,122,255,0.6)",
+              boxShadow: "0 0 12px rgba(255,107,53,0.6)",
             }}
           />
           <span

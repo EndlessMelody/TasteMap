@@ -104,6 +104,54 @@ export const apiPatch = <T>(path: string, body?: unknown) =>
 export const apiDelete = <T>(path: string) =>
   request<T>(path, { method: "DELETE" });
 
+export type MediaUploadType = "avatar" | "cover" | "post" | "reel";
+
+export interface MediaUploadResponse {
+  url: string;
+  file_type: string;
+  size_bytes: number;
+}
+
+export async function apiUploadMedia(
+  file: File,
+  uploadType: MediaUploadType,
+): Promise<MediaUploadResponse> {
+  const encodedType = encodeURIComponent(uploadType);
+  const url = `${BASE_URL}/api/v1/media/upload?type=${encodedType}`;
+
+  let token: string | undefined = cachedToken;
+  if (!token && typeof window !== "undefined" && initialSessionPromise) {
+    token = await initialSessionPromise;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    let message = `HTTP ${res.status}`;
+    try {
+      const err = await res.json();
+      message =
+        typeof err.detail === "object"
+          ? JSON.stringify(err.detail)
+          : (err.detail ?? err.message ?? message);
+    } catch {
+      // ignore parse errors
+    }
+    throw new ApiError(res.status, message);
+  }
+
+  return res.json() as Promise<MediaUploadResponse>;
+}
+
 // ─── JWT Auth API (for custom FastAPI backend) ────────────────────────────────
 
 const JWT_TOKEN_KEY = "tastemap_jwt_token";

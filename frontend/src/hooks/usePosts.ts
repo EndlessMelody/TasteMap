@@ -121,3 +121,44 @@ export function usePosts(limit: number = 8): UsePostsResult {
 
   return { posts, loading, error, refetch: fetchPosts };
 }
+
+// Hook to fetch posts by specific user
+export function useUserPosts(
+  userId: number | null,
+  limit: number = 10,
+): UsePostsResult {
+  const [posts, setPosts] = useState<PostData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchUserPosts = useCallback(async () => {
+    if (!userId) {
+      setPosts([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await apiGet<PostsResponse>(
+        `/api/v1/posts?user_id=${userId}&limit=${limit}&offset=0`,
+      );
+      setPosts((data.items ?? []).map(adaptPost));
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(`Lỗi ${err.status}: ${err.message}`);
+      } else {
+        setError("Không thể tải bài đăng");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [userId, limit]);
+
+  useEffect(() => {
+    fetchUserPosts();
+  }, [fetchUserPosts]);
+
+  return { posts, loading, error, refetch: fetchUserPosts };
+}

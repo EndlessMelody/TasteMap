@@ -207,7 +207,7 @@ export default function TourBuilderPage() {
 
   const nextEmptyIndex = filledNodes.findIndex((n) => n === null);
   const activeCard = deck[0] ?? null;
-  const activeColor = activeCard?.color ?? "#007AFF";
+  const activeColor = activeCard?.color ?? "#ff6b35";
 
   // Dynamic Tour DNA calculation
   const getTourDNA = useCallback(() => {

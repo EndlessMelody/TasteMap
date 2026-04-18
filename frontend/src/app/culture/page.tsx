@@ -242,7 +242,7 @@ export default function CulturePage() {
             />
           </div>
           <IconButton
-            icon={<Camera size={20} color="#007AFF" />}
+            icon={<Camera size={20} color="#ff6b35" />}
             variant="tertiary"
             onClick={() => fileInputRef.current?.click()}
             style={{
@@ -255,9 +255,9 @@ export default function CulturePage() {
           <IconButton
             icon={
               loading ? (
-                <Loader2 size={20} color="#007AFF" className="animate-spin" />
+                <Loader2 size={20} color="#ff6b35" className="animate-spin" />
               ) : (
-                <Sparkles size={20} color="#007AFF" />
+                <Sparkles size={20} color="#ff6b35" />
               )
             }
             variant="tertiary"
@@ -267,8 +267,8 @@ export default function CulturePage() {
               borderRadius: 14,
               width: 48,
               height: 48,
-              border: "1.5px solid #007AFF",
-              backgroundColor: loading ? "#F2F2F7" : "rgba(0,122,255,0.06)",
+              border: "1.5px solid #ff6b35",
+              backgroundColor: loading ? "#F2F2F7" : "rgba(255,107,53,0.06)",
             }}
           />
         </Row>
@@ -365,14 +365,14 @@ export default function CulturePage() {
               width: 48,
               height: 48,
               borderRadius: 14,
-              backgroundColor: "rgba(0,122,255,0.08)",
+              backgroundColor: "rgba(255,107,53,0.08)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               margin: "0 auto 16px",
             }}
           >
-            <Loader2 size={24} color="#007AFF" className="animate-spin" />
+            <Loader2 size={24} color="#ff6b35" className="animate-spin" />
           </div>
           <Text style={{ color: "#8E8E93", fontSize: "0.85rem" }}>
             Uncovering the story behind your dish...
@@ -431,10 +431,10 @@ export default function CulturePage() {
                       style={{
                         padding: "4px 10px",
                         borderRadius: 8,
-                        backgroundColor: "rgba(0,122,255,0.08)",
+                        backgroundColor: "rgba(255,107,53,0.08)",
                         fontSize: "0.7rem",
                         fontWeight: 700,
-                        color: "#007AFF",
+                        color: "#ff6b35",
                       }}
                     >
                       📸 Identified
@@ -496,11 +496,11 @@ export default function CulturePage() {
                       style={{
                         padding: "4px 12px",
                         borderRadius: 20,
-                        backgroundColor: "rgba(0,122,255,0.06)",
-                        border: "1px solid rgba(0,122,255,0.12)",
+                        backgroundColor: "rgba(255,107,53,0.06)",
+                        border: "1px solid rgba(255,107,53,0.12)",
                         fontSize: "0.75rem",
                         fontWeight: 600,
-                        color: "#007AFF",
+                        color: "#ff6b35",
                       }}
                     >
                       {tag}

@@ -108,7 +108,7 @@ function SplashScreen() {
           style={{
             height: "100%",
             borderRadius: 99,
-            backgroundColor: "#007AFF",
+            backgroundColor: "#ff6b35",
           }}
           animate={{ x: ["-100%", "200%"] }}
           transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}

@@ -85,15 +85,15 @@ function mapApiRoom(r: ApiRoom): LobbyData {
     route: r.route_description ?? "—",
     time: r.scheduled_time
       ? new Date(r.scheduled_time).toLocaleString([], {
-        dateStyle: "short",
-        timeStyle: "short",
-      })
+          dateStyle: "short",
+          timeStyle: "short",
+        })
       : "TBD",
     spots: r.max_spots,
     bg:
       r.cover_image_url ??
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=320&fit=crop",
-    accent: r.accent_color ?? "#007AFF",
+    accent: r.accent_color ?? "#ff6b35",
     is_public: r.is_public,
     invite_code: r.invite_code ?? undefined,
     status,
@@ -106,11 +106,11 @@ function mapApiRoom(r: ApiRoom): LobbyData {
     })),
     host: host
       ? {
-        name: host.display_name ?? "Host",
-        avatar:
-          host.avatar_url ??
-          `https://api.dicebear.com/9.x/thumbs/svg?seed=${host.user_id}`,
-      }
+          name: host.display_name ?? "Host",
+          avatar:
+            host.avatar_url ??
+            `https://api.dicebear.com/9.x/thumbs/svg?seed=${host.user_id}`,
+        }
       : undefined,
   };
 }
@@ -156,9 +156,9 @@ const STATUS_CONFIG: Record<
   },
   "in-progress": {
     label: "Live",
-    bg: "rgba(0,122,255,0.12)",
-    text: "#007AFF",
-    dot: "#007AFF",
+    bg: "rgba(255,107,53,0.12)",
+    text: "#ff6b35",
+    dot: "#ff6b35",
   },
   full: {
     label: "Full",
@@ -294,8 +294,8 @@ function RoomCard({
       (m) =>
         m.user_id === user.id ||
         m.name === user.username ||
-        m.name === user.display_name
-    )
+        m.name === user.display_name,
+    ),
   );
   const router = useRouter();
   const spotsLeft = lobby.spots - lobby.members.length;
@@ -502,20 +502,22 @@ function RoomCard({
                   ? { backgroundColor: "rgba(255,59,48,0.1)", color: "#FF3B30" }
                   : status === "in-progress"
                     ? {
-                      backgroundColor: "rgba(0,122,255,0.1)",
-                      color: "#007AFF",
-                    }
+                        backgroundColor: "rgba(255,107,53,0.1)",
+                        color: "#ff6b35",
+                      }
                     : {
-                      backgroundColor: lobby.accent + "18",
-                      color: lobby.accent,
-                    }
+                        backgroundColor: lobby.accent + "18",
+                        color: lobby.accent,
+                      }
               }
             >
               {status === "full"
                 ? "Full"
                 : status === "in-progress"
                   ? "Watch"
-                  : isJoined ? "Vào phòng" : "Join"}
+                  : isJoined
+                    ? "Vào phòng"
+                    : "Join"}
             </motion.button>
           </div>
         </div>
@@ -578,7 +580,7 @@ function CreateRoomModal({
   };
 
   const inputCls =
-    "w-full px-4 py-3 rounded-[14px] text-[15px] text-[#1C1C1E] bg-[#F9F9FB] border border-[#E5E5EA] outline-none focus:border-[#007AFF] focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all";
+    "w-full px-4 py-3 rounded-[14px] text-[15px] text-[#1C1C1E] bg-[#F9F9FB] border border-[#E5E5EA] outline-none focus:border-[#ff6b35] focus:bg-white focus:ring-2 focus:ring-orange-100 transition-all";
 
   // ... (rest of the code remains the same)
 
@@ -662,15 +664,15 @@ function CreateRoomModal({
                   style={
                     category === cat
                       ? {
-                        backgroundColor: "#007AFF",
-                        borderColor: "#007AFF",
-                        color: "#fff",
-                      }
+                          backgroundColor: "#ff6b35",
+                          borderColor: "#ff6b35",
+                          color: "#fff",
+                        }
                       : {
-                        backgroundColor: "#F2F2F7",
-                        borderColor: "transparent",
-                        color: "#3C3C43",
-                      }
+                          backgroundColor: "#F2F2F7",
+                          borderColor: "transparent",
+                          color: "#3C3C43",
+                        }
                   }
                 >
                   {CATEGORY_ICON[cat]} {cat}
@@ -759,20 +761,20 @@ function CreateRoomModal({
                     isPublic === pub
                       ? pub
                         ? {
-                          backgroundColor: "#E8F8EE",
-                          borderColor: "#34C759",
-                          color: "#1C7A3A",
-                        }
+                            backgroundColor: "#E8F8EE",
+                            borderColor: "#34C759",
+                            color: "#1C7A3A",
+                          }
                         : {
-                          backgroundColor: "#EEF0FF",
-                          borderColor: "#6366F1",
-                          color: "#4F46E5",
-                        }
+                            backgroundColor: "#EEF0FF",
+                            borderColor: "#6366F1",
+                            color: "#4F46E5",
+                          }
                       : {
-                        backgroundColor: "#F9F9FB",
-                        borderColor: "#E5E5EA",
-                        color: "#8E8E93",
-                      }
+                          backgroundColor: "#F9F9FB",
+                          borderColor: "#E5E5EA",
+                          color: "#8E8E93",
+                        }
                   }
                 >
                   {pub ? <Globe size={15} /> : <Lock size={15} />}
@@ -869,8 +871,8 @@ export default function GroupRoomsPage() {
         (m) =>
           m.user_id === user.id ||
           m.name === user.username ||
-          m.name === user.display_name
-      )
+          m.name === user.display_name,
+      ),
     );
     if (isJoined && lobby.id) {
       router.push(`/group-rooms/${lobby.id}`);
@@ -978,7 +980,7 @@ export default function GroupRoomsPage() {
               <motion.button
                 whileHover={{ scale: 1.06 }}
                 whileTap={{ scale: 0.93 }}
-                className="flex items-center gap-1.5 text-[#007AFF] text-[15px] font-semibold"
+                className="flex items-center gap-1.5 text-[#ff6b35] text-[15px] font-semibold"
               >
                 <ChevronLeft size={20} />
                 Discover
@@ -1039,7 +1041,7 @@ export default function GroupRoomsPage() {
               label: "Active Rooms",
               value: counts.All,
               icon: <Home size={20} />,
-              color: "#007AFF",
+              color: "#ff6b35",
             },
             {
               label: "Explorers Online",
@@ -1098,15 +1100,15 @@ export default function GroupRoomsPage() {
               style={
                 statusTab === tab
                   ? {
-                    backgroundColor: "#007AFF",
-                    color: "#fff",
-                    boxShadow: "0 4px 12px rgba(0,122,255,0.25)",
-                  }
+                      backgroundColor: "#ff6b35",
+                      color: "#fff",
+                      boxShadow: "0 4px 12px rgba(255,107,53,0.25)",
+                    }
                   : {
-                    backgroundColor: "#fff",
-                    color: "#3C3C43",
-                    border: "1px solid rgba(0,0,0,0.06)",
-                  }
+                      backgroundColor: "#fff",
+                      color: "#3C3C43",
+                      border: "1px solid rgba(0,0,0,0.06)",
+                    }
               }
             >
               {tab}
@@ -1115,9 +1117,9 @@ export default function GroupRoomsPage() {
                 style={
                   statusTab === tab
                     ? {
-                      backgroundColor: "rgba(255,255,255,0.25)",
-                      color: "#fff",
-                    }
+                        backgroundColor: "rgba(255,255,255,0.25)",
+                        color: "#fff",
+                      }
                     : { backgroundColor: "#F2F2F7", color: "#8E8E93" }
                 }
               >
@@ -1136,7 +1138,7 @@ export default function GroupRoomsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search rooms..."
-              className="pl-9 pr-4 py-2 rounded-full text-[14px] bg-white border border-[rgba(0,0,0,0.06)] outline-none focus:border-[#007AFF] focus:ring-2 focus:ring-blue-100 transition-all w-52"
+              className="pl-9 pr-4 py-2 rounded-full text-[14px] bg-white border border-[rgba(0,0,0,0.06)] outline-none focus:border-[#ff6b35] focus:ring-2 focus:ring-orange-100 transition-all w-52"
               style={{ color: "#1C1C1E" }}
             />
             {search && (
@@ -1162,15 +1164,15 @@ export default function GroupRoomsPage() {
               style={
                 activeCategory === cat
                   ? {
-                    backgroundColor: "#1C1C1E",
-                    borderColor: "#1C1C1E",
-                    color: "#fff",
-                  }
+                      backgroundColor: "#1C1C1E",
+                      borderColor: "#1C1C1E",
+                      color: "#fff",
+                    }
                   : {
-                    backgroundColor: "#fff",
-                    borderColor: "rgba(0,0,0,0.08)",
-                    color: "#3C3C43",
-                  }
+                      backgroundColor: "#fff",
+                      borderColor: "rgba(0,0,0,0.08)",
+                      color: "#3C3C43",
+                    }
               }
             >
               {CATEGORY_ICON[cat]}

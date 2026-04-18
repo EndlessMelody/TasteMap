@@ -64,9 +64,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!isMounted) return;
       if (session) {
         // Có session ở browser (từ cookie) -> Fetch user
-        const currentUser = await fetchUser();
-        // Không sync ở đây trên page reload vì nếu user chưa có thì là do api fetch lỗi. 
-        // Chỉ sync khi có sự kiện SIGNED_IN.
+        try {
+          await fetchUser();
+        } catch {
+          // Backend unreachable — not actionable here
+        }
       } else {
         setLoading(false);
       }
@@ -77,14 +79,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!isMounted) return;
       if (session) {
         if (event === 'SIGNED_IN') {
-           // Mới login xong (ví dụ từ Google OAuth redirect hoặc form login) -> cần sync JIT Provisioning
+           // Mới login xong -> cần sync JIT Provisioning
            syncAndFetch(session);
-        } else if (event === 'TOKEN_REFRESHED' || event === 'INITIAL_SESSION') {
+        } else if (event === 'TOKEN_REFRESHED') {
+           // Silently refetch — don't log errors if backend is down
            if (!user) {
              setLoading(true);
-             await fetchUser();
+             try { await fetchUser(); } catch { setLoading(false); }
            }
         }
+        // INITIAL_SESSION is handled by getSession() above — skip to avoid double-call
       } else {
         setUser(null);
         setLoading(false);

@@ -118,13 +118,15 @@ export function PostCard({
             <Avatar src={avatar} size="s" />
             <Column>
               <Text
-                style={{ color: "#1C1C1E", fontWeight: 700, fontSize: "0.75rem" }}
+                style={{
+                  color: "#1C1C1E",
+                  fontWeight: 700,
+                  fontSize: "0.75rem",
+                }}
               >
                 {name}
               </Text>
-              <Text
-                style={{ color: "#8E8E93", fontSize: "0.6rem" }}
-              >
+              <Text style={{ color: "#8E8E93", fontSize: "0.6rem" }}>
                 {time} • {location}
               </Text>
             </Column>
@@ -161,7 +163,15 @@ export function PostCard({
         </Column>
 
         {/* Bottom Half — Content */}
-        <Column style={{ paddingTop: "16px", paddingBottom: "16px", paddingLeft: "16px", paddingRight: "16px", gap: "12px" }}>
+        <Column
+          style={{
+            paddingTop: "16px",
+            paddingBottom: "16px",
+            paddingLeft: "16px",
+            paddingRight: "16px",
+            gap: "12px",
+          }}
+        >
           {/* Location */}
           <Row style={{ alignItems: "center", gap: "6px" }}>
             <MapPin size={14} color="#AEAEB2" />
@@ -200,7 +210,7 @@ export function PostCard({
               setIsExpanded(!isExpanded);
             }}
             style={{
-              color: "#007AFF",
+              color: "#ff6b35",
               fontSize: "0.75rem",
               fontWeight: 600,
               cursor: "pointer",
@@ -261,13 +271,21 @@ export function PostCard({
                   color={isLiked ? "#ED1B24" : "#8E8E93"}
                   fill={isLiked ? "#ED1B24" : "none"}
                 />
-                <Text variant="label-default-m" weight="strong" style={{ color: "var(--neutral-strong)" }}>
+                <Text
+                  variant="label-default-m"
+                  weight="strong"
+                  style={{ color: "var(--neutral-strong)" }}
+                >
                   {likes || 0}
                 </Text>
               </Row>
               <Row gap="8" vertical="center" style={{ cursor: "pointer" }}>
                 <MessageCircle size={20} color="#8E8E93" />
-                <Text variant="label-default-m" weight="strong" style={{ color: "var(--neutral-strong)" }}>
+                <Text
+                  variant="label-default-m"
+                  weight="strong"
+                  style={{ color: "var(--neutral-strong)" }}
+                >
                   {comments || 0}
                 </Text>
               </Row>
@@ -281,8 +299,8 @@ export function PostCard({
             >
               <Bookmark
                 size={20}
-                color={isSaved ? "#007AFF" : "#8E8E93"}
-                fill={isSaved ? "#007AFF" : "none"}
+                color={isSaved ? "#ff6b35" : "#8E8E93"}
+                fill={isSaved ? "#ff6b35" : "none"}
               />
             </Row>
           </Row>

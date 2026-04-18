@@ -22,7 +22,13 @@ export interface LobbyData {
 }
 
 // ═══════════ LOBBY CARD (iOS Style) ═══════════ //
-function IOSLobbyCard({ lobby, onClick }: { lobby: LobbyData; onClick: () => void }) {
+function IOSLobbyCard({
+  lobby,
+  onClick,
+}: {
+  lobby: LobbyData;
+  onClick: () => void;
+}) {
   const spotsLeft = lobby.spots - lobby.members.length;
 
   return (
@@ -36,12 +42,10 @@ function IOSLobbyCard({ lobby, onClick }: { lobby: LobbyData; onClick: () => voi
         transition: "box-shadow 0.3s",
       }}
       onMouseEnter={(e) =>
-        (e.currentTarget.style.boxShadow =
-          "0 12px 40px rgb(0 122 255 / 0.08)")
+        (e.currentTarget.style.boxShadow = "0 12px 40px rgb(0 122 255 / 0.08)")
       }
       onMouseLeave={(e) =>
-        (e.currentTarget.style.boxShadow =
-          "0 8px 30px rgb(0 0 0 / 0.04)")
+        (e.currentTarget.style.boxShadow = "0 8px 30px rgb(0 0 0 / 0.04)")
       }
     >
       {/* Top Bar — Live Status */}
@@ -90,7 +94,7 @@ function IOSLobbyCard({ lobby, onClick }: { lobby: LobbyData; onClick: () => voi
         </div>
 
         {/* Join Button */}
-        <button className="bg-[#EAF2FF] hover:bg-[#D6E6FF] text-[#007AFF] text-[14px] font-semibold py-2 px-4 rounded-full transition-colors">
+        <button className="bg-[#FFF0E6] hover:bg-[#FFE0CC] text-[#ff6b35] text-[14px] font-semibold py-2 px-4 rounded-full transition-colors">
           Join
         </button>
       </div>
@@ -126,8 +130,8 @@ function IOSLobbyModal({
         className="bg-white rounded-[32px] w-full max-w-md overflow-hidden"
         style={{ boxShadow: "0 20px 50px rgb(0 0 0 / 0.1)" }}
       >
-        {/* Header — Pastel Blue */}
-        <div className="bg-[#EAF2FF] p-6 relative">
+        {/* Header — Pastel Orange */}
+        <div className="bg-[#FFF0E6] p-6 relative">
           {/* Close Button */}
           <button
             onClick={onClose}
@@ -151,8 +155,9 @@ function IOSLobbyModal({
           <h2 className="text-[24px] font-bold tracking-tight text-[#1C1C1E] leading-snug">
             {lobby.name}
           </h2>
-          <p className="text-[#007AFF] font-medium text-[15px] mt-1">
-            {lobby.spots} Spots Total • {spotsLeft > 0 ? `${spotsLeft} Left` : "Full"}
+          <p className="text-[#ff6b35] font-medium text-[15px] mt-1">
+            {lobby.spots} Spots Total •{" "}
+            {spotsLeft > 0 ? `${spotsLeft} Left` : "Full"}
           </p>
 
           {/* Meta */}
@@ -174,10 +179,7 @@ function IOSLobbyModal({
 
           <div className="space-y-3">
             {lobby.members.map((member, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between"
-              >
+              <div key={i} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <img
                     src={member.avatar}
@@ -195,7 +197,7 @@ function IOSLobbyModal({
                 </div>
                 <div className="flex items-center gap-2">
                   {i === 0 && (
-                    <span className="text-[12px] bg-[#EAF2FF] text-[#007AFF] px-2.5 py-1 rounded-md font-semibold flex items-center gap-1">
+                    <span className="text-[12px] bg-[#FFF0E6] text-[#ff6b35] px-2.5 py-1 rounded-md font-semibold flex items-center gap-1">
                       <Crown size={11} /> Creator
                     </span>
                   )}
@@ -212,10 +214,12 @@ function IOSLobbyModal({
                 key={`empty-${i}`}
                 className="flex items-center gap-3 opacity-40"
               >
-                <div className="w-10 h-10 rounded-full border-2 border-dashed border-[#D6E6FF] bg-[#EAF2FF] flex items-center justify-center">
-                  <Plus size={14} className="text-[#007AFF]" />
+                <div className="w-10 h-10 rounded-full border-2 border-dashed border-[#FFE0CC] bg-[#FFF0E6] flex items-center justify-center">
+                  <Plus size={14} className="text-[#ff6b35]" />
                 </div>
-                <p className="text-[14px] text-[#8E8E93]">Waiting for explorer...</p>
+                <p className="text-[14px] text-[#8E8E93]">
+                  Waiting for explorer...
+                </p>
               </div>
             ))}
           </div>
@@ -227,8 +231,8 @@ function IOSLobbyModal({
             onClick={() => {
               onClose();
             }}
-            className="w-full bg-[#007AFF] hover:bg-[#0062CC] text-white text-[17px] font-semibold py-4 rounded-[16px] transition-transform active:scale-[0.98] cursor-pointer"
-            style={{ boxShadow: "0 4px 14px rgb(0 122 255 / 0.3)" }}
+            className="w-full bg-[#ff6b35] hover:bg-[#e65721] text-white text-[17px] font-semibold py-4 rounded-[16px] transition-transform active:scale-[0.98] cursor-pointer"
+            style={{ boxShadow: "0 4px 14px rgb(255 107 53 / 0.3)" }}
           >
             Confirm & Join Lobby
           </button>
@@ -259,8 +263,8 @@ export default function IOSLobbiesSection({
         {/* Section Header */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[12px] bg-[#EAF2FF] flex items-center justify-center">
-              <Users size={18} className="text-[#007AFF]" />
+            <div className="w-9 h-9 rounded-[12px] bg-[#FFF0E6] flex items-center justify-center">
+              <Users size={18} className="text-[#ff6b35]" />
             </div>
             <div>
               <h2 className="text-[20px] font-bold tracking-tight text-[#1C1C1E]">
@@ -271,7 +275,7 @@ export default function IOSLobbiesSection({
               </p>
             </div>
           </div>
-          <span className="text-[13px] font-semibold text-[#007AFF] bg-[#EAF2FF] px-3 py-1.5 rounded-full">
+          <span className="text-[13px] font-semibold text-[#ff6b35] bg-[#FFF0E6] px-3 py-1.5 rounded-full">
             {lobbies.length} Active
           </span>
         </div>

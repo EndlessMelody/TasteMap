@@ -44,9 +44,9 @@ function TopProgressBar() {
         style={{
           height: "100%",
           background:
-            "linear-gradient(90deg, #007AFF 0%, #AF52DE 60%, #FF6B6B 100%)",
+            "linear-gradient(90deg, #ff6b35 0%, #AF52DE 60%, #FF6B6B 100%)",
           borderRadius: "0 3px 3px 0",
-          boxShadow: "0 0 10px rgba(0,122,255,0.45)",
+          boxShadow: "0 0 10px rgba(255,107,53,0.45)",
         }}
       />
     </div>

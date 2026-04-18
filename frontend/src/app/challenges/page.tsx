@@ -37,7 +37,7 @@ import {
   ChallengeResponse,
   LeaderboardEntry,
   UserGamificationInfo,
-  StreakInfo
+  StreakInfo,
 } from "@/types/gamification";
 
 // ─── Config & Mappings ───────────────────────────────────────────────────────
@@ -84,7 +84,7 @@ type LeaderboardPeriod = "weekly" | "monthly" | "alltime";
 function ChallengeCard({
   c,
   index,
-  onAction
+  onAction,
 }: {
   c: ChallengeResponse;
   index: number;
@@ -96,7 +96,7 @@ function ChallengeCard({
   const isUpcoming = c.status === "upcoming" || c.status === "requires_opt_in";
 
   const icon = ICON_MAP[c.challenge.icon] || <Trophy size={20} />;
-  const accentColor = c.challenge.accent_color || "#007AFF";
+  const accentColor = c.challenge.accent_color || "#ff6b35";
 
   return (
     <motion.div
@@ -111,9 +111,10 @@ function ChallengeCard({
       className="bg-white rounded-[22px] p-5 flex flex-col gap-4"
       style={{
         border: "1px solid rgba(0,0,0,0.05)",
-        boxShadow: (isCompleted || isClaimed)
-          ? `0 4px 20px ${accentColor}22`
-          : "0 4px 16px rgba(0,0,0,0.04)",
+        boxShadow:
+          isCompleted || isClaimed
+            ? `0 4px 20px ${accentColor}22`
+            : "0 4px 16px rgba(0,0,0,0.04)",
         opacity: isUpcoming ? 0.72 : 1,
       }}
     >
@@ -131,11 +132,17 @@ function ChallengeCard({
                 {c.challenge.title}
               </h3>
               {isClaimed && (
-                <CheckCircle size={15} className="text-[#34C759]" fill="white" />
+                <CheckCircle
+                  size={15}
+                  className="text-[#34C759]"
+                  fill="white"
+                />
               )}
               {isUpcoming && <Lock size={13} className="text-[#8E8E93]" />}
             </div>
-            <p className="text-[13px] text-[#8E8E93] mt-1.5 leading-relaxed">{c.challenge.description}</p>
+            <p className="text-[13px] text-[#8E8E93] mt-1.5 leading-relaxed">
+              {c.challenge.description}
+            </p>
           </div>
         </div>
         <div
@@ -151,12 +158,21 @@ function ChallengeCard({
         <div className="mt-1">
           <div className="flex justify-between text-[12px] mb-2 font-medium">
             <span className="text-[#8E8E93]">
-              Progress: <span className="text-[#1C1C1E]">{c.progress} / {c.target}</span>
+              Progress:{" "}
+              <span className="text-[#1C1C1E]">
+                {c.progress} / {c.target}
+              </span>
             </span>
             <span
-              style={{ color: (isCompleted || isClaimed) ? "#34C759" : accentColor }}
+              style={{
+                color: isCompleted || isClaimed ? "#34C759" : accentColor,
+              }}
             >
-              {isClaimed ? "Claimed" : isCompleted ? "Reward Ready!" : `${Math.round(c.percentage)}%`}
+              {isClaimed
+                ? "Claimed"
+                : isCompleted
+                  ? "Reward Ready!"
+                  : `${Math.round(c.percentage)}%`}
             </span>
           </div>
           <div className="h-2.5 bg-[#F2F2F7] rounded-full overflow-hidden">
@@ -170,9 +186,10 @@ function ChallengeCard({
               }}
               className="h-full rounded-full"
               style={{
-                background: (isCompleted || isClaimed)
-                  ? "linear-gradient(90deg, #34C759, #30D158)"
-                  : `linear-gradient(90deg, ${accentColor}, ${accentColor}cc)`,
+                background:
+                  isCompleted || isClaimed
+                    ? "linear-gradient(90deg, #34C759, #30D158)"
+                    : `linear-gradient(90deg, ${accentColor}, ${accentColor}cc)`,
               }}
             />
           </div>
@@ -296,10 +313,13 @@ function LeaderboardRow({
 
       <div className="relative flex-shrink-0">
         <img
-          src={entry.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(entry.display_name)}&background=random`}
+          src={
+            entry.avatar_url ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(entry.display_name)}&background=random`
+          }
           alt={entry.display_name}
           className="w-10 h-10 rounded-full object-cover border-2 shadow-sm"
-          style={{ borderColor: entry.is_current_user ? "#007AFF" : "#E5E5EA" }}
+          style={{ borderColor: entry.is_current_user ? "#ff6b35" : "#E5E5EA" }}
         />
         {entry.featured_badge && (
           <span
@@ -317,7 +337,7 @@ function LeaderboardRow({
             {entry.display_name}
           </span>
           {entry.is_current_user && (
-            <span className="text-[10px] font-bold text-[#007AFF] bg-[#EAF2FF] px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold text-[#ff6b35] bg-[#FFF0E6] px-2 py-0.5 rounded-full">
               YOU
             </span>
           )}
@@ -339,7 +359,7 @@ function LeaderboardRow({
               background: isTop3
                 ? "linear-gradient(90deg, #FBBF24, #F59E0B)"
                 : entry.is_current_user
-                  ? "linear-gradient(90deg, #007AFF, #0057D9)"
+                  ? "linear-gradient(90deg, #ff6b35, #ff8c5f)"
                   : "linear-gradient(90deg, #D1D1D6, #A8A8AD)",
             }}
           />
@@ -350,7 +370,9 @@ function LeaderboardRow({
         <p className="text-[14px] font-extrabold text-[#1C1C1E] tabular-nums">
           {entry.xp.toLocaleString()}
         </p>
-        <p className="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider">XP</p>
+        <p className="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider">
+          XP
+        </p>
       </div>
     </motion.div>
   );
@@ -368,18 +390,32 @@ function BadgeCard() {
       </div>
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: "Spice Master", icon: <Flame size={16} />, color: "#E63946" },
+          {
+            label: "Spice Master",
+            icon: <Flame size={16} />,
+            color: "#E63946",
+          },
           { label: "Night Owl", icon: <Moon size={16} />, color: "#7B2FF7" },
           { label: "Photo Pro", icon: <Camera size={16} />, color: "#2A9D8F" },
-          { label: "Top Reviewer", icon: <Crown size={16} />, color: "#FBBF24" },
+          {
+            label: "Top Reviewer",
+            icon: <Crown size={16} />,
+            color: "#FBBF24",
+          },
         ].map((b) => (
           <div
             key={b.label}
             className="flex items-center gap-2.5 px-3 py-2.5 rounded-[18px] transition-all hover:scale-[1.02]"
-            style={{ backgroundColor: `${b.color}12`, border: `1px solid ${b.color}22` }}
+            style={{
+              backgroundColor: `${b.color}12`,
+              border: `1px solid ${b.color}22`,
+            }}
           >
             <span style={{ color: b.color }}>{b.icon}</span>
-            <span className="text-[11px] font-bold leading-tight" style={{ color: b.color }}>
+            <span
+              className="text-[11px] font-bold leading-tight"
+              style={{ color: b.color }}
+            >
               {b.label}
             </span>
           </div>
@@ -393,7 +429,13 @@ function BadgeCard() {
   );
 }
 
-function CompactLevelCard({ user, stats }: { user: any; stats: UserGamificationInfo | null }) {
+function CompactLevelCard({
+  user,
+  stats,
+}: {
+  user: any;
+  stats: UserGamificationInfo | null;
+}) {
   const pct = stats ? (stats.xp / stats.next_level_xp) * 100 : 0;
   return (
     <div
@@ -402,8 +444,10 @@ function CompactLevelCard({ user, stats }: { user: any; stats: UserGamificationI
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Zap size={18} className="text-[#007AFF]" fill="#007AFF" />
-          <h3 className="text-[17px] font-black text-[#1C1C1E]">Level {user?.level || 1}</h3>
+          <Zap size={18} className="text-[#ff6b35]" fill="#ff6b35" />
+          <h3 className="text-[17px] font-black text-[#1C1C1E]">
+            Level {user?.level || 1}
+          </h3>
         </div>
         <span className="text-[13px] font-bold text-[#8E8E93] tabular-nums">
           {stats?.xp || 0} / {stats?.next_level_xp || 1000} XP
@@ -414,11 +458,12 @@ function CompactLevelCard({ user, stats }: { user: any; stats: UserGamificationI
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           className="h-full rounded-full"
-          style={{ background: "linear-gradient(90deg, #007AFF, #0057D9)" }}
+          style={{ background: "linear-gradient(90deg, #ff6b35, #ff8c5f)" }}
         />
       </div>
       <p className="text-[12px] text-[#8E8E93] font-medium">
-        {stats ? stats.next_level_xp - stats.xp : 1000} XP to Level {(user?.level || 1) + 1} ·{" "}
+        {stats ? stats.next_level_xp - stats.xp : 1000} XP to Level{" "}
+        {(user?.level || 1) + 1} ·{" "}
         <span className="font-extrabold text-[#1C1C1E]">Teenage Syndrome</span>
       </p>
     </div>
@@ -430,7 +475,8 @@ function CompactLevelCard({ user, stats }: { user: any; stats: UserGamificationI
 export default function ChallengesPage() {
   const { user, refreshUser } = useAuth();
   const [activeTab, setActiveTab] = useState<CatTab>("All");
-  const [leaderboardPeriod, setLeaderboardPeriod] = useState<LeaderboardPeriod>("monthly");
+  const [leaderboardPeriod, setLeaderboardPeriod] =
+    useState<LeaderboardPeriod>("monthly");
 
   const [challenges, setChallenges] = useState<ChallengeResponse[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -441,10 +487,18 @@ export default function ChallengesPage() {
   const fetchData = useCallback(async () => {
     try {
       const [chRes, lbRes, statsRes, streakRes] = await Promise.all([
-        apiGet<{ success: boolean; data: ChallengeResponse[] }>("/api/v1/challenges/me"),
-        apiGet<{ success: boolean; data: LeaderboardEntry[] }>(`/api/v1/challenges/leaderboard?period=${leaderboardPeriod}`),
-        apiGet<{ success: boolean; data: UserGamificationInfo }>("/api/v1/challenges/xp/me"),
-        apiGet<{ success: boolean; data: StreakInfo }>("/api/v1/challenges/streaks/me")
+        apiGet<{ success: boolean; data: ChallengeResponse[] }>(
+          "/api/v1/challenges/me",
+        ),
+        apiGet<{ success: boolean; data: LeaderboardEntry[] }>(
+          `/api/v1/challenges/leaderboard?period=${leaderboardPeriod}`,
+        ),
+        apiGet<{ success: boolean; data: UserGamificationInfo }>(
+          "/api/v1/challenges/xp/me",
+        ),
+        apiGet<{ success: boolean; data: StreakInfo }>(
+          "/api/v1/challenges/streaks/me",
+        ),
       ]);
 
       if (chRes.success) setChallenges(chRes.data);
@@ -466,13 +520,19 @@ export default function ChallengesPage() {
   const handleAction = async (action: "join" | "claim", id: string) => {
     try {
       if (action === "join") {
-        const res = await apiPost<{ success: boolean }>(`/api/v1/challenges/${id}/join`, {});
+        const res = await apiPost<{ success: boolean }>(
+          `/api/v1/challenges/${id}/join`,
+          {},
+        );
         if (res.success) {
           toast.success("Joined challenge!");
           fetchData();
         }
       } else {
-        const res = await apiPost<{ success: boolean; data: { xp_awarded: number; new_level: number } }>(`/api/v1/challenges/${id}/claim`, {});
+        const res = await apiPost<{
+          success: boolean;
+          data: { xp_awarded: number; new_level: number };
+        }>(`/api/v1/challenges/${id}/claim`, {});
         if (res.success) {
           toast.success(`Claimed reward! +${res.data.xp_awarded} XP`);
           refreshUser(); // Global sync
@@ -489,28 +549,36 @@ export default function ChallengesPage() {
     if (activeTab === "Active") return c.status === "active";
     if (activeTab === "Completed") return c.status === "completed";
     if (activeTab === "Claimed") return c.status === "claimed";
-    if (activeTab === "Upcoming") return c.status === "upcoming" || c.status === "requires_opt_in";
+    if (activeTab === "Upcoming")
+      return c.status === "upcoming" || c.status === "requires_opt_in";
     return true;
   });
 
   const activeCount = challenges.filter((c) => c.status === "active").length;
-  const completedCount = challenges.filter((c) => c.status === "completed" || c.status === "claimed").length;
+  const completedCount = challenges.filter(
+    (c) => c.status === "completed" || c.status === "claimed",
+  ).length;
 
-  const maxXp = leaderboard.length > 0 ? Math.max(...leaderboard.map((e) => e.xp)) : 0;
+  const maxXp =
+    leaderboard.length > 0 ? Math.max(...leaderboard.map((e) => e.xp)) : 0;
 
   const tabCounts: Record<CatTab, number> = {
     All: challenges.length,
     Active: activeCount,
     Completed: challenges.filter((c) => c.status === "completed").length,
     Claimed: challenges.filter((c) => c.status === "claimed").length,
-    Upcoming: challenges.filter((c) => c.status === "upcoming" || c.status === "requires_opt_in").length,
+    Upcoming: challenges.filter(
+      (c) => c.status === "upcoming" || c.status === "requires_opt_in",
+    ).length,
   };
 
   if (isLoading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-20 gap-4 bg-[#F2F2F7]">
-        <Loader2 className="animate-spin text-[#007AFF]" size={40} />
-        <p className="text-[17px] font-bold text-[#1C1C1E]">Synchronizing TasteVault...</p>
+        <Loader2 className="animate-spin text-[#ff6b35]" size={40} />
+        <p className="text-[17px] font-bold text-[#1C1C1E]">
+          Synchronizing TasteVault...
+        </p>
       </div>
     );
   }
@@ -526,7 +594,8 @@ export default function ChallengesPage() {
         backgroundColor: "#F2F2F7",
         overflowY: "auto",
         overflowX: "hidden",
-        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
       }}
     >
       {/* ── HERO HEADER ── */}
@@ -580,7 +649,8 @@ export default function ChallengesPage() {
                 </h1>
               </div>
               <p className="text-[15px] text-[rgba(255,255,255,0.6)] font-medium max-w-md">
-                Refine your palate and climb the ranks. Every adventure brings you closer to becoming an Elite Foodie.
+                Refine your palate and climb the ranks. Every adventure brings
+                you closer to becoming an Elite Foodie.
               </p>
             </div>
 
@@ -588,7 +658,11 @@ export default function ChallengesPage() {
             <div className="flex items-center gap-4">
               <motion.div
                 animate={{ scale: [1, 1.04, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="flex items-center gap-3 px-5 py-3 rounded-[20px] shadow-lg"
                 style={{
                   background: "rgba(237,107,53,0.15)",
@@ -607,22 +681,30 @@ export default function ChallengesPage() {
                 </div>
               </motion.div>
 
-              <div className="flex items-center gap-3 px-5 py-3 rounded-[20px] shadow-lg"
+              <div
+                className="flex items-center gap-3 px-5 py-3 rounded-[20px] shadow-lg"
                 style={{
                   background: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.1)",
                   backdropFilter: "blur(12px)",
                 }}
               >
-                <div className="w-10 h-10 rounded-full border-4 border-[#007AFF] flex items-center justify-center bg-black/20">
-                  <span className="text-white font-black text-xs">{user?.level || 1}</span>
+                <div className="w-10 h-10 rounded-full border-4 border-[#ff6b35] flex items-center justify-center bg-black/20">
+                  <span className="text-white font-black text-xs">
+                    {user?.level || 1}
+                  </span>
                 </div>
                 <div>
                   <p className="text-[20px] font-black text-white leading-none">
                     LEVEL
                   </p>
                   <div className="mt-1.5 w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full bg-[#007AFF] rounded-full" style={{ width: `${(userStats?.xp || 0) / (userStats?.next_level_xp || 1000) * 100}%` }} />
+                    <div
+                      className="h-full bg-[#ff6b35] rounded-full"
+                      style={{
+                        width: `${((userStats?.xp || 0) / (userStats?.next_level_xp || 1000)) * 100}%`,
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -641,7 +723,7 @@ export default function ChallengesPage() {
                 label: "Active Missions",
                 value: activeCount,
                 icon: <Zap size={16} />,
-                color: "#007AFF",
+                color: "#ff6b35",
               },
               {
                 label: "Completed",
@@ -665,12 +747,17 @@ export default function ChallengesPage() {
                 style={{
                   background: "rgba(255,255,255,0.06)",
                   border: "1px solid rgba(255,255,255,0.08)",
-                  minHeight: "100px"
+                  minHeight: "100px",
                 }}
               >
-                <div className="flex items-center gap-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+                <div
+                  className="flex items-center gap-2"
+                  style={{ color: "rgba(255,255,255,0.4)" }}
+                >
                   {s.icon}
-                  <span className="text-[11px] font-bold uppercase tracking-widest">{s.label}</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest">
+                    {s.label}
+                  </span>
                 </div>
                 <p className="text-[26px] font-black text-white leading-none mt-2">
                   {s.value}
@@ -693,14 +780,14 @@ export default function ChallengesPage() {
                   style={
                     activeTab === tab
                       ? {
-                        backgroundColor: "#1C1C1E",
-                        color: "#fff",
-                        boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
-                      }
+                          backgroundColor: "#1C1C1E",
+                          color: "#fff",
+                          boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+                        }
                       : {
-                        backgroundColor: "transparent",
-                        color: "#8E8E93",
-                      }
+                          backgroundColor: "transparent",
+                          color: "#8E8E93",
+                        }
                   }
                 >
                   {tab}
@@ -708,7 +795,10 @@ export default function ChallengesPage() {
                     className="text-[11px] font-black px-2 py-0.5 rounded-lg"
                     style={
                       activeTab === tab
-                        ? { backgroundColor: "rgba(255,255,255,0.2)", color: "#fff" }
+                        ? {
+                            backgroundColor: "rgba(255,255,255,0.2)",
+                            color: "#fff",
+                          }
                         : { backgroundColor: "#E5E5EB", color: "#8E8E93" }
                     }
                   >
@@ -728,15 +818,24 @@ export default function ChallengesPage() {
               className="grid grid-cols-1 gap-5"
             >
               {filtered.map((c, i) => (
-                <ChallengeCard key={c.id} c={c} index={i} onAction={handleAction} />
+                <ChallengeCard
+                  key={c.id}
+                  c={c}
+                  index={i}
+                  onAction={handleAction}
+                />
               ))}
               {filtered.length === 0 && (
                 <div className="col-span-full flex flex-col items-center justify-center py-24 text-center bg-white rounded-[32px] border border-dashed border-gray-300">
                   <div className="w-20 h-20 rounded-full flex items-center justify-center mb-5 bg-gray-100 text-gray-400">
                     <SearchX size={36} />
                   </div>
-                  <h3 className="text-[20px] font-black text-[#1C1C1E]">No adventures here</h3>
-                  <p className="text-[15px] text-[#8E8E93] mt-2">Check back later for new limited-time challenges!</p>
+                  <h3 className="text-[20px] font-black text-[#1C1C1E]">
+                    No adventures here
+                  </h3>
+                  <p className="text-[15px] text-[#8E8E93] mt-2">
+                    Check back later for new limited-time challenges!
+                  </p>
                 </div>
               )}
             </motion.div>
@@ -754,34 +853,50 @@ export default function ChallengesPage() {
                   <div className="w-9 h-9 rounded-xl bg-[#FBBF24]/10 flex items-center justify-center">
                     <Award size={20} className="text-[#FBBF24]" />
                   </div>
-                  <h3 className="text-[18px] font-black text-[#1C1C1E] tracking-tight">Leaderboard</h3>
+                  <h3 className="text-[18px] font-black text-[#1C1C1E] tracking-tight">
+                    Leaderboard
+                  </h3>
                 </div>
               </div>
 
               {/* Period Switcher */}
               <div className="flex p-1 bg-[#F2F2F7] rounded-xl">
-                {(["weekly", "monthly", "alltime"] as LeaderboardPeriod[]).map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setLeaderboardPeriod(p)}
-                    className="flex-1 py-2 text-[11px] font-black uppercase tracking-widest rounded-lg transition-all"
-                    style={leaderboardPeriod === p
-                      ? { backgroundColor: "white", color: "#1C1C1E", boxShadow: "0 2px 6px rgba(0,0,0,0.06)" }
-                      : { color: "#8E8E93" }
-                    }
-                  >
-                    {p.replace('_', ' ')}
-                  </button>
-                ))}
+                {(["weekly", "monthly", "alltime"] as LeaderboardPeriod[]).map(
+                  (p) => (
+                    <button
+                      key={p}
+                      onClick={() => setLeaderboardPeriod(p)}
+                      className="flex-1 py-2 text-[11px] font-black uppercase tracking-widest rounded-lg transition-all"
+                      style={
+                        leaderboardPeriod === p
+                          ? {
+                              backgroundColor: "white",
+                              color: "#1C1C1E",
+                              boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
+                            }
+                          : { color: "#8E8E93" }
+                      }
+                    >
+                      {p.replace("_", " ")}
+                    </button>
+                  ),
+                )}
               </div>
             </div>
 
             <div className="flex flex-col gap-2 -mx-2">
               {leaderboard.map((entry, i) => (
-                <LeaderboardRow key={entry.user_id} entry={entry} maxXp={maxXp} index={i} />
+                <LeaderboardRow
+                  key={entry.user_id}
+                  entry={entry}
+                  maxXp={maxXp}
+                  index={i}
+                />
               ))}
               {leaderboard.length === 0 && (
-                <p className="text-center py-10 text-[13px] text-[#8E8E93] font-medium">Rankings will appear shortly...</p>
+                <p className="text-center py-10 text-[13px] text-[#8E8E93] font-medium">
+                  Rankings will appear shortly...
+                </p>
               )}
             </div>
 
@@ -792,35 +907,50 @@ export default function ChallengesPage() {
 
           <BadgeCard />
 
-
           <CompactLevelCard user={user} stats={userStats} />
 
           {/* Daily Streak Card */}
-          <div className="bg-white rounded-[32px] p-6 flex flex-col gap-4" style={{ border: "1px solid rgba(0,0,0,0.04)" }}>
+          <div
+            className="bg-white rounded-[32px] p-6 flex flex-col gap-4"
+            style={{ border: "1px solid rgba(0,0,0,0.04)" }}
+          >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-[#FF6B35]/10 flex items-center justify-center">
                 <Star size={20} className="text-[#FF6B35]" />
               </div>
-              <h4 className="text-[16px] font-black text-[#1C1C1E]">Daily Streak</h4>
+              <h4 className="text-[16px] font-black text-[#1C1C1E]">
+                Daily Streak
+              </h4>
             </div>
             <p className="text-[13px] text-[#8E8E93] leading-relaxed">
-              Check in every day to keep your streak alive and earn more XP bonus! Currently at <span className="text-[#FF6B35] font-bold">{streakInfo?.current_streak} days</span>.
+              Check in every day to keep your streak alive and earn more XP
+              bonus! Currently at{" "}
+              <span className="text-[#FF6B35] font-bold">
+                {streakInfo?.current_streak} days
+              </span>
+              .
             </p>
             <button
               onClick={async () => {
-                const res = await apiPost<{ success: boolean; data: any }>("/api/v1/challenges/streaks/checkin", {});
+                const res = await apiPost<{ success: boolean; data: any }>(
+                  "/api/v1/challenges/streaks/checkin",
+                  {},
+                );
                 if (res.success) {
                   toast.success("Checked in for today!");
                   fetchData();
                 }
               }}
               disabled={streakInfo?.is_active_today}
-              className={`w-full py-4 rounded-2xl text-[14px] font-black transition-all ${streakInfo?.is_active_today
-                ? "bg-[#F2F2F7] text-[#8E8E93] cursor-default"
-                : "bg-[#FF6B35] text-white shadow-lg shadow-[#FF6B35]/20 hover:scale-[1.02]"
-                }`}
+              className={`w-full py-4 rounded-2xl text-[14px] font-black transition-all ${
+                streakInfo?.is_active_today
+                  ? "bg-[#F2F2F7] text-[#8E8E93] cursor-default"
+                  : "bg-[#FF6B35] text-white shadow-lg shadow-[#FF6B35]/20 hover:scale-[1.02]"
+              }`}
             >
-              {streakInfo?.is_active_today ? "Already Checked In" : "Daily Check-in"}
+              {streakInfo?.is_active_today
+                ? "Already Checked In"
+                : "Daily Check-in"}
             </button>
           </div>
         </div>

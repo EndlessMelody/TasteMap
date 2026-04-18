@@ -204,7 +204,7 @@ const THINKING_MSGS = [
 
 // ─── Mood ambience ──────────────────────────────────────────────────────────
 const MOOD_AMBIENCE: Record<string, { from: string; accent: string }> = {
-  casual: { from: "rgba(0,122,255,0.07)", accent: "#007AFF" },
+  casual: { from: "rgba(255,107,53,0.07)", accent: "#ff6b35" },
   adventurous: { from: "rgba(255,107,53,0.09)", accent: "#FF6B35" },
   romantic: { from: "rgba(255,45,120,0.07)", accent: "#FF2D78" },
   family: { from: "rgba(52,199,89,0.07)", accent: "#34C759" },
@@ -399,7 +399,7 @@ function RouteMap({
         <path
           d={pathD}
           fill="none"
-          stroke="#007AFF"
+          stroke="#ff6b35"
           strokeWidth="2.5"
           strokeDasharray="6 3"
           opacity="0.55"
@@ -493,11 +493,11 @@ function StepPreferences({
               className="flex items-center gap-3 p-4 rounded-[18px] text-left border-2 transition-all"
               style={
                 mood === m.id
-                  ? { backgroundColor: "#EAF2FF", borderColor: "#007AFF" }
+                  ? { backgroundColor: "#FFF0E6", borderColor: "#ff6b35" }
                   : { backgroundColor: "#F9F9FB", borderColor: "transparent" }
               }
             >
-              <span style={{ color: mood === m.id ? "#007AFF" : "#636366" }}>
+              <span style={{ color: mood === m.id ? "#ff6b35" : "#636366" }}>
                 {m.icon}
               </span>
               <div>
@@ -507,7 +507,7 @@ function StepPreferences({
                 <p className="text-[12px] text-[#8E8E93]">{m.desc}</p>
               </div>
               {mood === m.id && (
-                <CheckCircle size={16} className="text-[#007AFF] ml-auto" />
+                <CheckCircle size={16} className="text-[#ff6b35] ml-auto" />
               )}
             </motion.button>
           ))}
@@ -562,13 +562,13 @@ function StepPreferences({
               className="flex flex-col items-center gap-1.5 p-3.5 rounded-[16px] border-2 transition-all"
               style={
                 group === g.id
-                  ? { backgroundColor: "#EAF2FF", borderColor: "#007AFF" }
+                  ? { backgroundColor: "#FFF0E6", borderColor: "#ff6b35" }
                   : { backgroundColor: "#F9F9FB", borderColor: "transparent" }
               }
             >
               <span
                 style={{
-                  color: group === g.id ? "#007AFF" : "#636366",
+                  color: group === g.id ? "#ff6b35" : "#636366",
                 }}
               >
                 {g.icon}
@@ -610,7 +610,7 @@ function StepSettings({
       {/* Duration */}
       <div>
         <h3 className="text-[15px] font-bold text-[#1C1C1E] mb-3 flex items-center gap-2">
-          <Clock size={16} className="text-[#007AFF]" /> How long?
+          <Clock size={16} className="text-[#ff6b35]" /> How long?
         </h3>
         <div className="grid grid-cols-4 gap-2">
           {DURATIONS.map((d) => (
@@ -691,7 +691,7 @@ function StepSettings({
               border: "1.5px solid #E5E5EA",
               color: "#1C1C1E",
             }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = "#007AFF")}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "#ff6b35")}
             onBlur={(e) => (e.currentTarget.style.borderColor = "#E5E5EA")}
           />
         </div>
@@ -747,12 +747,12 @@ function StepGenerating({ onDone }: { onDone: () => void }) {
           className="w-24 h-24 rounded-full"
           style={{
             background:
-              "conic-gradient(from 0deg, #007AFF, #A855F7, #FF6B35, #34C759, #007AFF)",
+              "conic-gradient(from 0deg, #ff6b35, #A855F7, #FF6B35, #34C759, #ff6b35)",
             padding: "3px",
           }}
         >
           <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-            <Sparkles size={32} className="text-[#007AFF]" />
+            <Sparkles size={32} className="text-[#ff6b35]" />
           </div>
         </motion.div>
         {[0, 1, 2].map((i) => (
@@ -801,7 +801,7 @@ function StepGenerating({ onDone }: { onDone: () => void }) {
                   : "6px",
               backgroundColor:
                 i <= Math.min(msgIdx, THINKING_MSGS.length - 1)
-                  ? "#007AFF"
+                  ? "#ff6b35"
                   : "#D1D1D6",
             }}
             transition={{ duration: 0.3 }}
@@ -912,7 +912,7 @@ function StopCard({
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               >
-                <RefreshCw size={22} color="#007AFF" />
+                <RefreshCw size={22} color="#ff6b35" />
               </motion.div>
               <p style={{ fontSize: 12, color: "#8E8E93", fontWeight: 600 }}>
                 Finding a better match...
@@ -1073,9 +1073,9 @@ function StopCard({
                             gap: 5,
                             padding: "5px 12px",
                             borderRadius: 20,
-                            border: "1.5px solid #007AFF",
-                            backgroundColor: "rgba(0,122,255,0.06)",
-                            color: "#007AFF",
+                            border: "1.5px solid #ff6b35",
+                            backgroundColor: "rgba(255,107,53,0.06)",
+                            color: "#ff6b35",
                             fontSize: 12,
                             fontWeight: 700,
                             cursor: "pointer",
@@ -1133,11 +1133,11 @@ function StopCard({
                             marginBottom: 4,
                           }}
                         >
-                          <Brain size={11} color="#007AFF" />
+                          <Brain size={11} color="#ff6b35" />
                           <span
                             style={{
                               fontSize: 10,
-                              color: "#007AFF",
+                              color: "#ff6b35",
                               fontWeight: 700,
                             }}
                           >
@@ -1345,7 +1345,7 @@ function StepResult({
               {
                 label: "Total Stops",
                 value: `${stops.length} places`,
-                color: "#007AFF",
+                color: "#ff6b35",
               },
               { label: "Est. Duration", value: "~4.5 hours", color: "#FF9500" },
               { label: "Budget", value: "305,000đ", color: "#34C759" },
@@ -1517,7 +1517,7 @@ export default function AIPlanner() {
               <motion.button
                 whileTap={{ scale: 0.93 }}
                 onClick={() => setStep((s) => s - 1)}
-                className="flex items-center gap-1 text-[#007AFF] text-[15px] font-semibold"
+                className="flex items-center gap-1 text-[#ff6b35] text-[15px] font-semibold"
               >
                 <ChevronLeft size={18} /> Back
               </motion.button>
@@ -1526,7 +1526,7 @@ export default function AIPlanner() {
               <Link href="/discover">
                 <motion.button
                   whileTap={{ scale: 0.93 }}
-                  className="flex items-center gap-1 text-[#007AFF] text-[15px] font-semibold"
+                  className="flex items-center gap-1 text-[#ff6b35] text-[15px] font-semibold"
                 >
                   <ChevronLeft size={18} /> Discover
                 </motion.button>
@@ -1539,7 +1539,7 @@ export default function AIPlanner() {
                 style={{
                   background: ambience
                     ? `linear-gradient(135deg, ${ambience.accent}, #A855F7)`
-                    : "linear-gradient(135deg, #007AFF, #A855F7)",
+                    : "linear-gradient(135deg, #ff6b35, #A855F7)",
                   transition: "background 0.4s",
                 }}
               >
@@ -1560,7 +1560,7 @@ export default function AIPlanner() {
                       style={
                         step >= s
                           ? {
-                              backgroundColor: ambience?.accent ?? "#007AFF",
+                              backgroundColor: ambience?.accent ?? "#ff6b35",
                               color: "#fff",
                             }
                           : { backgroundColor: "#E5E5EA", color: "#8E8E93" }
@@ -1589,7 +1589,7 @@ export default function AIPlanner() {
               className="h-full"
               animate={{
                 width: `${(step / 2) * 100}%`,
-                backgroundColor: ambience?.accent ?? "#007AFF",
+                backgroundColor: ambience?.accent ?? "#ff6b35",
               }}
               transition={{ duration: 0.4 }}
             />
@@ -1634,10 +1634,10 @@ export default function AIPlanner() {
                     backgroundColor: "#fff",
                     transition: "all 0.25s",
                     border: prompt
-                      ? `1.5px solid ${ambience?.accent ?? "#007AFF"}55`
+                      ? `1.5px solid ${ambience?.accent ?? "#ff6b35"}55`
                       : "1.5px solid #E5E5EA",
                     boxShadow: prompt
-                      ? `0 4px 20px ${ambience?.accent ?? "#007AFF"}18`
+                      ? `0 4px 20px ${ambience?.accent ?? "#ff6b35"}18`
                       : "0 2px 8px rgba(0,0,0,0.04)",
                   }}
                 />
@@ -1654,7 +1654,7 @@ export default function AIPlanner() {
                     border: "none",
                     cursor: "pointer",
                     background: prompt
-                      ? `linear-gradient(135deg, ${ambience?.accent ?? "#007AFF"}, #A855F7)`
+                      ? `linear-gradient(135deg, ${ambience?.accent ?? "#ff6b35"}, #A855F7)`
                       : "#E5E5EA",
                     display: "flex",
                     alignItems: "center",
@@ -1697,8 +1697,8 @@ export default function AIPlanner() {
                           fontWeight: 700,
                           padding: "3px 10px",
                           borderRadius: 20,
-                          backgroundColor: `${ambience?.accent ?? "#007AFF"}15`,
-                          color: ambience?.accent ?? "#007AFF",
+                          backgroundColor: `${ambience?.accent ?? "#ff6b35"}15`,
+                          color: ambience?.accent ?? "#ff6b35",
                         }}
                       >
                         {v}
@@ -1835,7 +1835,7 @@ export default function AIPlanner() {
                   ...((step === 1 ? canProceed1 : canProceed2)
                     ? {
                         background: `linear-gradient(135deg, ${ambience?.accent ?? "#1A7AFF"}, ${ambience?.accent ? ambience.accent + "BB" : "#0057D9"})`,
-                        boxShadow: `0 8px 24px ${ambience?.accent ?? "#007AFF"}44`,
+                        boxShadow: `0 8px 24px ${ambience?.accent ?? "#ff6b35"}44`,
                       }
                     : { background: "#E5E5EA", color: "#A8A8AD" }),
                   transition: "all 0.3s",
@@ -1860,3 +1860,4 @@ export default function AIPlanner() {
     </div>
   );
 }
+

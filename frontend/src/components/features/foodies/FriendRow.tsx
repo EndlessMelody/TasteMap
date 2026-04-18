@@ -581,7 +581,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                     fontWeight: 700,
                     padding: "0 16px",
                     height: 36,
-                    backgroundColor: "#007AFF",
+                    backgroundColor: "#ff6b35",
                     fontSize: "13px",
                     display: "flex",
                     alignItems: "center",

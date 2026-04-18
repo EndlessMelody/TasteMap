@@ -29,9 +29,16 @@ interface PostModalProps {
   onClose: () => void;
 }
 
-export default function PostModal({ isOpen, data: initialData, onClose }: PostModalProps) {
+export default function PostModal({
+  isOpen,
+  data: initialData,
+  onClose,
+}: PostModalProps) {
   const updatePost = useSocialStore((state) => state.updatePost);
-  const data = useSocialStore((state) => state.posts.find((p) => p.id === initialData.id)) || initialData;
+  const data =
+    useSocialStore((state) =>
+      state.posts.find((p) => p.id === initialData.id),
+    ) || initialData;
   const [isSaved, setIsSaved] = React.useState(false);
   const [commentsList, setCommentsList] = React.useState<any[]>([]);
   const [loadingComments, setLoadingComments] = React.useState(false);
@@ -43,7 +50,7 @@ export default function PostModal({ isOpen, data: initialData, onClose }: PostMo
       apiGet(`/api/v1/posts/${data.id}/comments`)
         .then((res: any) => {
           if (res && res.items) {
-             setCommentsList(res.items);
+            setCommentsList(res.items);
           }
         })
         .catch(console.error)
@@ -56,7 +63,9 @@ export default function PostModal({ isOpen, data: initialData, onClose }: PostMo
   const handlePostComment = async () => {
     if (!newComment.trim() || !data.id) return;
     try {
-      const res = await apiPost(`/api/v1/posts/${data.id}/comments`, { content: newComment });
+      const res = await apiPost(`/api/v1/posts/${data.id}/comments`, {
+        content: newComment,
+      });
       setCommentsList((prev) => [res, ...prev]);
       setNewComment("");
       updatePost(data.id, { comments: (data.comments || 0) + 1 });
@@ -186,7 +195,11 @@ export default function PostModal({ isOpen, data: initialData, onClose }: PostMo
                   </Column>
                 </Row>
                 <IconButton
-                  icon={<Text style={{ fontSize: "20px", color: "#1C1C1E" }}>×</Text>}
+                  icon={
+                    <Text style={{ fontSize: "20px", color: "#1C1C1E" }}>
+                      ×
+                    </Text>
+                  }
                   variant="tertiary"
                   onClick={onClose}
                   style={{ width: "36px", height: "36px", borderRadius: "50%" }}
@@ -219,7 +232,9 @@ export default function PostModal({ isOpen, data: initialData, onClose }: PostMo
                       </span>
                       {data.review}
                     </Text>
-                    <Row style={{ gap: "8px", flexWrap: "wrap", marginTop: "4px" }}>
+                    <Row
+                      style={{ gap: "8px", flexWrap: "wrap", marginTop: "4px" }}
+                    >
                       {data.tags.map((tag) => (
                         <span
                           key={tag}
@@ -249,13 +264,22 @@ export default function PostModal({ isOpen, data: initialData, onClose }: PostMo
                 {/* Real Comments */}
                 <Column style={{ gap: "16px" }}>
                   {loadingComments ? (
-                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>Đang tải bình luận...</Text>
+                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>
+                      Đang tải bình luận...
+                    </Text>
                   ) : commentsList.length === 0 ? (
-                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>Chưa có bình luận nào.</Text>
+                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>
+                      Chưa có bình luận nào.
+                    </Text>
                   ) : (
                     commentsList.map((c) => {
-                      const name = c.user?.display_name || c.user?.username || `User ${c.user?.id || ''}`;
-                      const avatarSrc = c.user?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=128`;
+                      const name =
+                        c.user?.display_name ||
+                        c.user?.username ||
+                        `User ${c.user?.id || ""}`;
+                      const avatarSrc =
+                        c.user?.avatar_url ||
+                        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=128`;
                       return (
                         <Row
                           key={c.id}
@@ -270,13 +294,17 @@ export default function PostModal({ isOpen, data: initialData, onClose }: PostMo
                                 lineHeight: 1.6,
                               }}
                             >
-                              <span style={{ fontWeight: 700, marginRight: "6px" }}>
+                              <span
+                                style={{ fontWeight: 700, marginRight: "6px" }}
+                              >
                                 {name}
                               </span>
                               {c.content}
                             </Text>
                             <Row style={{ gap: "12px", alignItems: "center" }}>
-                              <Text style={{ color: "#AEAEB2", fontSize: "0.7rem" }}>
+                              <Text
+                                style={{ color: "#AEAEB2", fontSize: "0.7rem" }}
+                              >
                                 {adaptTime(c.created_at)}
                               </Text>
                               <Text
@@ -294,7 +322,11 @@ export default function PostModal({ isOpen, data: initialData, onClose }: PostMo
                           <Heart
                             size={12}
                             color="#AEAEB2"
-                            style={{ marginLeft: "auto", cursor: "pointer", marginTop: "4px" }}
+                            style={{
+                              marginLeft: "auto",
+                              cursor: "pointer",
+                              marginTop: "4px",
+                            }}
                           />
                         </Row>
                       );
@@ -318,35 +350,71 @@ export default function PostModal({ isOpen, data: initialData, onClose }: PostMo
                       style={{ cursor: "pointer" }}
                       onClick={async () => {
                         const newIsLiked = !data.isLiked;
-                        const newLikes = newIsLiked ? data.likes + 1 : Math.max(0, data.likes - 1);
-                        updatePost(data.id, { isLiked: newIsLiked, likes: newLikes });
+                        const newLikes = newIsLiked
+                          ? data.likes + 1
+                          : Math.max(0, data.likes - 1);
+                        updatePost(data.id, {
+                          isLiked: newIsLiked,
+                          likes: newLikes,
+                        });
                         try {
                           await apiPost(`/api/v1/posts/${data.id}/like`, {});
                         } catch (e) {
-                          updatePost(data.id, { isLiked: data.isLiked, likes: data.likes });
+                          updatePost(data.id, {
+                            isLiked: data.isLiked,
+                            likes: data.likes,
+                          });
                         }
                       }}
                     >
                       <Heart
                         size={24}
-                        color={data.isLiked ? "var(--brand-solid-strong)" : "var(--neutral-alpha-medium)"}
-                        fill={data.isLiked ? "var(--brand-solid-strong)" : "none"}
+                        color={
+                          data.isLiked
+                            ? "var(--brand-solid-strong)"
+                            : "var(--neutral-alpha-medium)"
+                        }
+                        fill={
+                          data.isLiked ? "var(--brand-solid-strong)" : "none"
+                        }
                       />
-                      <Text variant="label-default-l" weight="strong" onBackground="neutral-strong">
+                      <Text
+                        variant="label-default-l"
+                        weight="strong"
+                        onBackground="neutral-strong"
+                      >
                         {data.likes || 0}
                       </Text>
                     </Row>
-                    <Row gap="8" vertical="center" style={{ cursor: "pointer" }}>
-                      <MessageCircle size={24} color="var(--neutral-alpha-medium)" />
-                      <Text variant="label-default-l" weight="strong" onBackground="neutral-strong">
+                    <Row
+                      gap="8"
+                      vertical="center"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <MessageCircle
+                        size={24}
+                        color="var(--neutral-alpha-medium)"
+                      />
+                      <Text
+                        variant="label-default-l"
+                        weight="strong"
+                        onBackground="neutral-strong"
+                      >
                         {data.comments || 0}
                       </Text>
                     </Row>
                   </Row>
-                  <Row style={{ cursor: "pointer" }} onClick={() => setIsSaved(!isSaved)}>
+                  <Row
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setIsSaved(!isSaved)}
+                  >
                     <Bookmark
                       size={24}
-                      color={isSaved ? "var(--brand-solid-strong)" : "var(--neutral-alpha-medium)"}
+                      color={
+                        isSaved
+                          ? "var(--brand-solid-strong)"
+                          : "var(--neutral-alpha-medium)"
+                      }
                       fill={isSaved ? "var(--brand-solid-strong)" : "none"}
                     />
                   </Row>
@@ -381,7 +449,7 @@ export default function PostModal({ isOpen, data: initialData, onClose }: PostMo
                 <Text
                   onClick={handlePostComment}
                   style={{
-                    color: newComment.trim() ? "#007AFF" : "#AEAEB2",
+                    color: newComment.trim() ? "#ff6b35" : "#AEAEB2",
                     fontWeight: 600,
                     fontSize: "0.85rem",
                     cursor: newComment.trim() ? "pointer" : "default",

@@ -38,6 +38,10 @@ import {
   PartyPopper,
   Users,
   Handshake,
+  Share2,
+  Link2,
+  QrCode,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -52,6 +56,7 @@ import ClientOnly from "@/components/common/ClientOnly";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/lib/supabase";
 import { useUserVector } from "@/context/UserVectorContext";
+import { CreatePostModal } from "@/components/modals/CreatePostModal";
 
 // ═══════════ PROFILE PAGE ═══════════ //
 
@@ -250,6 +255,11 @@ export default function ProfilePage() {
   const handleComingSoon = () =>
     toast("Will be updated in the next version 🚀");
 
+  // Create Content Modal state
+  const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
+  const handleOpenCreatePost = () => setIsCreatePostOpen(true);
+  const handleCloseCreatePost = () => setIsCreatePostOpen(false);
+
   const TRAIT_META: Record<
     string,
     {
@@ -360,7 +370,7 @@ export default function ProfilePage() {
                     width: "38px",
                     height: "38px",
                     borderRadius: "50%",
-                    border: "2px solid rgba(0,122,255,0.2)",
+                    border: "2px solid rgba(255,107,53,0.2)",
                   }}
                 />
                 <Column style={{ gap: "1px" }}>
@@ -396,13 +406,13 @@ export default function ProfilePage() {
                     gap: "6px",
                     padding: "9px 18px",
                     borderRadius: "12px",
-                    background: "linear-gradient(135deg, #1A7AFF, #0057D9)",
+                    background: "linear-gradient(135deg, #ff6b35, #e65721)",
                     border: "none",
                     cursor: "pointer",
                     color: "white",
                     fontSize: "0.85rem",
                     fontWeight: 700,
-                    boxShadow: "0 4px 12px rgba(0,122,255,0.28)",
+                    boxShadow: "0 4px 12px rgba(255,107,53,0.28)",
                   }}
                 >
                   <UserPlus size={15} /> Follow
@@ -417,10 +427,10 @@ export default function ProfilePage() {
                     gap: "6px",
                     padding: "9px 18px",
                     borderRadius: "12px",
-                    backgroundColor: "rgba(0,122,255,0.07)",
-                    border: "1px solid rgba(0,122,255,0.12)",
+                    backgroundColor: "rgba(255,107,53,0.07)",
+                    border: "1px solid rgba(255,107,53,0.12)",
                     cursor: "pointer",
-                    color: "#007AFF",
+                    color: "#ff6b35",
                     fontSize: "0.85rem",
                     fontWeight: 700,
                   }}
@@ -526,12 +536,12 @@ export default function ProfilePage() {
             }}
           >
             <Row style={{ gap: "8px", alignItems: "center" }}>
-              <Edit3 size={16} color="#007AFF" />
+              <Edit3 size={16} color="#ff6b35" />
               <Text style={{ fontSize: "0.85rem" }}>Edit Profile</Text>
             </Row>
           </Button>
           <IconButton
-            icon={<Heart size={20} color="#007AFF" />}
+            icon={<Heart size={20} color="#ff6b35" />}
             onClick={handleComingSoon}
             style={{
               backgroundColor: "rgba(255,255,255,0.8)",
@@ -565,9 +575,56 @@ export default function ProfilePage() {
           zIndex: 10,
         }}
       >
-        {/* Avatar Area */}
+        {/* Avatar Area with Animated Gradient Frame */}
         <Row fillWidth style={{ marginBottom: "32px" }}>
-          <div style={{ position: "relative" }}>
+          <div style={{ position: "relative", padding: "6px" }}>
+            {/* Animated Gradient Ring */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                borderRadius: "50%",
+                background:
+                  "conic-gradient(from 0deg, #ff6b35, #ff8c5a, #ffaa7a, #ff6b35)",
+                padding: "4px",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  backgroundColor: "#FFFFFF",
+                }}
+              />
+            </motion.div>
+
+            {/* Glow Effect */}
+            <motion.div
+              animate={{
+                boxShadow: [
+                  "0 0 20px rgba(255,107,53,0.3)",
+                  "0 0 40px rgba(255,107,53,0.5)",
+                  "0 0 20px rgba(255,107,53,0.3)",
+                ],
+              }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                position: "absolute",
+                top: "-4px",
+                left: "-4px",
+                right: "-4px",
+                bottom: "-4px",
+                borderRadius: "50%",
+                zIndex: -1,
+              }}
+            />
+
             <Avatar
               src={user?.avatar_url || ""}
               size="xl"
@@ -575,34 +632,32 @@ export default function ProfilePage() {
                 width: "160px",
                 height: "160px",
                 borderRadius: "50%",
-                borderTopWidth: "6px",
-                borderBottomWidth: "6px",
-                borderLeftWidth: "6px",
-                borderRightWidth: "6px",
-                borderStyle: "solid",
-                borderColor: "#FFFFFF",
-                boxShadow: "0 12px 32px rgba(0,0,0,0.1)",
+                border: "4px solid #FFFFFF",
+                position: "relative",
+                zIndex: 1,
               }}
             />
+
             {/* Level Badge */}
-            <div
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 15,
+                delay: 0.5,
+              }}
               style={{
                 position: "absolute",
-                bottom: "8px",
-                right: "8px",
-                backgroundColor: "#007AFF",
+                bottom: "4px",
+                right: "4px",
+                background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
                 borderRadius: "14px",
-                paddingTop: "6px",
-                paddingBottom: "6px",
-                paddingLeft: "12px",
-                paddingRight: "12px",
-                borderTopWidth: "4px",
-                borderBottomWidth: "4px",
-                borderLeftWidth: "4px",
-                borderRightWidth: "4px",
-                borderStyle: "solid",
-                borderColor: "#FFFFFF",
-                boxShadow: "0 4px 12px rgba(0,122,255,0.3)",
+                padding: "6px 12px",
+                border: "3px solid #FFFFFF",
+                boxShadow: "0 4px 16px rgba(255,107,53,0.4)",
+                zIndex: 2,
               }}
             >
               <Text
@@ -610,179 +665,803 @@ export default function ProfilePage() {
               >
                 LV {user?.level || 1}
               </Text>
-            </div>
+            </motion.div>
           </div>
         </Row>
 
-        {/* Name + Info */}
-        <Column style={{ gap: "10px", marginBottom: "32px" }}>
-          <Heading
-            variant="display-strong-s"
-            style={{ color: "#1C1C1E", fontSize: "2.5rem" }}
-          >
-            {user?.display_name || user?.username || "Guest"}
-          </Heading>
-
-          <Row style={{ gap: "12px", alignItems: "center" }}>
-            <Text
-              style={{ color: "#007AFF", fontWeight: 600, fontSize: "1rem" }}
-            >
-              @{user?.username || "guest"} • {user?.title || "Taste Explorer"}
-            </Text>
-          </Row>
-
-          <Text
-            style={{
-              color: "#636366",
-              fontSize: "1rem",
-              lineHeight: 1.6,
-              maxWidth: "720px",
-            }}
-          >
-            {user?.bio || "Enjoying the food exploration journey!"}
-          </Text>
-
-          {/* Level Progress Bar */}
-          <Column style={{ gap: "8px", maxWidth: "320px", marginTop: "8px" }}>
-            <Row style={{ justifyContent: "space-between" }}>
-              <Text
-                style={{
-                  color: "#8E8E93",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                }}
-              >
-                Level {user?.level || 1} Progress
-              </Text>
-              <Text
-                style={{
-                  color: "#1C1C1E",
-                  fontSize: "0.75rem",
-                  fontWeight: 700,
-                }}
-              >
-                {user?.xp || 0} / {(user?.level || 1) * 1000} XP
-              </Text>
-            </Row>
-            <div
-              style={{
-                width: "100%",
-                height: "6px",
-                backgroundColor: "#EAF2FF",
-                borderRadius: "3px",
-                overflow: "hidden",
-              }}
-            >
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{
-                  width: `${((user?.xp || 0) / ((user?.level || 1) * 1000)) * 100}%`,
-                }}
-                transition={{ duration: 1, delay: 0.5 }}
-                style={{
-                  height: "100%",
-                  backgroundColor: "#007AFF",
-                  borderRadius: "3px",
-                }}
-              />
-            </div>
-          </Column>
-
-          <Row style={{ gap: "24px", marginTop: "16px" }}>
-            <Row style={{ gap: "8px", alignItems: "center" }}>
-              <MapPin size={16} color="#8E8E93" />
-              <Text style={{ color: "#8E8E93", fontSize: "0.9rem" }}>
-                {user?.location || "Khám phá"}
-              </Text>
-            </Row>
-            <Row style={{ gap: "8px", alignItems: "center" }}>
-              <Calendar size={16} color="#8E8E93" />
-              <Text style={{ color: "#8E8E93", fontSize: "0.9rem" }}>
-                Joined{" "}
-                {user?.created_at
-                  ? new Date(user.created_at).toLocaleDateString()
-                  : "March 2025"}
-              </Text>
-            </Row>
-          </Row>
-        </Column>
-
-        {/* ── STATS ROW ── */}
+        {/* ═══ BENTO GRID LAYOUT ═══ */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "12px",
-            marginBottom: "32px",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "24px",
+            alignItems: "start",
+            marginBottom: "48px",
           }}
         >
-          {[
-            {
-              label: "Followers",
-              value: user?.stats?.followers ?? 0,
-              icon: <Users size={18} />,
-              color: "#007AFF",
-            },
-            {
-              label: "Following",
-              value: user?.stats?.following ?? 0,
-              icon: <Handshake size={18} />,
-              color: "#34C759",
-            },
-            {
-              label: "Reviews",
-              value: user?.stats?.reviews ?? 0,
-              icon: <Star size={18} />,
-              color: "#FBBF24",
-            },
-            {
-              label: "Visited",
-              value: user?.stats?.visited ?? 0,
-              icon: <MapPin size={18} />,
-              color: "#FF3B30",
-            },
-          ].map((s) => (
-            <div
-              key={s.label}
+          {/* ══ LEFT/CENTER COLUMN (col-span-2) ══ */}
+          <div
+            style={{
+              gridColumn: "span 2",
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+            }}
+          >
+            {/* Profile Identity Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
               style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                padding: "16px 8px",
                 backgroundColor: "#FFFFFF",
-                borderRadius: "16px",
-                border: "1px solid rgba(0,0,0,0.05)",
-                gap: "4px",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                borderRadius: "24px",
+                padding: "28px",
+                border: "1px solid #F2F2F7",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
               }}
             >
-              <span style={{ color: s.color }}>{s.icon}</span>
-              <Text
+              <Row
                 style={{
-                  fontSize: "1.3rem",
-                  fontWeight: 800,
-                  color: "#1C1C1E",
-                  letterSpacing: "-0.5px",
-                  lineHeight: 1,
+                  gap: "12px",
+                  alignItems: "center",
+                  marginBottom: "12px",
                 }}
               >
-                {typeof s.value === "number" && s.value >= 1000
-                  ? `${(s.value / 1000).toFixed(1)}K`
-                  : s.value}
-              </Text>
-              <Text
+                <Heading
+                  variant="display-strong-s"
+                  style={{
+                    color: "#1C1C1E",
+                    fontSize: "2.2rem",
+                    letterSpacing: "-0.5px",
+                  }}
+                >
+                  {user?.display_name || user?.username || "Guest"}
+                </Heading>
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", stiffness: 300, delay: 0.6 }}
+                  style={{
+                    background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                    borderRadius: "50%",
+                    padding: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Star size={12} color="white" fill="white" />
+                </motion.div>
+              </Row>
+
+              <Row
                 style={{
-                  color: "rgba(0,0,0,0.4)",
-                  fontSize: "0.72rem",
-                  fontWeight: 600,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.5px",
+                  gap: "12px",
+                  alignItems: "center",
+                  marginBottom: "16px",
                 }}
               >
-                {s.label}
+                <Text
+                  style={{
+                    color: "#ff6b35",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                  }}
+                >
+                  @{user?.username || "guest"}
+                </Text>
+                <span style={{ color: "#E5E5EA" }}>•</span>
+                <div
+                  style={{
+                    background: "linear-gradient(135deg, #FFF0E6, #FFE8D6)",
+                    padding: "4px 12px",
+                    borderRadius: "20px",
+                    border: "1px solid rgba(255,107,53,0.15)",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#ff6b35",
+                      fontWeight: 600,
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    {user?.title || "Taste Explorer"}
+                  </Text>
+                </div>
+              </Row>
+
+              <Text
+                style={{
+                  color: "#48484A",
+                  fontSize: "0.95rem",
+                  lineHeight: 1.6,
+                  maxWidth: "600px",
+                }}
+              >
+                {user?.bio ||
+                  "Exploring flavors, one bite at a time. Join me on this delicious journey!"}
               </Text>
+            </motion.div>
+
+            {/* Bento Pills Row */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "16px",
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.4 }}
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "20px",
+                  padding: "20px",
+                  border: "1px solid #F2F2F7",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                }}
+              >
+                <Row
+                  style={{
+                    gap: "8px",
+                    alignItems: "center",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                      padding: "6px",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <Flame size={14} color="white" />
+                  </div>
+                  <Text
+                    style={{
+                      color: "#1C1C1E",
+                      fontWeight: 700,
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    Level {user?.level || 1}
+                  </Text>
+                </Row>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "6px",
+                    backgroundColor: "#F2F2F7",
+                    borderRadius: "3px",
+                    overflow: "hidden",
+                  }}
+                >
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{
+                      width: `${Math.min(((user?.xp || 0) / ((user?.level || 1) * 1000)) * 100, 100)}%`,
+                    }}
+                    transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+                    style={{
+                      height: "100%",
+                      background: "linear-gradient(90deg, #ff6b35, #ff8c5a)",
+                      borderRadius: "3px",
+                    }}
+                  />
+                </div>
+                <Text
+                  style={{
+                    color: "#8E8E93",
+                    fontSize: "0.75rem",
+                    marginTop: "6px",
+                  }}
+                >
+                  {user?.xp || 0} / {(user?.level || 1) * 1000} XP
+                </Text>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.45 }}
+                whileHover={{ y: -2 }}
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "20px",
+                  padding: "20px",
+                  border: "1px solid #F2F2F7",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                  cursor: "pointer",
+                }}
+              >
+                <Row style={{ gap: "10px", alignItems: "center" }}>
+                  <div
+                    style={{
+                      backgroundColor: "#F2F2F7",
+                      padding: "8px",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    <MapPin size={16} color="#ff6b35" />
+                  </div>
+                  <Column>
+                    <Text
+                      style={{
+                        color: "#8E8E93",
+                        fontSize: "0.75rem",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Location
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#1C1C1E",
+                        fontWeight: 600,
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      {user?.location || "Exploring"}
+                    </Text>
+                  </Column>
+                </Row>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "20px",
+                  padding: "20px",
+                  border: "1px solid #F2F2F7",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.03)",
+                }}
+              >
+                <Row style={{ gap: "10px", alignItems: "center" }}>
+                  <div
+                    style={{
+                      backgroundColor: "#F2F2F7",
+                      padding: "8px",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    <Calendar size={16} color="#8E8E93" />
+                  </div>
+                  <Column>
+                    <Text
+                      style={{
+                        color: "#8E8E93",
+                        fontSize: "0.75rem",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Member Since
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#1C1C1E",
+                        fontWeight: 600,
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      {user?.created_at
+                        ? new Date(user.created_at).toLocaleDateString(
+                            "en-US",
+                            { month: "short", year: "numeric" },
+                          )
+                        : "Mar 2025"}
+                    </Text>
+                  </Column>
+                </Row>
+              </motion.div>
             </div>
-          ))}
+
+            {/* Favorite Tastes Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.55 }}
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: "24px",
+                padding: "24px",
+                border: "1px solid #F2F2F7",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+              }}
+            >
+              <Row
+                style={{
+                  gap: "8px",
+                  alignItems: "center",
+                  marginBottom: "16px",
+                }}
+              >
+                <Heart size={18} color="#ff6b35" />
+                <Text
+                  style={{
+                    color: "#1C1C1E",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                  }}
+                >
+                  Favorite Tastes
+                </Text>
+              </Row>
+              <Row style={{ gap: "8px", flexWrap: "wrap" }}>
+                {["#Spicy", "#Sweet", "#Vegan", "#Savory", "#Crispy"].map(
+                  (tag, i) => (
+                    <motion.button
+                      key={tag}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleComingSoon}
+                      style={{
+                        padding: "8px 16px",
+                        borderRadius: "20px",
+                        border: "none",
+                        background:
+                          i === 0
+                            ? "linear-gradient(135deg, #ff6b35, #ff8c5a)"
+                            : "#F9F9FB",
+                        color: i === 0 ? "white" : "#636366",
+                        fontWeight: 600,
+                        fontSize: "0.85rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {tag}
+                    </motion.button>
+                  ),
+                )}
+              </Row>
+            </motion.div>
+
+            {/* TasteMap Stats Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.6 }}
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: "24px",
+                padding: "24px",
+                border: "1px solid #F2F2F7",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+              }}
+            >
+              <Row
+                style={{
+                  gap: "8px",
+                  alignItems: "center",
+                  marginBottom: "16px",
+                }}
+              >
+                <div
+                  style={{
+                    background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                    padding: "6px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <TrendingUp size={16} color="white" />
+                </div>
+                <Text
+                  style={{
+                    color: "#1C1C1E",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                  }}
+                >
+                  TasteMap Stats
+                </Text>
+              </Row>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(4, 1fr)",
+                  gap: "12px",
+                }}
+              >
+                {[
+                  {
+                    label: "Followers",
+                    value: user?.stats?.followers ?? 0,
+                    color: "#ff6b35",
+                  },
+                  {
+                    label: "Following",
+                    value: user?.stats?.following ?? 0,
+                    color: "#34C759",
+                  },
+                  {
+                    label: "Reviews",
+                    value: user?.stats?.reviews ?? 0,
+                    color: "#5856D6",
+                  },
+                  {
+                    label: "Visited",
+                    value: user?.stats?.visited ?? 0,
+                    color: "#FF9500",
+                  },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    style={{
+                      backgroundColor: "#F9F9FB",
+                      borderRadius: "16px",
+                      padding: "16px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: stat.color,
+                        fontWeight: 700,
+                        fontSize: "1.3rem",
+                      }}
+                    >
+                      {typeof stat.value === "number" && stat.value >= 1000
+                        ? `${(stat.value / 1000).toFixed(1)}K`
+                        : stat.value}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#8E8E93",
+                        fontSize: "0.7rem",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {stat.label}
+                    </Text>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* ══ RIGHT COLUMN (col-span-1) ══ */}
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+          >
+            {/* Create Post Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              style={{
+                borderRadius: "24px",
+                overflow: "hidden",
+                boxShadow: "0 8px 32px rgba(255,107,53,0.18)",
+              }}
+            >
+              {/* Card Header */}
+              <div
+                style={{
+                  position: "relative",
+                  background: "linear-gradient(135deg, #ff6b35, #e85d2a, #ff8c5a)",
+                  padding: "20px 24px 18px",
+                  overflow: "hidden",
+                }}
+              >
+                {/* Decorative shimmer */}
+                <motion.div
+                  animate={{ x: ["calc(-100%)", "calc(200%)"] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear", repeatDelay: 2 }}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "60%",
+                    height: "100%",
+                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)",
+                    pointerEvents: "none",
+                  }}
+                />
+                <Row style={{ gap: "12px", alignItems: "center" }}>
+                  <div
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.2)",
+                      padding: "10px",
+                      borderRadius: "12px",
+                      display: "flex",
+                      backdropFilter: "blur(4px)",
+                    }}
+                  >
+                    <Camera size={20} color="white" />
+                  </div>
+                  <Column style={{ gap: "2px" }}>
+                    <Text
+                      style={{ color: "white", fontWeight: 700, fontSize: "1rem", lineHeight: 1.2 }}
+                    >
+                      Create Content
+                    </Text>
+                    <Text
+                      style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.78rem", fontWeight: 500 }}
+                    >
+                      Share your food journey
+                    </Text>
+                  </Column>
+                </Row>
+              </div>
+
+              {/* Action Buttons */}
+              <div
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  padding: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  borderLeft: "1px solid #F2F2F7",
+                  borderRight: "1px solid #F2F2F7",
+                  borderBottom: "1px solid #F2F2F7",
+                  borderBottomLeftRadius: "24px",
+                  borderBottomRightRadius: "24px",
+                }}
+              >
+                <motion.button
+                  whileHover={{ scale: 1.02, backgroundColor: "#FFF8F5" }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleOpenCreatePost}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "14px 16px",
+                    borderRadius: "14px",
+                    border: "1px solid rgba(255,107,53,0.12)",
+                    backgroundColor: "#FFFAF7",
+                    cursor: "pointer",
+                    width: "100%",
+                    textAlign: "left",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                      padding: "8px",
+                      borderRadius: "10px",
+                      display: "flex",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Star size={16} color="white" fill="white" />
+                  </div>
+                  <Column style={{ gap: "2px", flex: 1 }}>
+                    <Text
+                      style={{ color: "#1C1C1E", fontWeight: 600, fontSize: "0.88rem" }}
+                    >
+                      Foodie Feed Post
+                    </Text>
+                    <Text
+                      style={{ color: "#8E8E93", fontSize: "0.75rem", fontWeight: 500 }}
+                    >
+                      Reviews, ratings & food stories
+                    </Text>
+                  </Column>
+                  <ChevronLeft
+                    size={16}
+                    color="#C7C7CC"
+                    style={{ transform: "rotate(180deg)", flexShrink: 0 }}
+                  />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02, backgroundColor: "#F8F5FF" }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleOpenCreatePost}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                    padding: "14px 16px",
+                    borderRadius: "14px",
+                    border: "1px solid rgba(88,86,214,0.1)",
+                    backgroundColor: "#FAFAFF",
+                    cursor: "pointer",
+                    width: "100%",
+                    textAlign: "left",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "linear-gradient(135deg, #5856D6, #7B79E8)",
+                      padding: "8px",
+                      borderRadius: "10px",
+                      display: "flex",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <ImageIcon size={16} color="white" />
+                  </div>
+                  <Column style={{ gap: "2px", flex: 1 }}>
+                    <Text
+                      style={{ color: "#1C1C1E", fontWeight: 600, fontSize: "0.88rem" }}
+                    >
+                      Discover Reel
+                    </Text>
+                    <Text
+                      style={{ color: "#8E8E93", fontSize: "0.75rem", fontWeight: 500 }}
+                    >
+                      Short-form video content
+                    </Text>
+                  </Column>
+                  <ChevronLeft
+                    size={16}
+                    color="#C7C7CC"
+                    style={{ transform: "rotate(180deg)", flexShrink: 0 }}
+                  />
+                </motion.button>
+              </div>
+            </motion.div>
+
+            {/* Quick Actions Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.45 }}
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: "24px",
+                padding: "24px",
+                border: "1px solid #F2F2F7",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#1C1C1E",
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  marginBottom: "16px",
+                }}
+              >
+                Quick Actions
+              </Text>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
+                {[
+                  {
+                    icon: <Share2 size={18} />,
+                    label: "Share Profile",
+                    color: "#ff6b35",
+                  },
+                  {
+                    icon: <Link2 size={18} />,
+                    label: "Copy Link",
+                    color: "#34C759",
+                  },
+                  {
+                    icon: <QrCode size={18} />,
+                    label: "QR Code",
+                    color: "#5856D6",
+                  },
+                  {
+                    icon: <Settings size={18} />,
+                    label: "Settings",
+                    color: "#8E8E93",
+                  },
+                ].map((action) => (
+                  <motion.div
+                    key={action.label}
+                    whileHover={{ x: 4, backgroundColor: "#F9F9FB" }}
+                    onClick={handleComingSoon}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "12px",
+                      padding: "12px",
+                      borderRadius: "12px",
+                      cursor: "pointer",
+                      transition: "all 0.2s",
+                    }}
+                  >
+                    <span style={{ color: action.color }}>{action.icon}</span>
+                    <Text
+                      style={{
+                        color: "#1C1C1E",
+                        fontWeight: 600,
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      {action.label}
+                    </Text>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Taste Match Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              style={{
+                background: "linear-gradient(135deg, #FFF9F6, #FFF0E8)",
+                borderRadius: "24px",
+                padding: "24px",
+                border: "1px solid rgba(255,107,53,0.1)",
+              }}
+            >
+              <Row
+                style={{
+                  gap: "8px",
+                  alignItems: "center",
+                  marginBottom: "12px",
+                }}
+              >
+                <Users size={18} color="#ff6b35" />
+                <Text
+                  style={{
+                    color: "#1C1C1E",
+                    fontWeight: 700,
+                    fontSize: "0.95rem",
+                  }}
+                >
+                  Taste Match
+                </Text>
+              </Row>
+              <Text
+                style={{
+                  color: "#636366",
+                  fontSize: "0.8rem",
+                  marginBottom: "16px",
+                }}
+              >
+                People with similar taste
+              </Text>
+              <Row style={{ gap: "-8px" }}>
+                {[
+                  "https://i.pravatar.cc/150?img=1",
+                  "https://i.pravatar.cc/150?img=5",
+                  "https://i.pravatar.cc/150?img=8",
+                ].map((url, i) => (
+                  <img
+                    key={i}
+                    src={url}
+                    alt=""
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      border: "2px solid white",
+                      marginLeft: i > 0 ? "-10px" : "0",
+                    }}
+                  />
+                ))}
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                    marginLeft: "-10px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "2px solid white",
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: "0.75rem",
+                      fontWeight: 700,
+                    }}
+                  >
+                    +12
+                  </Text>
+                </div>
+              </Row>
+            </motion.div>
+          </div>
         </div>
 
         {/* ═══ TASTE DNA SECTION ═══ */}
@@ -793,7 +1472,7 @@ export default function ProfilePage() {
               flexGrow: 1.2,
               flexShrink: 1,
               flexBasis: "0%",
-              backgroundColor: "#EAF2FF",
+              backgroundColor: "#FFF5F0",
               borderRadius: "32px",
               paddingTop: "40px",
               paddingRight: "40px",
@@ -804,8 +1483,8 @@ export default function ProfilePage() {
               borderLeftWidth: "1px",
               borderRightWidth: "1px",
               borderStyle: "solid",
-              borderColor: "rgba(0,122,255,0.08)",
-              boxShadow: "0 12px 40px rgba(0,122,255,0.04)",
+              borderColor: "rgba(255,107,53,0.08)",
+              boxShadow: "0 12px 40px rgba(255,107,53,0.04)",
               height: "420px",
               position: "relative",
             }}
@@ -820,7 +1499,7 @@ export default function ProfilePage() {
               <Row style={{ gap: "12px", alignItems: "center" }}>
                 <div
                   style={{
-                    backgroundColor: "#007AFF",
+                    background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
                     paddingTop: "10px",
                     paddingBottom: "10px",
                     paddingLeft: "10px",
@@ -839,7 +1518,7 @@ export default function ProfilePage() {
                   </Heading>
                   <Text
                     style={{
-                      color: "#007AFF",
+                      color: "#ff6b35",
                       fontSize: "0.85rem",
                       fontWeight: 600,
                     }}
@@ -879,7 +1558,7 @@ export default function ProfilePage() {
                     outerRadius="70%"
                     data={radarData}
                   >
-                    <PolarGrid stroke="rgba(0,122,255,0.1)" />
+                    <PolarGrid stroke="rgba(255,107,53,0.1)" />
                     <PolarAngleAxis
                       dataKey="subject"
                       tick={{ fill: "#8E8E93", fontSize: 12, fontWeight: 600 }}
@@ -887,8 +1566,8 @@ export default function ProfilePage() {
                     <Radar
                       name="Taste"
                       dataKey="A"
-                      stroke="#007AFF"
-                      fill="#007AFF"
+                      stroke="#ff6b35"
+                      fill="#ff6b35"
                       fillOpacity={0.25}
                     />
                   </RadarChart>
@@ -1031,7 +1710,7 @@ export default function ProfilePage() {
               >
                 Taste Match with Friends
               </Text>
-              <Text style={{ color: "#007AFF", fontWeight: 800 }}>88%</Text>
+              <Text style={{ color: "#ff6b35", fontWeight: 800 }}>88%</Text>
             </Row>
           </Column>
         </Row>
@@ -1047,7 +1726,7 @@ export default function ProfilePage() {
               borderRightWidth: "0px",
               borderBottomWidth: "2px",
               borderBottomStyle: "solid",
-              borderBottomColor: "#EAF2FF",
+              borderBottomColor: "#FFE8D6",
               paddingBottom: "12px",
               marginBottom: "32px",
             }}
@@ -1067,7 +1746,7 @@ export default function ProfilePage() {
               >
                 <Text
                   style={{
-                    color: activeTab === tab ? "#007AFF" : "#8E8E93",
+                    color: activeTab === tab ? "#ff6b35" : "#8E8E93",
                     fontWeight: activeTab === tab ? 700 : 500,
                     fontSize: "1rem",
                     transition: "color 0.2s",
@@ -1084,7 +1763,7 @@ export default function ProfilePage() {
                       left: 0,
                       right: 0,
                       height: "3px",
-                      backgroundColor: "#007AFF",
+                      background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
                       borderRadius: "3px",
                     }}
                   />
@@ -1127,13 +1806,13 @@ export default function ProfilePage() {
                           paddingBottom: "18px",
                           paddingLeft: "32px",
                           paddingRight: "32px",
-                          backgroundColor: "#EAF2FF",
+                          backgroundColor: "#FFF5F0",
                           borderTopWidth: "1px",
                           borderBottomWidth: "1px",
                           borderLeftWidth: "1px",
                           borderRightWidth: "1px",
                           borderStyle: "solid",
-                          borderColor: "rgba(0,122,255,0.08)",
+                          borderColor: "rgba(255,107,53,0.08)",
                           borderRadius: "24px",
                         }}
                       >
@@ -1141,7 +1820,7 @@ export default function ProfilePage() {
                         <Column>
                           <Text
                             style={{
-                              color: "#007AFF",
+                              color: "#ff6b35",
                               fontWeight: 700,
                               fontSize: "0.95rem",
                             }}
@@ -1150,7 +1829,7 @@ export default function ProfilePage() {
                           </Text>
                           <Text
                             style={{
-                              color: "rgba(0,122,255,0.6)",
+                              color: "rgba(255,107,53,0.6)",
                               fontSize: "0.75rem",
                               fontWeight: 600,
                             }}
@@ -1198,15 +1877,15 @@ export default function ProfilePage() {
                     borderLeftWidth: "1px",
                     borderRightWidth: "1px",
                     borderStyle: "solid",
-                    borderColor: "#EAF2FF",
+                    borderColor: "#FFE8D6",
                     borderRadius: "32px",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <MapIcon size={48} color="#007AFF" style={{ opacity: 0.2 }} />
+                  <MapIcon size={48} color="#ff6b35" style={{ opacity: 0.2 }} />
                   <Text
-                    style={{ color: "#007AFF", fontWeight: 600, opacity: 0.5 }}
+                    style={{ color: "#ff6b35", fontWeight: 600, opacity: 0.5 }}
                   >
                     Interactive Map Coming Soon 🗺️
                   </Text>
@@ -1262,10 +1941,10 @@ export default function ProfilePage() {
                 borderBottomStyle: "solid",
                 borderLeftStyle: "solid",
                 borderRightStyle: "solid",
-                borderTopColor: "rgba(0, 122, 255, 0.1)",
-                borderBottomColor: "rgba(0, 122, 255, 0.1)",
-                borderLeftColor: "rgba(0, 122, 255, 0.1)",
-                borderRightColor: "rgba(0, 122, 255, 0.1)",
+                borderTopColor: "rgba(255, 107, 53, 0.1)",
+                borderBottomColor: "rgba(255, 107, 53, 0.1)",
+                borderLeftColor: "rgba(255, 107, 53, 0.1)",
+                borderRightColor: "rgba(255, 107, 53, 0.1)",
                 borderRadius: "28px",
                 overflow: "hidden",
                 boxShadow: "0 32px 80px rgba(0,0,0,0.15)",
@@ -1282,13 +1961,13 @@ export default function ProfilePage() {
                   paddingLeft: "32px",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  backgroundColor: "#EAF2FF",
+                  backgroundColor: "#FFF5F0",
                   borderTopWidth: "0px",
                   borderLeftWidth: "0px",
                   borderRightWidth: "0px",
                   borderBottomWidth: "1px",
                   borderBottomStyle: "solid",
-                  borderBottomColor: "rgba(0, 122, 255, 0.08)",
+                  borderBottomColor: "rgba(255, 107, 53, 0.08)",
                   flexShrink: 0,
                 }}
               >
@@ -1301,7 +1980,7 @@ export default function ProfilePage() {
                   </Heading>
                   <Text
                     style={{
-                      color: "#007AFF",
+                      color: "#ff6b35",
                       fontSize: "0.8rem",
                       fontWeight: 600,
                     }}
@@ -1310,7 +1989,7 @@ export default function ProfilePage() {
                   </Text>
                 </Column>
                 <IconButton
-                  icon={<X size={20} color="#007AFF" />}
+                  icon={<X size={20} color="#ff6b35" />}
                   onClick={() => setIsEditModalOpen(false)}
                   style={{
                     backgroundColor: "#FFFFFF",
@@ -1318,13 +1997,13 @@ export default function ProfilePage() {
                     width: "44px",
                     height: "44px",
                     cursor: "pointer",
-                    boxShadow: "0 4px 12px rgba(0, 122, 255, 0.1)",
+                    boxShadow: "0 4px 12px rgba(255, 107, 53, 0.1)",
                     borderTopWidth: "1px",
                     borderBottomWidth: "1px",
                     borderLeftWidth: "1px",
                     borderRightWidth: "1px",
                     borderStyle: "solid",
-                    borderColor: "rgba(0, 122, 255, 0.05)",
+                    borderColor: "rgba(255, 107, 53, 0.05)",
                   }}
                 />
               </Row>
@@ -1444,7 +2123,8 @@ export default function ProfilePage() {
                           width: "32px",
                           height: "32px",
                           borderRadius: "50%",
-                          backgroundColor: "#007AFF",
+                          background:
+                            "linear-gradient(135deg, #ff6b35, #ff8c5a)",
                           borderTopWidth: "3px",
                           borderBottomWidth: "3px",
                           borderLeftWidth: "3px",
@@ -1455,7 +2135,7 @@ export default function ProfilePage() {
                           alignItems: "center",
                           justifyContent: "center",
                           cursor: "pointer",
-                          boxShadow: "0 2px 8px rgba(0,122,255,0.3)",
+                          boxShadow: "0 2px 8px rgba(255,107,53,0.3)",
                         }}
                       >
                         <Camera size={14} color="white" />
@@ -1481,13 +2161,14 @@ export default function ProfilePage() {
                         style={{
                           width: "4px",
                           height: "16px",
-                          backgroundColor: "#007AFF",
+                          background:
+                            "linear-gradient(135deg, #ff6b35, #ff8c5a)",
                           borderRadius: "2px",
                         }}
                       />
                       <Text
                         style={{
-                          color: "#007AFF",
+                          color: "#ff6b35",
                           fontSize: "0.75rem",
                           fontWeight: 800,
                           textTransform: "uppercase",
@@ -1533,10 +2214,10 @@ export default function ProfilePage() {
                           transition: "all 0.2s",
                         }}
                         onFocus={(e) => {
-                          e.target.style.borderColor = "#007AFF";
+                          e.target.style.borderColor = "#ff6b35";
                           e.target.style.backgroundColor = "#FFFFFF";
                           e.target.style.boxShadow =
-                            "0 0 0 4px rgba(0, 122, 255, 0.1)";
+                            "0 0 0 4px rgba(255, 107, 53, 0.1)";
                         }}
                         onBlur={(e) => {
                           e.target.style.borderColor = "#E5E5EA";
@@ -1648,10 +2329,10 @@ export default function ProfilePage() {
                           transition: "all 0.2s",
                         }}
                         onFocus={(e) => {
-                          e.target.style.borderColor = "#007AFF";
+                          e.target.style.borderColor = "#ff6b35";
                           e.target.style.backgroundColor = "#FFFFFF";
                           e.target.style.boxShadow =
-                            "0 0 0 4px rgba(0, 122, 255, 0.1)";
+                            "0 0 0 4px rgba(255, 107, 53, 0.1)";
                         }}
                         onBlur={(e) => {
                           e.target.style.borderColor = "#E5E5EA";
@@ -1697,10 +2378,10 @@ export default function ProfilePage() {
                           transition: "all 0.2s",
                         }}
                         onFocus={(e) => {
-                          e.target.style.borderColor = "#007AFF";
+                          e.target.style.borderColor = "#ff6b35";
                           e.target.style.backgroundColor = "#FFFFFF";
                           e.target.style.boxShadow =
-                            "0 0 0 4px rgba(0, 122, 255, 0.1)";
+                            "0 0 0 4px rgba(255, 107, 53, 0.1)";
                         }}
                         onBlur={(e) => {
                           e.target.style.borderColor = "#E5E5EA";
@@ -1833,12 +2514,12 @@ export default function ProfilePage() {
                   gap: "16px",
                   borderTopWidth: "1px",
                   borderTopStyle: "solid",
-                  borderTopColor: "rgba(0, 122, 255, 0.08)",
+                  borderTopColor: "rgba(255, 107, 53, 0.08)",
                   borderLeftWidth: "0px",
                   borderRightWidth: "0px",
                   borderBottomWidth: "0px",
                   flexShrink: 0,
-                  backgroundColor: "#EAF2FF",
+                  backgroundColor: "#FFF5F0",
                 }}
               >
                 <Button
@@ -1851,7 +2532,7 @@ export default function ProfilePage() {
                     borderLeftWidth: "1px",
                     borderRightWidth: "1px",
                     borderStyle: "solid",
-                    borderColor: "rgba(0, 122, 255, 0.1)",
+                    borderColor: "rgba(255, 107, 53, 0.1)",
                     borderRadius: "16px",
                     color: "#8E8E93",
                     paddingTop: "12px",
@@ -1868,7 +2549,9 @@ export default function ProfilePage() {
                   size="m"
                   onClick={handleSave}
                   style={{
-                    backgroundColor: saveLoading ? "#B0CBFA" : "#007AFF",
+                    background: saveLoading
+                      ? "rgba(255,107,53,0.3)"
+                      : "linear-gradient(135deg, #ff6b35, #ff8c5a)",
                     color: "#FFFFFF",
                     borderRadius: "16px",
                     fontWeight: 700,
@@ -1884,7 +2567,7 @@ export default function ProfilePage() {
                     borderStyle: "none",
                     boxShadow: saveLoading
                       ? "none"
-                      : "0 8px 24px rgba(0,122,255,0.3)",
+                      : "0 8px 24px rgba(255,107,53,0.3)",
                   }}
                   disabled={saveLoading}
                 >
@@ -1896,6 +2579,20 @@ export default function ProfilePage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Create Post Modal */}
+      <CreatePostModal
+        isOpen={isCreatePostOpen}
+        onClose={handleCloseCreatePost}
+        onPostCreated={(event) => {
+          if (event.type === "post") {
+            toast.success("Foodie Feed post published successfully.");
+            return;
+          }
+
+          toast.success("Discover reel published. Open Discover to view it.");
+        }}
+      />
     </div>
   );
 }

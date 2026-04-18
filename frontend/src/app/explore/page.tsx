@@ -40,7 +40,7 @@ const MapWidget = dynamic(() => import("@/components/MapWidget"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-[#F2F2F7] flex items-center justify-center">
-      <div className="w-6 h-6 rounded-full border-2 border-[#E5E5EA] border-t-[#007AFF] animate-spin" />
+      <div className="w-6 h-6 rounded-full border-2 border-[#E5E5EA] border-t-[#ff6b35] animate-spin" />
     </div>
   ),
 });
@@ -188,7 +188,7 @@ const SPOTS: Spot[] = [
     name: "Hidden Cafe Rooftop",
     category: "Cafe",
     emoji: "☕",
-    accent: "#007AFF",
+    accent: "#ff6b35",
     lat: 10.906,
     lon: 106.767,
     rating: 4.6,
@@ -543,7 +543,7 @@ export default function ExplorePage() {
           }}
         >
           <div className="flex items-center gap-2 mb-1">
-            <Navigation size={20} className="text-[#007AFF]" />
+            <Navigation size={20} className="text-[#ff6b35]" />
             <h1 className="text-[22px] font-extrabold text-[#1C1C1E] tracking-tight">
               Explore
             </h1>
@@ -568,7 +568,7 @@ export default function ExplorePage() {
                 border: "1.5px solid transparent",
                 color: "#1C1C1E",
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = "#007AFF")}
+              onFocus={(e) => (e.currentTarget.style.borderColor = "#ff6b35")}
               onBlur={(e) =>
                 (e.currentTarget.style.borderColor = "transparent")
               }
@@ -730,7 +730,7 @@ export default function ExplorePage() {
             border: "1px solid rgba(0,0,0,0.06)",
           }}
         >
-          <MapPin size={14} className="text-[#007AFF]" />
+          <MapPin size={14} className="text-[#ff6b35]" />
           <span className="text-[13px] font-bold text-[#1C1C1E]">
             {filtered.length} spots
           </span>

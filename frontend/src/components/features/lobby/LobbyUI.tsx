@@ -27,8 +27,8 @@ export function AvatarStack({
         />
       ))}
       {spotsLeft > 0 && (
-        <div className="w-8 h-8 rounded-full border-2 border-dashed border-[#D6E6FF] bg-[#EAF2FF] flex items-center justify-center">
-          <Plus size={12} className="text-[#007AFF]" />
+        <div className="w-8 h-8 rounded-full border-2 border-dashed border-[#FFE0CC] bg-[#FFF0E6] flex items-center justify-center">
+          <Plus size={12} className="text-[#ff6b35]" />
         </div>
       )}
     </div>

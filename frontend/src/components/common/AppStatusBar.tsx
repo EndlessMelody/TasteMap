@@ -61,7 +61,7 @@ export const AppStatusBar = () => {
         {/* Left: System Status */}
         <Row gap="16" vertical="center">
           <Row gap="6" vertical="center">
-            <Cpu size={12} className="text-[#007AFF]" />
+            <Cpu size={12} className="text-[#ff6b35]" />
             <Text
               variant="body-default-xs"
               style={{ color: "#1C1C1E", fontWeight: 600 }}
@@ -145,7 +145,7 @@ export const AppStatusBar = () => {
             </Text>
           </Row>
           <Row gap="6" vertical="center">
-            <Globe size={12} style={{ color: "#007AFF" }} />
+            <Globe size={12} style={{ color: "#ff6b35" }} />
             <Text
               variant="body-default-xs"
               style={{ color: "#1C1C1E", fontWeight: 600 }}

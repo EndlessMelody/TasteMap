@@ -5,7 +5,7 @@ import { Sparkles, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRecommendations } from "@/hooks/useRecommendations";
 
-const CARD_COLORS = ["#E63946", "#2A9D8F", "#FF6B35", "#7B2FF7", "#007AFF"];
+const CARD_COLORS = ["#E63946", "#2A9D8F", "#FF6B35", "#7B2FF7", "#ff4757"];
 const FALLBACK_IMG =
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=200&fit=crop";
 

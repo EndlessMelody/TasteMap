@@ -33,17 +33,17 @@ const LIGHT_C = {
   border: "rgba(0, 0, 0, 0.06)",
   sectionLabel: "rgba(0, 0, 0, 0.3)",
   itemDefault: "rgba(0, 0, 0, 0.5)",
-  itemActive: "#4F8EF7",
+  itemActive: "#ff6b35",
   itemHover: "rgba(0, 0, 0, 0.04)",
-  itemActiveBg: "rgba(79, 142, 247, 0.08)",
-  indicator: "#4F8EF7",
-  logo: "#4F8EF7",
+  itemActiveBg: "rgba(255, 107, 53, 0.08)",
+  indicator: "#ff6b35",
+  logo: "#ff6b35",
   profileName: "rgba(0, 0, 0, 0.85)",
   profileSub: "rgba(0, 0, 0, 0.4)",
-  widgetBg: "rgba(79, 142, 247, 0.05)",
-  widgetBorder: "rgba(79, 142, 247, 0.15)",
+  widgetBg: "rgba(255, 107, 53, 0.05)",
+  widgetBorder: "rgba(255, 107, 53, 0.15)",
   progressBg: "rgba(0, 0, 0, 0.06)",
-  progressFill: "#4F8EF7",
+  progressFill: "#ff6b35",
   divider: "rgba(0,0,0,0.06)",
 };
 
@@ -52,17 +52,17 @@ const DARK_C = {
   border: "rgba(255, 255, 255, 0.08)",
   sectionLabel: "rgba(255, 255, 255, 0.3)",
   itemDefault: "rgba(255, 255, 255, 0.5)",
-  itemActive: "#6BA3FF",
+  itemActive: "#ff8c5a",
   itemHover: "rgba(255, 255, 255, 0.06)",
-  itemActiveBg: "rgba(107, 163, 255, 0.12)",
-  indicator: "#6BA3FF",
-  logo: "#6BA3FF",
+  itemActiveBg: "rgba(255, 140, 90, 0.12)",
+  indicator: "#ff8c5a",
+  logo: "#ff8c5a",
   profileName: "rgba(255, 255, 255, 0.9)",
   profileSub: "rgba(255, 255, 255, 0.4)",
-  widgetBg: "rgba(107, 163, 255, 0.08)",
-  widgetBorder: "rgba(107, 163, 255, 0.2)",
+  widgetBg: "rgba(255, 140, 90, 0.08)",
+  widgetBorder: "rgba(255, 140, 90, 0.2)",
   progressBg: "rgba(255, 255, 255, 0.08)",
-  progressFill: "#6BA3FF",
+  progressFill: "#ff8c5a",
   divider: "rgba(255,255,255,0.08)",
 };
 
@@ -222,8 +222,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         <div
           style={{
             padding: "2px 7px",
-            backgroundColor: "rgba(125, 170, 255, 0.15)",
-            border: "1px solid rgba(125, 170, 255, 0.25)",
+            backgroundColor: "rgba(255, 107, 53, 0.15)",
+            border: "1px solid rgba(255, 107, 53, 0.25)",
             borderRadius: "20px",
           }}
         >
@@ -679,7 +679,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
               >
                 {user?.display_name || user?.username || ""}
               </Text>
-              <BadgeCheck size={12} color="#4F8EF7" />
+              <BadgeCheck size={12} color="#ff6b35" />
             </Row>
             <Text variant="body-default-xs" style={{ color: C.profileSub }}>
               Level {user?.level ?? 1}

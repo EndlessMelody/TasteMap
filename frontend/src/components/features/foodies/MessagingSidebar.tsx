@@ -264,8 +264,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               borderRadius: "50%",
               width: 36,
               height: 36,
-              color: "#007AFF",
-              backgroundColor: "rgba(0,122,255,0.07)",
+              color: "#ff6b35",
+              backgroundColor: "rgba(255,107,53,0.07)",
             }}
           />
           <IconButton
@@ -274,8 +274,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               borderRadius: "50%",
               width: 36,
               height: 36,
-              color: "#007AFF",
-              backgroundColor: "rgba(0,122,255,0.07)",
+              color: "#ff6b35",
+              backgroundColor: "rgba(255,107,53,0.07)",
             }}
           />
           <IconButton
@@ -320,14 +320,14 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                 height: 72,
                 borderRadius: "50%",
                 background:
-                  "linear-gradient(135deg, rgba(0,122,255,0.12), rgba(0,122,255,0.04))",
+                  "linear-gradient(135deg, rgba(255,107,53,0.12), rgba(255,107,53,0.04))",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                border: "1.5px solid rgba(0,122,255,0.12)",
+                border: "1.5px solid rgba(255,107,53,0.12)",
               }}
             >
-              <MessageSquare size={32} color="rgba(0,122,255,0.5)" />
+              <MessageSquare size={32} color="rgba(255,107,53,0.5)" />
             </div>
             <Column style={{ alignItems: "center", gap: 6 }}>
               <Text style={{ fontWeight: 700, fontSize: 15, color: "#1C1C1E" }}>
@@ -439,7 +439,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                           {isMe && (
                             <CheckCheck
                               size={13}
-                              color="#007AFF"
+                              color="#ff6b35"
                               strokeWidth={2.5}
                             />
                           )}
@@ -542,11 +542,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               height: 38,
               borderRadius: "50%",
               background: message.trim()
-                ? "linear-gradient(135deg, #1A7AFF, #0057D9)"
+                ? "linear-gradient(135deg, #ff6b35, #e65721)"
                 : "#F2F2F7",
               color: message.trim() ? "white" : "rgba(0,0,0,0.4)",
               boxShadow: message.trim()
-                ? "0 4px 12px rgba(0,100,255,0.3)"
+                ? "0 4px 12px rgba(255,107,53,0.3)"
                 : "none",
               transition: "background 0.2s, box-shadow 0.2s",
               cursor: message.trim() && !sending ? "pointer" : "default",

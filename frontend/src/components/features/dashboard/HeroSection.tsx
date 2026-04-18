@@ -172,13 +172,13 @@ export const HeroSection = () => {
                     borderRadius: "8px",
                     alignItems: "center",
                     gap: "6px",
-                    backgroundColor: "rgba(0, 122, 255, 0.06)",
+                    backgroundColor: "rgba(255, 107, 53, 0.06)",
                   }}
                 >
-                  <CheckCircle2 size={11} color="#007AFF" />
+                  <CheckCircle2 size={11} color="#ff6b35" />
                   <Text
                     style={{
-                      color: "#007AFF",
+                      color: "#ff6b35",
                       fontSize: "0.65rem",
                       fontWeight: 800,
                       textTransform: "uppercase",
@@ -354,10 +354,10 @@ export const HeroSection = () => {
 
               <Row style={{ gap: "10px", alignItems: "center" }}>
                 <IconButton
-                  icon={<Navigation size={18} color="#007AFF" />}
+                  icon={<Navigation size={18} color="#ff6b35" />}
                   onClick={() => {}}
                   style={{
-                    backgroundColor: "rgba(0, 122, 255, 0.05)",
+                    backgroundColor: "rgba(255, 107, 53, 0.05)",
                     width: "42px",
                     height: "42px",
                     borderRadius: "12px",
@@ -366,7 +366,7 @@ export const HeroSection = () => {
                     borderLeftWidth: "1px",
                     borderRightWidth: "1px",
                     borderStyle: "solid",
-                    borderColor: "rgba(0, 122, 255, 0.1)",
+                    borderColor: "rgba(255, 107, 53, 0.1)",
                   }}
                 />
                 <Button

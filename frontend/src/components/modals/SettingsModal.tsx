@@ -162,9 +162,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     cursor: "pointer",
                     backgroundColor:
                       activeSettingsTab === tab.id
-                        ? "rgba(0,122,255,0.1)"
+                        ? "rgba(255,107,53,0.1)"
                         : "transparent",
-                    color: activeSettingsTab === tab.id ? "#007AFF" : textMuted,
+                    color: activeSettingsTab === tab.id ? "#ff6b35" : textMuted,
                     transition: "all 0.15s",
                   }}
                 >
@@ -210,9 +210,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     cursor: "pointer",
                     backgroundColor:
                       activeSettingsTab === tab.id
-                        ? "rgba(0,122,255,0.1)"
+                        ? "rgba(255,107,53,0.1)"
                         : "transparent",
-                    color: activeSettingsTab === tab.id ? "#007AFF" : textMuted,
+                    color: activeSettingsTab === tab.id ? "#ff6b35" : textMuted,
                     transition: "all 0.15s",
                   }}
                 >
@@ -295,10 +295,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             alignItems: "center",
                             gap: "12px",
                             backgroundColor: active
-                              ? "rgba(0,122,255,0.08)"
+                              ? "rgba(255,107,53,0.08)"
                               : cardBg,
                             border: active
-                              ? "2px solid #007AFF"
+                              ? "2px solid #ff6b35"
                               : `1px solid ${border}`,
                             borderRadius: "14px",
                             cursor: "pointer",
@@ -315,7 +315,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                                 width: 18,
                                 height: 18,
                                 borderRadius: "50%",
-                                backgroundColor: "#007AFF",
+                                backgroundColor: "#ff6b35",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
@@ -325,13 +325,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             </div>
                           )}
                           <div
-                            style={{ color: active ? "#007AFF" : textMuted }}
+                            style={{ color: active ? "#ff6b35" : textMuted }}
                           >
                             {opt.icon}
                           </div>
                           <Text
                             style={{
-                              color: active ? "#007AFF" : textMuted,
+                              color: active ? "#ff6b35" : textMuted,
                               fontWeight: 600,
                               fontSize: "0.85rem",
                             }}
@@ -358,7 +358,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <Row style={{ gap: "10px" }}>
                       {[
                         "#ED1B24",
-                        "#007AFF",
+                        "#ff6b35",
                         "#A855F7",
                         "#FBBF24",
                         "#34C759",
@@ -372,13 +372,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             borderRadius: "50%",
                             backgroundColor: c,
                             border:
-                              c === "#007AFF"
+                              c === "#ff6b35"
                                 ? "3px solid white"
                                 : "2px solid transparent",
                             cursor: "pointer",
                             transition: "transform 0.15s",
                             boxShadow:
-                              c === "#007AFF" ? `0 0 12px ${c}60` : "none",
+                              c === "#ff6b35" ? `0 0 12px ${c}60` : "none",
                           }}
                         />
                       ))}
@@ -417,10 +417,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             borderRadius: "12px",
                             cursor: "pointer",
                             backgroundColor: active
-                              ? "rgba(0,122,255,0.06)"
+                              ? "rgba(255,107,53,0.06)"
                               : cardBg,
                             border: active
-                              ? "1.5px solid #007AFF"
+                              ? "1.5px solid #ff6b35"
                               : `1px solid ${border}`,
                             transition: "all 0.15s",
                           }}
@@ -444,7 +444,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                                 width: 20,
                                 height: 20,
                                 borderRadius: "50%",
-                                backgroundColor: "#007AFF",
+                                backgroundColor: "#ff6b35",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
