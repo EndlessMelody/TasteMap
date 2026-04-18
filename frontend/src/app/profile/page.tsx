@@ -119,6 +119,7 @@ export default function ProfilePage() {
   const { user, loading, refetch } = useAuth();
   const { radarData } = useUserVector();
   const [totalBadges, setTotalBadges] = useState<number>(0);
+  const [friendsList, setFriendsList] = useState<any[]>([]);
 
   React.useEffect(() => {
     const fetchTotalBadges = async () => {
@@ -130,6 +131,18 @@ export default function ProfilePage() {
       }
     };
     fetchTotalBadges();
+  }, []);
+
+  React.useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const data = await apiGet<{ items: any[] }>("/api/v1/social/foodies");
+        setFriendsList(data?.items || []);
+      } catch (err) {
+        console.error("Failed to fetch friends", err);
+      }
+    };
+    fetchFriends();
   }, []);
 
   // Form state
@@ -687,113 +700,20 @@ export default function ProfilePage() {
           </div>
         </Row>
 
-        {/* Name + Info */}
-        <Column style={{ gap: "10px", marginBottom: "32px" }}>
-          <Heading
-            variant="display-strong-s"
-            style={{ color: "#1C1C1E", fontSize: "2.5rem" }}
-          >
-            {user?.display_name || user?.username || "Guest"}
-          </Heading>
-
-          <Row style={{ gap: "12px", alignItems: "center" }}>
-            <Text
-              style={{ color: "#007AFF", fontWeight: 600, fontSize: "1rem" }}
-            >
-              @{user?.username || "guest"} • {user?.title || "Taste Explorer"}
-            </Text>
-          </Row>
-
-          <Text
-            style={{
-              color: "#636366",
-              fontSize: "1rem",
-              lineHeight: 1.6,
-              maxWidth: "720px",
-            }}
-          >
-            {user?.bio || "Enjoying the food exploration journey!"}
-          </Text>
-
-          {/* Level Progress Bar */}
-          <Column style={{ gap: "8px", maxWidth: "320px", marginTop: "8px" }}>
-            <Row style={{ justifyContent: "space-between" }}>
-              <Text
-                style={{
-                  color: "#8E8E93",
-                  fontSize: "0.75rem",
-                  fontWeight: 600,
-                }}
-              >
-                Level {user?.level || 1} Progress
-              </Text>
-              <Text
-                style={{
-                  color: "#1C1C1E",
-                  fontSize: "0.75rem",
-                  fontWeight: 700,
-                }}
-              >
-                {user?.xp ?? 0} / {user?.next_level_xp ?? 100} XP
-              </Text>
-            </Row>
-            <div
-              style={{
-                width: "100%",
-                height: "6px",
-                backgroundColor: "#EAF2FF",
-                borderRadius: "3px",
-                overflow: "hidden",
-              }}
-            >
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{
-                  width: `${Math.min(((user?.xp ?? 0) / (user?.next_level_xp || 1)) * 100, 100)}%`,
-                }}
-                transition={{ duration: 1, delay: 0.5 }}
-                style={{
-                  height: "100%",
-                  backgroundColor: "#007AFF",
-                  borderRadius: "3px",
-                }}
-              />
-            </div>
-          </Column>
-
-          <Row style={{ gap: "24px", marginTop: "16px" }}>
-            <Row style={{ gap: "8px", alignItems: "center" }}>
-              <MapPin size={16} color="#8E8E93" />
-              <Text style={{ color: "#8E8E93", fontSize: "0.9rem" }}>
-                {user?.location || "Khám phá"}
-              </Text>
-            </Row>
-            <Row style={{ gap: "8px", alignItems: "center" }}>
-              <Calendar size={16} color="#8E8E93" />
-              <Text style={{ color: "#8E8E93", fontSize: "0.9rem" }}>
-                Joined{" "}
-                {user?.created_at
-                  ? new Date(user.created_at).toLocaleDateString()
-                  : "March 2025"}
-              </Text>
-            </Row>
-          </Row>
-        </Column>
 
         {/* ── STATS ROW ── */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "2fr 1fr",
             gap: "24px",
-            alignItems: "start",
+            alignItems: "stretch",
             marginBottom: "48px",
           }}
         >
           {/* ══ LEFT/CENTER COLUMN (col-span-2) ══ */}
           <div
             style={{
-              gridColumn: "span 2",
               display: "flex",
               flexDirection: "column",
               gap: "20px",
@@ -1101,49 +1021,124 @@ export default function ProfilePage() {
                     fontSize: "1rem",
                   }}
                 >
-                  Favorite Tastes
+                  Flavor Profile
                 </Text>
               </Row>
-              <Row style={{ gap: "8px", flexWrap: "wrap" }}>
-                {["#Spicy", "#Sweet", "#Vegan", "#Savory", "#Crispy"].map(
-                  (tag, i) => (
-                    <motion.button
-                      key={tag}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={handleComingSoon}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, 1fr)",
+                  gap: "10px",
+                }}
+              >
+                {[
+                  { emoji: "🌶️", label: "Spicy", value: 85, color: "#FF3B30" },
+                  { emoji: "🍰", label: "Sweet", value: 60, color: "#FF9500" },
+                  { emoji: "🥬", label: "Vegan", value: 40, color: "#34C759" },
+                  { emoji: "🧂", label: "Savory", value: 72, color: "#5856D6" },
+                  { emoji: "🍤", label: "Crispy", value: 55, color: "#FF6B35" },
+                  { emoji: "🍜", label: "Umami", value: 68, color: "#AF52DE" },
+                ].map((taste, i) => (
+                  <motion.div
+                    key={taste.label}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: 0.6 + i * 0.05 }}
+                    whileHover={{ scale: 1.03, backgroundColor: "#FAFAFA" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      padding: "10px 12px",
+                      borderRadius: "14px",
+                      backgroundColor: "#F9F9FB",
+                      cursor: "pointer",
+                      transition: "background-color 0.2s",
+                    }}
+                  >
+                    <div
                       style={{
-                        padding: "8px 16px",
-                        borderRadius: "20px",
-                        border: "none",
-                        background:
-                          i === 0
-                            ? "linear-gradient(135deg, #ff6b35, #ff8c5a)"
-                            : "#F9F9FB",
-                        color: i === 0 ? "white" : "#636366",
-                        fontWeight: 600,
-                        fontSize: "0.85rem",
-                        cursor: "pointer",
+                        fontSize: "1.3rem",
+                        width: "32px",
+                        height: "32px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
                       }}
                     >
-                      {tag}
-                    </motion.button>
-                  ),
-                )}
-              </Row>
+                      {taste.emoji}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <Row
+                        style={{
+                          justifyContent: "space-between",
+                          marginBottom: "4px",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "#1C1C1E",
+                            fontWeight: 600,
+                            fontSize: "0.8rem",
+                          }}
+                        >
+                          {taste.label}
+                        </Text>
+                        <Text
+                          style={{
+                            color: taste.color,
+                            fontWeight: 700,
+                            fontSize: "0.75rem",
+                          }}
+                        >
+                          {taste.value}%
+                        </Text>
+                      </Row>
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "4px",
+                          backgroundColor: "#ECECEE",
+                          borderRadius: "2px",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${taste.value}%` }}
+                          transition={{
+                            duration: 0.8,
+                            delay: 0.7 + i * 0.08,
+                            ease: "easeOut",
+                          }}
+                          style={{
+                            height: "100%",
+                            background: `linear-gradient(90deg, ${taste.color}, ${taste.color}aa)`,
+                            borderRadius: "2px",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
 
-            {/* TasteMap Stats Card */}
+            {/* Friends List Card — flex-grow to fill remaining height */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.6 }}
               style={{
+                flex: 1,
                 backgroundColor: "#FFFFFF",
                 borderRadius: "24px",
                 padding: "24px",
                 border: "1px solid #F2F2F7",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
               <Row
@@ -1151,92 +1146,226 @@ export default function ProfilePage() {
                   gap: "8px",
                   alignItems: "center",
                   marginBottom: "16px",
+                  justifyContent: "space-between",
                 }}
               >
-                <div
-                  style={{
-                    background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
-                    padding: "6px",
-                    borderRadius: "8px",
-                  }}
-                >
-                  <TrendingUp size={16} color="white" />
-                </div>
-                <Text
-                  style={{
-                    color: "#1C1C1E",
-                    fontWeight: 700,
-                    fontSize: "1rem",
-                  }}
-                >
-                  TasteMap Stats
-                </Text>
-              </Row>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4, 1fr)",
-                  gap: "12px",
-                }}
-              >
-                {[
-                  {
-                    label: "Followers",
-                    value: user?.stats?.followers ?? 0,
-                    color: "#ff6b35",
-                  },
-                  {
-                    label: "Following",
-                    value: user?.stats?.following ?? 0,
-                    color: "#34C759",
-                  },
-                  {
-                    label: "Reviews",
-                    value: user?.stats?.reviews ?? 0,
-                    color: "#5856D6",
-                  },
-                  {
-                    label: "Visited",
-                    value: user?.stats?.visited ?? 0,
-                    color: "#FF9500",
-                  },
-                ].map((stat) => (
+                <Row style={{ gap: "8px", alignItems: "center" }}>
                   <div
-                    key={stat.label}
                     style={{
-                      backgroundColor: "#F9F9FB",
-                      borderRadius: "16px",
-                      padding: "16px",
-                      textAlign: "center",
+                      background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                      padding: "6px",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <Users size={16} color="white" />
+                  </div>
+                  <Text
+                    style={{
+                      color: "#1C1C1E",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                    }}
+                  >
+                    Friends
+                  </Text>
+                  <div
+                    style={{
+                      backgroundColor: "#F2F2F7",
+                      padding: "2px 8px",
+                      borderRadius: "10px",
                     }}
                   >
                     <Text
                       style={{
-                        color: stat.color,
-                        fontWeight: 700,
-                        fontSize: "1.3rem",
-                      }}
-                    >
-                      {typeof stat.value === "number" && stat.value >= 1000
-                        ? `${(stat.value / 1000).toFixed(1)}K`
-                        : stat.value}
-                    </Text>
-                    <Text
-                      style={{
                         color: "#8E8E93",
-                        fontSize: "0.7rem",
+                        fontSize: "0.75rem",
                         fontWeight: 600,
                       }}
                     >
-                      {stat.label}
+                      {friendsList.length}
                     </Text>
                   </div>
-                ))}
-              </div>
+                </Row>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleComingSoon}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#ff6b35",
+                    fontWeight: 600,
+                    fontSize: "0.8rem",
+                    cursor: "pointer",
+                    padding: "4px 8px",
+                  }}
+                >
+                  See All
+                </motion.button>
+              </Row>
+
+              {friendsList.length === 0 ? (
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "12px",
+                    padding: "24px 0",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "linear-gradient(135deg, #FFF0E6, #FFE8D6)",
+                      padding: "16px",
+                      borderRadius: "50%",
+                    }}
+                  >
+                    <UserPlus size={24} color="#ff6b35" />
+                  </div>
+                  <Text
+                    style={{
+                      color: "#8E8E93",
+                      fontSize: "0.85rem",
+                      textAlign: "center",
+                    }}
+                  >
+                    No friends yet. Start exploring!
+                  </Text>
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={handleComingSoon}
+                    style={{
+                      background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                      color: "white",
+                      border: "none",
+                      padding: "10px 20px",
+                      borderRadius: "12px",
+                      fontWeight: 600,
+                      fontSize: "0.85rem",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Discover Foodies
+                  </motion.button>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                    flex: 1,
+                  }}
+                >
+                  {friendsList.slice(0, 5).map((friend, i) => (
+                    <motion.div
+                      key={friend.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 * i }}
+                      whileHover={{ backgroundColor: "#F9F9FB" }}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                        padding: "10px 12px",
+                        borderRadius: "14px",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                      }}
+                      onClick={handleComingSoon}
+                    >
+                      <img
+                        src={
+                          friend.avatar_url ||
+                          `https://i.pravatar.cc/150?u=${friend.id}`
+                        }
+                        alt={friend.display_name || friend.username}
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          border: "2px solid #F2F2F7",
+                        }}
+                      />
+                      <Column style={{ flex: 1, gap: "2px" }}>
+                        <Text
+                          style={{
+                            color: "#1C1C1E",
+                            fontWeight: 600,
+                            fontSize: "0.88rem",
+                          }}
+                        >
+                          {friend.display_name || friend.username}
+                        </Text>
+                        <Text
+                          style={{
+                            color: "#8E8E93",
+                            fontSize: "0.75rem",
+                          }}
+                        >
+                          @{friend.username}
+                          {friend.match_score != null &&
+                            ` · ${friend.match_score}% match`}
+                        </Text>
+                      </Column>
+                      <div
+                        style={{
+                          padding: "4px 10px",
+                          borderRadius: "8px",
+                          background:
+                            friend.match_score >= 80
+                              ? "linear-gradient(135deg, #FFF0E6, #FFE8D6)"
+                              : "#F2F2F7",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color:
+                              friend.match_score >= 80
+                                ? "#ff6b35"
+                                : "#8E8E93",
+                            fontWeight: 700,
+                            fontSize: "0.75rem",
+                          }}
+                        >
+                          {friend.match_score ?? 0}%
+                        </Text>
+                      </div>
+                    </motion.div>
+                  ))}
+                  {friendsList.length > 5 && (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleComingSoon}
+                      style={{
+                        marginTop: "4px",
+                        background: "#F9F9FB",
+                        border: "none",
+                        padding: "10px",
+                        borderRadius: "12px",
+                        color: "#ff6b35",
+                        fontWeight: 600,
+                        fontSize: "0.85rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      View all {friendsList.length} friends
+                    </motion.button>
+                  )}
+                </div>
+              )}
             </motion.div>
+
           </div>
 
-          {/* ══ RIGHT COLUMN (col-span-1) ══ */}
+          {/* ══ RIGHT COLUMN ══ */}
           <div
             style={{ display: "flex", flexDirection: "column", gap: "20px" }}
           >
@@ -1489,89 +1618,94 @@ export default function ProfilePage() {
               </div>
             </motion.div>
 
-            {/* Taste Match Card */}
+            {/* TasteMap Stats Card — flex-grow to fill remaining height */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
               style={{
-                background: "linear-gradient(135deg, #FFF9F6, #FFF0E8)",
+                flex: 1,
+                backgroundColor: "#FFFFFF",
                 borderRadius: "24px",
                 padding: "24px",
-                border: "1px solid rgba(255,107,53,0.1)",
+                border: "1px solid #F2F2F7",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
               }}
             >
               <Row
                 style={{
                   gap: "8px",
                   alignItems: "center",
-                  marginBottom: "12px",
+                  marginBottom: "16px",
                 }}
               >
-                <Users size={18} color="#ff6b35" />
+                <div
+                  style={{
+                    background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                    padding: "6px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  <TrendingUp size={16} color="white" />
+                </div>
                 <Text
                   style={{
                     color: "#1C1C1E",
                     fontWeight: 700,
-                    fontSize: "0.95rem",
+                    fontSize: "1rem",
                   }}
                 >
-                  Taste Match
+                  TasteMap Stats
                 </Text>
               </Row>
-              <Text
+              <div
                 style={{
-                  color: "#636366",
-                  fontSize: "0.8rem",
-                  marginBottom: "16px",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, 1fr)",
+                  gap: "12px",
                 }}
               >
-                People with similar taste
-              </Text>
-              <Row style={{ gap: "-8px" }}>
                 {[
-                  "https://i.pravatar.cc/150?img=1",
-                  "https://i.pravatar.cc/150?img=5",
-                  "https://i.pravatar.cc/150?img=8",
-                ].map((url, i) => (
-                  <img
-                    key={i}
-                    src={url}
-                    alt=""
+                  { label: "Followers", value: user?.stats?.followers ?? 0, color: "#ff6b35" },
+                  { label: "Following", value: user?.stats?.following ?? 0, color: "#34C759" },
+                  { label: "Reviews", value: user?.stats?.reviews ?? 0, color: "#5856D6" },
+                  { label: "Visited", value: user?.stats?.visited ?? 0, color: "#FF9500" },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
                     style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      border: "2px solid white",
-                      marginLeft: i > 0 ? "-10px" : "0",
-                    }}
-                  />
-                ))}
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "50%",
-                    background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
-                    marginLeft: "-10px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    border: "2px solid white",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: "0.75rem",
-                      fontWeight: 700,
+                      backgroundColor: "#F9F9FB",
+                      borderRadius: "16px",
+                      padding: "16px",
+                      textAlign: "center",
                     }}
                   >
-                    +12
-                  </Text>
-                </div>
-              </Row>
+                    <Text
+                      style={{
+                        color: stat.color,
+                        fontWeight: 700,
+                        fontSize: "1.3rem",
+                      }}
+                    >
+                      {typeof stat.value === "number" && stat.value >= 1000
+                        ? `${(stat.value / 1000).toFixed(1)}K`
+                        : stat.value}
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#8E8E93",
+                        fontSize: "0.7rem",
+                        fontWeight: 600,
+                      }}
+                    >
+                      {stat.label}
+                    </Text>
+                  </div>
+                ))}
+              </div>
             </motion.div>
+
+
           </div>
         </div>
 
