@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Column, Row, Heading, Text } from '@/once-ui/components';
+import { Column, Row, Heading, Text } from '@/components/OnceUI';
 import { apiGet } from '@/lib/api';
 import { Users, Target, MapPin } from 'lucide-react';
 

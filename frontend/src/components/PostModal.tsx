@@ -450,8 +450,8 @@ export default function PostModal({
                 >
                   <Input
                     value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    onKeyDown={(e) => {
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value)}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                       if (e.key === "Enter") handlePostComment();
                     }}
                     placeholder="Add a comment..."
