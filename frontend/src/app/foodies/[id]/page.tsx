@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   Column,
@@ -26,6 +26,14 @@ import {
   ChevronLeft,
   Dna,
   Trophy,
+  Paperclip,
+  ImageIcon,
+  Smile,
+  X,
+  Pause,
+  StopCircle,
+  ThumbsUp,
+  Play // Nhớ check xem có Play chưa
 } from "lucide-react";
 
 import {
@@ -42,6 +50,67 @@ import { apiGet, apiPost, apiPatch, apiDelete } from "@/lib/api";
 import { useUserVector } from "@/context/UserVectorContext";
 import { useChat } from "@/context/ChatContext";
 import type { Friend } from "@/components/features/foodies/FriendRow";
+import { useMediaUpload } from "@/hooks/useMediaUpload";
+import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
+
+
+// 2. THÊM VÀO KHU VỰC HELPERS (trên component VoicePlayer)
+function normalizeMimeType(mimeType: string): string {
+  return mimeType.split(";", 1)[0]?.trim()?.toLowerCase() || "application/octet-stream";
+}
+
+function getAudioFileExtension(mimeType: string): string {
+  const map: Record<string, string> = {
+    "audio/webm": "webm",
+    "audio/ogg": "ogg",
+    "audio/wav": "wav",
+    "audio/mp4": "mp4",
+    "audio/mpeg": "mp3",
+    "audio/mp3": "mp3",
+  };
+  return map[mimeType] ?? mimeType.split("/")[1] ?? "webm";
+}
+
+function formatVoiceDuration(seconds: unknown): string {
+  const s = typeof seconds === "number" ? seconds : Number(seconds);
+  if (!Number.isFinite(s) || s < 0) return "0:00";
+  const r = Math.round(s);
+  return `${Math.floor(r / 60)}:${String(r % 60).padStart(2, "0")}`;
+}
+
+function getDateLabel(createdAt?: string): string {
+  if (!createdAt) return "Today";
+  const d = new Date(createdAt);
+  if (isNaN(d.getTime())) return "Today";
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesStart = new Date(todayStart);
+  yesStart.setDate(todayStart.getDate() - 1);
+  if (d >= todayStart) return "Today";
+  if (d >= yesStart) return "Yesterday";
+  return d.toLocaleDateString([], { month: "short", day: "numeric" });
+}
+
+function bubbleRadius(sender: "me" | "them", pos: "single" | "first" | "middle" | "last"): string {
+  const R = 18, t = 4;
+  if (sender === "me") {
+    if (pos === "single") return `${R}px ${R}px ${t}px ${R}px`;
+    if (pos === "first") return `${R}px ${R}px ${t}px ${R}px`;
+    if (pos === "middle") return `${R}px ${t}px ${t}px ${R}px`;
+    return `${R}px ${t}px ${R}px ${R}px`;
+  } else {
+    if (pos === "single") return `${R}px ${R}px ${R}px ${t}px`;
+    if (pos === "first") return `${R}px ${R}px ${R}px ${t}px`;
+    if (pos === "middle") return `${t}px ${R}px ${R}px ${t}px`;
+    return `${t}px ${R}px ${R}px ${R}px`;
+  }
+}
+
+const EMOJI_LIST = [
+  "😀", "😂", "😍", "😎", "🤔", "🥺", "🙏", "👏", "🔥", "✨", "🎉", "💯",
+  "❤️", "🧡", "💛", "💚", "💙", "💜", "👍", "👎", "👌", "🤣", "😇", "🫡",
+  "😋", "🤤", "🥳", "😴", "🍔", "🍜", "🍣", "🍕", "🧋", "☕", "🍰", "🥗",
+];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -97,6 +166,83 @@ const RADAR_SUBJECTS = [
 ];
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
+
+function DateSeparator({ label }: { label: string }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0" }}>
+      <div style={{ flex: 1, height: 1, backgroundColor: "#E5E5EA" }} />
+      <span
+        style={{
+          fontSize: 11, fontWeight: 600, color: "#8E8E93",
+          backgroundColor: "#F9F9FB", padding: "3px 10px",
+          borderRadius: 20, border: "1px solid #E5E5EA", whiteSpace: "nowrap",
+        }}
+      >
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, backgroundColor: "#E5E5EA" }} />
+    </div>
+  );
+}
+
+function VoicePlayer({ src, isMe, durationHint }: { src: string; isMe: boolean; durationHint?: number }) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const total = duration > 0 ? duration : (durationHint ?? 0);
+
+  useEffect(() => {
+    const a = audioRef.current;
+    return () => { a?.pause(); };
+  }, []);
+
+  const toggle = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) { void a.play(); setIsPlaying(true); }
+    else { a.pause(); setIsPlaying(false); }
+  };
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 200 }}>
+      <audio
+        ref={audioRef}
+        src={src}
+        preload="metadata"
+        onLoadedMetadata={() => { const d = audioRef.current?.duration ?? 0; if (isFinite(d) && d > 0) setDuration(d); }}
+        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
+        onEnded={() => { setIsPlaying(false); setCurrentTime(0); }}
+        style={{ display: "none" }}
+      />
+      <button
+        onClick={toggle}
+        style={{
+          width: 28, height: 28, borderRadius: "50%", border: "none", cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+          background: isMe ? "rgba(255,255,255,0.2)" : "rgba(255,107,53,0.14)",
+          color: isMe ? "#fff" : "#ff6b35",
+        }}
+      >
+        {isPlaying ? <Pause size={13} /> : <Play size={13} />}
+      </button>
+      <input
+        type="range" min={0} max={Math.max(total, 0.1)} step={0.05}
+        value={Math.min(currentTime, Math.max(total, 0.1))}
+        onChange={(e) => {
+          const t = Number(e.target.value);
+          if (audioRef.current) audioRef.current.currentTime = t;
+          setCurrentTime(t);
+        }}
+        style={{ flex: 1, accentColor: isMe ? "#fff" : "#ff6b35" }}
+      />
+      <span style={{ fontSize: 11, color: isMe ? "rgba(255,255,255,0.85)" : "#8E8E93", whiteSpace: "nowrap" }}>
+        {formatVoiceDuration(currentTime)} / {formatVoiceDuration(total)}
+      </span>
+    </div>
+  );
+}
 
 function ProfileSkeleton() {
   return (
@@ -535,13 +681,13 @@ export default function FoodieProfilePage() {
 
   const matchScore = social?.food_vector
     ? (() => {
-        const a = myRadarData.map((r) => r.A / 150);
-        const b = social.food_vector!;
-        const dot = a.reduce((s, v, i) => s + v * (b[i] ?? 0.5), 0);
-        const na = Math.sqrt(a.reduce((s, v) => s + v * v, 0));
-        const nb = Math.sqrt(b.reduce((s, v) => s + v * v, 0));
-        return na && nb ? Math.round((dot / (na * nb)) * 100) : 0;
-      })()
+      const a = myRadarData.map((r) => r.A / 150);
+      const b = social.food_vector!;
+      const dot = a.reduce((s, v, i) => s + v * (b[i] ?? 0.5), 0);
+      const na = Math.sqrt(a.reduce((s, v) => s + v * v, 0));
+      const nb = Math.sqrt(b.reduce((s, v) => s + v * v, 0));
+      return na && nb ? Math.round((dot / (na * nb)) * 100) : 0;
+    })()
     : null;
 
   const fs = social?.friendship_status ?? "none";

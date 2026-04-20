@@ -162,4 +162,10 @@ async def create_group_message(
     user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_db)
 ):
-    return await service.create_group_message(db, group_id, user_id, body.content)
+    return await service.create_group_message(
+        db, group_id, user_id, 
+        content=body.content,
+        content_type=body.content_type,
+        media_url=body.media_url,
+        media_meta=body.media_meta
+    )

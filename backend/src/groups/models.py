@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, func, Text, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey, func, Text, UniqueConstraint, JSON
 from sqlalchemy.orm import relationship
 from pgvector.sqlalchemy import Vector
 from src.db.database import Base
@@ -82,7 +82,10 @@ class GroupChatMessage(Base):
     id = Column(Integer, primary_key=True, index=True)
     group_id = Column(Integer, ForeignKey("groups.id", ondelete="CASCADE"), nullable=False, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    content = Column(Text, nullable=False)
+    content = Column(Text, nullable=True)
+    content_type = Column(String(20), default="text", nullable=False, index=True)
+    media_url = Column(String(500), nullable=True)
+    media_meta = Column(JSON, default=dict, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     group = relationship("Group")

@@ -686,14 +686,30 @@ async def get_group_messages(db: AsyncSession, group_id: int, limit: int = 50) -
             "user_id": msg.user_id,
             "username": user.display_name or user.username,
             "content": msg.content,
+            "content_type": msg.content_type,
+            "media_url": msg.media_url,
+            "media_meta": msg.media_meta,
             "created_at": msg.created_at,
         })
     return {"items": items}
 
-async def create_group_message(db: AsyncSession, group_id: int, user_id: int, content: str) -> dict:
+async def create_group_message(
+    db: AsyncSession, group_id: int, user_id: int, 
+    content: str | None = None,
+    content_type: str = "text",
+    media_url: str | None = None,
+    media_meta: dict | None = None
+) -> dict:
     from src.groups.models import GroupChatMessage
     
-    msg = GroupChatMessage(group_id=group_id, user_id=user_id, content=content)
+    msg = GroupChatMessage(
+        group_id=group_id, 
+        user_id=user_id, 
+        content=content,
+        content_type=content_type,
+        media_url=media_url,
+        media_meta=media_meta or {}
+    )
     db.add(msg)
     await db.commit()
     await db.refresh(msg)
@@ -706,6 +722,9 @@ async def create_group_message(db: AsyncSession, group_id: int, user_id: int, co
         "user_id": msg.user_id,
         "username": user.display_name or user.username,
         "content": msg.content,
+        "content_type": msg.content_type,
+        "media_url": msg.media_url,
+        "media_meta": msg.media_meta,
         "created_at": msg.created_at,
     }
 

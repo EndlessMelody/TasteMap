@@ -170,7 +170,10 @@ class UndoResponse(BaseModel):
 # ─── Chat ─────────────────────────────────────────────────────────────────
 
 class ChatMessageBase(BaseModel):
-    content: str
+    content: str | None = None
+    content_type: str = "text"
+    media_url: str | None = None
+    media_meta: dict = {}
 
 
 class ChatMessageCreate(ChatMessageBase):
