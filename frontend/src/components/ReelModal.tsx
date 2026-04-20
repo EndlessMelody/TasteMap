@@ -45,6 +45,7 @@ export default function ReelModal({
   const [comments, setComments] = React.useState<any[]>([]);
   const [newComment, setNewComment] = React.useState("");
   const [isLoadingComments, setIsLoadingComments] = React.useState(false);
+  const [isPostingComment, setIsPostingComment] = React.useState(false);
 
   React.useEffect(() => {
     if (isOpen && data?.id) {
@@ -60,16 +61,23 @@ export default function ReelModal({
   }, [isOpen, data?.id]);
 
   const handlePostComment = async () => {
-    if (!newComment.trim() || !data?.id) return;
+    if (!newComment.trim() || !data?.id || isPostingComment) return;
+
+    const content = newComment.trim();
+    setIsPostingComment(true);
+    setNewComment(""); // Clear immediately
+
     try {
       const res = await apiPost(`/api/v1/reels/${data.id}/comments`, {
-        content: newComment,
+        content: content,
       });
       setComments([res, ...comments]);
-      setNewComment("");
       updateReel(data.id, { comments: (data.comments || 0) + 1 });
     } catch (err) {
       console.error(err);
+      setNewComment(content); // Restore on error
+    } finally {
+      setIsPostingComment(false);
     }
   };
 
@@ -296,6 +304,7 @@ export default function ReelModal({
                             "https://i.pinimg.com/736x/46/83/99/46839974515f6ca59a6023ef5e061d3e.jpg"
                           }
                           size="s"
+                          name={c.user?.display_name || c.user?.username}
                         />
                         <Column style={{ gap: "4px" }}>
                           <Text
@@ -392,17 +401,17 @@ export default function ReelModal({
                         size={24}
                         color={
                           data.isLiked
-                            ? "var(--brand-solid-strong)"
-                            : "var(--neutral-alpha-medium)"
+                            ? "#ff6b35"
+                            : "#AEAEB2"
                         }
                         fill={
-                          data.isLiked ? "var(--brand-solid-strong)" : "none"
+                          data.isLiked ? "#ff6b35" : "none"
                         }
                       />
                       <Text
                         variant="label-default-l"
                         weight="strong"
-                        onBackground="neutral-strong"
+                        style={{ color: "#1C1C1E" }}
                       >
                         {data.likes || 0}
                       </Text>
@@ -414,79 +423,83 @@ export default function ReelModal({
                     >
                       <MessageCircle
                         size={24}
-                        color="var(--neutral-alpha-medium)"
+                        color="#AEAEB2"
                       />
                       <Text
                         variant="label-default-l"
                         weight="strong"
-                        onBackground="neutral-strong"
+                        style={{ color: "#1C1C1E" }}
                       >
                         {comments.length}
                       </Text>
                     </Row>
                   </Row>
-                  <Row
-                    style={{ cursor: "pointer" }}
+                  <IconButton
+                    icon={
+                      <Bookmark
+                        size={22}
+                        color={
+                          isSaved
+                            ? "#ff6b35"
+                            : "#AEAEB2"
+                        }
+                        fill={isSaved ? "#ff6b35" : "none"}
+                      />
+                    }
+                    variant="tertiary"
                     onClick={() => setIsSaved(!isSaved)}
-                  >
-                    <Bookmark
-                      size={24}
-                      color={
-                        isSaved
-                          ? "var(--brand-solid-strong)"
-                          : "var(--neutral-alpha-medium)"
-                      }
-                      fill={isSaved ? "var(--brand-solid-strong)" : "none"}
-                    />
-                  </Row>
+                  />
                 </Row>
               </Column>
 
               {/* Input Footer */}
               <Row
                 style={{
-                  paddingTop: "16px",
-                  paddingBottom: "16px",
-                  paddingLeft: "24px",
-                  paddingRight: "24px",
-                  borderTopWidth: "1px",
-                  borderTopStyle: "solid",
-                  borderTopColor: "var(--border-medium)",
+                  padding: "16px 24px",
+                  borderTop: "1px solid var(--border-medium)",
                   alignItems: "center",
-                  gap: "16px",
+                  gap: "12px",
                   flexShrink: 0,
                 }}
               >
-                <Input
-                  value={newComment}
-                  onChange={(e: any) => setNewComment(e.target.value)}
-                  onKeyPress={(e: any) => {
-                    if (e.key === "Enter") handlePostComment();
-                  }}
-                  placeholder="Add a comment..."
-                  style={{
-                    flex: 1,
-                    borderWidth: 0,
-                    borderStyle: "none",
-                    backgroundColor: "transparent",
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                    paddingLeft: 0,
-                    paddingRight: 0,
-                    fontSize: "0.85rem",
-                  }}
-                />
-                <Text
-                  onClick={handlePostComment}
-                  style={{
-                    color: newComment.trim() ? "#ff6b35" : "#AEAEB2",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    cursor: newComment.trim() ? "pointer" : "default",
-                  }}
+                <Row
+                  fillWidth
+                  paddingX="m"
+                  paddingY="xs"
+                  radius="xl"
+                  align="center"
+                  style={{ backgroundColor: "#F2F2F7" }}
                 >
-                  Post
-                </Text>
+                  <Input
+                    value={newComment}
+                    onChange={(e: any) => setNewComment(e.target.value)}
+                    onKeyDown={(e: any) => {
+                      if (e.key === "Enter") handlePostComment();
+                    }}
+                    placeholder="Add a comment..."
+                    disabled={isPostingComment}
+                    style={{
+                      flex: 1,
+                      border: "none",
+                      backgroundColor: "transparent",
+                      padding: 0,
+                      fontSize: "0.85rem",
+                      height: "auto"
+                    }}
+                  />
+                  <IconButton
+                    icon={isPostingComment ? <Text>...</Text> : <Send size={18} />}
+                    variant="ghost"
+                    onClick={handlePostComment}
+                    disabled={!newComment.trim() || isPostingComment}
+                    style={{
+                      color: newComment.trim() ? "#ff6b35" : "#AEAEB2",
+                      cursor: newComment.trim() ? "pointer" : "default",
+                      width: "32px",
+                      height: "32px"
+                    }}
+                  />
+                </Row>
               </Row>
             </Column>
           </motion.div>

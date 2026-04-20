@@ -30,22 +30,22 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col m-0 p-0 overflow-hidden">
+      <body suppressHydrationWarning className="min-h-full flex flex-col m-0 p-0 overflow-hidden">
         <DashboardLayout>{children}</DashboardLayout>
         <Toaster
-            theme="dark"
-            position="bottom-center"
-            toastOptions={{
-              style: {
-                background: "#1A1A1A",
-                border: "1px solid rgba(255,255,255,0.08)",
-                color: "white",
-                fontSize: "0.85rem",
-                borderRadius: "12px",
-                backdropFilter: "blur(12px)",
-              },
-            }}
-          />
+          theme="dark"
+          position="bottom-center"
+          toastOptions={{
+            style: {
+              background: "#1A1A1A",
+              border: "1px solid rgba(255,255,255,0.08)",
+              color: "white",
+              fontSize: "0.85rem",
+              borderRadius: "12px",
+              backdropFilter: "blur(12px)",
+            },
+          }}
+        />
       </body>
     </html>
   );

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: tastemap-backend
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    # Đảm bảo lệnh startCommand trỏ đúng vào file chứa biến app FastAPI của bạn
+    # Ví dụ: nếu app = FastAPI() nằm trong src/main.py, lệnh sẽ là: uvicorn src.main:app --host 0.0.0.0 --port 10000
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port 10000"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0 # Chọn phiên bản Python bạn đang dùng
+      - key: DATABASE_URL
+        value: your_database_url_here # Thay bằng URL thật nếu có, hoặc để trống và cấu hình sau trên dashboard

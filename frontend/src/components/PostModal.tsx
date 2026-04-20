@@ -43,6 +43,7 @@ export default function PostModal({
   const [commentsList, setCommentsList] = React.useState<any[]>([]);
   const [loadingComments, setLoadingComments] = React.useState(false);
   const [newComment, setNewComment] = React.useState("");
+  const [isPostingComment, setIsPostingComment] = React.useState(false);
 
   React.useEffect(() => {
     if (isOpen && data.id) {
@@ -61,16 +62,23 @@ export default function PostModal({
   }, [isOpen, data.id]);
 
   const handlePostComment = async () => {
-    if (!newComment.trim() || !data.id) return;
+    if (!newComment.trim() || !data.id || isPostingComment) return;
+
+    const content = newComment.trim();
+    setIsPostingComment(true);
+    setNewComment(""); // Clear immediately for snappy UX
+
     try {
       const res = await apiPost(`/api/v1/posts/${data.id}/comments`, {
-        content: newComment,
+        content: content,
       });
       setCommentsList((prev) => [res, ...prev]);
-      setNewComment("");
       updatePost(data.id, { comments: (data.comments || 0) + 1 });
     } catch (err) {
       console.error(err);
+      setNewComment(content); // Restore if failed
+    } finally {
+      setIsPostingComment(false);
     }
   };
 
@@ -371,17 +379,17 @@ export default function PostModal({
                         size={24}
                         color={
                           data.isLiked
-                            ? "var(--brand-solid-strong)"
-                            : "var(--neutral-alpha-medium)"
+                            ? "#ff6b35"
+                            : "#AEAEB2"
                         }
                         fill={
-                          data.isLiked ? "var(--brand-solid-strong)" : "none"
+                          data.isLiked ? "#ff6b35" : "none"
                         }
                       />
                       <Text
                         variant="label-default-l"
                         weight="strong"
-                        onBackground="neutral-strong"
+                        style={{ color: "#1C1C1E" }}
                       >
                         {data.likes || 0}
                       </Text>
@@ -393,31 +401,32 @@ export default function PostModal({
                     >
                       <MessageCircle
                         size={24}
-                        color="var(--neutral-alpha-medium)"
+                        color="#AEAEB2"
                       />
                       <Text
                         variant="label-default-l"
                         weight="strong"
-                        onBackground="neutral-strong"
+                        style={{ color: "#1C1C1E" }}
                       >
                         {data.comments || 0}
                       </Text>
                     </Row>
                   </Row>
-                  <Row
-                    style={{ cursor: "pointer" }}
+                  <IconButton
+                    icon={
+                      <Bookmark
+                        size={22}
+                        color={
+                          isSaved
+                            ? "#ff6b35"
+                            : "#AEAEB2"
+                        }
+                        fill={isSaved ? "#ff6b35" : "none"}
+                      />
+                    }
+                    variant="tertiary"
                     onClick={() => setIsSaved(!isSaved)}
-                  >
-                    <Bookmark
-                      size={24}
-                      color={
-                        isSaved
-                          ? "var(--brand-solid-strong)"
-                          : "var(--neutral-alpha-medium)"
-                      }
-                      fill={isSaved ? "var(--brand-solid-strong)" : "none"}
-                    />
-                  </Row>
+                  />
                 </Row>
               </Column>
 
@@ -427,36 +436,48 @@ export default function PostModal({
                   padding: "16px 24px",
                   borderTop: "1px solid var(--border-medium)",
                   alignItems: "center",
-                  gap: "16px",
+                  gap: "12px",
                   flexShrink: 0,
                 }}
               >
-                <Input
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handlePostComment();
-                  }}
-                  placeholder="Add a comment..."
-                  style={{
-                    flex: 1,
-                    border: "none",
-                    backgroundColor: "transparent",
-                    padding: 0,
-                    fontSize: "0.85rem",
-                  }}
-                />
-                <Text
-                  onClick={handlePostComment}
-                  style={{
-                    color: newComment.trim() ? "#ff6b35" : "#AEAEB2",
-                    fontWeight: 600,
-                    fontSize: "0.85rem",
-                    cursor: newComment.trim() ? "pointer" : "default",
-                  }}
+                <Row
+                  fillWidth
+                  paddingX="m"
+                  paddingY="xs"
+                  radius="xl"
+                  align="center"
+                  style={{ backgroundColor: "#F2F2F7" }}
                 >
-                  Post
-                </Text>
+                  <Input
+                    value={newComment}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value)}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      if (e.key === "Enter") handlePostComment();
+                    }}
+                    placeholder="Add a comment..."
+                    disabled={isPostingComment}
+                    style={{
+                      flex: 1,
+                      border: "none",
+                      backgroundColor: "transparent",
+                      padding: 0,
+                      fontSize: "0.85rem",
+                      height: "auto"
+                    }}
+                  />
+                  <IconButton
+                    icon={isPostingComment ? <Text>...</Text> : <Send size={18} />}
+                    variant="ghost"
+                    onClick={handlePostComment}
+                    disabled={!newComment.trim() || isPostingComment}
+                    style={{
+                      color: newComment.trim() ? "#ff6b35" : "#AEAEB2",
+                      cursor: newComment.trim() ? "pointer" : "default",
+                      width: "32px",
+                      height: "32px"
+                    }}
+                  />
+                </Row>
               </Row>
             </Column>
           </motion.div>
