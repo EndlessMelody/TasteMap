@@ -13,12 +13,11 @@ import {
   Heart,
   MessageCircle,
   Bookmark,
-  Star,
   MapPin,
   Send,
+  X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import BottomSheet from "@/components/BottomSheet";
 import { apiGet, apiPost } from "@/lib/api";
 import { useSocialStore } from "@/store/socialStore";
 import { PostData } from "@/types/dashboard";
@@ -50,9 +49,7 @@ export default function PostModal({
       setLoadingComments(true);
       apiGet(`/api/v1/posts/${data.id}/comments`)
         .then((res: any) => {
-          if (res && res.items) {
-            setCommentsList(res.items);
-          }
+          if (res && res.items) setCommentsList(res.items);
         })
         .catch(console.error)
         .finally(() => setLoadingComments(false));
@@ -63,34 +60,28 @@ export default function PostModal({
 
   const handlePostComment = async () => {
     if (!newComment.trim() || !data.id || isPostingComment) return;
-
     const content = newComment.trim();
     setIsPostingComment(true);
-    setNewComment(""); // Clear immediately for snappy UX
-
+    setNewComment("");
     try {
-      const res = await apiPost(`/api/v1/posts/${data.id}/comments`, {
-        content: content,
-      });
+      const res = await apiPost(`/api/v1/posts/${data.id}/comments`, { content });
       setCommentsList((prev) => [res, ...prev]);
       updatePost(data.id, { comments: (data.comments || 0) + 1 });
     } catch (err) {
       console.error(err);
-      setNewComment(content); // Restore if failed
+      setNewComment(content);
     } finally {
       setIsPostingComment(false);
     }
   };
 
   const adaptTime = (dateStr: string) => {
-    if (!dateStr) return "Just now";
-    const now = new Date();
-    const created = new Date(dateStr);
-    const diffMs = now.getTime() - created.getTime();
+    if (!dateStr) return "Vừa xong";
+    const diffMs = Date.now() - new Date(dateStr).getTime();
     const diffH = Math.floor(diffMs / 3600000);
-    if (diffH < 1) return `${Math.floor(diffMs / 60000)}m`;
-    if (diffH < 24) return `${diffH}h`;
-    return `${Math.floor(diffH / 24)}d`;
+    if (diffH < 1) return `${Math.floor(diffMs / 60000)}p`;
+    if (diffH < 24) return `${diffH}g`;
+    return `${Math.floor(diffH / 24)}n`;
   };
 
   return (
@@ -100,53 +91,62 @@ export default function PostModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
           style={{
             position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
+            inset: 0,
             zIndex: 200,
-            backgroundColor: "rgba(0,0,0,0.8)",
-            backdropFilter: "blur(12px)",
+            backgroundColor: "rgba(0,0,0,0.75)",
+            backdropFilter: "blur(16px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            paddingTop: "20px",
-            paddingBottom: "20px",
-            paddingLeft: "20px",
-            paddingRight: "20px",
+            padding: "20px",
           }}
           onClick={onClose}
         >
           <motion.div
-            initial={{ scale: 0.95, y: 20 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.95, y: 20 }}
+            initial={{ scale: 0.94, y: 24, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.94, y: 24, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 340, damping: 30 }}
             onClick={(e) => e.stopPropagation()}
             style={{
               width: "100%",
-              maxWidth: "1100px",
-              height: "85vh",
+              maxWidth: "1080px",
+              height: "88vh",
               backgroundColor: "#FFFFFF",
-              borderRadius: "24px",
+              borderRadius: "28px",
               overflow: "hidden",
-              boxShadow: "0 32px 80px rgba(0,0,0,0.2)",
+              boxShadow: "0 40px 100px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08)",
               display: "flex",
               flexDirection: "row",
             }}
           >
-            {/* Left Block (Media) */}
-            <Column
+            {/* ── Left: Media ── */}
+            <div
               style={{
-                width: "55%",
+                width: "56%",
                 height: "100%",
-                backgroundColor: "#000000",
+                backgroundColor: "#0a0a0a",
                 position: "relative",
+                display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
               }}
             >
+              {/* Subtle gradient vignette */}
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.45) 100%)",
+                  zIndex: 1,
+                  pointerEvents: "none",
+                }}
+              />
               <img
                 src={data.img}
                 alt={data.spotName}
@@ -154,331 +154,364 @@ export default function PostModal({
                   width: "100%",
                   height: "100%",
                   objectFit: "contain",
+                  display: "block",
                 }}
               />
-            </Column>
+              {/* Bottom location badge */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "20px",
+                  left: "20px",
+                  zIndex: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  backgroundColor: "rgba(255,255,255,0.12)",
+                  backdropFilter: "blur(12px)",
+                  borderRadius: "20px",
+                  padding: "6px 12px",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                }}
+              >
+                <MapPin size={12} color="rgba(255,255,255,0.85)" />
+                <span style={{ color: "rgba(255,255,255,0.9)", fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.02em" }}>
+                  {data.spotName}
+                </span>
+              </div>
+            </div>
 
-            {/* Right Block (Info & Comments) */}
+            {/* ── Right: Info & Comments ── */}
             <Column
               style={{
-                width: "45%",
+                width: "44%",
                 height: "100%",
-                backgroundColor: "#FFFFFF",
-                borderLeft: "1px solid #E5E5EA",
+                backgroundColor: "#FAFAFA",
+                borderLeft: "1px solid #EBEBEB",
                 display: "flex",
                 flexDirection: "column",
               }}
             >
               {/* Header */}
-              <Row
+              <div
                 style={{
-                  paddingTop: "18px",
-                  paddingBottom: "18px",
-                  paddingLeft: "24px",
-                  paddingRight: "24px",
-                  borderBottom: "1px solid var(--border-medium)",
+                  padding: "18px 20px 16px",
+                  borderBottom: "1px solid #F0F0F0",
+                  display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
                   flexShrink: 0,
+                  backgroundColor: "#FFFFFF",
                 }}
               >
-                <Row style={{ alignItems: "center", gap: "12px" }}>
-                  <Avatar src={data.avatar} size="m" />
-                  <Column style={{ gap: "2px" }}>
-                    <Text
-                      style={{
-                        color: "#1C1C1E",
-                        fontWeight: 700,
-                        fontSize: "0.9rem",
-                      }}
-                    >
+                <div style={{ display: "flex", alignItems: "center", gap: "11px" }}>
+                  <div style={{ position: "relative" }}>
+                    <Avatar src={data.avatar} size="m" />
+                    {/* Online dot */}
+                    <div style={{
+                      position: "absolute",
+                      bottom: 1,
+                      right: 1,
+                      width: 9,
+                      height: 9,
+                      borderRadius: "50%",
+                      backgroundColor: "#22c55e",
+                      border: "2px solid #FFFFFF",
+                    }} />
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#111", letterSpacing: "-0.01em" }}>
                       {data.name}
-                    </Text>
-                    <Row style={{ alignItems: "center", gap: "4px" }}>
-                      <MapPin size={11} color="#AEAEB2" />
-                      <Text style={{ color: "#AEAEB2", fontSize: "0.7rem" }}>
-                        {data.spotName} • {data.location}
-                      </Text>
-                    </Row>
-                  </Column>
-                </Row>
-                <IconButton
-                  icon={
-                    <Text style={{ fontSize: "20px", color: "#1C1C1E" }}>
-                      ×
-                    </Text>
-                  }
-                  variant="tertiary"
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "2px" }}>
+                      <MapPin size={10} color="#C0C0C0" />
+                      <span style={{ color: "#AEAEB2", fontSize: "0.68rem", fontWeight: 500 }}>
+                        {data.location}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <button
                   onClick={onClose}
-                  style={{ width: "36px", height: "36px", borderRadius: "50%" }}
-                />
-              </Row>
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    border: "1px solid #E8E8E8",
+                    backgroundColor: "#F5F5F5",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    transition: "background 0.15s",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#EBEBEB")}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#F5F5F5")}
+                >
+                  <X size={15} color="#555" />
+                </button>
+              </div>
 
-              {/* Scrollable Content (Caption + Comments) */}
-              <Column
+              {/* Scrollable: Caption + Comments */}
+              <div
                 className="no-scrollbar"
                 style={{
                   flex: 1,
                   overflowY: "auto",
-                  padding: "24px",
-                  gap: "24px",
+                  padding: "20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
                 }}
               >
-                {/* Caption / Review */}
-                <Row style={{ alignItems: "flex-start", gap: "12px" }}>
+                {/* Caption */}
+                <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
                   <Avatar src={data.avatar} size="s" />
-                  <Column style={{ gap: "6px", flex: 1 }}>
-                    <Text
-                      style={{
-                        color: "#1C1C1E",
-                        fontSize: "0.85rem",
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      <span style={{ fontWeight: 700, marginRight: "6px" }}>
-                        {data.name}
-                      </span>
+                  <div style={{ flex: 1 }}>
+                    <p style={{ margin: 0, fontSize: "0.83rem", lineHeight: 1.55, color: "#1C1C1E" }}>
+                      <span style={{ fontWeight: 700, marginRight: "5px" }}>{data.name}</span>
                       {data.review}
-                    </Text>
-                    <Row
-                      style={{ gap: "8px", flexWrap: "wrap", marginTop: "4px" }}
-                    >
-                      {data.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          style={{
-                            padding: "4px 10px",
-                            backgroundColor: "#F2F2F7",
-                            borderRadius: "16px",
-                            fontSize: "0.7rem",
-                            fontWeight: 600,
-                            color: "#8E8E93",
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </Row>
-                  </Column>
-                </Row>
+                    </p>
+                    {data.tags?.length > 0 && (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "10px" }}>
+                        {data.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            style={{
+                              padding: "3px 10px",
+                              backgroundColor: "#FFF0EA",
+                              borderRadius: "20px",
+                              fontSize: "0.68rem",
+                              fontWeight: 600,
+                              color: "#ff6b35",
+                              border: "1px solid rgba(255,107,53,0.15)",
+                            }}
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-                <div
-                  style={{
-                    height: "1px",
-                    backgroundColor: "#F2F2F7",
-                  }}
-                />
+                {/* Divider */}
+                <div style={{ height: "1px", backgroundColor: "#F0F0F0" }} />
 
-                {/* Real Comments */}
-                <Column style={{ gap: "16px" }}>
+                {/* Comments */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                   {loadingComments ? (
-                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>
-                      Đang tải bình luận...
-                    </Text>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                      {[0, 1, 2].map((i) => (
+                        <motion.div
+                          key={i}
+                          animate={{ opacity: [0.3, 1, 0.3] }}
+                          transition={{ duration: 1.2, delay: i * 0.2, repeat: Infinity }}
+                          style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#D0D0D0" }}
+                        />
+                      ))}
+                    </div>
                   ) : commentsList.length === 0 ? (
-                    <Text style={{ color: "#AEAEB2", fontSize: "0.85rem" }}>
-                      Chưa có bình luận nào.
-                    </Text>
+                    <div style={{ textAlign: "center", padding: "24px 0" }}>
+                      <MessageCircle size={28} color="#E0E0E0" />
+                      <p style={{ margin: "8px 0 0", color: "#C0C0C0", fontSize: "0.8rem" }}>Chưa có bình luận nào</p>
+                    </div>
                   ) : (
-                    commentsList.map((c) => {
-                      const name =
-                        c.user?.display_name ||
-                        c.user?.username ||
-                        `User ${c.user?.id || ""}`;
-                      const avatarSrc =
-                        c.user?.avatar_url ||
+                    commentsList.map((c, idx) => {
+                      const name = c.user?.display_name || c.user?.username || `User`;
+                      const avatarSrc = c.user?.avatar_url ||
                         `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=128`;
                       return (
-                        <Row
+                        <motion.div
                           key={c.id}
-                          style={{ gap: "12px", alignItems: "flex-start" }}
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: idx * 0.04 }}
+                          style={{ display: "flex", gap: "9px", alignItems: "flex-start" }}
                         >
                           <Avatar src={avatarSrc} size="s" />
-                          <Column style={{ gap: "4px" }}>
-                            <Text
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div
                               style={{
-                                color: "#1C1C1E",
-                                fontSize: "0.8rem",
-                                lineHeight: 1.6,
+                                backgroundColor: "#F5F5F7",
+                                borderRadius: "14px",
+                                borderTopLeftRadius: "4px",
+                                padding: "8px 12px",
                               }}
                             >
-                              <span
-                                style={{ fontWeight: 700, marginRight: "6px" }}
-                              >
-                                {name}
+                              <p style={{ margin: 0, fontSize: "0.8rem", lineHeight: 1.5, color: "#1C1C1E" }}>
+                                <span style={{ fontWeight: 700, marginRight: "5px" }}>{name}</span>
+                                {c.content}
+                              </p>
+                            </div>
+                            <div style={{ display: "flex", gap: "12px", marginTop: "5px", paddingLeft: "4px" }}>
+                              <span style={{ color: "#C0C0C0", fontSize: "0.68rem" }}>{adaptTime(c.created_at)}</span>
+                              <span style={{ color: "#C0C0C0", fontSize: "0.68rem", fontWeight: 600, cursor: "pointer" }}>
+                                Trả lời
                               </span>
-                              {c.content}
-                            </Text>
-                            <Row style={{ gap: "12px", alignItems: "center" }}>
-                              <Text
-                                style={{ color: "#AEAEB2", fontSize: "0.7rem" }}
-                              >
-                                {adaptTime(c.created_at)}
-                              </Text>
-                              <Text
-                                style={{
-                                  color: "#AEAEB2",
-                                  fontSize: "0.7rem",
-                                  fontWeight: 600,
-                                  cursor: "pointer",
-                                }}
-                              >
-                                Reply
-                              </Text>
-                            </Row>
-                          </Column>
-                          <Heart
-                            size={12}
-                            color="#AEAEB2"
-                            style={{
-                              marginLeft: "auto",
-                              cursor: "pointer",
-                              marginTop: "4px",
-                            }}
-                          />
-                        </Row>
+                            </div>
+                          </div>
+                          <button
+                            style={{ background: "none", border: "none", cursor: "pointer", padding: "4px", marginTop: "2px" }}
+                          >
+                            <Heart size={13} color="#D0D0D0" />
+                          </button>
+                        </motion.div>
                       );
                     })
                   )}
-                </Column>
-              </Column>
+                </div>
+              </div>
 
-              {/* Action Bar (Icons) */}
-              <Column
-                padding="l"
-                borderTop="neutral-alpha-weak"
-                gap="12"
-                style={{ flexShrink: 0 }}
-              >
-                <Row fillWidth horizontal="between" vertical="center">
-                  <Row gap="24" vertical="center">
-                    <Row
-                      gap="8"
-                      vertical="center"
-                      style={{ cursor: "pointer" }}
-                      onClick={async () => {
-                        const newIsLiked = !data.isLiked;
-                        const newLikes = newIsLiked
-                          ? data.likes + 1
-                          : Math.max(0, data.likes - 1);
-                        updatePost(data.id, {
-                          isLiked: newIsLiked,
-                          likes: newLikes,
-                        });
-                        try {
-                          await apiPost(`/api/v1/posts/${data.id}/like`, {});
-                        } catch (e) {
-                          updatePost(data.id, {
-                            isLiked: data.isLiked,
-                            likes: data.likes,
-                          });
-                        }
-                      }}
-                    >
-                      <Heart
-                        size={24}
-                        color={
-                          data.isLiked
-                            ? "#ff6b35"
-                            : "#AEAEB2"
-                        }
-                        fill={
-                          data.isLiked ? "#ff6b35" : "none"
-                        }
-                      />
-                      <Text
-                        variant="label-default-l"
-                        weight="strong"
-                        style={{ color: "#1C1C1E" }}
-                      >
-                        {data.likes || 0}
-                      </Text>
-                    </Row>
-                    <Row
-                      gap="8"
-                      vertical="center"
-                      style={{ cursor: "pointer" }}
-                    >
-                      <MessageCircle
-                        size={24}
-                        color="#AEAEB2"
-                      />
-                      <Text
-                        variant="label-default-l"
-                        weight="strong"
-                        style={{ color: "#1C1C1E" }}
-                      >
-                        {data.comments || 0}
-                      </Text>
-                    </Row>
-                  </Row>
-                  <IconButton
-                    icon={
-                      <Bookmark
-                        size={22}
-                        color={
-                          isSaved
-                            ? "#ff6b35"
-                            : "#AEAEB2"
-                        }
-                        fill={isSaved ? "#ff6b35" : "none"}
-                      />
-                    }
-                    variant="tertiary"
-                    onClick={() => setIsSaved(!isSaved)}
-                  />
-                </Row>
-              </Column>
-
-              {/* Input Footer */}
-              <Row
+              {/* Action Bar */}
+              <div
                 style={{
-                  padding: "16px 24px",
-                  borderTop: "1px solid var(--border-medium)",
+                  padding: "12px 20px",
+                  borderTop: "1px solid #F0F0F0",
+                  display: "flex",
                   alignItems: "center",
-                  gap: "12px",
+                  justifyContent: "space-between",
+                  backgroundColor: "#FFFFFF",
                   flexShrink: 0,
                 }}
               >
-                <Row
-                  fillWidth
-                  paddingX="m"
-                  paddingY="xs"
-                  radius="xl"
-                  align="center"
-                  style={{ backgroundColor: "#F2F2F7" }}
+                <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+                  {/* Like */}
+                  <motion.button
+                    whileTap={{ scale: 0.85 }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      padding: "6px 10px",
+                      borderRadius: "20px",
+                      backgroundColor: data.isLiked ? "#FFF0EA" : "transparent",
+                      transition: "background 0.2s",
+                    }}
+                    onClick={async () => {
+                      const newIsLiked = !data.isLiked;
+                      const newLikes = newIsLiked ? data.likes + 1 : Math.max(0, data.likes - 1);
+                      updatePost(data.id, { isLiked: newIsLiked, likes: newLikes });
+                      try {
+                        await apiPost(`/api/v1/posts/${data.id}/like`, {});
+                      } catch {
+                        updatePost(data.id, { isLiked: data.isLiked, likes: data.likes });
+                      }
+                    }}
+                  >
+                    <Heart
+                      size={20}
+                      color={data.isLiked ? "#ff6b35" : "#C0C0C0"}
+                      fill={data.isLiked ? "#ff6b35" : "none"}
+                      strokeWidth={data.isLiked ? 2.5 : 2}
+                    />
+                    <span style={{ fontSize: "0.82rem", fontWeight: 700, color: data.isLiked ? "#ff6b35" : "#888" }}>
+                      {data.likes || 0}
+                    </span>
+                  </motion.button>
+
+                  {/* Comment count */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "6px 10px" }}>
+                    <MessageCircle size={20} color="#C0C0C0" />
+                    <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#888" }}>
+                      {data.comments || 0}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Save */}
+                <motion.button
+                  whileTap={{ scale: 0.85 }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "6px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  onClick={() => setIsSaved(!isSaved)}
+                >
+                  <Bookmark
+                    size={20}
+                    color={isSaved ? "#ff6b35" : "#C0C0C0"}
+                    fill={isSaved ? "#ff6b35" : "none"}
+                    strokeWidth={isSaved ? 2.5 : 2}
+                  />
+                </motion.button>
+              </div>
+
+              {/* Comment Input Footer */}
+              <div
+                style={{
+                  padding: "12px 16px 14px",
+                  borderTop: "1px solid #F0F0F0",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  backgroundColor: "#FFFFFF",
+                  flexShrink: 0,
+                }}
+              >
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    backgroundColor: "#F5F5F7",
+                    borderRadius: "22px",
+                    padding: "8px 8px 8px 14px",
+                    border: "1.5px solid transparent",
+                    transition: "border-color 0.2s",
+                  }}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(255,107,53,0.35)")}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = "transparent")}
                 >
                   <Input
                     value={newComment}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value)}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                      if (e.key === "Enter") handlePostComment();
-                    }}
-                    placeholder="Add a comment..."
+                    onChange={(e) => setNewComment(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") handlePostComment(); }}
+                    placeholder="Thêm bình luận..."
                     disabled={isPostingComment}
                     style={{
                       flex: 1,
                       border: "none",
                       backgroundColor: "transparent",
                       padding: 0,
-                      fontSize: "0.85rem",
-                      height: "auto"
+                      fontSize: "0.83rem",
+                      height: "auto",
+                      outline: "none",
+                      color: "#1C1C1E",
                     }}
                   />
-                  <IconButton
-                    icon={isPostingComment ? <Text>...</Text> : <Send size={18} />}
-                    variant="ghost"
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
                     onClick={handlePostComment}
                     disabled={!newComment.trim() || isPostingComment}
                     style={{
-                      color: newComment.trim() ? "#ff6b35" : "#AEAEB2",
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                      border: "none",
+                      backgroundColor: newComment.trim() ? "#ff6b35" : "#E5E5EA",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       cursor: newComment.trim() ? "pointer" : "default",
-                      width: "32px",
-                      height: "32px"
+                      flexShrink: 0,
+                      transition: "background 0.2s",
                     }}
-                  />
-                </Row>
-              </Row>
+                  >
+                    <Send size={14} color={newComment.trim() ? "#fff" : "#AEAEB2"} />
+                  </motion.button>
+                </div>
+              </div>
             </Column>
           </motion.div>
         </motion.div>

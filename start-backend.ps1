@@ -1,7 +1,8 @@
 # Start the TasteMap FastAPI backend
 # Runs on http://127.0.0.1:8000
 
-$backendPath = "C:\Users\phanp\Code\TasteMap\backend"
+$currentDir = Get-Location
+$backendPath = "$currentDir\backend"
 
 Write-Host "Starting TasteMap Backend (FastAPI)..." -ForegroundColor Cyan
 Write-Host "Location: $backendPath" -ForegroundColor Gray
@@ -19,7 +20,8 @@ $activateScript = Join-Path $venvScripts "Activate.ps1"
 if (Test-Path $activateScript) {
     Write-Host "Activating virtual environment..." -ForegroundColor Yellow
     & $activateScript
-} else {
+}
+else {
     Write-Host "Warning: No virtual environment found at $venvPath" -ForegroundColor Yellow
     Write-Host "Make sure dependencies are installed: pip install -r requirements.txt" -ForegroundColor Yellow
 }
