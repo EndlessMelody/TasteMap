@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, HTMLAttributes, ButtonHTMLAttributes, InputHTMLAttributes, ImgHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 
 // ---- Helpers ----
@@ -33,8 +33,40 @@ function resolvePadding(v?: string) {
   return PADDING_MAP[v] ?? v;
 }
 
+interface FlexProps extends HTMLAttributes<HTMLDivElement> {
+  fillWidth?: boolean;
+  fillHeight?: boolean;
+  fill?: boolean;
+  align?: "start" | "center" | "end" | "stretch";
+  justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
+  horizontal?: "start" | "center" | "end" | "stretch";
+  vertical?: "start" | "center" | "end" | "between";
+  padding?: string;
+  paddingX?: string;
+  paddingY?: string;
+  paddingTop?: string;
+  paddingBottom?: string;
+  paddingLeft?: string;
+  paddingRight?: string;
+  gap?: number;
+  background?: keyof typeof BG_MAP;
+  onBackground?: string;
+  radius?: keyof typeof RADIUS_MAP;
+  overflow?: "visible" | "hidden" | "scroll" | "auto";
+  position?: "static" | "relative" | "absolute" | "fixed" | "sticky";
+  border?: string;
+  borderRight?: string;
+  borderLeft?: string;
+  borderBottom?: string;
+  borderTop?: string;
+  flex?: string | number;
+  flexGrow?: number;
+  flexShrink?: number;
+  flexBasis?: string | number;
+}
+
 // ---- Flex Container (Column) ----
-export const Column = React.forwardRef<HTMLDivElement, any>(
+export const Column = React.forwardRef<HTMLDivElement, FlexProps>(
   (
     {
       fillWidth,
@@ -187,7 +219,7 @@ export const Column = React.forwardRef<HTMLDivElement, any>(
 Column.displayName = "Column";
 
 // ---- Flex Container (Row) ----
-export const Row = React.forwardRef<HTMLDivElement, any>(
+export const Row = React.forwardRef<HTMLDivElement, FlexProps>(
   (
     {
       fillWidth,
@@ -338,8 +370,15 @@ export const Row = React.forwardRef<HTMLDivElement, any>(
 );
 Row.displayName = "Row";
 
+interface GridProps extends HTMLAttributes<HTMLDivElement> {
+  columns?: string;
+  gap?: number;
+  padding?: string;
+  background?: keyof typeof BG_MAP;
+}
+
 // ---- Grid ----
-export const Grid = React.forwardRef<HTMLDivElement, any>(
+export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
   (
     { columns, gap, padding, background, className, style, children, ...props },
     ref,
@@ -377,6 +416,11 @@ const HEADING_SIZE: Record<string, string> = {
   "heading-strong-xs": "0.875rem",
 };
 
+interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
+  variant?: keyof typeof HEADING_SIZE;
+  align?: "left" | "center" | "right" | "justify";
+}
+
 export const Heading = ({
   variant,
   align,
@@ -384,11 +428,11 @@ export const Heading = ({
   style,
   children,
   ...props
-}: any) => (
+}: HeadingProps) => (
   <h2
     className={cn("font-sans m-0 font-bold leading-tight", className)}
     style={{
-      fontSize: HEADING_SIZE[variant] ?? "1.25rem",
+      fontSize: variant ? HEADING_SIZE[variant] : "1.25rem",
       lineHeight: 1.2,
       textAlign: align,
       ...style,
@@ -407,6 +451,12 @@ const TEXT_SIZE: Record<string, string> = {
   "body-default-xs": "0.75rem",
 };
 
+interface TextProps extends HTMLAttributes<HTMLParagraphElement> {
+  variant?: keyof typeof TEXT_SIZE;
+  align?: "left" | "center" | "right" | "justify";
+  onBackground?: string;
+}
+
 export const Text = ({
   variant,
   align,
@@ -415,11 +465,11 @@ export const Text = ({
   style,
   children,
   ...props
-}: any) => (
+}: TextProps) => (
   <p
     className={cn("font-sans m-0 leading-relaxed", className)}
     style={{
-      fontSize: TEXT_SIZE[variant] ?? "0.9375rem",
+      fontSize: variant ? TEXT_SIZE[variant] : "0.9375rem",
       textAlign: align,
       ...style,
     }}
@@ -428,6 +478,12 @@ export const Text = ({
     {children}
   </p>
 );
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  size?: "s" | "m" | "l";
+  variant?: "primary" | "secondary" | "tertiary" | "danger";
+  fillWidth?: boolean;
+}
 
 // ---- Button ----
 export const Button = ({
@@ -440,7 +496,7 @@ export const Button = ({
   style,
   children,
   ...props
-}: any) => (
+}: ButtonProps) => (
   <button
     onClick={onClick}
     disabled={disabled}
@@ -471,6 +527,13 @@ export const Button = ({
   </button>
 );
 
+interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  icon: React.ReactNode;
+  variant?: "primary" | "secondary" | "tertiary" | "danger";
+  size?: "s" | "m" | "l";
+  tooltip?: string;
+}
+
 // ---- IconButton ----
 export const IconButton = ({
   icon,
@@ -482,7 +545,7 @@ export const IconButton = ({
   style,
   tooltip,
   ...props
-}: any) => (
+}: IconButtonProps) => (
   <button
     onClick={onClick}
     disabled={disabled}
@@ -509,8 +572,10 @@ export const IconButton = ({
   </button>
 );
 
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
+
 // ---- Input ----
-export const Input = ({ placeholder, className, style, ...props }: any) => (
+export const Input = ({ placeholder, className, style, ...props }: InputProps) => (
   <input
     placeholder={placeholder}
     className={cn(
@@ -564,6 +629,12 @@ function initials(name?: string): string {
     .toUpperCase();
 }
 
+interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {
+  size?: keyof typeof AVATAR_SIZE;
+  name?: string;
+  src?: string;
+}
+
 export const Avatar = ({
   size = "m",
   src,
@@ -571,7 +642,7 @@ export const Avatar = ({
   className,
   style,
   ...props
-}: any) => {
+}: AvatarProps) => {
   const [imgError, setImgError] = useState(false);
   const dim = AVATAR_SIZE[size] ?? "36px";
   const showFallback = !src || imgError;
@@ -592,7 +663,7 @@ export const Avatar = ({
           flexShrink: 0,
           ...style,
         }}
-        {...props}
+        {...(props as any)}
       >
         <span
           style={{ fontSize, fontWeight: 700, color: "white", lineHeight: 1 }}

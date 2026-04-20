@@ -470,13 +470,13 @@ export default function PostModal({
                     border: "1.5px solid transparent",
                     transition: "border-color 0.2s",
                   }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = "rgba(255,107,53,0.35)")}
-                  onBlur={(e) => (e.currentTarget.style.borderColor = "transparent")}
+                  onFocus={(e: React.FocusEvent<HTMLDivElement>) => (e.currentTarget.style.borderColor = "rgba(255,107,53,0.35)")}
+                  onBlur={(e: React.FocusEvent<HTMLDivElement>) => (e.currentTarget.style.borderColor = "transparent")}
                 >
                   <Input
                     value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter") handlePostComment(); }}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value)}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => { if (e.key === "Enter") handlePostComment(); }}
                     placeholder="Thêm bình luận..."
                     disabled={isPostingComment}
                     style={{
