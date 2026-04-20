@@ -10,18 +10,24 @@ import {
   Avatar,
   Button,
 } from "@/components/OnceUI";
+
+// ── Premium Icons (lucide-react) ──
 import {
-  ChevronLeft,
-  MessageSquare,
+  MessageCircle,
   UserPlus,
   UserCheck,
   Clock,
   MapPin,
-  Award,
+  Medal,
   Users,
   BookOpen,
   Layers,
+  Sparkles,
+  ChevronLeft,
+  Dna,
+  Trophy,
 } from "lucide-react";
+
 import {
   Radar,
   RadarChart,
@@ -100,11 +106,19 @@ function ProfileSkeleton() {
           0%   { background-position: 200% 0; }
           100% { background-position: -200% 0; }
         }
-        .sk { background: linear-gradient(90deg, #ebebeb 25%, #d6d6d6 50%, #ebebeb 75%); background-size: 200% 100%; animation: shimmer-slide 1.4s ease-in-out infinite; }
+        .sk {
+          background: linear-gradient(90deg, var(--dsc-surface-muted) 25%, var(--dsc-surface) 50%, var(--dsc-surface-muted) 75%);
+          background-size: 200% 100%;
+          animation: shimmer-slide 1.4s ease-in-out infinite;
+        }
       `}</style>
       <Column
         fillHeight
-        style={{ width: "100%", overflowY: "auto", backgroundColor: "#F2F2F7" }}
+        style={{
+          width: "100%",
+          overflowY: "auto",
+          backgroundColor: "var(--dsc-bg)",
+        }}
       >
         <div className="sk" style={{ height: 220, flexShrink: 0 }} />
         <div
@@ -130,7 +144,7 @@ function ProfileSkeleton() {
                 width: 80,
                 height: 80,
                 borderRadius: "50%",
-                border: "4px solid #F2F2F7",
+                border: "4px solid var(--dsc-bg)",
                 flexShrink: 0,
               }}
             />
@@ -256,9 +270,10 @@ function MatchGauge({ pct }: { pct: number }) {
 function ActionButton({
   onClick,
   disabled,
-  color = "#ff6b35",
-  bg,
+  color = "white",
+  bg = "#ff6b35",
   border,
+  boxShadow,
   children,
 }: {
   onClick: () => void;
@@ -266,6 +281,7 @@ function ActionButton({
   color?: string;
   bg?: string;
   border?: string;
+  boxShadow?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -281,17 +297,102 @@ function ActionButton({
         padding: "11px 20px",
         borderRadius: 12,
         border: border ?? "none",
-        backgroundColor: bg ?? color,
-        color: bg ? color : "white",
+        backgroundColor: bg,
+        color,
         fontSize: 14,
         fontWeight: 700,
         cursor: disabled ? "default" : "pointer",
         opacity: disabled ? 0.6 : 1,
         whiteSpace: "nowrap",
+        fontFamily: "inherit",
+        boxShadow: boxShadow,
+        transition: "box-shadow 0.2s",
       }}
     >
       {children}
     </motion.button>
+  );
+}
+
+// ─── Glassmorphic Card ──────────────────────────────────────────────────────
+function Card({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div
+        className="dsc-lift"
+        style={{
+          backgroundColor: "var(--dsc-surface)",
+          borderRadius: 20,
+          border: "1px solid var(--dsc-border)",
+          padding: 24,
+          boxShadow: "var(--dsc-shadow-sm)",
+          marginBottom: 16,
+          transition:
+            "box-shadow 0.3s var(--dsc-ease-out), transform 0.3s var(--dsc-ease-out)",
+          ...style,
+        }}
+      >
+        {children}
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Section label ────────────────────────────────────────────────────────────
+function SectionLabel({
+  icon,
+  label,
+  color = "var(--dsc-accent-warm)",
+  iconBg,
+  badge,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  color?: string;
+  iconBg?: string;
+  badge?: React.ReactNode;
+}) {
+  return (
+    <Row style={{ alignItems: "center", gap: 10, marginBottom: 16 }}>
+      <div
+        style={{
+          width: 30,
+          height: 30,
+          borderRadius: 9,
+          background:
+            iconBg ?? `linear-gradient(135deg, ${color}14, ${color}22)`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color,
+          flexShrink: 0,
+        }}
+      >
+        {icon}
+      </div>
+      <Text
+        style={{
+          fontSize: 15,
+          fontWeight: 800,
+          color: "var(--dsc-text)",
+          letterSpacing: "-0.3px",
+        }}
+      >
+        {label}
+      </Text>
+      {badge}
+    </Row>
   );
 }
 
@@ -381,15 +482,35 @@ export default function FoodieProfilePage() {
           width: "100%",
           alignItems: "center",
           justifyContent: "center",
-          gap: 12,
-          backgroundColor: "#F2F2F7",
+          gap: 14,
+          backgroundColor: "var(--dsc-bg)",
         }}
       >
-        <Text style={{ fontSize: "2.5rem" }}>🍽️</Text>
-        <Heading variant="heading-strong-m" style={{ color: "#1C1C1E" }}>
+        <div
+          style={{
+            width: 64,
+            height: 64,
+            borderRadius: 20,
+            background:
+              "linear-gradient(135deg, rgba(255,107,53,0.08), rgba(255,107,53,0.16))",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "var(--dsc-accent-warm)",
+          }}
+        >
+          <Sparkles size={28} strokeWidth={2} />
+        </div>
+        <Heading
+          variant="heading-strong-m"
+          style={{ color: "var(--dsc-text)" }}
+        >
           Profile not found
         </Heading>
-        <Text variant="body-default-s" style={{ color: "rgba(0,0,0,0.4)" }}>
+        <Text
+          variant="body-default-s"
+          style={{ color: "var(--dsc-text-subtle)" }}
+        >
           {error}
         </Text>
         <Button
@@ -426,14 +547,50 @@ export default function FoodieProfilePage() {
   const fs = social?.friendship_status ?? "none";
   const displayName = profile.display_name || profile.username;
 
+  const STAT_TILES = [
+    {
+      label: "Posts",
+      value: profile.stats.reviews,
+      icon: <BookOpen size={13} strokeWidth={2.25} />,
+      color: "#ff6b35",
+    },
+    {
+      label: "Visited",
+      value: profile.stats.visited,
+      icon: <MapPin size={13} strokeWidth={2.25} />,
+      color: "#D97706",
+    },
+    {
+      label: "Foodies",
+      value: profile.stats.followers,
+      icon: <Users size={13} strokeWidth={2.25} />,
+      color: "var(--dsc-accent-success)",
+    },
+    {
+      label: `Lv.${profile.level}`,
+      value: `${profile.xp} XP`,
+      icon: <Medal size={13} strokeWidth={2.25} />,
+      color: "var(--dsc-accent-magic)",
+    },
+  ];
+
   return (
     <Column
       fillHeight
       className="no-scrollbar"
-      style={{ width: "100%", overflowY: "auto", backgroundColor: "#F2F2F7" }}
+      style={{
+        width: "100%",
+        overflowY: "auto",
+        backgroundColor: "var(--dsc-bg)",
+      }}
     >
       {/* ══ Cover Banner ══ */}
-      <div style={{ position: "relative", height: 220, flexShrink: 0 }}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        style={{ position: "relative", height: 220, flexShrink: 0 }}
+      >
         <img
           src={profile.cover_url || DEFAULT_COVER}
           alt=""
@@ -444,16 +601,32 @@ export default function FoodieProfilePage() {
             display: "block",
           }}
         />
+        {/* Warm wash — editorial color tint */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(135deg, rgba(255,107,53,0.05) 0%, transparent 40%, rgba(168,85,247,0.08) 100%)",
+            mixBlendMode: "overlay",
+            pointerEvents: "none",
+          }}
+        />
+        {/* Bottom fade — blends into page surface */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.5) 100%)",
+              "linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.65) 100%)",
           }}
         />
+
         {/* Back nav */}
-        <button
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => router.push("/foodies")}
           style={{
             position: "absolute",
@@ -461,42 +634,46 @@ export default function FoodieProfilePage() {
             left: 22,
             display: "flex",
             alignItems: "center",
-            gap: 6,
-            padding: "8px 16px",
+            gap: 5,
+            padding: "8px 14px",
             borderRadius: 20,
-            backgroundColor: "rgba(255,255,255,0.18)",
-            backdropFilter: "blur(12px)",
-            border: "1px solid rgba(255,255,255,0.3)",
+            backgroundColor: "rgba(255,255,255,0.14)",
+            backdropFilter: "blur(14px)",
+            WebkitBackdropFilter: "blur(14px)",
+            border: "1px solid rgba(255,255,255,0.25)",
             color: "white",
             fontSize: 13,
             fontWeight: 600,
             cursor: "pointer",
+            fontFamily: "inherit",
           }}
         >
-          <ChevronLeft size={15} />
+          <ChevronLeft size={16} strokeWidth={2.5} />
           Foodies
-        </button>
+        </motion.button>
+
         {/* Match badge */}
         {matchScore !== null && (
           <div style={{ position: "absolute", top: 18, right: 22 }}>
             <MatchGauge pct={matchScore} />
           </div>
         )}
-        {/* Name overlay at bottom of cover */}
+
+        {/* Label at bottom */}
         <div style={{ position: "absolute", bottom: 16, left: 30 }}>
           <Text
             style={{
               fontSize: 11,
               fontWeight: 700,
               letterSpacing: "1.2px",
-              color: "rgba(255,255,255,0.75)",
+              color: "rgba(255,255,255,0.7)",
               textTransform: "uppercase",
             }}
           >
             Foodie Profile
           </Text>
         </div>
-      </div>
+      </motion.div>
 
       {/* ══ Content ══ */}
       <div
@@ -508,358 +685,348 @@ export default function FoodieProfilePage() {
         }}
       >
         {/* Avatar row — overlaps cover */}
-        <Row
-          style={{
-            alignItems: "flex-end",
-            gap: 20,
-            marginTop: -50,
-            marginBottom: 20,
-          }}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div style={{ position: "relative", flexShrink: 0 }}>
-            <Avatar
-              src={profile.avatar_url || DEFAULT_AVATAR}
-              name={displayName}
-              size="xl"
-              style={{
-                border: "4px solid white",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                display: "block",
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                bottom: 5,
-                right: 5,
-                width: 14,
-                height: 14,
-                borderRadius: "50%",
-                backgroundColor: "#34C759",
-                border: "2.5px solid white",
-              }}
-            />
-          </div>
-          <Column style={{ gap: 3, paddingBottom: 6, flex: 1 }}>
-            <Heading
-              variant="heading-strong-l"
-              style={{ color: "#1C1C1E", letterSpacing: "-0.8px" }}
-            >
-              {displayName}
-            </Heading>
-            <Row style={{ alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-              <Text
-                variant="body-default-s"
-                style={{ color: "rgba(0,0,0,0.4)" }}
+          <Row
+            style={{
+              alignItems: "flex-end",
+              gap: 20,
+              marginTop: -50,
+              marginBottom: 20,
+            }}
+          >
+            <div style={{ position: "relative", flexShrink: 0 }}>
+              <Avatar
+                src={profile.avatar_url || DEFAULT_AVATAR}
+                name={displayName}
+                size="xl"
+                style={{
+                  border: "4px solid var(--dsc-bg)",
+                  boxShadow: "0 4px 20px rgba(255,107,53,0.12)",
+                  display: "block",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 5,
+                  right: 5,
+                  width: 14,
+                  height: 14,
+                  borderRadius: "50%",
+                  backgroundColor: "var(--dsc-accent-success)",
+                  border: "2.5px solid var(--dsc-bg)",
+                }}
+              />
+            </div>
+            <Column style={{ gap: 3, paddingBottom: 6, flex: 1 }}>
+              <Heading
+                variant="heading-strong-l"
+                style={{ color: "var(--dsc-text)", letterSpacing: "-0.8px" }}
               >
-                @{profile.username}
-              </Text>
-              {profile.location && (
-                <Row style={{ alignItems: "center", gap: 4 }}>
-                  <MapPin size={12} color="rgba(0,0,0,0.35)" />
-                  <Text
-                    variant="body-default-xs"
-                    style={{ color: "rgba(0,0,0,0.4)" }}
-                  >
-                    {profile.location}
-                  </Text>
-                </Row>
-              )}
-            </Row>
-          </Column>
-        </Row>
+                {displayName}
+              </Heading>
+              <Row style={{ alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                <Text
+                  variant="body-default-s"
+                  style={{ color: "var(--dsc-text-subtle)" }}
+                >
+                  @{profile.username}
+                </Text>
+                {profile.location && (
+                  <Row style={{ alignItems: "center", gap: 4 }}>
+                    <MapPin
+                      size={12}
+                      strokeWidth={2.25}
+                      color="var(--dsc-text-subtle)"
+                    />
+                    <Text
+                      variant="body-default-xs"
+                      style={{ color: "var(--dsc-text-subtle)" }}
+                    >
+                      {profile.location}
+                    </Text>
+                  </Row>
+                )}
+              </Row>
+            </Column>
+          </Row>
+        </motion.div>
 
         {/* Title + Bio */}
         {(profile.title || profile.bio) && (
-          <Column
+          <Card>
+            <Column style={{ gap: 10 }}>
+              {profile.title && (
+                <div
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    padding: "5px 12px",
+                    borderRadius: 20,
+                    backgroundColor: "rgba(217,119,6,0.06)",
+                    border: "1px solid rgba(217,119,6,0.18)",
+                    width: "fit-content",
+                  }}
+                >
+                  <Medal size={12} strokeWidth={2.25} color="#D97706" />
+                  <Text
+                    style={{ fontSize: 12, fontWeight: 700, color: "#D97706" }}
+                  >
+                    {profile.title}
+                  </Text>
+                </div>
+              )}
+              {profile.bio && (
+                <Text
+                  variant="body-default-s"
+                  style={{ color: "var(--dsc-text-muted)", lineHeight: 1.6 }}
+                >
+                  {profile.bio}
+                </Text>
+              )}
+            </Column>
+          </Card>
+        )}
+
+        {/* Stats row */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div
             style={{
-              backgroundColor: "white",
-              borderRadius: 16,
-              border: "1px solid rgba(0,0,0,0.05)",
-              padding: "18px 20px",
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
               gap: 10,
               marginBottom: 16,
             }}
           >
-            {profile.title && (
-              <div
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  padding: "5px 12px",
-                  borderRadius: 20,
-                  backgroundColor: "rgba(255,149,0,0.08)",
-                  border: "1px solid rgba(255,149,0,0.2)",
-                  width: "fit-content",
-                }}
-              >
-                <Award size={13} color="#D97706" />
-                <Text
-                  style={{ fontSize: 12, fontWeight: 700, color: "#D97706" }}
-                >
-                  {profile.title}
-                </Text>
-              </div>
-            )}
-            {profile.bio && (
-              <Text
-                variant="body-default-s"
-                style={{ color: "rgba(0,0,0,0.6)", lineHeight: 1.6 }}
-              >
-                {profile.bio}
-              </Text>
-            )}
-          </Column>
-        )}
-
-        {/* Stats row */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 10,
-            marginBottom: 16,
-          }}
-        >
-          {[
-            {
-              label: "Posts",
-              value: profile.stats.reviews,
-              icon: <BookOpen size={13} />,
-            },
-            {
-              label: "Visited",
-              value: profile.stats.visited,
-              icon: <MapPin size={13} />,
-            },
-            {
-              label: "Foodies",
-              value: profile.stats.followers,
-              icon: <Users size={13} />,
-            },
-            {
-              label: "Level",
-              value: `Lv.${profile.level}`,
-              icon: <Award size={13} />,
-            },
-          ].map((s) => (
-            <Column
-              key={s.label}
-              style={{
-                alignItems: "center",
-                padding: "14px 8px",
-                backgroundColor: "white",
-                borderRadius: 16,
-                border: "1px solid rgba(0,0,0,0.05)",
-                gap: 4,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: 800,
-                  color: "#1C1C1E",
-                  letterSpacing: "-0.5px",
-                }}
-              >
-                {s.value}
-              </Text>
-              <Row
-                style={{
-                  alignItems: "center",
-                  gap: 4,
-                  color: "rgba(0,0,0,0.4)",
-                }}
-              >
-                {s.icon}
-                <Text
-                  variant="body-default-xs"
-                  style={{ color: "rgba(0,0,0,0.4)", fontWeight: 500 }}
-                >
-                  {s.label}
-                </Text>
-              </Row>
-            </Column>
-          ))}
-        </div>
-
-        {/* Action bar */}
-        <Row style={{ gap: 10, flexWrap: "wrap", marginBottom: 24 }}>
-          <ActionButton
-            onClick={handleMessage}
-            bg="white"
-            color="#1C1C1E"
-            border="1.5px solid rgba(0,0,0,0.1)"
-          >
-            <MessageSquare size={16} />
-            Message
-          </ActionButton>
-
-          <ActionButton
-            onClick={() => router.push("/group-rooms")}
-            bg="rgba(175,82,222,0.07)"
-            color="#AF52DE"
-            border="1.5px solid rgba(175,82,222,0.2)"
-          >
-            <Layers size={16} />
-            Food Tour
-          </ActionButton>
-
-          <AnimatePresence mode="wait">
-            {fs === "none" && (
+            {STAT_TILES.map((s, i) => (
               <motion.div
-                key="add"
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.18 }}
+                key={s.label}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.28, delay: i * 0.06 }}
               >
-                <ActionButton
-                  onClick={handleAddFriend}
-                  disabled={actionBusy}
-                  bg="#ff6b35"
-                >
-                  <UserPlus size={16} />
-                  Add Friend
-                </ActionButton>
-              </motion.div>
-            )}
-
-            {fs === "pending_sent" && (
-              <motion.div
-                key="pending"
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.18 }}
-              >
-                <ActionButton
-                  onClick={handleCancel}
-                  disabled={actionBusy}
-                  bg="white"
-                  color="rgba(0,0,0,0.5)"
-                  border="1.5px solid rgba(0,0,0,0.1)"
-                >
-                  <Clock size={16} />
-                  Pending · Cancel
-                </ActionButton>
-              </motion.div>
-            )}
-
-            {fs === "pending_received" && (
-              <motion.div
-                key="received"
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.18 }}
-                style={{ display: "flex", gap: 10 }}
-              >
-                <ActionButton
-                  onClick={handleAccept}
-                  disabled={actionBusy}
-                  bg="#34C759"
-                >
-                  <UserCheck size={16} />
-                  Accept Request
-                </ActionButton>
-                <ActionButton
-                  onClick={handleCancel}
-                  disabled={actionBusy}
-                  bg="white"
-                  color="rgba(0,0,0,0.5)"
-                  border="1.5px solid rgba(0,0,0,0.1)"
-                >
-                  Decline
-                </ActionButton>
-              </motion.div>
-            )}
-
-            {fs === "accepted" && (
-              <motion.div
-                key="friends"
-                initial={{ opacity: 0, y: -6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.18 }}
-              >
-                <ActionButton
-                  onClick={handleUnfriend}
-                  disabled={actionBusy}
-                  bg="rgba(52,199,89,0.06)"
-                  color="#16A34A"
-                  border="1.5px solid rgba(52,199,89,0.3)"
-                >
-                  <UserCheck size={16} />
-                  Friends · Unfriend
-                </ActionButton>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Row>
-
-        {/* ── Taste DNA ── */}
-        <Column
-          style={{
-            backgroundColor: "white",
-            borderRadius: 20,
-            border: "1px solid rgba(0,0,0,0.05)",
-            padding: "24px",
-            gap: 4,
-            marginBottom: 16,
-          }}
-        >
-          <Row style={{ alignItems: "center", gap: 10, marginBottom: 8 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 800,
-                color: "#1C1C1E",
-                letterSpacing: "-0.3px",
-              }}
-            >
-              🍄 Taste DNA
-            </Text>
-            {matchScore !== null && (
-              <div
-                style={{
-                  padding: "3px 10px",
-                  borderRadius: 20,
-                  backgroundColor:
-                    matchScore >= 80
-                      ? "rgba(52,199,89,0.1)"
-                      : "rgba(255,149,0,0.1)",
-                  border: `1px solid ${
-                    matchScore >= 80
-                      ? "rgba(52,199,89,0.25)"
-                      : "rgba(255,149,0,0.25)"
-                  }`,
-                }}
-              >
-                <Text
+                <Column
+                  className="dsc-lift"
                   style={{
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: matchScore >= 80 ? "#16A34A" : "#D97706",
+                    alignItems: "center",
+                    padding: "16px 8px",
+                    backgroundColor: "var(--dsc-surface)",
+                    borderRadius: 16,
+                    border: "1px solid var(--dsc-border)",
+                    gap: 4,
+                    boxShadow: "var(--dsc-shadow-sm)",
+                    transition:
+                      "box-shadow 0.3s var(--dsc-ease-out), transform 0.3s var(--dsc-ease-out)",
                   }}
                 >
-                  {matchScore}% match
-                </Text>
-              </div>
-            )}
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 800,
+                      color: "var(--dsc-text)",
+                      letterSpacing: "-0.5px",
+                    }}
+                  >
+                    {s.value}
+                  </Text>
+                  <Row style={{ alignItems: "center", gap: 4, color: s.color }}>
+                    {s.icon}
+                    <Text
+                      variant="body-default-xs"
+                      style={{
+                        color: "var(--dsc-text-subtle)",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {s.label}
+                    </Text>
+                  </Row>
+                </Column>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Action bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.15 }}
+        >
+          <Row style={{ gap: 10, flexWrap: "wrap", marginBottom: 24 }}>
+            <ActionButton
+              onClick={handleMessage}
+              bg="var(--dsc-surface)"
+              color="var(--dsc-text)"
+              border="1.5px solid var(--dsc-border)"
+              boxShadow="var(--dsc-shadow-sm)"
+            >
+              <MessageCircle size={16} strokeWidth={2.25} />
+              Message
+            </ActionButton>
+
+            <ActionButton
+              onClick={() => router.push("/group-rooms")}
+              bg="rgba(168,85,247,0.06)"
+              color="var(--dsc-accent-magic)"
+              border="1.5px solid rgba(168,85,247,0.2)"
+            >
+              <Layers size={16} strokeWidth={2.25} />
+              Food Tour
+            </ActionButton>
+
+            <AnimatePresence mode="wait">
+              {fs === "none" && (
+                <motion.div
+                  key="add"
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18 }}
+                >
+                  <ActionButton
+                    onClick={handleAddFriend}
+                    disabled={actionBusy}
+                    bg="linear-gradient(135deg, #ff6b35, #e65721)"
+                    color="white"
+                    boxShadow="0 4px 14px rgba(255,107,53,0.28)"
+                  >
+                    <UserPlus size={16} strokeWidth={2.5} />
+                    Add Friend
+                  </ActionButton>
+                </motion.div>
+              )}
+
+              {fs === "pending_sent" && (
+                <motion.div
+                  key="pending"
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18 }}
+                >
+                  <ActionButton
+                    onClick={handleCancel}
+                    disabled={actionBusy}
+                    bg="var(--dsc-surface)"
+                    color="var(--dsc-text-subtle)"
+                    border="1.5px solid var(--dsc-border)"
+                  >
+                    <Clock size={16} strokeWidth={2.5} />
+                    Pending · Cancel
+                  </ActionButton>
+                </motion.div>
+              )}
+
+              {fs === "pending_received" && (
+                <motion.div
+                  key="received"
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18 }}
+                  style={{ display: "flex", gap: 10 }}
+                >
+                  <ActionButton
+                    onClick={handleAccept}
+                    disabled={actionBusy}
+                    bg="linear-gradient(135deg, #16A34A, #15803d)"
+                    color="white"
+                    boxShadow="0 4px 14px rgba(22,163,74,0.22)"
+                  >
+                    <UserCheck size={16} strokeWidth={2.5} />
+                    Accept Request
+                  </ActionButton>
+                  <ActionButton
+                    onClick={handleCancel}
+                    disabled={actionBusy}
+                    bg="var(--dsc-surface)"
+                    color="var(--dsc-text-subtle)"
+                    border="1.5px solid var(--dsc-border)"
+                  >
+                    Decline
+                  </ActionButton>
+                </motion.div>
+              )}
+
+              {fs === "accepted" && (
+                <motion.div
+                  key="friends"
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.18 }}
+                >
+                  <ActionButton
+                    onClick={handleUnfriend}
+                    disabled={actionBusy}
+                    bg="rgba(52,199,89,0.06)"
+                    color="#16A34A"
+                    border="1.5px solid rgba(52,199,89,0.25)"
+                  >
+                    <UserCheck size={16} strokeWidth={2.5} />
+                    Friends · Unfriend
+                  </ActionButton>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Row>
+        </motion.div>
+
+        {/* ── Taste DNA Chart ── */}
+        <Card>
+          <SectionLabel
+            icon={<Dna size={15} strokeWidth={2.25} />}
+            label="Taste DNA"
+            color="var(--dsc-accent-warm)"
+            badge={
+              matchScore !== null ? (
+                <div
+                  style={{
+                    padding: "3px 10px",
+                    borderRadius: 20,
+                    backgroundColor:
+                      matchScore >= 80
+                        ? "rgba(52,199,89,0.08)"
+                        : "rgba(255,149,0,0.08)",
+                    border: `1px solid ${matchScore >= 80 ? "rgba(52,199,89,0.22)" : "rgba(255,149,0,0.22)"}`,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: matchScore >= 80 ? "#16A34A" : "#D97706",
+                    }}
+                  >
+                    {matchScore}% match
+                  </Text>
+                </div>
+              ) : undefined
+            }
+          />
           <ClientOnly>
             <ResponsiveContainer width="100%" height={270}>
               <RadarChart
                 data={radarChartData}
                 margin={{ top: 8, right: 24, bottom: 8, left: 24 }}
               >
-                <PolarGrid stroke="rgba(0,0,0,0.07)" />
+                <PolarGrid stroke="var(--dsc-border)" />
                 <PolarAngleAxis
                   dataKey="subject"
                   tick={{
-                    fill: "rgba(0,0,0,0.55)",
+                    fill: "var(--dsc-text-subtle)",
                     fontSize: 11,
                     fontWeight: 600,
                   }}
@@ -886,7 +1053,7 @@ export default function FoodieProfilePage() {
                       style={{
                         fontSize: 12,
                         fontWeight: 600,
-                        color: "rgba(0,0,0,0.55)",
+                        color: "var(--dsc-text-muted)",
                       }}
                     >
                       {value}
@@ -896,133 +1063,187 @@ export default function FoodieProfilePage() {
               </RadarChart>
             </ResponsiveContainer>
           </ClientOnly>
-        </Column>
+        </Card>
 
         {/* ── Mutual Foodies ── */}
         {social && social.mutual_friends_count > 0 && (
-          <Column
-            style={{
-              backgroundColor: "white",
-              borderRadius: 20,
-              border: "1px solid rgba(0,0,0,0.05)",
-              padding: "24px",
-              gap: 16,
-              marginBottom: 16,
-            }}
-          >
-            <Row style={{ alignItems: "center", gap: 8 }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 800,
-                  color: "#1C1C1E",
-                  letterSpacing: "-0.3px",
-                }}
-              >
-                🤝 Mutual Foodies
-              </Text>
-              <div
-                style={{
-                  padding: "2px 10px",
-                  borderRadius: 20,
-                  backgroundColor: "rgba(255,107,53,0.08)",
-                  border: "1px solid rgba(255,107,53,0.15)",
-                }}
-              >
-                <Text
-                  style={{ fontSize: 12, fontWeight: 700, color: "#ff6b35" }}
-                >
-                  {social.mutual_friends_count}
-                </Text>
-              </div>
-            </Row>
-            <Row style={{ gap: 20, flexWrap: "wrap" }}>
-              {social.mutual_friends.map((mf) => (
-                <button
-                  key={mf.id}
-                  onClick={() => router.push(`/foodies/${mf.id}`)}
+          <Card>
+            <SectionLabel
+              icon={<Users size={15} strokeWidth={2.25} />}
+              label="Mutual Foodies"
+              color="var(--dsc-accent-success)"
+              badge={
+                <div
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 6,
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: "8px 10px",
-                    borderRadius: 12,
-                    transition: "background 0.15s",
-                  }}
-                >
-                  <Avatar
-                    src={mf.avatar_url || DEFAULT_AVATAR}
-                    name={mf.display_name || mf.username}
-                    size="l"
-                  />
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: "#1C1C1E",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {(mf.display_name || mf.username).split(" ")[0]}
-                  </Text>
-                </button>
-              ))}
-            </Row>
-          </Column>
-        )}
-
-        {/* ── Badges ── */}
-        {profile.badges.length > 0 && (
-          <Column
-            style={{
-              backgroundColor: "white",
-              borderRadius: 20,
-              border: "1px solid rgba(0,0,0,0.05)",
-              padding: "24px",
-              gap: 16,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 800,
-                color: "#1C1C1E",
-                letterSpacing: "-0.3px",
-              }}
-            >
-              🏆 Achievements
-            </Text>
-            <Row style={{ gap: 10, flexWrap: "wrap" }}>
-              {profile.badges.map((badge, i) => (
-                <Row
-                  key={i}
-                  style={{
-                    alignItems: "center",
-                    gap: 7,
-                    padding: "8px 14px",
+                    padding: "2px 10px",
                     borderRadius: 20,
-                    backgroundColor: `${badge.color}18`,
-                    border: `1.5px solid ${badge.color}30`,
+                    backgroundColor: "rgba(255,107,53,0.06)",
+                    border: "1px solid rgba(255,107,53,0.15)",
                   }}
                 >
-                  <span style={{ fontSize: 16 }}>{badge.icon}</span>
                   <Text
                     style={{
                       fontSize: 12,
                       fontWeight: 700,
-                      color: badge.color,
+                      color: "var(--dsc-accent-warm)",
                     }}
                   >
-                    {badge.label}
+                    {social.mutual_friends_count}
                   </Text>
-                </Row>
+                </div>
+              }
+            />
+            {/* Compact stacked-avatar row with +N overflow */}
+            <Row vertical="center" style={{ gap: 14, flexWrap: "wrap" }}>
+              <Row
+                vertical="center"
+                style={{
+                  paddingLeft: 10,
+                  flexShrink: 0,
+                }}
+              >
+                {social.mutual_friends.slice(0, 5).map((mf, i) => (
+                  <motion.button
+                    key={mf.id}
+                    initial={{ opacity: 0, scale: 0.8, x: -8 }}
+                    whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05, duration: 0.3 }}
+                    whileHover={{ y: -4, zIndex: 10 }}
+                    onClick={() => router.push(`/foodies/${mf.id}`)}
+                    title={mf.display_name || mf.username}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                      marginLeft: i === 0 ? 0 : -12,
+                      display: "flex",
+                      position: "relative",
+                      zIndex: 5 - i,
+                      borderRadius: "50%",
+                      transition: "transform 0.2s var(--dsc-ease-out)",
+                    }}
+                  >
+                    <Avatar
+                      src={mf.avatar_url || DEFAULT_AVATAR}
+                      name={mf.display_name || mf.username}
+                      size="l"
+                      style={{
+                        border: "3px solid var(--dsc-surface)",
+                        boxShadow: "0 2px 8px rgba(10,10,10,0.08)",
+                      }}
+                    />
+                  </motion.button>
+                ))}
+                {social.mutual_friends_count > 5 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3, duration: 0.3 }}
+                    style={{
+                      marginLeft: -12,
+                      width: 48,
+                      height: 48,
+                      borderRadius: "50%",
+                      background:
+                        "linear-gradient(135deg, rgba(255,107,53,0.10), rgba(168,85,247,0.10))",
+                      border: "3px solid var(--dsc-surface)",
+                      boxShadow: "0 2px 8px rgba(10,10,10,0.08)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: 12,
+                      fontWeight: 800,
+                      color: "var(--dsc-accent-warm)",
+                      letterSpacing: "-0.3px",
+                      zIndex: 0,
+                    }}
+                  >
+                    +{social.mutual_friends_count - 5}
+                  </motion.div>
+                )}
+              </Row>
+              <Column style={{ gap: 2, minWidth: 0, flex: 1 }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: "var(--dsc-text)",
+                    letterSpacing: "-0.2px",
+                  }}
+                >
+                  {social.mutual_friends
+                    .slice(0, 2)
+                    .map((mf) => (mf.display_name || mf.username).split(" ")[0])
+                    .join(", ")}
+                  {social.mutual_friends_count > 2 && (
+                    <span
+                      style={{
+                        color: "var(--dsc-text-muted)",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {" "}
+                      and {social.mutual_friends_count - 2} other
+                      {social.mutual_friends_count - 2 === 1 ? "" : "s"}
+                    </span>
+                  )}
+                </Text>
+                <Text
+                  variant="body-default-xs"
+                  style={{ color: "var(--dsc-text-subtle)" }}
+                >
+                  Also connected with {displayName}
+                </Text>
+              </Column>
+            </Row>
+          </Card>
+        )}
+
+        {/* ── Badges ── */}
+        {profile.badges.length > 0 && (
+          <Card>
+            <SectionLabel
+              icon={<Trophy size={15} strokeWidth={2.25} />}
+              label="Achievements"
+              color="#D97706"
+            />
+            <Row style={{ gap: 10, flexWrap: "wrap" }}>
+              {profile.badges.map((badge, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.04, duration: 0.25 }}
+                >
+                  <Row
+                    style={{
+                      alignItems: "center",
+                      gap: 7,
+                      padding: "8px 14px",
+                      borderRadius: 20,
+                      backgroundColor: `${badge.color}10`,
+                      border: `1.5px solid ${badge.color}28`,
+                    }}
+                  >
+                    <span style={{ fontSize: 16 }}>{badge.icon}</span>
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: badge.color,
+                      }}
+                    >
+                      {badge.label}
+                    </Text>
+                  </Row>
+                </motion.div>
               ))}
             </Row>
-          </Column>
+          </Card>
         )}
       </div>
     </Column>

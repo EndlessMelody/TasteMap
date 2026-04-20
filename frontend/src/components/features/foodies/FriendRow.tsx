@@ -11,20 +11,23 @@ import {
   IconButton,
   Button,
 } from "@/components/OnceUI";
+import { motion } from "framer-motion";
+
+// ── Premium Icons (lucide-react) ──
 import {
-  MessageSquare,
+  MessageCircle,
+  Clock,
   MapPin,
   MoreHorizontal,
   Eye,
-  UserX,
-  Clock,
+  UserMinus,
   UserPlus,
+  Coffee,
   Fish,
   Soup,
-  Coffee,
-  Sandwich,
-  Flame,
   Pizza,
+  Flame,
+  Sandwich,
 } from "lucide-react";
 
 export interface Friend {
@@ -64,7 +67,7 @@ const menuItemStyle: React.CSSProperties = {
   fontSize: 13,
   fontWeight: 600,
   cursor: "pointer",
-  color: "#1C1C1E",
+  color: "var(--dsc-text)",
   transition: "background 0.12s",
 };
 
@@ -91,29 +94,34 @@ function MoreMenu({
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <IconButton
-        icon={<MoreHorizontal size={16} />}
+        icon={<MoreHorizontal size={16} strokeWidth={2.25} />}
         onClick={() => setOpen((o) => !o)}
         variant="tertiary"
         style={{
           width: 36,
           height: 36,
-          backgroundColor: "#F2F2F7",
-          color: "#8E8E93",
+          backgroundColor: "var(--dsc-surface-muted)",
+          color: "var(--dsc-text-subtle)",
+          borderRadius: 10,
         }}
       />
       {open && (
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: -6, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.15 }}
           style={{
             position: "absolute",
             right: 0,
             top: "calc(100% + 6px)",
-            backgroundColor: "white",
-            borderRadius: 12,
-            boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
-            border: "1px solid rgba(0,0,0,0.07)",
+            backgroundColor: "var(--dsc-surface)",
+            borderRadius: 14,
+            boxShadow: "var(--dsc-shadow-lg)",
+            border: "1px solid var(--dsc-border)",
             overflow: "hidden",
             zIndex: 100,
-            minWidth: 160,
+            minWidth: 170,
           }}
         >
           <button
@@ -122,22 +130,35 @@ function MoreMenu({
               setOpen(false);
             }}
             style={menuItemStyle}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor =
+                "var(--dsc-surface-muted)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "transparent")
+            }
           >
-            <Eye size={14} />
+            <Eye size={15} strokeWidth={2.25} />
             View Profile
           </button>
-          <div style={{ height: 1, backgroundColor: "rgba(0,0,0,0.06)" }} />
+          <div style={{ height: 1, backgroundColor: "var(--dsc-border)" }} />
           <button
             onClick={() => {
               onUnfriend();
               setOpen(false);
             }}
-            style={{ ...menuItemStyle, color: "#FF3B30" }}
+            style={{ ...menuItemStyle, color: "#e63946" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "rgba(230,57,70,0.06)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "transparent")
+            }
           >
-            <UserX size={14} />
+            <UserMinus size={15} strokeWidth={2.25} />
             Unfriend
           </button>
-        </div>
+        </motion.div>
       )}
     </div>
   );
@@ -152,11 +173,19 @@ function MatchGauge({ pct }: { pct: number }) {
   const cy = size / 2;
   const circ = 2 * Math.PI * r;
   const filled = (pct / 100) * circ;
-  const color = pct >= 85 ? "#16A34A" : pct >= 70 ? "#D97706" : "#9CA3AF";
+  const color =
+    pct >= 85 ? "#34c759" : pct >= 70 ? "#D97706" : "var(--dsc-text-subtle)";
+  const glowColor = pct >= 85 ? "rgba(52,199,89,0.25)" : "transparent";
 
   return (
     <div
-      style={{ position: "relative", width: size, height: size, flexShrink: 0 }}
+      style={{
+        position: "relative",
+        width: size,
+        height: size,
+        flexShrink: 0,
+        filter: pct >= 85 ? `drop-shadow(0 0 8px ${glowColor})` : "none",
+      }}
     >
       <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
         <circle
@@ -164,7 +193,7 @@ function MatchGauge({ pct }: { pct: number }) {
           cy={cy}
           r={r}
           fill="none"
-          stroke="rgba(0,0,0,0.07)"
+          stroke="var(--dsc-border)"
           strokeWidth={strokeW}
         />
         <circle
@@ -198,7 +227,7 @@ function MatchGauge({ pct }: { pct: number }) {
           style={{
             fontSize: "9px",
             fontWeight: 600,
-            color: "rgba(0,0,0,0.35)",
+            color: "var(--dsc-text-subtle)",
             lineHeight: 1,
           }}
         >
@@ -209,7 +238,7 @@ function MatchGauge({ pct }: { pct: number }) {
   );
 }
 
-// ─── Activity chip (emoji → color mapping) ───
+// ─── Activity chip (emoji → icon mapping) ───
 const ACTIVITY_MAP: {
   emoji: string;
   icon: React.ReactElement;
@@ -218,47 +247,47 @@ const ACTIVITY_MAP: {
 }[] = [
   {
     emoji: "🍣",
-    icon: <Fish size={12} />,
+    icon: <Fish size={13} strokeWidth={2.25} />,
     color: "#C2410C",
-    bg: "rgba(239,68,68,0.09)",
+    bg: "rgba(239,68,68,0.07)",
   },
   {
     emoji: "🍜",
-    icon: <Soup size={12} />,
+    icon: <Soup size={13} strokeWidth={2.25} />,
     color: "#B45309",
-    bg: "rgba(245,158,11,0.10)",
+    bg: "rgba(245,158,11,0.08)",
   },
   {
     emoji: "☕",
-    icon: <Coffee size={12} />,
+    icon: <Coffee size={13} strokeWidth={2.25} />,
     color: "#78350F",
-    bg: "rgba(180,83,9,0.10)",
+    bg: "rgba(180,83,9,0.08)",
   },
   {
     emoji: "🍔",
-    icon: <Sandwich size={12} />,
+    icon: <Sandwich size={13} strokeWidth={2.25} />,
     color: "#854D0E",
-    bg: "rgba(234,179,8,0.10)",
+    bg: "rgba(234,179,8,0.08)",
   },
   {
     emoji: "🌶️",
-    icon: <Flame size={12} />,
+    icon: <Flame size={13} strokeWidth={2.25} />,
     color: "#B91C1C",
-    bg: "rgba(239,68,68,0.09)",
+    bg: "rgba(239,68,68,0.07)",
   },
   {
     emoji: "🍕",
-    icon: <Pizza size={12} />,
+    icon: <Pizza size={13} strokeWidth={2.25} />,
     color: "#C2410C",
-    bg: "rgba(249,115,22,0.10)",
+    bg: "rgba(249,115,22,0.08)",
   },
 ];
 
 function ActivityChip({ status }: { status: string }) {
   const found = ACTIVITY_MAP.find((a) => status.includes(a.emoji));
-  const color = found?.color ?? "rgba(0,0,0,0.5)";
-  const bg = found?.bg ?? "rgba(0,0,0,0.04)";
-  const icon = found?.icon ?? <MapPin size={12} />;
+  const color = found?.color ?? "var(--dsc-text-muted)";
+  const bg = found?.bg ?? "rgba(255,107,53,0.05)";
+  const icon = found?.icon ?? <MapPin size={13} strokeWidth={2.25} />;
   const label = status
     .replace(/[\u{1F300}-\u{1FFFF}]|\u{1F32E}|\u{1F336}\uFE0F/gu, "")
     .trim();
@@ -272,11 +301,11 @@ function ActivityChip({ status }: { status: string }) {
         padding: "5px 12px",
         borderRadius: 20,
         backgroundColor: bg,
-        border: `1px solid ${color}25`,
+        border: `1px solid ${color}20`,
         maxWidth: "100%",
       }}
     >
-      <span style={{ color }}>{icon}</span>
+      <span style={{ color, display: "flex" }}>{icon}</span>
       <Text
         variant="body-default-xs"
         style={{
@@ -293,6 +322,12 @@ function ActivityChip({ status }: { status: string }) {
   );
 }
 
+// ─── Card entrance animation ───
+const cardVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0 },
+};
+
 // ─── Main component ───
 export const FriendRow: React.FC<FriendRowProps> = ({
   friend,
@@ -305,6 +340,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
 }) => {
   const router = useRouter();
   const handleViewProfile = () => router.push(`/foodies/${friend.id}`);
+
   /* ── COMPACT (chat sidebar) ── */
   if (isCompact) {
     return (
@@ -318,7 +354,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
         className="messenger-list-item"
         style={{
           cursor: "pointer",
-          transition: "background-color 0.15s",
+          transition: "background-color 0.18s ease",
           backgroundColor: "transparent",
           minHeight: 68,
         }}
@@ -334,8 +370,8 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                 width: 12,
                 height: 12,
                 borderRadius: "50%",
-                backgroundColor: "#34C759",
-                border: "2.5px solid #F8F8FA",
+                backgroundColor: "var(--dsc-accent-success)",
+                border: "2.5px solid var(--dsc-surface-muted)",
               }}
             />
           )}
@@ -347,7 +383,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
           >
             <Text
               style={{
-                color: "#1C1C1E",
+                color: "var(--dsc-text)",
                 fontSize: 14,
                 fontWeight: 600,
                 whiteSpace: "nowrap",
@@ -360,14 +396,14 @@ export const FriendRow: React.FC<FriendRowProps> = ({
             </Text>
             <Text
               variant="body-default-xs"
-              style={{ color: "rgba(0,0,0,0.28)", flexShrink: 0 }}
+              style={{ color: "var(--dsc-text-subtle)", flexShrink: 0 }}
             >
               9:41 AM
             </Text>
           </Row>
           <Text
             style={{
-              color: "rgba(0,0,0,0.45)",
+              color: "var(--dsc-text-muted)",
               fontSize: 12,
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -381,10 +417,10 @@ export const FriendRow: React.FC<FriendRowProps> = ({
         </Column>
         <style jsx>{`
           .messenger-list-item:hover {
-            background-color: rgba(0, 0, 0, 0.03) !important;
+            background-color: rgba(255, 107, 53, 0.04) !important;
           }
           .messenger-list-item:active {
-            background-color: rgba(0, 0, 0, 0.06) !important;
+            background-color: rgba(255, 107, 53, 0.08) !important;
           }
         `}</style>
       </Row>
@@ -393,245 +429,269 @@ export const FriendRow: React.FC<FriendRowProps> = ({
 
   /* ── FULL CARD (expanded) ── */
   return (
-    <Column
-      fillWidth
-      style={{
-        backgroundColor: "white",
-        borderRadius: 20,
-        border: "1px solid rgba(0,0,0,0.05)",
-        boxShadow: "0 2px 16px rgba(0,0,0,0.04)",
-        overflow: "hidden",
-        transition: "box-shadow 0.2s ease",
-      }}
+    <motion.div
+      variants={cardVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* ── Cover hero image ── */}
-      <div
+      <Column
+        fillWidth
+        className="dsc-lift"
         style={{
-          position: "relative",
-          height: 120,
+          backgroundColor: "var(--dsc-surface)",
+          borderRadius: 20,
+          border: "1px solid var(--dsc-border)",
+          boxShadow: "var(--dsc-shadow-sm)",
           overflow: "hidden",
-          flexShrink: 0,
+          transition:
+            "box-shadow 0.3s var(--dsc-ease-out), transform 0.3s var(--dsc-ease-out)",
         }}
       >
-        <img
-          src={friend.cover}
-          alt=""
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            display: "block",
-          }}
-        />
-        {/* Bottom fade */}
+        {/* ── Cover hero image ── */}
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(255,255,255,0.9) 90%, white 100%)",
+            position: "relative",
+            height: 120,
+            overflow: "hidden",
+            flexShrink: 0,
           }}
-        />
-        {/* Online badge */}
-        {friend.isOnline && (
+        >
+          <img
+            src={friend.cover}
+            alt=""
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+          {/* Warm bottom fade */}
           <div
             style={{
               position: "absolute",
-              top: 12,
-              right: 12,
-              display: "flex",
-              alignItems: "center",
-              gap: 5,
-              padding: "4px 10px",
-              borderRadius: 20,
-              backgroundColor: "rgba(255,255,255,0.9)",
-              backdropFilter: "blur(8px)",
-              border: "1px solid rgba(52,199,89,0.25)",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+              inset: 0,
+              background:
+                "linear-gradient(to bottom, rgba(255,107,53,0.03) 0%, rgba(255,255,255,0.92) 88%, var(--dsc-surface) 100%)",
             }}
-          >
+          />
+          {/* Online badge — glassmorphic */}
+          {friend.isOnline && (
             <div
               style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                backgroundColor: "#34C759",
-                boxShadow: "0 0 0 2px rgba(52,199,89,0.25)",
+                position: "absolute",
+                top: 12,
+                right: 12,
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                padding: "4px 10px",
+                borderRadius: 20,
+                backgroundColor: "rgba(255,255,255,0.82)",
+                backdropFilter: "blur(12px) saturate(180%)",
+                WebkitBackdropFilter: "blur(12px) saturate(180%)",
+                border: "1px solid rgba(52,199,89,0.25)",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
               }}
-            />
-            <Text
-              variant="body-default-xs"
-              style={{ color: "#16A34A", fontWeight: 700 }}
             >
-              Online
-            </Text>
-          </div>
-        )}
-      </div>
-
-      {/* ── Card body ── */}
-      <div style={{ padding: "0 24px 20px", marginTop: -16 }}>
-        {/* Avatar + name row */}
-        <Row vertical="center" gap="14" style={{ marginBottom: 14 }}>
-          <div style={{ position: "relative", flexShrink: 0 }}>
-            <Avatar
-              src={friend.avatar}
-              name={friend.name}
-              size="l"
-              style={{
-                border: "3px solid white",
-                display: "block",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-              }}
-            />
-          </div>
-          <Column style={{ gap: 1, flex: 1, overflow: "hidden" }}>
-            <Heading
-              variant="heading-strong-s"
-              style={{ color: "#1C1C1E", letterSpacing: "-0.3px" }}
-            >
-              {friend.name}
-            </Heading>
-            <Row vertical="center" gap="4">
-              <MapPin size={11} color="rgba(0,0,0,0.3)" />
-              <Text
-                variant="body-default-xs"
-                style={{ color: "rgba(0,0,0,0.4)", fontWeight: 500 }}
-              >
-                {friend.note}
-              </Text>
-            </Row>
-          </Column>
-          {/* Match gauge — right side of name row */}
-          {friend.match !== undefined && (
-            <Column style={{ alignItems: "center", gap: 2, flexShrink: 0 }}>
-              <MatchGauge pct={friend.match} />
-              <Text
-                variant="body-default-xs"
+              <div
                 style={{
-                  color: "rgba(0,0,0,0.35)",
-                  fontSize: "10px",
-                  whiteSpace: "nowrap",
+                  width: 7,
+                  height: 7,
+                  borderRadius: "50%",
+                  backgroundColor: "var(--dsc-accent-success)",
+                  boxShadow: "0 0 0 2px rgba(52,199,89,0.25)",
                 }}
+              />
+              <Text
+                variant="body-default-xs"
+                style={{ color: "#16A34A", fontWeight: 700 }}
               >
-                Taste Match
+                Online
               </Text>
-            </Column>
+            </div>
           )}
-        </Row>
+        </div>
 
-        {/* Activity chip + actions */}
-        <Row
-          vertical="center"
-          style={{ justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}
-        >
-          <ActivityChip status={friend.status} />
-
-          <Row gap="8" vertical="center" style={{ flexShrink: 0 }}>
-            {variant === "friend" && (
-              <>
-                <IconButton
-                  icon={<MessageSquare size={16} />}
-                  onClick={() => onMessage(friend)}
-                  variant="tertiary"
-                  style={{
-                    width: 36,
-                    height: 36,
-                    backgroundColor: "#F2F2F7",
-                    color: "#8E8E93",
-                  }}
+        {/* ── Card body ── */}
+        <div style={{ padding: "0 24px 20px", marginTop: -16 }}>
+          {/* Avatar + name row */}
+          <Row vertical="center" gap="14" style={{ marginBottom: 14 }}>
+            <div style={{ position: "relative", flexShrink: 0 }}>
+              <Avatar
+                src={friend.avatar}
+                name={friend.name}
+                size="l"
+                style={{
+                  border: "3px solid var(--dsc-surface)",
+                  display: "block",
+                  boxShadow: "0 2px 10px rgba(255,107,53,0.10)",
+                }}
+              />
+            </div>
+            <Column style={{ gap: 1, flex: 1, overflow: "hidden" }}>
+              <Heading
+                variant="heading-strong-s"
+                style={{ color: "var(--dsc-text)", letterSpacing: "-0.3px" }}
+              >
+                {friend.name}
+              </Heading>
+              <Row vertical="center" gap="4">
+                <MapPin
+                  size={11}
+                  strokeWidth={2.25}
+                  color="var(--dsc-text-subtle)"
                 />
-                <Button
-                  variant="secondary"
-                  onClick={() => onInvite && onInvite(friend)}
+                <Text
+                  variant="body-default-xs"
+                  style={{ color: "var(--dsc-text-muted)", fontWeight: 500 }}
+                >
+                  {friend.note}
+                </Text>
+              </Row>
+            </Column>
+            {/* Match gauge — right side */}
+            {friend.match !== undefined && (
+              <Column style={{ alignItems: "center", gap: 2, flexShrink: 0 }}>
+                <MatchGauge pct={friend.match} />
+                <Text
+                  variant="body-default-xs"
                   style={{
-                    borderRadius: 10,
-                    fontWeight: 700,
-                    padding: "0 16px",
-                    height: 36,
-                    fontSize: "13px",
+                    color: "var(--dsc-text-subtle)",
+                    fontSize: "10px",
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  Invite to Tour
-                </Button>
-                <MoreMenu
-                  onViewProfile={handleViewProfile}
-                  onUnfriend={() => onUnfriend && onUnfriend(friend)}
-                />
-              </>
-            )}
-            {variant === "discover" && (
-              <>
-                <IconButton
-                  icon={<MessageSquare size={16} />}
-                  onClick={() => onMessage(friend)}
-                  variant="tertiary"
-                  style={{
-                    width: 36,
-                    height: 36,
-                    backgroundColor: "#F2F2F7",
-                    color: "#8E8E93",
-                  }}
-                />
-                <Button
-                  variant="primary"
-                  onClick={() => onInvite && onInvite(friend)}
-                  style={{
-                    borderRadius: 10,
-                    fontWeight: 700,
-                    padding: "0 16px",
-                    height: 36,
-                    backgroundColor: "#ff6b35",
-                    fontSize: "13px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
-                >
-                  <UserPlus size={14} />
-                  Add Friend
-                </Button>
-              </>
-            )}
-            {variant === "sent" && (
-              <>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "7px 14px",
-                    borderRadius: 10,
-                    backgroundColor: "rgba(0,0,0,0.04)",
-                    border: "1px solid rgba(0,0,0,0.08)",
-                    color: "rgba(0,0,0,0.45)",
-                    fontSize: 13,
-                    fontWeight: 600,
-                  }}
-                >
-                  <Clock size={13} />
-                  Pending
-                </div>
-                <Button
-                  variant="secondary"
-                  onClick={() => onCancel && onCancel(friend)}
-                  style={{
-                    borderRadius: 10,
-                    fontWeight: 600,
-                    padding: "0 16px",
-                    height: 36,
-                    fontSize: "13px",
-                    color: "#FF3B30",
-                    border: "1.5px solid rgba(255,59,48,0.2)",
-                  }}
-                >
-                  Cancel
-                </Button>
-              </>
+                  Taste Match
+                </Text>
+              </Column>
             )}
           </Row>
-        </Row>
-      </div>
-    </Column>
+
+          {/* Activity chip + actions */}
+          <Row
+            vertical="center"
+            style={{
+              justifyContent: "space-between",
+              gap: 12,
+              flexWrap: "wrap",
+            }}
+          >
+            <ActivityChip status={friend.status} />
+
+            <Row gap="8" vertical="center" style={{ flexShrink: 0 }}>
+              {variant === "friend" && (
+                <>
+                  <IconButton
+                    icon={<MessageCircle size={16} strokeWidth={2.25} />}
+                    onClick={() => onMessage(friend)}
+                    variant="tertiary"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      backgroundColor: "rgba(255,107,53,0.06)",
+                      color: "var(--dsc-accent-warm)",
+                      borderRadius: 10,
+                    }}
+                  />
+                  <Button
+                    variant="secondary"
+                    onClick={() => onInvite && onInvite(friend)}
+                    style={{
+                      borderRadius: 10,
+                      fontWeight: 700,
+                      padding: "0 16px",
+                      height: 36,
+                      fontSize: "13px",
+                      borderColor: "var(--dsc-border-strong)",
+                    }}
+                  >
+                    Invite to Tour
+                  </Button>
+                  <MoreMenu
+                    onViewProfile={handleViewProfile}
+                    onUnfriend={() => onUnfriend && onUnfriend(friend)}
+                  />
+                </>
+              )}
+              {variant === "discover" && (
+                <>
+                  <IconButton
+                    icon={<MessageCircle size={16} strokeWidth={2.25} />}
+                    onClick={() => onMessage(friend)}
+                    variant="tertiary"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      backgroundColor: "rgba(255,107,53,0.06)",
+                      color: "var(--dsc-accent-warm)",
+                      borderRadius: 10,
+                    }}
+                  />
+                  <Button
+                    variant="primary"
+                    onClick={() => onInvite && onInvite(friend)}
+                    style={{
+                      borderRadius: 10,
+                      fontWeight: 700,
+                      padding: "0 16px",
+                      height: 36,
+                      background: "linear-gradient(135deg, #ff6b35, #e65721)",
+                      fontSize: "13px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      border: "none",
+                      boxShadow: "0 2px 8px rgba(255,107,53,0.25)",
+                    }}
+                  >
+                    <UserPlus size={14} strokeWidth={2.5} />
+                    Add Friend
+                  </Button>
+                </>
+              )}
+              {variant === "sent" && (
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "7px 14px",
+                      borderRadius: 10,
+                      backgroundColor: "rgba(255,107,53,0.05)",
+                      border: "1px solid rgba(255,107,53,0.15)",
+                      color: "var(--dsc-text-muted)",
+                      fontSize: 13,
+                      fontWeight: 600,
+                    }}
+                  >
+                    <Clock size={13} strokeWidth={2.5} />
+                    Pending
+                  </div>
+                  <Button
+                    variant="secondary"
+                    onClick={() => onCancel && onCancel(friend)}
+                    style={{
+                      borderRadius: 10,
+                      fontWeight: 600,
+                      padding: "0 16px",
+                      height: 36,
+                      fontSize: "13px",
+                      color: "#e63946",
+                      border: "1.5px solid rgba(230,57,70,0.2)",
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              )}
+            </Row>
+          </Row>
+        </div>
+      </Column>
+    </motion.div>
   );
 };

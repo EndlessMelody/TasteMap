@@ -2,22 +2,26 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { Column, Row, Heading, Text, Avatar } from "@/components/OnceUI";
+import { motion } from "framer-motion";
+
+// ── Premium Icons (lucide-react) ──
 import {
-  Search,
   Users,
-  Wifi,
-  Flame,
+  Search,
   X,
-  TrendingUp,
-  UserPlus,
-  Clock,
+  Plus,
+  Flame,
   Send,
-  AlertTriangle,
-  SearchX,
-  Target,
-  Moon,
+  Clock,
+  Crosshair,
   MailOpen,
+  SearchX,
+  Sparkles,
+  HeartPulse,
+  TrendingUp,
+  MoonStar,
 } from "lucide-react";
+
 import { FriendRow, Friend } from "@/components/features/foodies/FriendRow";
 import { useChat } from "@/context/ChatContext";
 import { useFoodies } from "@/hooks/useFoodies";
@@ -43,18 +47,19 @@ function mapSentToFriend(s: SentRequest): Friend {
   };
 }
 
-// ── Pending Request Card ──────────────────────────────────────────────────────
+// ── Pending Request Card ──
 function PendingRequestCard({
   req,
   onAccept,
   onDecline,
+  index,
 }: {
   req: PendingRequest;
   onAccept: () => void;
   onDecline: () => void;
+  index: number;
 }) {
   const [busy, setBusy] = React.useState(false);
-
   const handle = async (fn: () => Promise<void> | void) => {
     setBusy(true);
     try {
@@ -66,138 +71,180 @@ function PendingRequestCard({
 
   const matchColor =
     req.match_score >= 80
-      ? "#34C759"
+      ? "var(--dsc-accent-success)"
       : req.match_score >= 55
-        ? "#FF9500"
-        : "#8E8E93";
+        ? "#D97706"
+        : "var(--dsc-text-subtle)";
 
   return (
-    <div
-      style={{
-        backgroundColor: "white",
-        borderRadius: 20,
-        overflow: "hidden",
-        border: "1px solid rgba(255,149,0,0.15)",
-        boxShadow: "0 2px 12px rgba(255,149,0,0.06)",
-        display: "flex",
-        flexDirection: "column",
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        duration: 0.35,
+        delay: index * 0.06,
+        ease: [0.22, 1, 0.36, 1],
       }}
     >
-      {/* Cover strip */}
       <div
+        className="dsc-lift"
         style={{
-          height: 64,
-          background: req.cover_url
-            ? `url(${req.cover_url}) center/cover`
-            : "linear-gradient(135deg, #FF9500 0%, #FF6B6B 100%)",
-          position: "relative",
+          backgroundColor: "var(--dsc-surface)",
+          borderRadius: 20,
+          overflow: "hidden",
+          border: "1px solid rgba(255,107,53,0.12)",
+          boxShadow: "var(--dsc-shadow-sm)",
+          display: "flex",
+          flexDirection: "column",
+          transition:
+            "box-shadow 0.3s var(--dsc-ease-out), transform 0.3s var(--dsc-ease-out)",
         }}
       >
-        {/* Match badge */}
+        {/* Cover strip */}
         <div
           style={{
-            position: "absolute",
-            top: 10,
-            right: 12,
-            padding: "3px 9px",
-            borderRadius: 20,
-            backgroundColor: "rgba(0,0,0,0.45)",
-            backdropFilter: "blur(8px)",
-            fontSize: 11,
-            fontWeight: 700,
-            color: matchColor,
+            height: 64,
+            background: req.cover_url
+              ? `url(${req.cover_url}) center/cover`
+              : "linear-gradient(135deg, #ff6b35 0%, #e65721 50%, #a855f7 100%)",
+            position: "relative",
           }}
         >
-          {req.match_score}% match
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(to bottom, transparent 40%, rgba(255,255,255,0.3) 100%)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              top: 10,
+              right: 12,
+              padding: "3px 9px",
+              borderRadius: 20,
+              backgroundColor: "rgba(255,255,255,0.85)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              fontSize: 11,
+              fontWeight: 700,
+              color: matchColor,
+              border: "1px solid rgba(255,255,255,0.4)",
+            }}
+          >
+            {req.match_score}% match
+          </div>
         </div>
-      </div>
-
-      {/* Body */}
-      <div style={{ padding: "0 16px 16px", marginTop: -22 }}>
-        <Avatar
-          src={req.avatar_url}
-          name={req.display_name || req.username}
-          size="l"
-          style={{
-            border: "3px solid white",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-          }}
-        />
-        <div style={{ marginTop: 8 }}>
-          <Text style={{ fontSize: 15, fontWeight: 700, color: "#1C1C1E" }}>
-            {req.display_name || req.username}
-          </Text>
-          <Text style={{ fontSize: 12, color: "#8E8E93", marginTop: 1 }}>
-            @{req.username}
-          </Text>
-          {(req.title || req.bio) && (
+        <div style={{ padding: "0 16px 16px", marginTop: -22 }}>
+          <Avatar
+            src={req.avatar_url}
+            name={req.display_name || req.username}
+            size="l"
+            style={{
+              border: "3px solid var(--dsc-surface)",
+              boxShadow: "0 2px 10px rgba(255,107,53,0.10)",
+            }}
+          />
+          <div style={{ marginTop: 8 }}>
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: 700,
+                color: "var(--dsc-text)",
+              }}
+            >
+              {req.display_name || req.username}
+            </Text>
             <Text
               style={{
                 fontSize: 12,
-                color: "#6C6C70",
-                marginTop: 5,
-                lineHeight: 1.4,
-                overflow: "hidden",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
+                color: "var(--dsc-text-subtle)",
+                marginTop: 1,
               }}
             >
-              {req.title || req.bio}
+              @{req.username}
             </Text>
-          )}
+            {(req.title || req.bio) && (
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: "var(--dsc-text-muted)",
+                  marginTop: 5,
+                  lineHeight: 1.4,
+                  overflow: "hidden",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
+                {req.title || req.bio}
+              </Text>
+            )}
+          </div>
+          <Row style={{ gap: 8, marginTop: 14 }}>
+            <button
+              disabled={busy}
+              onClick={() => handle(onAccept)}
+              style={{
+                flex: 1,
+                padding: "9px 0",
+                borderRadius: 12,
+                border: "none",
+                background: busy
+                  ? "rgba(255,107,53,0.3)"
+                  : "linear-gradient(135deg, #ff6b35, #e65721)",
+                color: "white",
+                fontSize: 13,
+                fontWeight: 700,
+                cursor: busy ? "default" : "pointer",
+                transition: "all 0.18s",
+                boxShadow: busy ? "none" : "0 2px 8px rgba(255,107,53,0.25)",
+              }}
+            >
+              Accept
+            </button>
+            <button
+              disabled={busy}
+              onClick={() => handle(onDecline)}
+              style={{
+                flex: 1,
+                padding: "9px 0",
+                borderRadius: 12,
+                border: "1.5px solid var(--dsc-border)",
+                backgroundColor: "transparent",
+                color: "var(--dsc-text-subtle)",
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: busy ? "default" : "pointer",
+                transition: "all 0.18s",
+              }}
+            >
+              Decline
+            </button>
+          </Row>
         </div>
-
-        {/* Buttons */}
-        <Row style={{ gap: 8, marginTop: 14 }}>
-          <button
-            disabled={busy}
-            onClick={() => handle(onAccept)}
-            style={{
-              flex: 1,
-              padding: "9px 0",
-              borderRadius: 12,
-              border: "none",
-              backgroundColor: busy ? "#FFD4A3" : "#ff6b35",
-              color: "white",
-              fontSize: 13,
-              fontWeight: 700,
-              cursor: busy ? "default" : "pointer",
-              transition: "background 0.15s",
-            }}
-          >
-            Accept
-          </button>
-          <button
-            disabled={busy}
-            onClick={() => handle(onDecline)}
-            style={{
-              flex: 1,
-              padding: "9px 0",
-              borderRadius: 12,
-              border: "1.5px solid #E5E5EA",
-              backgroundColor: "transparent",
-              color: "#8E8E93",
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: busy ? "default" : "pointer",
-            }}
-          >
-            Decline
-          </button>
-        </Row>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 type FilterTab = "all" | "online" | "high-match" | "sent";
 
 const TAB_CONFIG: { id: FilterTab; label: string; icon: React.ReactNode }[] = [
-  { id: "all", label: "All", icon: <Users size={13} /> },
-  { id: "online", label: "Online", icon: <Wifi size={13} /> },
-  { id: "high-match", label: "High Match", icon: <Flame size={13} /> },
-  { id: "sent", label: "Sent", icon: <Send size={13} /> },
+  { id: "all", label: "All", icon: <Users size={13} strokeWidth={2.25} /> },
+  {
+    id: "online",
+    label: "Online",
+    icon: <HeartPulse size={13} strokeWidth={2.25} />,
+  },
+  {
+    id: "high-match",
+    label: "High Match",
+    icon: <Flame size={13} strokeWidth={2.25} />,
+  },
+  { id: "sent", label: "Sent", icon: <Send size={13} strokeWidth={2.25} /> },
 ];
 
 export default function FoodiesPage() {
@@ -246,7 +293,7 @@ export default function FoodiesPage() {
     return list;
   }, [debouncedQuery, activeTab, friends]);
 
-  /* ── Compact (chat-open) mode keeps the old behaviour ── */
+  /* ── Compact (chat-open) mode ── */
   if (isChatOpen) {
     return (
       <Column
@@ -259,24 +306,23 @@ export default function FoodiesPage() {
           minWidth: "320px",
           maxWidth: "320px",
           overflowY: "auto",
-          backgroundColor: "#F8F8FA",
-          borderRight: "1px solid rgba(0,0,0,0.06)",
+          backgroundColor: "var(--dsc-surface-muted)",
+          borderRight: "1px solid var(--dsc-border)",
           transition: "all 0.4s ease",
         }}
       >
-        {/* Compact header */}
         <Column style={{ padding: "20px 16px 0", gap: "12px", flexShrink: 0 }}>
           <Heading
             variant="heading-strong-l"
-            style={{ letterSpacing: "-1px", color: "#1C1C1E" }}
+            style={{ letterSpacing: "-1px", color: "var(--dsc-text)" }}
           >
             Chats
           </Heading>
-          {/* Compact search */}
           <div style={{ position: "relative" }}>
             <Search
               size={14}
-              color="rgba(0,0,0,0.3)"
+              color="var(--dsc-text-subtle)"
+              strokeWidth={2.25}
               style={{
                 position: "absolute",
                 left: 10,
@@ -294,18 +340,26 @@ export default function FoodiesPage() {
                 boxSizing: "border-box",
                 padding: "8px 10px 8px 32px",
                 borderRadius: "10px",
-                border: "1px solid rgba(0,0,0,0.07)",
-                backgroundColor: "rgba(0,0,0,0.03)",
+                border: "1px solid var(--dsc-border)",
+                backgroundColor: "var(--dsc-surface)",
                 fontSize: "13px",
-                color: "#1C1C1E",
+                color: "var(--dsc-text)",
                 outline: "none",
+                fontFamily: "inherit",
+                transition: "border-color 0.18s",
               }}
+              onFocusCapture={(e) =>
+                (e.currentTarget.style.borderColor = "var(--dsc-border-focus)")
+              }
+              onBlurCapture={(e) =>
+                (e.currentTarget.style.borderColor = "var(--dsc-border)")
+              }
             />
           </div>
           <div
             style={{
               height: "1px",
-              backgroundColor: "rgba(0,0,0,0.06)",
+              backgroundColor: "var(--dsc-border)",
               margin: "4px 0",
             }}
           />
@@ -326,7 +380,7 @@ export default function FoodiesPage() {
             >
               <Text
                 variant="body-default-s"
-                style={{ color: "rgba(0,0,0,0.3)" }}
+                style={{ color: "var(--dsc-text-subtle)" }}
               >
                 No results
               </Text>
@@ -352,7 +406,11 @@ export default function FoodiesPage() {
       <Column
         fillHeight
         className="no-scrollbar"
-        style={{ width: "100%", overflowY: "auto", backgroundColor: "#F2F2F7" }}
+        style={{
+          width: "100%",
+          overflowY: "auto",
+          backgroundColor: "var(--dsc-bg)",
+        }}
       >
         <Column style={{ padding: "40px", gap: 16 }}>
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -361,7 +419,7 @@ export default function FoodiesPage() {
               style={{
                 height: 120,
                 borderRadius: 20,
-                backgroundColor: "rgba(0,0,0,0.05)",
+                backgroundColor: "var(--dsc-surface-muted)",
                 animation: "pulse 1.5s ease-in-out infinite",
               }}
             />
@@ -380,29 +438,33 @@ export default function FoodiesPage() {
           alignItems: "center",
           justifyContent: "center",
           gap: 12,
-          backgroundColor: "#F2F2F7",
+          backgroundColor: "var(--dsc-bg)",
         }}
       >
         <div
           style={{
-            width: 48,
-            height: 48,
-            borderRadius: "50%",
-            backgroundColor: "rgba(255,59,48,0.08)",
+            width: 52,
+            height: 52,
+            borderRadius: 16,
+            background:
+              "linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.15))",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#FF3B30",
+            color: "#e63946",
           }}
         >
-          <AlertTriangle size={24} />
+          <Sparkles size={24} strokeWidth={2} />
         </div>
-        <Heading variant="heading-strong-s" style={{ color: "#1C1C1E" }}>
+        <Heading
+          variant="heading-strong-s"
+          style={{ color: "var(--dsc-text)" }}
+        >
           Could not load foodies
         </Heading>
         <Text
           variant="body-default-s"
-          style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
+          style={{ color: "var(--dsc-text-subtle)", textAlign: "center" }}
         >
           {error}
         </Text>
@@ -412,34 +474,34 @@ export default function FoodiesPage() {
 
   const STATS = [
     {
-      icon: <Users size={14} />,
+      icon: <Users size={15} strokeWidth={2.25} />,
       label: "Total Foodies",
       value: friends.length,
       color: "#ff6b35",
     },
     {
-      icon: <Wifi size={14} />,
+      icon: <HeartPulse size={15} strokeWidth={2.25} />,
       label: "Online Now",
       value: onlineCount,
-      color: "#34C759",
+      color: "var(--dsc-accent-success)",
     },
     {
-      icon: <Flame size={14} />,
+      icon: <Flame size={15} strokeWidth={2.25} />,
       label: "High Match",
       value: highMatchCount,
-      color: "#FF9500",
+      color: "#D97706",
     },
     {
-      icon: <TrendingUp size={14} />,
+      icon: <TrendingUp size={15} strokeWidth={2.25} />,
       label: "Avg Match",
       value: `${avgMatch}%`,
-      color: "#AF52DE",
+      color: "var(--dsc-accent-magic)",
     },
     {
-      icon: <Clock size={14} />,
+      icon: <Clock size={15} strokeWidth={2.25} />,
       label: "Sent",
       value: sentRequests.length,
-      color: "#6C6C70",
+      color: "var(--dsc-text-muted)",
     },
   ];
 
@@ -447,171 +509,241 @@ export default function FoodiesPage() {
     <Column
       fillHeight
       className="no-scrollbar"
-      style={{ width: "100%", overflowY: "auto", backgroundColor: "#F2F2F7" }}
+      style={{
+        width: "100%",
+        overflowY: "auto",
+        backgroundColor: "var(--dsc-bg)",
+      }}
     >
       {/* ══ HERO HEADER BAR ══ */}
-      <div
-        style={{
-          backgroundColor: "white",
-          borderBottom: "1px solid rgba(0,0,0,0.06)",
-          padding: "32px 40px 24px",
-        }}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* Title row */}
-        <Row
+        <div
           style={{
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            marginBottom: 20,
+            position: "relative",
+            backgroundColor: "var(--dsc-surface)",
+            borderBottom: "1px solid var(--dsc-border)",
+            padding: "32px 40px 24px",
+            overflow: "hidden",
           }}
         >
-          <Column style={{ gap: 4 }}>
-            <Heading
-              variant="display-strong-m"
-              style={{ letterSpacing: "-1.5px", color: "#1C1C1E" }}
-            >
-              Foodies
-            </Heading>
-            <Text variant="body-default-s" style={{ color: "rgba(0,0,0,0.4)" }}>
-              Find foodies with matching taste vectors — invite them to a tour.
-            </Text>
-          </Column>
-          {/* Online pill */}
-          <Row
+          {/* Signature gradient wash — top-right, editorial */}
+          <div
+            aria-hidden
             style={{
-              alignItems: "center",
-              gap: 6,
-              padding: "6px 14px",
-              borderRadius: 20,
-              backgroundColor: "rgba(52,199,89,0.08)",
-              border: "1px solid rgba(52,199,89,0.2)",
+              position: "absolute",
+              top: -120,
+              right: -80,
+              width: 460,
+              height: 320,
+              borderRadius: "50%",
+              background:
+                "radial-gradient(circle, rgba(168,85,247,0.08) 0%, rgba(255,107,53,0.06) 35%, transparent 72%)",
+              filter: "blur(12px)",
+              pointerEvents: "none",
             }}
-          >
-            <div
-              style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                backgroundColor: "#34C759",
-                boxShadow: "0 0 0 3px rgba(52,199,89,0.2)",
-              }}
-            />
-            <Text
-              variant="body-default-xs"
-              style={{ color: "#16A34A", fontWeight: 700 }}
-            >
-              {onlineCount} online now
-            </Text>
-          </Row>
-        </Row>
-
-        {/* ── Stat pills ── */}
-        <Row style={{ gap: 12, flexWrap: "wrap" }}>
-          {STATS.map((s) => (
+          />
+          <div style={{ position: "relative", zIndex: 1 }}>
+            {/* Title row */}
             <Row
-              key={s.label}
               style={{
-                alignItems: "center",
-                gap: 10,
-                padding: "12px 18px",
-                backgroundColor: "#F8F8FA",
-                border: "1px solid rgba(0,0,0,0.05)",
-                borderRadius: 14,
-                flex: "1 1 160px",
+                alignItems: "flex-end",
+                justifyContent: "space-between",
+                marginBottom: 20,
               }}
             >
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 10,
-                  backgroundColor: `${s.color}14`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: s.color,
-                  flexShrink: 0,
-                }}
-              >
-                {s.icon}
-              </div>
-              <Column style={{ gap: 0 }}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 800,
-                    color: "#1C1C1E",
-                    lineHeight: 1.1,
-                  }}
+              <Column style={{ gap: 4 }}>
+                <Heading
+                  variant="display-strong-m"
+                  style={{ letterSpacing: "-1.5px", color: "var(--dsc-text)" }}
                 >
-                  {s.value}
-                </Text>
+                  Foodies
+                </Heading>
                 <Text
-                  variant="body-default-xs"
-                  style={{ color: "rgba(0,0,0,0.4)", fontWeight: 500 }}
+                  variant="body-default-s"
+                  style={{ color: "var(--dsc-text-subtle)" }}
                 >
-                  {s.label}
+                  Find foodies with matching taste vectors — invite them to a
+                  tour.
                 </Text>
               </Column>
+              {/* Online pill */}
+              <Row
+                style={{
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 14px",
+                  borderRadius: 20,
+                  backgroundColor: "rgba(52,199,89,0.06)",
+                  border: "1px solid rgba(52,199,89,0.2)",
+                }}
+              >
+                <div
+                  style={{
+                    width: 7,
+                    height: 7,
+                    borderRadius: "50%",
+                    backgroundColor: "var(--dsc-accent-success)",
+                    boxShadow: "0 0 0 3px rgba(52,199,89,0.2)",
+                    animation: "dsc-pulse-live 2s ease-in-out infinite",
+                  }}
+                />
+                <Text
+                  variant="body-default-xs"
+                  style={{ color: "#16A34A", fontWeight: 700 }}
+                >
+                  {onlineCount} online now
+                </Text>
+              </Row>
             </Row>
-          ))}
-        </Row>
 
-        {/* ── Add friend by username ── */}
-        <div style={{ marginTop: 20, maxWidth: 480 }}>
-          <AddFriendSearch onRequestSent={() => {}} />
+            {/* ── Stat pills with glassmorphism ── */}
+            <Row style={{ gap: 12, flexWrap: "wrap" }}>
+              {STATS.map((s, i) => (
+                <motion.div
+                  key={s.label}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: i * 0.05 + 0.1,
+                    duration: 0.3,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  style={{ flex: "1 1 160px" }}
+                >
+                  <Row
+                    className="dsc-lift"
+                    style={{
+                      alignItems: "center",
+                      gap: 10,
+                      padding: "12px 18px",
+                      backgroundColor: "var(--dsc-surface-muted)",
+                      border: "1px solid var(--dsc-border)",
+                      borderRadius: 14,
+                      transition:
+                        "box-shadow 0.3s var(--dsc-ease-out), transform 0.3s var(--dsc-ease-out)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 34,
+                        height: 34,
+                        borderRadius: 10,
+                        background: `linear-gradient(135deg, ${s.color}14, ${s.color}22)`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: s.color,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {s.icon}
+                    </div>
+                    <Column style={{ gap: 0 }}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 800,
+                          color: "var(--dsc-text)",
+                          lineHeight: 1.1,
+                          letterSpacing: "-0.5px",
+                        }}
+                      >
+                        {s.value}
+                      </Text>
+                      <Text
+                        variant="body-default-xs"
+                        style={{
+                          color: "var(--dsc-text-subtle)",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {s.label}
+                      </Text>
+                    </Column>
+                  </Row>
+                </motion.div>
+              ))}
+            </Row>
+
+            {/* ── Add friend by username ── */}
+            <div
+              id="foodies-add-friend"
+              style={{ marginTop: 20, maxWidth: 480 }}
+            >
+              <AddFriendSearch onRequestSent={() => {}} />
+            </div>
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       <Column style={{ padding: "28px 40px 48px", gap: 28 }}>
         {/* ── Friend Requests section ── */}
         {pendingRequests.length > 0 && (
-          <Column style={{ gap: 14 }}>
-            <Row style={{ alignItems: "center", gap: 10 }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <Column style={{ gap: 14 }}>
+              <Row style={{ alignItems: "center", gap: 10 }}>
+                <div
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    backgroundColor: "var(--dsc-accent-warm)",
+                    boxShadow: "0 0 0 3px rgba(255,107,53,0.2)",
+                    animation: "dsc-pulse-live 2s ease-in-out infinite",
+                  }}
+                />
+                <Heading
+                  variant="heading-strong-s"
+                  style={{ color: "var(--dsc-text)" }}
+                >
+                  Friend Requests
+                </Heading>
+                <div
+                  style={{
+                    padding: "2px 10px",
+                    borderRadius: 20,
+                    backgroundColor: "rgba(255,107,53,0.08)",
+                    border: "1px solid rgba(255,107,53,0.2)",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: "var(--dsc-accent-warm)",
+                    }}
+                  >
+                    {pendingRequests.length}
+                  </Text>
+                </div>
+              </Row>
               <div
                 style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  backgroundColor: "#FF9500",
-                  boxShadow: "0 0 0 3px rgba(255,149,0,0.2)",
-                }}
-              />
-              <Heading variant="heading-strong-s" style={{ color: "#1C1C1E" }}>
-                Friend Requests
-              </Heading>
-              <div
-                style={{
-                  padding: "2px 10px",
-                  borderRadius: 20,
-                  backgroundColor: "rgba(255,149,0,0.1)",
-                  border: "1px solid rgba(255,149,0,0.25)",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+                  gap: 14,
                 }}
               >
-                <Text
-                  style={{ fontSize: 12, fontWeight: 700, color: "#D97706" }}
-                >
-                  {pendingRequests.length}
-                </Text>
+                {pendingRequests.map((req: PendingRequest, idx) => (
+                  <PendingRequestCard
+                    key={req.friendship_id}
+                    req={req}
+                    index={idx}
+                    onAccept={() => acceptRequest(req.friendship_id)}
+                    onDecline={() => declineRequest(req.friendship_id)}
+                  />
+                ))}
               </div>
-            </Row>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-                gap: 14,
-              }}
-            >
-              {pendingRequests.map((req: PendingRequest) => (
-                <PendingRequestCard
-                  key={req.friendship_id}
-                  req={req}
-                  onAccept={() => acceptRequest(req.friendship_id)}
-                  onDecline={() => declineRequest(req.friendship_id)}
-                />
-              ))}
-            </div>
-          </Column>
+            </Column>
+          </motion.div>
         )}
 
         {/* ── Online Now spotlight strip ── */}
@@ -623,8 +755,9 @@ export default function FoodiesPage() {
                   width: 8,
                   height: 8,
                   borderRadius: "50%",
-                  backgroundColor: "#34C759",
+                  backgroundColor: "var(--dsc-accent-success)",
                   boxShadow: "0 0 0 3px rgba(52,199,89,0.2)",
+                  animation: "dsc-pulse-live 2s ease-in-out infinite",
                 }}
               />
               <Text
@@ -640,12 +773,25 @@ export default function FoodiesPage() {
               </Text>
             </Row>
             <Row
-              style={{ gap: 12, overflowX: "auto", paddingBottom: 4 }}
+              style={{
+                gap: 12,
+                overflowX: "auto",
+                paddingBottom: 4,
+                scrollSnapType: "x proximity",
+                WebkitMaskImage:
+                  "linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%)",
+                maskImage:
+                  "linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%)",
+              }}
               className="no-scrollbar"
             >
-              {onlineFriends.map((f) => (
-                <button
+              {onlineFriends.map((f, i) => (
+                <motion.button
                   key={f.id}
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.04, duration: 0.25 }}
+                  whileHover={{ y: -3 }}
                   onClick={() => handleMessageUser(f)}
                   style={{
                     display: "flex",
@@ -653,13 +799,14 @@ export default function FoodiesPage() {
                     alignItems: "center",
                     gap: 8,
                     padding: "16px 20px",
-                    backgroundColor: "white",
-                    border: "1px solid rgba(0,0,0,0.05)",
+                    backgroundColor: "var(--dsc-surface)",
+                    border: "1px solid var(--dsc-border)",
                     borderRadius: 16,
                     cursor: "pointer",
                     flexShrink: 0,
                     minWidth: 100,
-                    transition: "box-shadow 0.18s",
+                    transition: "box-shadow 0.2s var(--dsc-ease-out)",
+                    boxShadow: "var(--dsc-shadow-sm)",
                   }}
                 >
                   <div style={{ position: "relative" }}>
@@ -680,8 +827,8 @@ export default function FoodiesPage() {
                         width: 10,
                         height: 10,
                         borderRadius: "50%",
-                        backgroundColor: "#34C759",
-                        border: "2px solid white",
+                        backgroundColor: "var(--dsc-accent-success)",
+                        border: "2px solid var(--dsc-surface)",
                       }}
                     />
                   </div>
@@ -689,7 +836,7 @@ export default function FoodiesPage() {
                     style={{
                       fontSize: 12,
                       fontWeight: 600,
-                      color: "#1C1C1E",
+                      color: "var(--dsc-text)",
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -703,8 +850,8 @@ export default function FoodiesPage() {
                         color: f.match >= 85 ? "#16A34A" : "#D97706",
                         backgroundColor:
                           f.match >= 85
-                            ? "rgba(52,199,89,0.1)"
-                            : "rgba(245,158,11,0.1)",
+                            ? "rgba(52,199,89,0.08)"
+                            : "rgba(245,158,11,0.08)",
                         padding: "2px 8px",
                         borderRadius: 10,
                       }}
@@ -712,7 +859,7 @@ export default function FoodiesPage() {
                       {f.match}%
                     </span>
                   )}
-                </button>
+                </motion.button>
               ))}
             </Row>
           </Column>
@@ -723,7 +870,8 @@ export default function FoodiesPage() {
           <div style={{ position: "relative" }}>
             <Search
               size={16}
-              color="rgba(0,0,0,0.3)"
+              color="var(--dsc-text-subtle)"
+              strokeWidth={2.25}
               style={{
                 position: "absolute",
                 left: 14,
@@ -741,22 +889,23 @@ export default function FoodiesPage() {
                 boxSizing: "border-box",
                 padding: "13px 40px 13px 42px",
                 borderRadius: 14,
-                border: "1.5px solid rgba(0,0,0,0.07)",
-                backgroundColor: "#FFFFFF",
+                border: "1.5px solid var(--dsc-border)",
+                backgroundColor: "var(--dsc-surface)",
                 fontSize: 14,
-                color: "#1C1C1E",
+                color: "var(--dsc-text)",
                 outline: "none",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-                transition: "border-color 0.15s, box-shadow 0.15s",
+                fontFamily: "inherit",
+                boxShadow: "var(--dsc-shadow-sm)",
+                transition: "border-color 0.18s, box-shadow 0.18s",
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = "rgba(0,122,255,0.4)";
+                e.target.style.borderColor = "var(--dsc-border-focus)";
                 e.target.style.boxShadow =
-                  "0 0 0 4px rgba(0,122,255,0.08), 0 2px 8px rgba(0,0,0,0.04)";
+                  "0 0 0 4px rgba(255,107,53,0.08), var(--dsc-shadow-sm)";
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = "rgba(0,0,0,0.07)";
-                e.target.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)";
+                e.target.style.borderColor = "var(--dsc-border)";
+                e.target.style.boxShadow = "var(--dsc-shadow-sm)";
               }}
             />
             {query && (
@@ -771,16 +920,24 @@ export default function FoodiesPage() {
                   border: "none",
                   cursor: "pointer",
                   padding: 4,
-                  color: "rgba(0,0,0,0.3)",
+                  color: "var(--dsc-text-subtle)",
                   display: "flex",
                 }}
               >
-                <X size={14} />
+                <X size={14} strokeWidth={2.5} />
               </button>
             )}
           </div>
 
-          <Row style={{ gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          {/* Filter tabs with animated indicator */}
+          <Row
+            style={{
+              gap: 8,
+              alignItems: "center",
+              flexWrap: "wrap",
+              position: "relative",
+            }}
+          >
             {TAB_CONFIG.map((tab) => {
               const isActive = activeTab === tab.id;
               const count =
@@ -802,19 +959,42 @@ export default function FoodiesPage() {
                     padding: "8px 16px",
                     borderRadius: 10,
                     border: isActive
-                      ? "1.5px solid #ff6b35"
-                      : "1.5px solid rgba(0,0,0,0.07)",
+                      ? "1.5px solid var(--dsc-accent-warm)"
+                      : "1.5px solid var(--dsc-border)",
                     backgroundColor: isActive
                       ? "rgba(255,107,53,0.06)"
-                      : "#FFFFFF",
-                    color: isActive ? "#ff6b35" : "rgba(0,0,0,0.5)",
+                      : "var(--dsc-surface)",
+                    color: isActive
+                      ? "var(--dsc-accent-warm)"
+                      : "var(--dsc-text-muted)",
                     cursor: "pointer",
                     fontWeight: isActive ? 700 : 500,
                     fontSize: 13,
-                    transition: "all 0.16s",
+                    transition: "all 0.2s var(--dsc-ease-out)",
                     whiteSpace: "nowrap",
+                    fontFamily: "inherit",
+                    position: "relative",
                   }}
                 >
+                  {/* Animated pill highlight */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="foodies-tab-pill"
+                      style={{
+                        position: "absolute",
+                        inset: -1,
+                        borderRadius: 10,
+                        border: "1.5px solid var(--dsc-accent-warm)",
+                        backgroundColor: "rgba(255,107,53,0.06)",
+                        zIndex: -1,
+                      }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 350,
+                        damping: 30,
+                      }}
+                    />
+                  )}
                   {tab.icon}
                   {tab.label}
                   <span
@@ -823,10 +1003,12 @@ export default function FoodiesPage() {
                       borderRadius: 10,
                       backgroundColor: isActive
                         ? "rgba(255,107,53,0.12)"
-                        : "rgba(0,0,0,0.05)",
+                        : "var(--dsc-surface-muted)",
                       fontSize: 11,
                       fontWeight: 700,
-                      color: isActive ? "#ff6b35" : "rgba(0,0,0,0.4)",
+                      color: isActive
+                        ? "var(--dsc-accent-warm)"
+                        : "var(--dsc-text-subtle)",
                     }}
                   >
                     {count}
@@ -836,7 +1018,7 @@ export default function FoodiesPage() {
             })}
             <Text
               variant="body-default-xs"
-              style={{ marginLeft: "auto", color: "rgba(0,0,0,0.3)" }}
+              style={{ marginLeft: "auto", color: "var(--dsc-text-subtle)" }}
             >
               {activeTab === "sent" ? sentRequests.length : filtered.length}{" "}
               result
@@ -858,23 +1040,30 @@ export default function FoodiesPage() {
                   width: 8,
                   height: 8,
                   borderRadius: "50%",
-                  backgroundColor: "#8E8E93",
-                  boxShadow: "0 0 0 3px rgba(142,142,147,0.2)",
+                  backgroundColor: "var(--dsc-text-subtle)",
+                  boxShadow: "0 0 0 3px rgba(174,174,178,0.2)",
                 }}
               />
-              <Heading variant="heading-strong-s" style={{ color: "#1C1C1E" }}>
+              <Heading
+                variant="heading-strong-s"
+                style={{ color: "var(--dsc-text)" }}
+              >
                 Sent Requests
               </Heading>
               <div
                 style={{
                   padding: "2px 10px",
                   borderRadius: 20,
-                  backgroundColor: "rgba(142,142,147,0.1)",
-                  border: "1px solid rgba(142,142,147,0.2)",
+                  backgroundColor: "rgba(174,174,178,0.08)",
+                  border: "1px solid rgba(174,174,178,0.2)",
                 }}
               >
                 <Text
-                  style={{ fontSize: 12, fontWeight: 700, color: "#8E8E93" }}
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: "var(--dsc-text-subtle)",
+                  }}
                 >
                   {sentRequests.length}
                 </Text>
@@ -900,49 +1089,18 @@ export default function FoodiesPage() {
                 ))}
               </div>
             ) : (
-              <Column
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "64px 24px",
-                  gap: 12,
-                  backgroundColor: "white",
-                  borderRadius: 20,
-                  border: "1px solid rgba(0,0,0,0.04)",
-                }}
-              >
-                <div
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(142,142,147,0.08)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#8E8E93",
-                  }}
-                >
-                  <MailOpen size={24} />
-                </div>
-                <Heading
-                  variant="heading-strong-s"
-                  style={{ color: "#1C1C1E" }}
-                >
-                  No sent requests
-                </Heading>
-                <Text
-                  variant="body-default-s"
-                  style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
-                >
-                  Add some foodies to grow your network!
-                </Text>
-              </Column>
+              <EmptyState
+                icon={<MailOpen size={24} strokeWidth={2} />}
+                iconBg="linear-gradient(135deg, rgba(174,174,178,0.08), rgba(174,174,178,0.15))"
+                iconColor="var(--dsc-text-subtle)"
+                title="No sent requests"
+                subtitle="Add some foodies to grow your network!"
+              />
             )}
           </Column>
         )}
 
-        {/* ══ Friend Grid — 3 columns on wide screens ══ */}
+        {/* ══ Friend Grid ══ */}
         {activeTab !== "sent" && filtered.length > 0 && (
           <div
             style={{
@@ -966,202 +1124,238 @@ export default function FoodiesPage() {
             ))}
           </div>
         )}
+
+        {/* ══ Empty states ══ */}
         {activeTab !== "sent" &&
           filtered.length === 0 &&
           (() => {
-            const base = {
-              alignItems: "center" as const,
-              justifyContent: "center" as const,
-              padding: "64px 24px",
-              gap: 12,
-              backgroundColor: "white",
-              borderRadius: 20,
-              border: "1px solid rgba(0,0,0,0.04)",
-            };
             if (activeTab === "online")
               return (
-                <Column style={base}>
-                  <div
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: "50%",
-                      backgroundColor: "rgba(52,199,89,0.08)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#34C759",
-                    }}
-                  >
-                    <Moon size={24} />
-                  </div>
-                  <Heading
-                    variant="heading-strong-s"
-                    style={{ color: "#1C1C1E" }}
-                  >
-                    No one online right now
-                  </Heading>
-                  <Text
-                    variant="body-default-s"
-                    style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
-                  >
-                    Check back later to see who&apos;s active.
-                  </Text>
-                </Column>
+                <EmptyState
+                  icon={<MoonStar size={24} strokeWidth={2} />}
+                  iconBg="linear-gradient(135deg, rgba(52,199,89,0.06), rgba(52,199,89,0.14))"
+                  iconColor="var(--dsc-accent-success)"
+                  title="No one online right now"
+                  subtitle="Check back later to see who's active."
+                />
               );
             if (activeTab === "high-match")
               return (
-                <Column style={base}>
-                  <div
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: "50%",
-                      backgroundColor: "rgba(175,82,222,0.08)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#AF52DE",
-                    }}
-                  >
-                    <Target size={24} />
-                  </div>
-                  <Heading
-                    variant="heading-strong-s"
-                    style={{ color: "#1C1C1E" }}
-                  >
-                    No high-match foodies yet
-                  </Heading>
-                  <Text
-                    variant="body-default-s"
-                    style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
-                  >
-                    Discover and add foodies to find your taste twins!
-                  </Text>
-                </Column>
+                <EmptyState
+                  icon={<Crosshair size={24} strokeWidth={2} />}
+                  iconBg="linear-gradient(135deg, rgba(168,85,247,0.06), rgba(168,85,247,0.14))"
+                  iconColor="var(--dsc-accent-magic)"
+                  title="No high-match foodies yet"
+                  subtitle="Discover and add foodies to find your taste twins!"
+                />
               );
             if (query.trim())
               return (
-                <Column style={base}>
-                  <div
-                    style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: "50%",
-                      backgroundColor: "rgba(142,142,147,0.08)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#8E8E93",
-                    }}
-                  >
-                    <SearchX size={24} />
-                  </div>
-                  <Heading
-                    variant="heading-strong-s"
-                    style={{ color: "#1C1C1E" }}
-                  >
-                    No results for &ldquo;{query}&rdquo;
-                  </Heading>
-                  <Text
-                    variant="body-default-s"
-                    style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
-                  >
-                    Try a different name or clear the search.
-                  </Text>
-                </Column>
+                <EmptyState
+                  icon={<SearchX size={24} strokeWidth={2} />}
+                  iconBg="linear-gradient(135deg, rgba(174,174,178,0.06), rgba(174,174,178,0.14))"
+                  iconColor="var(--dsc-text-subtle)"
+                  title={<>No results for &ldquo;{query}&rdquo;</>}
+                  subtitle="Try a different name or clear the search."
+                />
               );
             return (
-              <Column style={base}>
-                <div
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: "50%",
-                    backgroundColor: "rgba(255,107,53,0.08)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#ff6b35",
-                  }}
-                >
-                  <Users size={24} />
-                </div>
-                <Heading
-                  variant="heading-strong-s"
-                  style={{ color: "#1C1C1E" }}
-                >
-                  Your foodies list is empty
-                </Heading>
-                <Text
-                  variant="body-default-s"
-                  style={{ color: "rgba(0,0,0,0.4)", textAlign: "center" }}
-                >
-                  Search by username above to add your first foodie!
-                </Text>
-              </Column>
+              <EmptyState
+                icon={<Users size={24} strokeWidth={2} />}
+                iconBg="linear-gradient(135deg, rgba(255,107,53,0.06), rgba(255,107,53,0.14))"
+                iconColor="var(--dsc-accent-warm)"
+                title="Your foodies list is empty"
+                subtitle="Search by username above to add your first foodie!"
+                actionLabel="Add your first foodie"
+                onAction={() => {
+                  const el = document.getElementById("foodies-add-friend");
+                  if (el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                    const input = el.querySelector<HTMLInputElement>("input");
+                    setTimeout(() => input?.focus(), 400);
+                  }
+                }}
+              />
             );
           })()}
 
         {/* ══ Discover Section ══ */}
         {activeTab !== "sent" && discover.length > 0 && (
-          <Column style={{ gap: 16 }}>
-            <Row style={{ alignItems: "center", gap: 8 }}>
-              <div
-                style={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: 8,
-                  backgroundColor: "rgba(175,82,222,0.1)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#AF52DE",
-                }}
-              >
-                <UserPlus size={14} />
-              </div>
-              <Column style={{ gap: 0 }}>
-                <Text
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
+            <Column style={{ gap: 16 }}>
+              <Row style={{ alignItems: "center", gap: 8 }}>
+                <div
                   style={{
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color: "#1C1C1E",
-                    letterSpacing: "-0.2px",
+                    width: 30,
+                    height: 30,
+                    borderRadius: 9,
+                    background: "var(--dsc-gradient-signature-soft)",
+                    border: "1px solid rgba(168,85,247,0.18)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "var(--dsc-accent-magic)",
                   }}
                 >
-                  Discover Foodies
-                </Text>
-                <Text
-                  variant="body-default-xs"
-                  style={{ color: "rgba(0,0,0,0.4)" }}
-                >
-                  People with matching taste vectors you haven’t connected with
-                  yet
-                </Text>
-              </Column>
-            </Row>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-                gap: 16,
-              }}
-            >
-              {discover.map((person) => (
-                <FriendRow
-                  key={person.id}
-                  friend={person}
-                  variant="discover"
-                  isCompact={false}
-                  onMessage={() => handleMessageUser(person)}
-                  onInvite={(f) => sendRequest(f.id)}
-                />
-              ))}
-            </div>
-          </Column>
+                  <Sparkles size={14} strokeWidth={2.5} />
+                </div>
+                <Column style={{ gap: 0 }}>
+                  <Row style={{ alignItems: "center", gap: 8 }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 700,
+                        color: "var(--dsc-text)",
+                        letterSpacing: "-0.2px",
+                      }}
+                    >
+                      Discover Foodies
+                    </Text>
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        letterSpacing: "0.8px",
+                        textTransform: "uppercase",
+                        color: "var(--dsc-accent-magic)",
+                        background:
+                          "linear-gradient(135deg, rgba(168,85,247,0.1), rgba(255,107,53,0.08))",
+                        border: "1px solid rgba(168,85,247,0.18)",
+                        padding: "2px 8px",
+                        borderRadius: 20,
+                      }}
+                    >
+                      AI-matched
+                    </span>
+                  </Row>
+                  <Text
+                    variant="body-default-xs"
+                    style={{ color: "var(--dsc-text-subtle)" }}
+                  >
+                    People with matching taste vectors you haven&apos;t
+                    connected with yet
+                  </Text>
+                </Column>
+              </Row>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                  gap: 16,
+                }}
+              >
+                {discover.map((person) => (
+                  <FriendRow
+                    key={person.id}
+                    friend={person}
+                    variant="discover"
+                    isCompact={false}
+                    onMessage={() => handleMessageUser(person)}
+                    onInvite={(f) => sendRequest(f.id)}
+                  />
+                ))}
+              </div>
+            </Column>
+          </motion.div>
         )}
       </Column>
     </Column>
+  );
+}
+
+// ── Reusable Empty State Component ──
+function EmptyState({
+  icon,
+  iconBg,
+  iconColor,
+  title,
+  subtitle,
+  actionLabel,
+  onAction,
+}: {
+  icon: React.ReactNode;
+  iconBg: string;
+  iconColor: string;
+  title: React.ReactNode;
+  subtitle: string;
+  actionLabel?: string;
+  onAction?: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+    >
+      <Column
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "64px 24px",
+          gap: 12,
+          backgroundColor: "var(--dsc-surface)",
+          borderRadius: 20,
+          border: "1px solid var(--dsc-border)",
+        }}
+      >
+        <div
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: 16,
+            background: iconBg,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: iconColor,
+          }}
+        >
+          {icon}
+        </div>
+        <Heading
+          variant="heading-strong-s"
+          style={{ color: "var(--dsc-text)" }}
+        >
+          {title}
+        </Heading>
+        <Text
+          variant="body-default-s"
+          style={{ color: "var(--dsc-text-subtle)", textAlign: "center" }}
+        >
+          {subtitle}
+        </Text>
+        {actionLabel && onAction && (
+          <motion.button
+            whileHover={{ scale: 1.03, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={onAction}
+            style={{
+              marginTop: 6,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "10px 18px",
+              borderRadius: 12,
+              border: "none",
+              background: "linear-gradient(135deg, #ff6b35, #e65721)",
+              color: "white",
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: "pointer",
+              boxShadow: "0 4px 14px rgba(255,107,53,0.28)",
+              fontFamily: "inherit",
+            }}
+          >
+            <Plus size={14} strokeWidth={2.75} />
+            {actionLabel}
+          </motion.button>
+        )}
+      </Column>
+    </motion.div>
   );
 }

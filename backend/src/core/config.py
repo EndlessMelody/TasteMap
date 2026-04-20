@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     SUPABASE_URL: str
     SUPABASE_JWT_SECRET: str
     SUPABASE_ANON_KEY: str | None = None
+    SUPABASE_SERVICE_ROLE_KEY: str | None = None
     SUPABASE_PROJECT_REF: str = "bjuikfhjrpmrpbvhduey"
 
     # --- Groq / OpenAI-compatible LLM ---

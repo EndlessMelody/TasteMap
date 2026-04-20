@@ -23,7 +23,7 @@ export class ApiError extends Error {
 
 // ─── Token Caching ─────────────────────────────────────────────────────────────
 let cachedToken: string | undefined;
-let initialSessionPromise: Promise<any> | null = null;
+let initialSessionPromise: Promise<string | undefined> | null = null;
 
 if (typeof window !== "undefined") {
   // Sync token in background with a singleton promise
@@ -110,7 +110,7 @@ export const apiPut = <T>(path: string, body?: unknown) =>
 export const apiDelete = <T>(path: string) =>
   request<T>(path, { method: "DELETE" });
 
-export type MediaUploadType = "avatar" | "cover" | "post" | "reel";
+export type MediaUploadType = "avatar" | "cover" | "post" | "reel" | "chat";
 
 export interface MediaUploadResponse {
   url: string;

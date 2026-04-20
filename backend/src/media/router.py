@@ -6,8 +6,8 @@ router = APIRouter()
 
 @router.post(
     "/upload",
-    summary="Upload ảnh hoặc video",
-    description="Trả về URL để nhúng vào User/Post/Reel/Group. type: 'avatar'|'cover'|'post'|'reel'"
+    summary="Upload ảnh, video, hoặc audio",
+    description="Trả về URL để nhúng vào User/Post/Reel/Group/Chat. type: 'avatar'|'cover'|'post'|'reel'|'chat'"
 )
 async def upload_media(
     request: Request,
