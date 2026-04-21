@@ -40,6 +40,7 @@ export interface Friend {
   match?: number;
   isOnline?: boolean;
   friendshipId?: number;
+  lastMessageAt?: string;
 }
 
 export type FriendVariant = "friend" | "discover" | "sent";
@@ -52,6 +53,7 @@ interface FriendRowProps {
   onUnfriend?: (friend: Friend) => void;
   onCancel?: (friend: Friend) => void;
   isCompact?: boolean;
+  isActive?: boolean;
 }
 
 // ─── More dropdown menu (friend variant) ───
@@ -337,6 +339,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
   onUnfriend,
   onCancel,
   isCompact = false,
+  isActive = false,
 }) => {
   const router = useRouter();
   const handleViewProfile = () => router.push(`/foodies/${friend.id}`);
@@ -349,14 +352,15 @@ export const FriendRow: React.FC<FriendRowProps> = ({
         gap="12"
         onClick={() => onMessage(friend)}
         paddingX="16"
-        paddingY="14"
+        paddingY="16"
         radius="m"
-        className="messenger-list-item"
+        className={`messenger-list-item ${isActive ? 'is-active' : ''}`}
         style={{
           cursor: "pointer",
-          transition: "background-color 0.18s ease",
-          backgroundColor: "transparent",
-          minHeight: 68,
+          transition: "all 0.2s ease",
+          backgroundColor: isActive ? "rgba(255, 107, 53, 0.08)" : "transparent",
+          minHeight: 72,
+          borderLeft: isActive ? "3px solid var(--dsc-accent-warm)" : "3px solid transparent",
         }}
       >
         <div style={{ position: "relative", flexShrink: 0 }}>
@@ -376,16 +380,16 @@ export const FriendRow: React.FC<FriendRowProps> = ({
             />
           )}
         </div>
-        <Column flexGrow={1} style={{ overflow: "hidden", gap: 1 }}>
+        <Column flexGrow={1} style={{ overflow: "hidden", gap: 3 }}>
           <Row
             vertical="center"
             style={{ justifyContent: "space-between", gap: 8 }}
           >
             <Text
               style={{
-                color: "var(--dsc-text)",
+                color: isActive ? "var(--dsc-text)" : "var(--dsc-text)",
                 fontSize: 14,
-                fontWeight: 600,
+                fontWeight: 700,
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -396,24 +400,44 @@ export const FriendRow: React.FC<FriendRowProps> = ({
             </Text>
             <Text
               variant="body-default-xs"
-              style={{ color: "var(--dsc-text-subtle)", flexShrink: 0 }}
+              style={{ 
+                color: isActive ? "var(--dsc-accent-warm)" : "var(--dsc-text-subtle)", 
+                flexShrink: 0,
+                fontWeight: isActive ? 700 : 400
+              }}
             >
-              9:41 AM
+              {friend.lastMessageAt ? new Date(friend.lastMessageAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : ""}
             </Text>
           </Row>
-          <Text
-            style={{
-              color: "var(--dsc-text-muted)",
-              fontSize: 12,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {friend.status
-              .replace(/[\u{1F300}-\u{1FFFF}]|\u{1F336}\uFE0F/gu, "")
-              .trim()}
-          </Text>
+          <Row>
+            <div
+              style={{
+                display: "inline-flex",
+                padding: "2px 10px",
+                borderRadius: "12px",
+                backgroundColor: isActive ? "var(--dsc-accent-warm)" : "var(--dsc-surface-muted)",
+                border: isActive ? "none" : "1px solid var(--dsc-border)",
+                transition: "all 0.2s ease",
+              }}
+            >
+              <Text
+                style={{
+                  color: isActive ? "#ffffff" : "var(--dsc-text-muted)",
+                  fontSize: 10,
+                  fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.4px",
+                }}
+              >
+                {friend.status
+                  .replace(/[\u{1F300}-\u{1FFFF}]|\u{1F336}\uFE0F/gu, "")
+                  .trim() || "Foodie"}
+              </Text>
+            </div>
+          </Row>
         </Column>
         <style jsx>{`
           .messenger-list-item:hover {

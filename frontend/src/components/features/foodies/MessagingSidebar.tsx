@@ -1218,7 +1218,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
         style={{
           minHeight: 0,
           overflowY: "auto",
-          padding: "24px 32px",
+          padding: "32px 48px",
           gap: 2,
           backgroundColor: "var(--dsc-bg)",
         }}
@@ -1354,7 +1354,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                       </div>
 
                       {/* Bubble */}
-                      <div style={{ maxWidth: "68%" }}>
+                      <div style={{ maxWidth: "75%" }}>
                         <div
                           style={{
                             padding:
@@ -1683,7 +1683,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
         fillWidth
         vertical="center"
         style={{
-          padding: "8px 14px",
+          padding: "16px 24px",
           borderTop: "1px solid var(--dsc-border)",
           backgroundColor: "var(--dsc-surface)",
           flexShrink: 0,

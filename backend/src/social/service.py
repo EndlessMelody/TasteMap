@@ -24,7 +24,7 @@ def _cosine_sim(a, b) -> float:
     return dot / (norm_a * norm_b)
 
 
-def _to_foodie(user: User, current_vector, friendship_id: Optional[int] = None) -> dict:
+def _to_foodie(user: User, current_vector, friendship_id: Optional[int] = None, last_message_at: Optional[any] = None) -> dict:
     return {
         "id": user.id,
         "username": user.username,
@@ -36,6 +36,7 @@ def _to_foodie(user: User, current_vector, friendship_id: Optional[int] = None) 
         "title": user.title,
         "match_score": round(_cosine_sim(current_vector, user.food_vector) * 100),
         "friendship_id": friendship_id,
+        "last_message_at": last_message_at.isoformat() if last_message_at else None,
     }
 
 
@@ -104,7 +105,7 @@ async def accept_request(db: AsyncSession, friendship_id: int, user_id: int) -> 
     result = await db.execute(select(Friendship).where(Friendship.id == friendship_id, Friendship.friend_id == user_id))
     fs = result.scalars().first()
     if not fs:
-        raise HTTPException(status_code=404, detail="Lời mời không tồn tại")
+        raise HTTPException(status_code=404, detail="Invitation not found")
 
     accepter_res = await db.execute(select(User).where(User.id == user_id))
     accepter = accepter_res.scalars().first()
@@ -116,7 +117,7 @@ async def accept_request(db: AsyncSession, friendship_id: int, user_id: int) -> 
         user_id=fs.user_id,
         type="social",
         title="Friend Request Accepted",
-        body=f"{accepter_name} accepted your friend request! 🎉",
+        body=f"{accepter_name} accepted your friend request!",
         reference_type="friendship",
         reference_id=fs.id,
     )
@@ -131,7 +132,7 @@ async def block_friend(db: AsyncSession, friendship_id: int, user_id: int) -> di
     )
     fs = result.scalars().first()
     if not fs:
-        raise HTTPException(status_code=404, detail="Không tìm thấy")
+        raise HTTPException(status_code=404, detail="Not found")
     fs.status = "blocked"
     await db.commit()
     return {"status": "blocked"}
@@ -143,7 +144,7 @@ async def delete_friendship(db: AsyncSession, friendship_id: int, user_id: int) 
     )
     fs = result.scalars().first()
     if not fs:
-        raise HTTPException(status_code=404, detail="Không tìm thấy")
+        raise HTTPException(status_code=404, detail="Not found")
     await db.delete(fs)
     await db.commit()
     return {"status": "deleted"}
@@ -178,13 +179,28 @@ async def list_pending_requests(db: AsyncSession, user_id: int) -> dict:
 
 
 async def list_friends_foodies(db: AsyncSession, user_id: int) -> dict:
+    from src.messages.models import ChatMessage
+    from sqlalchemy import func
+
     me_res = await db.execute(select(User).where(User.id == user_id))
     me = me_res.scalars().first()
     if not me:
         return {"items": []}
 
+    # Subquery to get last message timestamp for each friend
+    last_msg_subquery = (
+        select(func.max(ChatMessage.created_at))
+        .where(
+            or_(
+                (ChatMessage.sender_id == user_id) & (ChatMessage.receiver_id == User.id),
+                (ChatMessage.sender_id == User.id) & (ChatMessage.receiver_id == user_id)
+            )
+        )
+        .scalar_subquery()
+    )
+
     result = await db.execute(
-        select(Friendship, User)
+        select(Friendship, User, last_msg_subquery.label("last_message_at"))
         .join(User, or_(
             (Friendship.friend_id == User.id) & (Friendship.user_id == user_id),
             (Friendship.user_id == User.id) & (Friendship.friend_id == user_id),
@@ -196,11 +212,13 @@ async def list_friends_foodies(db: AsyncSession, user_id: int) -> dict:
     )
     rows = result.all()
     items = []
-    for fs, user in rows:
+    for fs, user, last_msg_at in rows:
         friend_id = fs.friend_id if fs.user_id == user_id else fs.user_id
         if user.id == friend_id:
-            items.append(_to_foodie(user, me.food_vector, friendship_id=fs.id))
-    items.sort(key=lambda x: x["match_score"], reverse=True)
+            items.append(_to_foodie(user, me.food_vector, friendship_id=fs.id, last_message_at=last_msg_at))
+    
+    # Sort by last_message_at DESC, then by match_score DESC
+    items.sort(key=lambda x: (x["last_message_at"] or "", x["match_score"]), reverse=True)
     return {"items": items}
 
 

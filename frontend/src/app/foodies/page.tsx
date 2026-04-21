@@ -248,7 +248,7 @@ const TAB_CONFIG: { id: FilterTab; label: string; icon: React.ReactNode }[] = [
 ];
 
 export default function FoodiesPage() {
-  const { isChatOpen, setIsChatOpen, setActiveFriend } = useChat();
+  const { isChatOpen, setIsChatOpen, activeFriend, setActiveFriend } = useChat();
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
 
@@ -280,7 +280,7 @@ export default function FoodiesPage() {
 
   const filtered = useMemo(() => {
     if (activeTab === "sent") return [];
-    let list = friends;
+    let list = [...friends];
     if (activeTab === "online") list = list.filter((f) => f.isOnline);
     if (activeTab === "high-match")
       list = list.filter((f) => (f.match ?? 0) >= 80);
@@ -290,7 +290,14 @@ export default function FoodiesPage() {
           f.name.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
           f.status.toLowerCase().includes(debouncedQuery.toLowerCase()),
       );
-    return list;
+    
+    // Sort by lastMessageAt descending, then match score
+    return list.sort((a, b) => {
+      const dateA = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
+      const dateB = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
+      if (dateA !== dateB) return dateB - dateA;
+      return (b.match ?? 0) - (a.match ?? 0);
+    });
   }, [debouncedQuery, activeTab, friends]);
 
   /* ── Compact (chat-open) mode ── */
@@ -370,6 +377,7 @@ export default function FoodiesPage() {
               key={f.id}
               friend={f}
               isCompact
+              isActive={activeFriend?.id === f.id}
               onMessage={() => handleMessageUser(f)}
               onInvite={(f2) => alert(`Invited ${f2.name}!`)}
             />

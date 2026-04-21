@@ -48,6 +48,7 @@ export interface FoodieFriendRaw {
   title?: string;
   match_score: number;
   friendship_id?: number;
+  last_message_at?: string;
 }
 
 function mapToFriend(f: FoodieFriendRaw): Friend {
@@ -61,6 +62,7 @@ function mapToFriend(f: FoodieFriendRaw): Friend {
     match: f.match_score,
     isOnline: false,
     friendshipId: f.friendship_id,
+    lastMessageAt: f.last_message_at,
   };
 }
 
