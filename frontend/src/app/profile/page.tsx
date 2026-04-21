@@ -1060,9 +1060,9 @@ export default function ProfilePage() {
                     >
                       {user?.created_at
                         ? new Date(user.created_at).toLocaleDateString(
-                            "en-US",
-                            { month: "short", year: "numeric" },
-                          )
+                          "en-US",
+                          { month: "short", year: "numeric" },
+                        )
                         : "Mar 2025"}
                     </Text>
                   </Column>
@@ -1409,8 +1409,8 @@ export default function ProfilePage() {
                           {friend.title
                             ? `${friend.title}`
                             : friend.location
-                            ? `📍 ${friend.location}`
-                            : `@${friend.username}`}
+                              ? `📍 ${friend.location}`
+                              : `@${friend.username}`}
                         </span>
                       </div>
 
@@ -2347,9 +2347,9 @@ export default function ProfilePage() {
               )}
 
               {activeTab === "Achievements" && (
-                <Column fillWidth gap="24">
-                  <Row fillWidth horizontal="between" vertical="center" paddingX="8">
-                    <Column gap="4">
+                <Column fillWidth gap={24}>
+                  <Row fillWidth horizontal="center" vertical="center" paddingX="8">
+                    <Column gap={4}>
                       <Heading variant="display-strong-s">Badge Vault</Heading>
                       <Text variant="body-default-xs" onBackground="neutral-weak">
                         Collect and show off your culinary journey
@@ -2373,7 +2373,7 @@ export default function ProfilePage() {
                     ))}
 
                     {badges.length === 0 && !badgesLoading && (
-                      <Column fillWidth horizontal="center" vertical="center" padding="64" gap="16" background="neutral-alpha-weak" radius="xl" style={{ border: '2px dashed rgba(0,0,0,0.05)', gridColumn: '1 / -1' }}>
+                      <Column fillWidth horizontal="center" vertical="center" padding="64" gap={16} background="neutral-alpha-weak" radius="xl" style={{ border: '2px dashed rgba(0,0,0,0.05)', gridColumn: '1 / -1' }}>
                         <div style={{ opacity: 0.2 }}>
                           <Award size={48} />
                         </div>
@@ -3335,4 +3335,4 @@ export default function ProfilePage() {
       />
     </div>
   );
-}
+}
