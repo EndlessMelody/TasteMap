@@ -70,6 +70,11 @@ export interface BadgeSummary {
   earned_at?: string;
 }
 
+export interface UserBadgeResponse {
+  badge: BadgeSummary;
+  earned_at?: string;
+}
+
 export interface UserGamificationInfo {
   current_xp: number;
   xp: number; // For backward compatibility

@@ -9,7 +9,25 @@ import {
   Text,
   Avatar,
   Button,
+  Grid,
 } from "@/components/OnceUI";
+
+import {
+  ProfileIdentityCard,
+  FlavorProfileCard,
+  FriendsListCard,
+  ProfileTabs,
+  QuickActionsCard,
+  TasteMapStatsCard,
+  TasteDNACard,
+  TopHighlightsCard,
+  EditProfileModal,
+  ProfileStickyHeader,
+  ProfileCover,
+  ProfileAvatarGroup,
+  FriendItem,
+  PostItem
+} from "@/components/features/profile";
 
 // ── Premium Icons (lucide-react) ──
 import {
@@ -48,6 +66,9 @@ import ClientOnly from "@/components/common/ClientOnly";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiGet, apiPost, apiPatch, apiDelete } from "@/lib/api";
 import { useUserVector } from "@/context/UserVectorContext";
+import { BadgeSummary } from "@/types/gamification";
+import BadgeCard from "@/components/features/gamification/BadgeCard";
+import { useBadges } from "@/hooks/useBadges";
 import { useChat } from "@/context/ChatContext";
 import type { Friend } from "@/components/features/foodies/FriendRow";
 import { useMediaUpload } from "@/hooks/useMediaUpload";
@@ -132,7 +153,7 @@ interface UserProfile {
     followers: number;
     following: number;
   };
-  badges: { icon: string; label: string; color: string }[];
+  badges: BadgeSummary[];
 }
 
 interface MutualFriend {
@@ -167,82 +188,82 @@ const RADAR_SUBJECTS = [
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function DateSeparator({ label }: { label: string }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0" }}>
-      <div style={{ flex: 1, height: 1, backgroundColor: "#E5E5EA" }} />
-      <span
-        style={{
-          fontSize: 11, fontWeight: 600, color: "#8E8E93",
-          backgroundColor: "#F9F9FB", padding: "3px 10px",
-          borderRadius: 20, border: "1px solid #E5E5EA", whiteSpace: "nowrap",
-        }}
-      >
-        {label}
-      </span>
-      <div style={{ flex: 1, height: 1, backgroundColor: "#E5E5EA" }} />
-    </div>
-  );
-}
+// function DateSeparator({ label }: { label: string }) {
+//   return (
+//     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0" }}>
+//       <div style={{ flex: 1, height: 1, backgroundColor: "#E5E5EA" }} />
+//       <span
+//         style={{
+//           fontSize: 11, fontWeight: 600, color: "#8E8E93",
+//           backgroundColor: "#F9F9FB", padding: "3px 10px",
+//           borderRadius: 20, border: "1px solid #E5E5EA", whiteSpace: "nowrap",
+//         }}
+//       >
+//         {label}
+//       </span>
+//       <div style={{ flex: 1, height: 1, backgroundColor: "#E5E5EA" }} />
+//     </div>
+//   );
+// }
 
-function VoicePlayer({ src, isMe, durationHint }: { src: string; isMe: boolean; durationHint?: number }) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+// function VoicePlayer({ src, isMe, durationHint }: { src: string; isMe: boolean; durationHint?: number }) {
+//   const audioRef = useRef<HTMLAudioElement | null>(null);
+//   const [isPlaying, setIsPlaying] = useState(false);
+//   const [currentTime, setCurrentTime] = useState(0);
+//   const [duration, setDuration] = useState(0);
 
-  const total = duration > 0 ? duration : (durationHint ?? 0);
+//   const total = duration > 0 ? duration : (durationHint ?? 0);
 
-  useEffect(() => {
-    const a = audioRef.current;
-    return () => { a?.pause(); };
-  }, []);
+//   useEffect(() => {
+//     const a = audioRef.current;
+//     return () => { a?.pause(); };
+//   }, []);
 
-  const toggle = () => {
-    const a = audioRef.current;
-    if (!a) return;
-    if (a.paused) { void a.play(); setIsPlaying(true); }
-    else { a.pause(); setIsPlaying(false); }
-  };
+//   const toggle = () => {
+//     const a = audioRef.current;
+//     if (!a) return;
+//     if (a.paused) { void a.play(); setIsPlaying(true); }
+//     else { a.pause(); setIsPlaying(false); }
+//   };
 
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 200 }}>
-      <audio
-        ref={audioRef}
-        src={src}
-        preload="metadata"
-        onLoadedMetadata={() => { const d = audioRef.current?.duration ?? 0; if (isFinite(d) && d > 0) setDuration(d); }}
-        onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
-        onEnded={() => { setIsPlaying(false); setCurrentTime(0); }}
-        style={{ display: "none" }}
-      />
-      <button
-        onClick={toggle}
-        style={{
-          width: 28, height: 28, borderRadius: "50%", border: "none", cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-          background: isMe ? "rgba(255,255,255,0.2)" : "rgba(255,107,53,0.14)",
-          color: isMe ? "#fff" : "#ff6b35",
-        }}
-      >
-        {isPlaying ? <Pause size={13} /> : <Play size={13} />}
-      </button>
-      <input
-        type="range" min={0} max={Math.max(total, 0.1)} step={0.05}
-        value={Math.min(currentTime, Math.max(total, 0.1))}
-        onChange={(e) => {
-          const t = Number(e.target.value);
-          if (audioRef.current) audioRef.current.currentTime = t;
-          setCurrentTime(t);
-        }}
-        style={{ flex: 1, accentColor: isMe ? "#fff" : "#ff6b35" }}
-      />
-      <span style={{ fontSize: 11, color: isMe ? "rgba(255,255,255,0.85)" : "#8E8E93", whiteSpace: "nowrap" }}>
-        {formatVoiceDuration(currentTime)} / {formatVoiceDuration(total)}
-      </span>
-    </div>
-  );
-}
+//   return (
+//     <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 200 }}>
+//       <audio
+//         ref={audioRef}
+//         src={src}
+//         preload="metadata"
+//         onLoadedMetadata={() => { const d = audioRef.current?.duration ?? 0; if (isFinite(d) && d > 0) setDuration(d); }}
+//         onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
+//         onEnded={() => { setIsPlaying(false); setCurrentTime(0); }}
+//         style={{ display: "none" }}
+//       />
+//       <button
+//         onClick={toggle}
+//         style={{
+//           width: 28, height: 28, borderRadius: "50%", border: "none", cursor: "pointer",
+//           display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+//           background: isMe ? "rgba(255,255,255,0.2)" : "rgba(255,107,53,0.14)",
+//           color: isMe ? "#fff" : "#ff6b35",
+//         }}
+//       >
+//         {isPlaying ? <Pause size={13} /> : <Play size={13} />}
+//       </button>
+//       <input
+//         type="range" min={0} max={Math.max(total, 0.1)} step={0.05}
+//         value={Math.min(currentTime, Math.max(total, 0.1))}
+//         onChange={(e) => {
+//           const t = Number(e.target.value);
+//           if (audioRef.current) audioRef.current.currentTime = t;
+//           setCurrentTime(t);
+//         }}
+//         style={{ flex: 1, accentColor: isMe ? "#fff" : "#ff6b35" }}
+//       />
+//       <span style={{ fontSize: 11, color: isMe ? "rgba(255,255,255,0.85)" : "#8E8E93", whiteSpace: "nowrap" }}>
+//         {formatVoiceDuration(currentTime)} / {formatVoiceDuration(total)}
+//       </span>
+//     </div>
+//   );
+// }
 
 function ProfileSkeleton() {
   return (
@@ -413,132 +434,59 @@ function MatchGauge({ pct }: { pct: number }) {
   );
 }
 
-function ActionButton({
-  onClick,
-  disabled,
-  color = "white",
-  bg = "#ff6b35",
-  border,
-  boxShadow,
-  children,
-}: {
-  onClick: () => void;
+function SocialActionItem({ 
+  icon, 
+  label, 
+  color, 
+  onClick, 
+  disabled, 
+  subtitle 
+}: { 
+  icon: React.ReactNode; 
+  label: string; 
+  color: string; 
+  onClick: () => void; 
   disabled?: boolean;
-  color?: string;
-  bg?: string;
-  border?: string;
-  boxShadow?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <motion.button
-      whileHover={{ scale: disabled ? 1 : 1.03 }}
-      whileTap={{ scale: disabled ? 1 : 0.96 }}
-      disabled={disabled}
-      onClick={onClick}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 7,
-        padding: "11px 20px",
-        borderRadius: 12,
-        border: border ?? "none",
-        backgroundColor: bg,
-        color,
-        fontSize: 14,
-        fontWeight: 700,
-        cursor: disabled ? "default" : "pointer",
-        opacity: disabled ? 0.6 : 1,
-        whiteSpace: "nowrap",
-        fontFamily: "inherit",
-        boxShadow: boxShadow,
-        transition: "box-shadow 0.2s",
-      }}
-    >
-      {children}
-    </motion.button>
-  );
-}
-
-// ─── Glassmorphic Card ──────────────────────────────────────────────────────
-function Card({
-  children,
-  style,
-}: {
-  children: React.ReactNode;
-  style?: React.CSSProperties;
+  subtitle?: string;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={disabled ? {} : { x: 4, backgroundColor: "#F9F9FB" }}
+      onClick={!disabled ? onClick : undefined}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        padding: "12px",
+        borderRadius: "12px",
+        cursor: disabled ? "default" : "pointer",
+        transition: "all 0.2s",
+        opacity: disabled ? 0.6 : 1,
+      }}
     >
-      <div
-        className="dsc-lift"
-        style={{
-          backgroundColor: "var(--dsc-surface)",
-          borderRadius: 20,
-          border: "1px solid var(--dsc-border)",
-          padding: 24,
-          boxShadow: "var(--dsc-shadow-sm)",
-          marginBottom: 16,
-          transition:
-            "box-shadow 0.3s var(--dsc-ease-out), transform 0.3s var(--dsc-ease-out)",
-          ...style,
-        }}
-      >
-        {children}
-      </div>
-    </motion.div>
-  );
-}
-
-// ─── Section label ────────────────────────────────────────────────────────────
-function SectionLabel({
-  icon,
-  label,
-  color = "var(--dsc-accent-warm)",
-  iconBg,
-  badge,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  color?: string;
-  iconBg?: string;
-  badge?: React.ReactNode;
-}) {
-  return (
-    <Row style={{ alignItems: "center", gap: 10, marginBottom: 16 }}>
-      <div
-        style={{
-          width: 30,
-          height: 30,
-          borderRadius: 9,
-          background:
-            iconBg ?? `linear-gradient(135deg, ${color}14, ${color}22)`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color,
-          flexShrink: 0,
-        }}
-      >
+      <div style={{ 
+        color, 
+        backgroundColor: `${color}14`, 
+        width: 32, 
+        height: 32, 
+        display: "flex", 
+        alignItems: "center", 
+        justifyContent: "center",
+        borderRadius: 8
+      }}>
         {icon}
       </div>
-      <Text
-        style={{
-          fontSize: 15,
-          fontWeight: 800,
-          color: "var(--dsc-text)",
-          letterSpacing: "-0.3px",
-        }}
-      >
-        {label}
-      </Text>
-      {badge}
-    </Row>
+      <Column style={{ gap: "2px" }}>
+        <Text style={{ color: "#1C1C1E", fontWeight: 600, fontSize: "0.88rem" }}>
+          {label}
+        </Text>
+        {subtitle && (
+          <Text style={{ color: "#8E8E93", fontSize: "0.75rem" }}>
+            {subtitle}
+          </Text>
+        )}
+      </Column>
+    </motion.div>
   );
 }
 
@@ -556,7 +504,13 @@ export default function FoodieProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [actionBusy, setActionBusy] = useState(false);
 
+  // ── States for ProfileTabs (Posts/Reviews/Achievements) ──
+  const [userPosts, setUserPosts] = useState<PostItem[]>([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+  const [postsTotal, setPostsTotal] = useState(0);
+
   const userId = parseInt(id, 10);
+  const { badges, loading: badgesLoading, totalBadges } = useBadges(userId);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -566,7 +520,7 @@ export default function FoodieProfilePage() {
         apiGet<UserProfile>(`/api/v1/users/${userId}`),
         apiGet<SocialContext>(`/api/v1/users/${userId}/social-context`),
       ]);
-      setProfile(prof);
+      setProfile({ ...prof, badges: [] }); // badges are now handled by useBadges hook
       setSocial(ctx);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load profile");
@@ -575,9 +529,26 @@ export default function FoodieProfilePage() {
     }
   }, [userId]);
 
+  const fetchUserPosts = useCallback(async () => {
+    if (!userId) return;
+    setPostsLoading(true);
+    try {
+      const data = await apiGet<{ items: PostItem[]; total: number }>(
+        `/api/v1/posts/?user_id=${userId}&limit=50&offset=0`
+      );
+      setUserPosts(data?.items || []);
+      setPostsTotal(data?.total || 0);
+    } catch (err) {
+      console.error("Failed to fetch foodie posts", err);
+    } finally {
+      setPostsLoading(false);
+    }
+  }, [userId]);
+
   useEffect(() => {
     load();
-  }, [load]);
+    fetchUserPosts();
+  }, [load, fetchUserPosts]);
 
   const withBusy = async (fn: () => Promise<void>) => {
     setActionBusy(true);
@@ -824,10 +795,10 @@ export default function FoodieProfilePage() {
       {/* ══ Content ══ */}
       <div
         style={{
-          maxWidth: 860,
+          maxWidth: 1200, // Widened for 2 columns
           width: "100%",
           margin: "0 auto",
-          padding: "0 40px 64px",
+          padding: "0 24px 64px",
         }}
       >
         {/* Avatar row — overlaps cover */}
@@ -844,553 +815,238 @@ export default function FoodieProfilePage() {
               marginBottom: 20,
             }}
           >
-            <div style={{ position: "relative", flexShrink: 0 }}>
-              <Avatar
-                src={profile.avatar_url || DEFAULT_AVATAR}
-                name={displayName}
-                size="xl"
-                style={{
-                  border: "4px solid var(--dsc-bg)",
-                  boxShadow: "0 4px 20px rgba(255,107,53,0.12)",
-                  display: "block",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 5,
-                  right: 5,
-                  width: 14,
-                  height: 14,
-                  borderRadius: "50%",
-                  backgroundColor: "var(--dsc-accent-success)",
-                  border: "2.5px solid var(--dsc-bg)",
-                }}
-              />
-            </div>
-            <Column style={{ gap: 3, paddingBottom: 6, flex: 1 }}>
-              <Heading
-                variant="heading-strong-l"
-                style={{ color: "var(--dsc-text)", letterSpacing: "-0.8px" }}
-              >
-                {displayName}
-              </Heading>
-              <Row style={{ alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                <Text
-                  variant="body-default-s"
-                  style={{ color: "var(--dsc-text-subtle)" }}
-                >
-                  @{profile.username}
-                </Text>
-                {profile.location && (
-                  <Row style={{ alignItems: "center", gap: 4 }}>
-                    <MapPin
-                      size={12}
-                      strokeWidth={2.25}
-                      color="var(--dsc-text-subtle)"
-                    />
-                    <Text
-                      variant="body-default-xs"
-                      style={{ color: "var(--dsc-text-subtle)" }}
-                    >
-                      {profile.location}
-                    </Text>
-                  </Row>
-                )}
-              </Row>
-            </Column>
+            <ProfileAvatarGroup user={profile as any} />
           </Row>
         </motion.div>
 
-        {/* Title + Bio */}
-        {(profile.title || profile.bio) && (
-          <Card>
-            <Column style={{ gap: 10 }}>
-              {profile.title && (
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "5px 12px",
-                    borderRadius: 20,
-                    backgroundColor: "rgba(217,119,6,0.06)",
-                    border: "1px solid rgba(217,119,6,0.18)",
-                    width: "fit-content",
-                  }}
-                >
-                  <Medal size={12} strokeWidth={2.25} color="#D97706" />
-                  <Text
-                    style={{ fontSize: 12, fontWeight: 700, color: "#D97706" }}
-                  >
-                    {profile.title}
-                  </Text>
-                </div>
-              )}
-              {profile.bio && (
-                <Text
-                  variant="body-default-s"
-                  style={{ color: "var(--dsc-text-muted)", lineHeight: 1.6 }}
-                >
-                  {profile.bio}
-                </Text>
-              )}
-            </Column>
-          </Card>
-        )}
-
-        {/* Stats row */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        {/* ── Main Layout Grid ── */}
+        <div 
+          style={{ 
+            display: "grid", 
+            gridTemplateColumns: "minmax(0, 2fr) minmax(0, 1fr)", 
+            gap: "24px",
+            alignItems: "start"
+          }}
         >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: 10,
-              marginBottom: 16,
-            }}
-          >
-            {STAT_TILES.map((s, i) => (
-              <motion.div
-                key={s.label}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.28, delay: i * 0.06 }}
+          {/* ══ LEFT COLUMN ══ */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            {/* Identity Card */}
+            <ProfileIdentityCard user={profile as any} />
+
+            {/* Taste DNA Comparison Card (Signature Feature) */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: "24px",
+                padding: "24px",
+                border: "1px solid #F2F2F7",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+              }}
+            >
+              <Row
+                style={{
+                  gap: "8px",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                  justifyContent: "space-between",
+                }}
               >
-                <Column
-                  className="dsc-lift"
-                  style={{
-                    alignItems: "center",
-                    padding: "16px 8px",
-                    backgroundColor: "var(--dsc-surface)",
-                    borderRadius: 16,
-                    border: "1px solid var(--dsc-border)",
-                    gap: 4,
-                    boxShadow: "var(--dsc-shadow-sm)",
-                    transition:
-                      "box-shadow 0.3s var(--dsc-ease-out), transform 0.3s var(--dsc-ease-out)",
-                  }}
-                >
-                  <Text
+                <Row style={{ gap: "8px", alignItems: "center" }}>
+                  <div
                     style={{
-                      fontSize: 20,
-                      fontWeight: 800,
-                      color: "var(--dsc-text)",
-                      letterSpacing: "-0.5px",
+                      background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                      padding: "6px",
+                      borderRadius: "8px",
                     }}
                   >
-                    {s.value}
+                    <Dna size={16} color="white" />
+                  </div>
+                  <Text style={{ color: "#1C1C1E", fontWeight: 700, fontSize: "1rem" }}>
+                    Taste DNA Compare
                   </Text>
-                  <Row style={{ alignItems: "center", gap: 4, color: s.color }}>
-                    {s.icon}
-                    <Text
-                      variant="body-default-xs"
-                      style={{
-                        color: "var(--dsc-text-subtle)",
-                        fontWeight: 500,
-                      }}
+                </Row>
+                {matchScore !== null && (
+                  <div
+                    style={{
+                      padding: "4px 12px",
+                      borderRadius: "12px",
+                      backgroundColor: matchScore >= 80 ? "#EAFBEF" : "#FFF7E6",
+                      color: matchScore >= 80 ? "#16A34A" : "#D97706",
+                      fontSize: "0.85rem",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {matchScore}% Compatibility
+                  </div>
+                )}
+              </Row>
+
+              <div style={{ height: 320, width: "100%" }}>
+                <ClientOnly>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart
+                      data={radarChartData}
+                      margin={{ top: 8, right: 30, bottom: 8, left: 30 }}
                     >
-                      {s.label}
-                    </Text>
-                  </Row>
-                </Column>
-              </motion.div>
-            ))}
+                      <PolarGrid stroke="#F2F2F7" />
+                      <PolarAngleAxis
+                        dataKey="subject"
+                        tick={{
+                          fill: "#8E8E93",
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      />
+                      <Radar
+                        name="You"
+                        dataKey="you"
+                        stroke="#ff6b35"
+                        fill="#ff6b35"
+                        fillOpacity={0.12}
+                        strokeWidth={2.5}
+                      />
+                      <Radar
+                        name={displayName}
+                        dataKey="them"
+                        stroke="#FF9500"
+                        fill="#FF9500"
+                        fillOpacity={0.12}
+                        strokeWidth={2.5}
+                      />
+                      <Legend verticalAlign="bottom" />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </ClientOnly>
+              </div>
+            </motion.div>
+
+            {/* Flavor Profile Details */}
+            <FlavorProfileCard />
+
+            {/* Mutual Friends Section */}
+            <FriendsListCard 
+              friendsList={(social?.mutual_friends || []).map(f => ({
+                id: f.id,
+                username: f.username,
+                display_name: f.display_name,
+                avatar_url: f.avatar_url,
+                match_score: 0, // Score not available for mutual list usually
+              }))}
+              friendsLoading={loading}
+              onSeeAll={() => {}} // Could link to a mutuals modal
+            />
           </div>
-        </motion.div>
 
-        {/* Action bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.15 }}
-        >
-          <Row style={{ gap: 10, flexWrap: "wrap", marginBottom: 24 }}>
-            <ActionButton
-              onClick={handleMessage}
-              bg="var(--dsc-surface)"
-              color="var(--dsc-text)"
-              border="1.5px solid var(--dsc-border)"
-              boxShadow="var(--dsc-shadow-sm)"
+          {/* ══ RIGHT COLUMN ══ */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            
+            {/* Social Quick Actions Card */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: "24px",
+                padding: "24px",
+                border: "1px solid #F2F2F7",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+              }}
             >
-              <MessageCircle size={16} strokeWidth={2.25} />
-              Message
-            </ActionButton>
+              <Text style={{ color: "#1C1C1E", fontWeight: 700, fontSize: "0.95rem", marginBottom: "16px" }}>
+                Social Connections
+              </Text>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {/* Message Action */}
+                <SocialActionItem 
+                  icon={<MessageCircle size={18} />} 
+                  label="Send Message" 
+                  color="#007AFF" 
+                  onClick={handleMessage} 
+                />
 
-            <ActionButton
-              onClick={() => router.push("/group-rooms")}
-              bg="rgba(168,85,247,0.06)"
-              color="var(--dsc-accent-magic)"
-              border="1.5px solid rgba(168,85,247,0.2)"
-            >
-              <Layers size={16} strokeWidth={2.25} />
-              Food Tour
-            </ActionButton>
+                {/* Food Tour Action */}
+                <SocialActionItem 
+                  icon={<Layers size={18} />} 
+                  label="Create Food Tour" 
+                  color="#A855F7" 
+                  onClick={() => router.push("/group-rooms")} 
+                />
 
-            <AnimatePresence mode="wait">
-              {fs === "none" && (
-                <motion.div
-                  key="add"
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18 }}
-                >
-                  <ActionButton
+                {/* Friendship Logic Actions */}
+                {fs === "none" && (
+                  <SocialActionItem 
+                    icon={<UserPlus size={18} />} 
+                    label="Add Friend" 
+                    color="#ff6b35" 
                     onClick={handleAddFriend}
                     disabled={actionBusy}
-                    bg="linear-gradient(135deg, #ff6b35, #e65721)"
-                    color="white"
-                    boxShadow="0 4px 14px rgba(255,107,53,0.28)"
-                  >
-                    <UserPlus size={16} strokeWidth={2.5} />
-                    Add Friend
-                  </ActionButton>
-                </motion.div>
-              )}
-
-              {fs === "pending_sent" && (
-                <motion.div
-                  key="pending"
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18 }}
-                >
-                  <ActionButton
+                  />
+                )}
+                {fs === "pending_sent" && (
+                  <SocialActionItem 
+                    icon={<Clock size={18} />} 
+                    label="Cancel Request" 
+                    color="#8E8E93" 
                     onClick={handleCancel}
                     disabled={actionBusy}
-                    bg="var(--dsc-surface)"
-                    color="var(--dsc-text-subtle)"
-                    border="1.5px solid var(--dsc-border)"
-                  >
-                    <Clock size={16} strokeWidth={2.5} />
-                    Pending · Cancel
-                  </ActionButton>
-                </motion.div>
-              )}
-
-              {fs === "pending_received" && (
-                <motion.div
-                  key="received"
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18 }}
-                  style={{ display: "flex", gap: 10 }}
-                >
-                  <ActionButton
-                    onClick={handleAccept}
-                    disabled={actionBusy}
-                    bg="linear-gradient(135deg, #16A34A, #15803d)"
-                    color="white"
-                    boxShadow="0 4px 14px rgba(22,163,74,0.22)"
-                  >
-                    <UserCheck size={16} strokeWidth={2.5} />
-                    Accept Request
-                  </ActionButton>
-                  <ActionButton
-                    onClick={handleCancel}
-                    disabled={actionBusy}
-                    bg="var(--dsc-surface)"
-                    color="var(--dsc-text-subtle)"
-                    border="1.5px solid var(--dsc-border)"
-                  >
-                    Decline
-                  </ActionButton>
-                </motion.div>
-              )}
-
-              {fs === "accepted" && (
-                <motion.div
-                  key="friends"
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18 }}
-                >
-                  <ActionButton
+                  />
+                )}
+                {fs === "pending_received" && (
+                  <>
+                    <SocialActionItem 
+                      icon={<UserCheck size={18} />} 
+                      label="Confirm Request" 
+                      color="#34C759" 
+                      onClick={handleAccept}
+                      disabled={actionBusy}
+                    />
+                    <SocialActionItem 
+                      icon={<X size={18} />} 
+                      label="Decline Request" 
+                      color="#FF3B30" 
+                      onClick={handleCancel}
+                      disabled={actionBusy}
+                    />
+                  </>
+                )}
+                {fs === "accepted" && (
+                  <SocialActionItem 
+                    icon={<UserCheck size={18} />} 
+                    label="Connected" 
+                    color="#34C759" 
                     onClick={handleUnfriend}
                     disabled={actionBusy}
-                    bg="rgba(52,199,89,0.06)"
-                    color="#16A34A"
-                    border="1.5px solid rgba(52,199,89,0.25)"
-                  >
-                    <UserCheck size={16} strokeWidth={2.5} />
-                    Friends · Unfriend
-                  </ActionButton>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Row>
-        </motion.div>
-
-        {/* ── Taste DNA Chart ── */}
-        <Card>
-          <SectionLabel
-            icon={<Dna size={15} strokeWidth={2.25} />}
-            label="Taste DNA"
-            color="var(--dsc-accent-warm)"
-            badge={
-              matchScore !== null ? (
-                <div
-                  style={{
-                    padding: "3px 10px",
-                    borderRadius: 20,
-                    backgroundColor:
-                      matchScore >= 80
-                        ? "rgba(52,199,89,0.08)"
-                        : "rgba(255,149,0,0.08)",
-                    border: `1px solid ${matchScore >= 80 ? "rgba(52,199,89,0.22)" : "rgba(255,149,0,0.22)"}`,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: matchScore >= 80 ? "#16A34A" : "#D97706",
-                    }}
-                  >
-                    {matchScore}% match
-                  </Text>
-                </div>
-              ) : undefined
-            }
-          />
-          <ClientOnly>
-            <ResponsiveContainer width="100%" height={270}>
-              <RadarChart
-                data={radarChartData}
-                margin={{ top: 8, right: 24, bottom: 8, left: 24 }}
-              >
-                <PolarGrid stroke="var(--dsc-border)" />
-                <PolarAngleAxis
-                  dataKey="subject"
-                  tick={{
-                    fill: "var(--dsc-text-subtle)",
-                    fontSize: 11,
-                    fontWeight: 600,
-                  }}
-                />
-                <Radar
-                  name="You"
-                  dataKey="you"
-                  stroke="#ff6b35"
-                  fill="#ff6b35"
-                  fillOpacity={0.12}
-                  strokeWidth={2}
-                />
-                <Radar
-                  name={displayName}
-                  dataKey="them"
-                  stroke="#FF9500"
-                  fill="#FF9500"
-                  fillOpacity={0.12}
-                  strokeWidth={2}
-                />
-                <Legend
-                  formatter={(value) => (
-                    <span
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: "var(--dsc-text-muted)",
-                      }}
-                    >
-                      {value}
-                    </span>
-                  )}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          </ClientOnly>
-        </Card>
-
-        {/* ── Mutual Foodies ── */}
-        {social && social.mutual_friends_count > 0 && (
-          <Card>
-            <SectionLabel
-              icon={<Users size={15} strokeWidth={2.25} />}
-              label="Mutual Foodies"
-              color="var(--dsc-accent-success)"
-              badge={
-                <div
-                  style={{
-                    padding: "2px 10px",
-                    borderRadius: 20,
-                    backgroundColor: "rgba(255,107,53,0.06)",
-                    border: "1px solid rgba(255,107,53,0.15)",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: "var(--dsc-accent-warm)",
-                    }}
-                  >
-                    {social.mutual_friends_count}
-                  </Text>
-                </div>
-              }
-            />
-            {/* Compact stacked-avatar row with +N overflow */}
-            <Row vertical="center" style={{ gap: 14, flexWrap: "wrap" }}>
-              <Row
-                vertical="center"
-                style={{
-                  paddingLeft: 10,
-                  flexShrink: 0,
-                }}
-              >
-                {social.mutual_friends.slice(0, 5).map((mf, i) => (
-                  <motion.button
-                    key={mf.id}
-                    initial={{ opacity: 0, scale: 0.8, x: -8 }}
-                    whileInView={{ opacity: 1, scale: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.05, duration: 0.3 }}
-                    whileHover={{ y: -4, zIndex: 10 }}
-                    onClick={() => router.push(`/foodies/${mf.id}`)}
-                    title={mf.display_name || mf.username}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: 0,
-                      marginLeft: i === 0 ? 0 : -12,
-                      display: "flex",
-                      position: "relative",
-                      zIndex: 5 - i,
-                      borderRadius: "50%",
-                      transition: "transform 0.2s var(--dsc-ease-out)",
-                    }}
-                  >
-                    <Avatar
-                      src={mf.avatar_url || DEFAULT_AVATAR}
-                      name={mf.display_name || mf.username}
-                      size="l"
-                      style={{
-                        border: "3px solid var(--dsc-surface)",
-                        boxShadow: "0 2px 8px rgba(10,10,10,0.08)",
-                      }}
-                    />
-                  </motion.button>
-                ))}
-                {social.mutual_friends_count > 5 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.3, duration: 0.3 }}
-                    style={{
-                      marginLeft: -12,
-                      width: 48,
-                      height: 48,
-                      borderRadius: "50%",
-                      background:
-                        "linear-gradient(135deg, rgba(255,107,53,0.10), rgba(168,85,247,0.10))",
-                      border: "3px solid var(--dsc-surface)",
-                      boxShadow: "0 2px 8px rgba(10,10,10,0.08)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 12,
-                      fontWeight: 800,
-                      color: "var(--dsc-accent-warm)",
-                      letterSpacing: "-0.3px",
-                      zIndex: 0,
-                    }}
-                  >
-                    +{social.mutual_friends_count - 5}
-                  </motion.div>
+                    subtitle="Click to unfriend"
+                  />
                 )}
-              </Row>
-              <Column style={{ gap: 2, minWidth: 0, flex: 1 }}>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: "var(--dsc-text)",
-                    letterSpacing: "-0.2px",
-                  }}
-                >
-                  {social.mutual_friends
-                    .slice(0, 2)
-                    .map((mf) => (mf.display_name || mf.username).split(" ")[0])
-                    .join(", ")}
-                  {social.mutual_friends_count > 2 && (
-                    <span
-                      style={{
-                        color: "var(--dsc-text-muted)",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {" "}
-                      and {social.mutual_friends_count - 2} other
-                      {social.mutual_friends_count - 2 === 1 ? "" : "s"}
-                    </span>
-                  )}
-                </Text>
-                <Text
-                  variant="body-default-xs"
-                  style={{ color: "var(--dsc-text-subtle)" }}
-                >
-                  Also connected with {displayName}
-                </Text>
-              </Column>
-            </Row>
-          </Card>
-        )}
+              </div>
+            </motion.div>
 
-        {/* ── Badges ── */}
-        {profile.badges.length > 0 && (
-          <Card>
-            <SectionLabel
-              icon={<Trophy size={15} strokeWidth={2.25} />}
-              label="Achievements"
-              color="#D97706"
+            {/* Profile Statistics Card */}
+            <TasteMapStatsCard user={profile as any} />
+
+            {/* Top Highlights (Contextual) */}
+            <TopHighlightsCard 
+              radarData={radarChartData.map(d => ({ ...d, A: d.them }))} 
             />
-            <Row style={{ gap: 10, flexWrap: "wrap" }}>
-              {profile.badges.map((badge, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.85 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.04, duration: 0.25 }}
-                >
-                  <Row
-                    style={{
-                      alignItems: "center",
-                      gap: 7,
-                      padding: "8px 14px",
-                      borderRadius: 20,
-                      backgroundColor: `${badge.color}10`,
-                      border: `1.5px solid ${badge.color}28`,
-                    }}
-                  >
-                    <span style={{ fontSize: 16 }}>{badge.icon}</span>
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 700,
-                        color: badge.color,
-                      }}
-                    >
-                      {badge.label}
-                    </Text>
-                  </Row>
-                </motion.div>
-              ))}
-            </Row>
-          </Card>
-        )}
+          </div>
+        </div>
+
+        {/* ── Main Profile Tabs (Posts, Reviews, Badges) ── */}
+        <div style={{ marginTop: "48px" }}>
+          <ProfileTabs 
+            postsLoading={postsLoading}
+            userPosts={userPosts}
+            badges={badges}
+            totalBadges={totalBadges}
+            badgesLoading={badgesLoading}
+          />
+        </div>
       </div>
     </Column>
   );

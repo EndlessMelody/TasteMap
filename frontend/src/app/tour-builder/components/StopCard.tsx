@@ -149,7 +149,7 @@ export function StopCard({ card }: StopCardProps) {
           <Text style={{ color: text.tertiary, fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>
             Estimated Cost
           </Text>
-          <Row vertical="center" horizontal="between" style={{ width: '100%' }}>
+          <Row vertical="center" horizontal="center" style={{ width: '100%' }}>
             <Row vertical="center" style={{ gap: '8px' }}>
               <DollarSign size={18} color={accent.primary} />
               <Text style={{ color: text.primary, fontSize: '1.25rem', fontWeight: 800 }}>~{card.price} VND</Text>
@@ -183,12 +183,12 @@ export function StopCard({ card }: StopCardProps) {
         </Column>
 
         <div style={{ marginTop: 'auto', paddingTop: spacing.m }}>
-           <Row vertical="center" style={{ gap: spacing.xs, opacity: 0.6 }}>
-              <Sparkles size={14} color={accent.primary} />
-              <Text style={{ fontSize: '0.7rem', fontWeight: 700, color: text.tertiary, textTransform: 'uppercase' }}>
-                Highly Recommended for your Tour DNA
-              </Text>
-           </Row>
+          <Row vertical="center" style={{ gap: spacing.xs, opacity: 0.6 }}>
+            <Sparkles size={14} color={accent.primary} />
+            <Text style={{ fontSize: '0.7rem', fontWeight: 700, color: text.tertiary, textTransform: 'uppercase' }}>
+              Highly Recommended for your Tour DNA
+            </Text>
+          </Row>
         </div>
       </Column>
     </Row>

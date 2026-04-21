@@ -4,11 +4,21 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // 1. Kiểm tra Admin routes (RBAC qua cookie)
+  // 1. Kiểm tra Role (RBAC qua cookie)
+  const userRole = request.cookies.get("user_role")?.value;
+
+  // Chặn người dùng bị BAN
+  if (userRole === "banned" && pathname !== "/banned") {
+    // Cho phép logout nếu cần, nhưng thường thì chặn tiệt
+    // Ngoại trừ các route static và api đã được lọc ở dưới
+    if (!pathname.startsWith("/_next") && !pathname.includes(".") && !pathname.startsWith("/api")) {
+      return NextResponse.redirect(new URL("/banned", request.url));
+    }
+  }
+
+  // Chặn Admin routes
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
-    const userRole = request.cookies.get("user_role")?.value;
-    
-    // Nếu không phải admin (có thể là undefined hoặc "user"), đá văng ra ngoài
+    // Nếu không phải admin (có thể là trường hợp banned ở trên đã bắt, hoặc guest/user)
     if (userRole !== "admin") {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
