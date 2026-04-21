@@ -2,13 +2,12 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-export function useProfileActions(username: string | undefined) {
+export function useProfileActions(user: any) {
     const [showQR, setShowQR] = useState(false);
 
-    // Lấy ra đường link đầy đủ dẫn tới Profile của user
-    // Cần check typeof window để tránh lỗi khi Next.js render trên server (SSR)
-    const profileUrl = typeof window !== "undefined" && username
-        ? `${window.location.origin}/foodies/${username}`
+    // Lấy ra đường link đầy đủ dẫn tới Profile của user (sử dụng ID)
+    const profileUrl = typeof window !== "undefined" && user?.id
+        ? `${window.location.origin}/foodies/${user.id}`
         : "";
 
     const handleShareProfile = async () => {

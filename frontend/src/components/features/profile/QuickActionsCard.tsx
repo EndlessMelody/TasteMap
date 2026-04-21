@@ -14,7 +14,7 @@ interface QuickActionsCardProps {
 
 export const QuickActionsCard: React.FC<QuickActionsCardProps> = ({ user, onSettingsClick }) => {
   // Lấy các hàm xử lý từ Custom Hook
-  const { handleShareProfile, handleCopyLink } = useProfileActions(user);
+  const { handleShareProfile, handleCopyLink, profileUrl } = useProfileActions(user);
 
   // State để mở/tắt Modal QR
   const [isQROpen, setIsQROpen] = useState(false);
@@ -106,15 +106,12 @@ export const QuickActionsCard: React.FC<QuickActionsCardProps> = ({ user, onSett
         </div>
       </motion.div>
 
-      {/* Render cái QRCodeModal ở đây */}
-      <AnimatePresence>
-        {isQROpen && (
-          <QRCodeModal
-            user={user}
-            onClose={() => setIsQROpen(false)}
-          />
-        )}
-      </AnimatePresence>
+      <QRCodeModal
+        user={user}
+        url={profileUrl}
+        isOpen={isQROpen}
+        onClose={() => setIsQROpen(false)}
+      />
     </>
   );
 };

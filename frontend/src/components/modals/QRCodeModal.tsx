@@ -11,7 +11,10 @@ interface QRCodeModalProps {
     url?: string;
 }
 
-export default function QRCodeModal({ isOpen, onClose, url }: QRCodeModalProps) {
+export default function QRCodeModal({ isOpen, onClose, url: providedUrl, user }: QRCodeModalProps) {
+    // Generate URL if not provided by parent
+    const url = providedUrl || (user?.id ? `${window.location.origin}/foodies/${user.id}` : "");
+
     return (
         <AnimatePresence>
             {isOpen && (
