@@ -72,6 +72,15 @@ export function useFoodies() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const loadSent = useCallback(async () => {
+    try {
+      const res = await apiGet<{ items: SentRequest[] }>("/api/v1/friends/sent");
+      setSentRequests(res.items ?? []);
+    } catch (e) {
+      console.error("Failed to load sent requests", e);
+    }
+  }, []);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -97,10 +106,16 @@ export function useFoodies() {
     load();
   }, [load]);
 
-  const sendRequest = useCallback(async (targetUserId: number) => {
-    await apiPost("/api/v1/friends/request", { friend_id: targetUserId });
-    setDiscover((prev) => prev.filter((f) => f.id !== targetUserId));
-  }, []);
+  const sendRequest = useCallback(
+    async (targetUserId: number) => {
+      await apiPost("/api/v1/friends/request", { friend_id: targetUserId });
+      // Xóa khỏi discover ngay lập tức
+      setDiscover((prev) => prev.filter((f) => f.id !== targetUserId));
+      // Tải lại danh sách sent mà không set loading toàn cục
+      loadSent();
+    },
+    [loadSent],
+  );
 
   const acceptRequest = useCallback(
     async (friendshipId: number) => {

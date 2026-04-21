@@ -95,7 +95,10 @@ function MoreMenu({
     <div ref={ref} style={{ position: "relative" }}>
       <IconButton
         icon={<MoreHorizontal size={16} strokeWidth={2.25} />}
-        onClick={() => setOpen((o) => !o)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen((o) => !o);
+        }}
         variant="tertiary"
         style={{
           width: 36,
@@ -339,6 +342,18 @@ export const FriendRow: React.FC<FriendRowProps> = ({
   isCompact = false,
 }) => {
   const router = useRouter();
+  const [busy, setBusy] = useState(false);
+
+  const handleAction = async (fn?: (f: Friend) => void | Promise<void>) => {
+    if (!fn) return;
+    setBusy(true);
+    try {
+      await fn(friend);
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const handleViewProfile = () => router.push(`/foodies/${friend.id}`);
 
   /* ── COMPACT (chat sidebar) ── */
@@ -439,12 +454,14 @@ export const FriendRow: React.FC<FriendRowProps> = ({
       <Column
         fillWidth
         className="dsc-lift"
+        onClick={handleViewProfile}
         style={{
           backgroundColor: "var(--dsc-surface)",
           borderRadius: 20,
           border: "1px solid var(--dsc-border)",
           boxShadow: "var(--dsc-shadow-sm)",
           overflow: "hidden",
+          cursor: "pointer",
           transition:
             "box-shadow 0.3s var(--dsc-ease-out), transform 0.3s var(--dsc-ease-out)",
         }}
@@ -586,7 +603,10 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                 <>
                   <IconButton
                     icon={<MessageCircle size={16} strokeWidth={2.25} />}
-                    onClick={() => onMessage(friend)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAction(onMessage);
+                    }}
                     variant="tertiary"
                     style={{
                       width: 36,
@@ -594,25 +614,31 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                       backgroundColor: "rgba(255,107,53,0.06)",
                       color: "var(--dsc-accent-warm)",
                       borderRadius: 10,
+                      opacity: busy ? 0.5 : 1,
                     }}
                   />
                   <Button
                     variant="secondary"
-                    onClick={() => onInvite && onInvite(friend)}
+                    disabled={busy}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAction(onInvite);
+                    }}
                     style={{
                       borderRadius: 10,
                       fontWeight: 700,
                       padding: "0 16px",
                       height: 36,
                       fontSize: "13px",
-                      borderColor: "var(--dsc-border-strong)",
+                      borderColor: busy ? "var(--dsc-border)" : "var(--dsc-border-strong)",
+                      opacity: busy ? 0.7 : 1,
                     }}
                   >
-                    Invite to Tour
+                    {busy ? "Sending..." : "Invite to Tour"}
                   </Button>
                   <MoreMenu
                     onViewProfile={handleViewProfile}
-                    onUnfriend={() => onUnfriend && onUnfriend(friend)}
+                    onUnfriend={() => handleAction(onUnfriend)}
                   />
                 </>
               )}
@@ -620,7 +646,10 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                 <>
                   <IconButton
                     icon={<MessageCircle size={16} strokeWidth={2.25} />}
-                    onClick={() => onMessage(friend)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAction(onMessage);
+                    }}
                     variant="tertiary"
                     style={{
                       width: 36,
@@ -628,27 +657,40 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                       backgroundColor: "rgba(255,107,53,0.06)",
                       color: "var(--dsc-accent-warm)",
                       borderRadius: 10,
+                      opacity: busy ? 0.5 : 1,
                     }}
                   />
                   <Button
                     variant="primary"
-                    onClick={() => onInvite && onInvite(friend)}
+                    disabled={busy}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAction(onInvite);
+                    }}
                     style={{
                       borderRadius: 10,
                       fontWeight: 700,
                       padding: "0 16px",
                       height: 36,
-                      background: "linear-gradient(135deg, #ff6b35, #e65721)",
+                      background: busy
+                        ? "var(--dsc-border)"
+                        : "linear-gradient(135deg, #ff6b35, #e65721)",
                       fontSize: "13px",
                       display: "flex",
                       alignItems: "center",
                       gap: 6,
                       border: "none",
-                      boxShadow: "0 2px 8px rgba(255,107,53,0.25)",
+                      boxShadow: busy ? "none" : "0 2px 8px rgba(255,107,53,0.25)",
+                      cursor: busy ? "default" : "pointer",
+                      opacity: busy ? 0.8 : 1,
                     }}
                   >
-                    <UserPlus size={14} strokeWidth={2.5} />
-                    Add Friend
+                    {busy ? (
+                      <Clock size={14} className="animate-spin" />
+                    ) : (
+                      <UserPlus size={14} strokeWidth={2.5} />
+                    )}
+                    {busy ? "Adding..." : "Add Friend"}
                   </Button>
                 </>
               )}
@@ -673,18 +715,24 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                   </div>
                   <Button
                     variant="secondary"
-                    onClick={() => onCancel && onCancel(friend)}
+                    disabled={busy}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAction(onCancel);
+                    }}
                     style={{
                       borderRadius: 10,
                       fontWeight: 600,
                       padding: "0 16px",
                       height: 36,
                       fontSize: "13px",
-                      color: "#e63946",
+                      color: busy ? "var(--dsc-text-muted)" : "#e63946",
                       border: "1.5px solid rgba(230,57,70,0.2)",
+                      opacity: busy ? 0.6 : 1,
+                      cursor: busy ? "default" : "pointer",
                     }}
                   >
-                    Cancel
+                    {busy ? "Canceling..." : "Cancel"}
                   </Button>
                 </>
               )}
