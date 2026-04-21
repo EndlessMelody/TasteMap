@@ -131,8 +131,8 @@ function MoreMenu({
             }}
             style={menuItemStyle}
             onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor =
-                "var(--dsc-surface-muted)")
+            (e.currentTarget.style.backgroundColor =
+              "var(--dsc-surface-muted)")
             }
             onMouseLeave={(e) =>
               (e.currentTarget.style.backgroundColor = "transparent")
@@ -245,43 +245,43 @@ const ACTIVITY_MAP: {
   color: string;
   bg: string;
 }[] = [
-  {
-    emoji: "🍣",
-    icon: <Fish size={13} strokeWidth={2.25} />,
-    color: "#C2410C",
-    bg: "rgba(239,68,68,0.07)",
-  },
-  {
-    emoji: "🍜",
-    icon: <Soup size={13} strokeWidth={2.25} />,
-    color: "#B45309",
-    bg: "rgba(245,158,11,0.08)",
-  },
-  {
-    emoji: "☕",
-    icon: <Coffee size={13} strokeWidth={2.25} />,
-    color: "#78350F",
-    bg: "rgba(180,83,9,0.08)",
-  },
-  {
-    emoji: "🍔",
-    icon: <Sandwich size={13} strokeWidth={2.25} />,
-    color: "#854D0E",
-    bg: "rgba(234,179,8,0.08)",
-  },
-  {
-    emoji: "🌶️",
-    icon: <Flame size={13} strokeWidth={2.25} />,
-    color: "#B91C1C",
-    bg: "rgba(239,68,68,0.07)",
-  },
-  {
-    emoji: "🍕",
-    icon: <Pizza size={13} strokeWidth={2.25} />,
-    color: "#C2410C",
-    bg: "rgba(249,115,22,0.08)",
-  },
-];
+    {
+      emoji: "🍣",
+      icon: <Fish size={13} strokeWidth={2.25} />,
+      color: "#C2410C",
+      bg: "rgba(239,68,68,0.07)",
+    },
+    {
+      emoji: "🍜",
+      icon: <Soup size={13} strokeWidth={2.25} />,
+      color: "#B45309",
+      bg: "rgba(245,158,11,0.08)",
+    },
+    {
+      emoji: "☕",
+      icon: <Coffee size={13} strokeWidth={2.25} />,
+      color: "#78350F",
+      bg: "rgba(180,83,9,0.08)",
+    },
+    {
+      emoji: "🍔",
+      icon: <Sandwich size={13} strokeWidth={2.25} />,
+      color: "#854D0E",
+      bg: "rgba(234,179,8,0.08)",
+    },
+    {
+      emoji: "🌶️",
+      icon: <Flame size={13} strokeWidth={2.25} />,
+      color: "#B91C1C",
+      bg: "rgba(239,68,68,0.07)",
+    },
+    {
+      emoji: "🍕",
+      icon: <Pizza size={13} strokeWidth={2.25} />,
+      color: "#C2410C",
+      bg: "rgba(249,115,22,0.08)",
+    },
+  ];
 
 function ActivityChip({ status }: { status: string }) {
   const found = ACTIVITY_MAP.find((a) => status.includes(a.emoji));
@@ -346,7 +346,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
     return (
       <Row
         vertical="center"
-        gap="12"
+        gap={12}
         onClick={() => onMessage(friend)}
         paddingX="16"
         paddingY="14"
@@ -518,7 +518,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
         {/* ── Card body ── */}
         <div style={{ padding: "0 24px 20px", marginTop: -16 }}>
           {/* Avatar + name row */}
-          <Row vertical="center" gap="14" style={{ marginBottom: 14 }}>
+          <Row vertical="center" gap={14} style={{ marginBottom: 14 }}>
             <div style={{ position: "relative", flexShrink: 0 }}>
               <Avatar
                 src={friend.avatar}
@@ -538,7 +538,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
               >
                 {friend.name}
               </Heading>
-              <Row vertical="center" gap="4">
+              <Row vertical="center" gap={4}>
                 <MapPin
                   size={11}
                   strokeWidth={2.25}
@@ -581,7 +581,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
           >
             <ActivityChip status={friend.status} />
 
-            <Row gap="8" vertical="center" style={{ flexShrink: 0 }}>
+            <Row gap={8} vertical="center" style={{ flexShrink: 0 }}>
               {variant === "friend" && (
                 <>
                   <IconButton

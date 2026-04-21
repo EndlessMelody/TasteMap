@@ -203,7 +203,12 @@ export default function ProfilePage() {
             <CreatePostCard onOpenCreatePost={handleOpenCreatePost} />
 
             {/* Quick Actions Card */}
-            <QuickActionsCard onAction={handleComingSoon} />
+            <QuickActionsCard
+              user={user}
+              onSettingsClick={() => {
+                toast("Đang mở Settings...");
+              }}
+            />
 
             {/* TasteMap Stats Card */}
             <TasteMapStatsCard user={user} />

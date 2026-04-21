@@ -1366,7 +1366,7 @@ export default function FoodieProfilePage() {
                 <div className="sk" style={{ height: 100, width: '100%', borderRadius: 16 }} />
               </Row>
             ) : (
-              <Grid columns="repeat(auto-fill, minmax(250px, 1fr))" gap="16">
+              <Grid columns="repeat(auto-fill, minmax(250px, 1fr))" gap={16}>
                 {badges.map((badge, i) => (
                   <BadgeCard key={badge.id || i} badge={badge} delay={i * 0.05} />
                 ))}
