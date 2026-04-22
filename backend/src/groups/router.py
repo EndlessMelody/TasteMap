@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
 from src.groups import service
@@ -10,6 +10,7 @@ from src.groups.schemas import (
     ChatMessageCreate,
 )
 from src.core.dependencies import get_current_user_id
+from src.groups.websocket import voice_manager, validate_ws_token
 from typing import Optional
 
 router = APIRouter()
@@ -169,3 +170,109 @@ async def create_group_message(
         media_url=body.media_url,
         media_meta=body.media_meta
     )
+
+
+@router.websocket("/{group_id}/voice")
+async def voice_websocket(
+    websocket: WebSocket,
+    group_id: int,
+    token: str = Query(...),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    WebSocket endpoint for voice chat signaling.
+    
+    Protocol:
+    - Client -> Server: {type: "signal", payload: {...}}
+    - Server -> Client: {type: "signal", payload: {...}}
+    
+    Signal types:
+    - offer: WebRTC offer from one peer to another
+    - answer: WebRTC answer
+    - ice_candidate: ICE candidate for connection
+    - mute_toggle: User muted/unmuted
+    - speaking: User started/stopped speaking
+    """
+    # Authenticate user
+    user = await validate_ws_token(token, db)
+    if not user:
+        await websocket.close(code=4001, reason="Invalid token")
+        return
+    
+    # Verify group membership
+    is_member = await service.is_group_member(db, group_id, user.id)
+    if not is_member:
+        await websocket.close(code=4002, reason="Not a group member")
+        return
+    
+    # Join voice channel
+    await voice_manager.join_voice(websocket, group_id, user.id)
+    
+    try:
+        while True:
+            data = await websocket.receive_text()
+            message = json.loads(data)
+            
+            msg_type = message.get("type")
+            payload = message.get("payload", {})
+            
+            if msg_type == "signal":
+                # Relay WebRTC signaling messages
+                target_user_id = payload.get("target_user_id")
+                signal_type = payload.get("signal_type")  # offer, answer, ice_candidate
+                
+                if target_user_id and signal_type:
+                    await voice_manager.send_to_user(
+                        group_id,
+                        target_user_id,
+                        {
+                            "type": "signal",
+                            "payload": {
+                                "from_user_id": user.id,
+                                "signal_type": signal_type,
+                                "data": payload.get("data")
+                            }
+                        }
+                    )
+            
+            elif msg_type == "mute_toggle":
+                # Broadcast mute state to all participants
+                await voice_manager.broadcast_to_voice(
+                    group_id,
+                    {
+                        "type": "mute_toggle",
+                        "payload": {
+                            "user_id": user.id,
+                            "is_muted": payload.get("is_muted", False)
+                        }
+                    }
+                )
+            
+            elif msg_type == "speaking":
+                # Broadcast speaking state to all participants
+                await voice_manager.broadcast_to_voice(
+                    group_id,
+                    {
+                        "type": "speaking",
+                        "payload": {
+                            "user_id": user.id,
+                            "is_speaking": payload.get("is_speaking", False)
+                        }
+                    },
+                    exclude_user_id=user.id
+                )
+            
+    except WebSocketDisconnect:
+        pass
+    except Exception as e:
+        print(f"Voice WebSocket error: {e}")
+    finally:
+        voice_manager.leave_voice(group_id, user.id)
+        # Notify others
+        await voice_manager.broadcast_to_voice(
+            group_id,
+            {
+                "type": "user_left_voice",
+                "payload": {"user_id": user.id}
+            }
+        )

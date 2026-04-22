@@ -12,6 +12,8 @@ import { UserVectorProvider } from "@/context/UserVectorContext";
 
 import { Sidebar } from "./common/Sidebar";
 import { RightSidebar } from "./common/RightSidebar";
+import { CreatePostModal } from "@/components/modals/CreatePostModal";
+import { useUiStore } from "@/store/uiStore";
 import { ChatProvider, useChat } from "@/context/ChatContext";
 import { MessagingSidebar } from "./features/foodies/MessagingSidebar";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
@@ -52,22 +54,23 @@ function SplashScreen() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 10,
+          gap: 12,
         }}
       >
-        <span style={{ fontSize: 44 }}>🗺️</span>
         <h1
           style={{
             margin: 0,
-            fontSize: 26,
+            fontSize: 48,
             fontWeight: 800,
-            color: "#1C1C1E",
-            letterSpacing: "-0.8px",
+            color: "#ff6b35",
+            letterSpacing: "-0.06em",
+            fontFamily: "var(--font-geist-sans), sans-serif",
+            lineHeight: 1,
           }}
         >
-          TasteMap
+          TasteMap.
         </h1>
-        <p style={{ margin: 0, fontSize: 13, color: "rgba(0,0,0,0.35)" }}>
+        <p style={{ margin: 0, fontSize: 13, color: "rgba(0,0,0,0.45)", fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase" }}>
           Discover food together
         </p>
       </motion.div>
@@ -122,8 +125,12 @@ export default function DashboardLayout({
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const { isInitializing, isLoggedIn } = useAuth();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isRightExpanded, setIsRightExpanded] = useState(false);
+  
+  // Global Modals State
+  const { isCreatePostModalOpen, closeCreatePost, createPostType } = useUiStore();
+  
   const router = useRouter();
   const pathname = usePathname();
 
@@ -149,7 +156,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       setIsSidebarOpen(false);
       setIsRightExpanded(false);
     } else {
-      setIsSidebarOpen(true);
+      setIsSidebarOpen(false);
       setIsRightExpanded(false);
     }
   }, [isFullScreenPage]);
@@ -210,7 +217,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         >
           <Sidebar
             isOpen={isSidebarOpen}
-            onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+            onToggle={setIsSidebarOpen}
             isFullScreen={false}
             currentPath={pathname}
           />
@@ -218,7 +225,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       ) : (
         <Sidebar
           isOpen={isSidebarOpen}
-          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+          onToggle={setIsSidebarOpen}
           isFullScreen={isFullScreenPage}
           currentPath={pathname}
         />
@@ -299,6 +306,13 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
           onExpandChange={setIsRightExpanded}
         />
       ) : null}
+
+      {/* 4. GLOBAL MODALS */}
+      <CreatePostModal
+        isOpen={isCreatePostModalOpen}
+        onClose={closeCreatePost}
+        initialType={createPostType}
+      />
     </Row>
   );
 }

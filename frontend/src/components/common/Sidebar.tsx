@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
   Column,
@@ -24,7 +24,10 @@ import {
   BadgeCheck,
   BookOpen,
   Shield,
+  SquarePlus,
+  Clapperboard,
 } from "lucide-react";
+import { useUiStore } from "@/store/uiStore";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -154,9 +157,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       tabIndex={0}
       style={{
         alignItems: "center",
-        justifyContent: collapsed ? "center" : "flex-start",
+        justifyContent: "flex-start",
         gap: "10px",
-        padding: collapsed ? "11px 0" : "10px 12px",
+        padding: "8px 16px",
         borderRadius: "10px",
         backgroundColor: active
           ? C.itemActiveBg
@@ -166,10 +169,11 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         cursor: "pointer",
         color: active ? C.itemActive : C.itemDefault,
         transition: "all 0.18s cubic-bezier(0.4, 0, 0.2, 1)",
-        minHeight: "42px",
+        minHeight: "38px",
         position: "relative",
         width: "100%",
         boxSizing: "border-box",
+        overflow: "hidden",
       }}
     >
       {/* Active left indicator */}
@@ -196,50 +200,70 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           alignItems: "center",
           justifyContent: "center",
           flexShrink: 0,
-          width: "20px",
+          width: "24px",
           color: "inherit",
+          zIndex: 1,
         }}
       >
         {icon}
       </div>
 
-      {/* Label */}
-      {!collapsed && (
-        <Text
-          variant="body-default-s"
-          style={{
-            color: "inherit",
-            fontWeight: active ? 600 : 400,
-            whiteSpace: "nowrap",
-            flex: 1,
-          }}
-        >
-          {label}
-        </Text>
-      )}
-
-      {/* Badge */}
-      {!collapsed && badge && (
-        <div
-          style={{
-            padding: "2px 7px",
-            backgroundColor: "rgba(255, 107, 53, 0.15)",
-            border: "1px solid rgba(255, 107, 53, 0.25)",
-            borderRadius: "20px",
-          }}
-        >
-          <Text
-            variant="body-default-xs"
+      {/* Label and Badge Container */}
+      <AnimatePresence mode="wait">
+        {!collapsed && (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -8 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
             style={{
-              color: C.itemActive,
-              fontWeight: 700,
-              fontSize: "0.65rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              flex: 1,
+              overflow: "hidden",
             }}
           >
-            {badge}
-          </Text>
-        </div>
-      )}
+            <Text
+              variant="body-default-s"
+              style={{
+                color: "inherit",
+                fontWeight: active ? 600 : 400,
+                whiteSpace: "nowrap",
+                flex: 1,
+              }}
+            >
+              {label}
+            </Text>
+
+            {badge && (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                style={{
+                  padding: "2px 7px",
+                  backgroundColor: "rgba(255, 107, 53, 0.15)",
+                  border: "1px solid rgba(255, 107, 53, 0.25)",
+                  borderRadius: "20px",
+                  flexShrink: 0,
+                }}
+              >
+                <Text
+                  variant="body-default-xs"
+                  style={{
+                    color: C.itemActive,
+                    fontWeight: 700,
+                    fontSize: "0.65rem",
+                  }}
+                >
+                  {badge}
+                </Text>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Row>
   );
 
@@ -247,29 +271,46 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 };
 
 // ─── Section Label ───
-const SectionLabel: React.FC<{ label: string }> = ({ label }) => {
+const SectionLabel: React.FC<{ label: string; visible?: boolean }> = ({
+  label,
+  visible = true,
+}) => {
   const C = useThemeColors();
   return (
-    <Text
-      variant="body-default-xs"
-      style={{
-        color: C.sectionLabel,
-        textTransform: "uppercase",
-        letterSpacing: "1.5px",
-        fontWeight: 600,
-        padding: "0 12px",
-        marginBottom: "2px",
-      }}
-    >
-      {label}
-    </Text>
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -10 }}
+          transition={{ duration: 0.15, ease: "easeOut" }}
+          style={{ width: "100%", overflow: "hidden" }}
+        >
+          <Text
+            variant="body-default-xs"
+            style={{
+              color: C.sectionLabel,
+              textTransform: "uppercase",
+              letterSpacing: "1.5px",
+              fontWeight: 600,
+              padding: "0 16px",
+              marginBottom: "2px",
+              marginTop: "4px",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {label}
+          </Text>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
 // ─── Main Sidebar ───
 interface SidebarProps {
   isOpen: boolean;
-  onToggle: () => void;
+  onToggle: (open: boolean) => void;
   isFullScreen?: boolean;
   currentPath: string;
 }
@@ -285,27 +326,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const C = useThemeColors();
   const sidebarWidth = isFullScreen ? 0 : isOpen ? 240 : 72;
 
+  const activeModal = useUiStore((state) => state.activeModal);
+
+  // Track if we are hovering to prevent flickering
+  const [isHovered, setIsHovered] = React.useState(false);
+
   return (
-    <Column
+    <motion.div
       className="no-scrollbar"
-      fillHeight
+      animate={{
+        width: isFullScreen ? 0 : isOpen ? 240 : 72,
+        minWidth: isFullScreen ? 0 : isOpen ? 240 : 72,
+      }}
+      transition={{
+        duration: 0.35,
+        ease: [0.19, 1, 0.22, 1], // Shorter, snappier ease to reduce perceived lag
+      }}
+      onMouseEnter={() => {
+        setIsHovered(true);
+        if (!isOpen) onToggle(true);
+      }}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        if (isOpen) onToggle(false);
+      }}
       style={{
-        width: isFullScreen ? "0px" : `${sidebarWidth}px`,
-        minWidth: isFullScreen ? "0px" : `${sidebarWidth}px`,
+        height: "100%",
         flexShrink: 0,
         overflowX: "hidden",
         overflowY: "auto",
-        transition:
-          "width 0.35s cubic-bezier(0.16, 1, 0.3, 1), min-width 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
         borderRight: isFullScreen ? "none" : `1px solid ${C.border}`,
         backgroundColor: C.bg,
         boxShadow: "1px 0 0 rgba(0,0,0,0.06)",
-        padding: isFullScreen
-          ? "0"
-          : isOpen
-            ? "24px 12px 20px"
-            : "24px 8px 20px",
-        gap: "24px",
+        padding: isFullScreen ? "0" : "24px 8px 20px",
+        gap: "16px",
         display: isFullScreen ? "none" : "flex",
         flexDirection: "column",
         position: "relative",
@@ -317,59 +371,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
         fillWidth
         style={{
           alignItems: "center",
-          justifyContent: isOpen ? "space-between" : "center",
+          justifyContent: "flex-start",
           minHeight: "36px",
           flexShrink: 0,
+          paddingLeft: "20px",
         }}
       >
-        {isOpen && (
-          <Heading
-            variant="heading-strong-l"
-            onClick={() => router.push(user ? "/discover" : "/")}
-            style={{
-              color: C.logo,
-              fontWeight: 900,
-              letterSpacing: "-0.5px",
-              cursor: "pointer",
-              lineHeight: 1,
-              userSelect: "none",
-              paddingLeft: "4px",
-              paddingRight: "12px",
-            }}
-          >
-            <span
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push("/");
-              }}
-              style={{
-                color: C.logo,
-                fontWeight: 900,
-                letterSpacing: "-0.5px",
-                cursor: "pointer",
-                lineHeight: 1,
-                userSelect: "none",
-              }}
-            >
-              TasteMap.
-            </span>
-          </Heading>
-        )}
-        <IconButton
-          icon={
-            isOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />
-          }
-          onClick={onToggle}
-          variant="tertiary"
+        <Heading
+          variant="heading-strong-l"
           style={{
-            color: C.sectionLabel,
-            backgroundColor: "transparent",
-            width: "32px",
-            height: "32px",
+            color: C.logo,
+            fontWeight: 800,
+            letterSpacing: "-0.06em",
             cursor: "pointer",
-            flexShrink: 0,
+            userSelect: "none",
+            fontSize: "18px",
+            fontFamily: "var(--font-geist-sans), sans-serif",
+            lineHeight: 1,
           }}
-        />
+          onClick={() => router.push(user ? "/discover" : "/")}
+        >
+          {isOpen ? "TasteMap." : "T."}
+        </Heading>
       </Row>
 
       {/* ─── Divider ─── */}
@@ -382,8 +405,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       />
 
       {/* ─── Menu Section ─── */}
-      <Column style={{ gap: "2px", width: "100%", flexShrink: 0 }}>
-        {isOpen && <SectionLabel label="Menu" />}
+      <Column style={{ gap: "1px", width: "100%", flexShrink: 0 }}>
+        <SectionLabel label="Menu" visible={isOpen} />
         <SidebarItem
           icon={<Compass size={17} />}
           label="Discover"
@@ -432,8 +455,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </Column>
 
       {/* ─── Social Section ─── */}
-      <Column style={{ gap: "2px", width: "100%", flexShrink: 0 }}>
-        {isOpen && <SectionLabel label="Social" />}
+      <Column style={{ gap: "1px", width: "100%", flexShrink: 0 }}>
+        <SectionLabel label="Social" visible={isOpen} />
         <SidebarItem
           icon={<Users size={17} />}
           label="Foodies"
@@ -448,12 +471,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
           collapsed={!isOpen}
           onClick={() => router.push("/group-rooms")}
         />
+        <SidebarItem
+          icon={<SquarePlus size={17} />}
+          label="Create"
+          active={activeModal === "createPost"}
+          collapsed={!isOpen}
+          onClick={() => useUiStore.getState().openCreatePost("post")}
+        />
       </Column>
 
       {/* ─── Admin Section ─── */}
       {user?.role === "admin" && (
-        <Column style={{ gap: "2px", width: "100%", flexShrink: 0 }}>
-          {isOpen && <SectionLabel label="Admin" />}
+        <Column style={{ gap: "1px", width: "100%", flexShrink: 0 }}>
+          <SectionLabel label="Admin" visible={isOpen} />
           <SidebarItem
             icon={<Shield size={17} />}
             label="Dashboard"
@@ -470,7 +500,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* ─── Profile Footer ─── */}
       <SidebarProfileFooter isOpen={isOpen} />
-    </Column>
+    </motion.div>
   );
 };
 
@@ -638,15 +668,16 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
       style={{
         alignItems: "center",
         gap: "10px",
-        padding: isOpen ? "10px 12px" : "10px 0",
+        padding: "8px 16px",
         borderRadius: "10px",
         backgroundColor: "rgba(255,255,255,0.03)",
         border: `1px solid rgba(0,0,0,0.06)`,
-        justifyContent: isOpen ? "flex-start" : "center",
+        justifyContent: "flex-start",
         flexShrink: 0,
         cursor: "pointer",
         transition: "background-color 0.18s",
         position: "relative",
+        minHeight: "56px",
       }}
       onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
         (e.currentTarget as HTMLElement).style.backgroundColor =
@@ -679,71 +710,86 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
           }}
         />
       </div>
-      {isOpen && (
-        <>
-          <Column style={{ gap: "1px", overflow: "hidden", flex: 1 }}>
-            <Row style={{ alignItems: "center", gap: "4px" }}>
-              <Text
-                variant="body-default-s"
-                style={{
-                  color: C.profileName,
-                  fontWeight: 600,
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {user?.display_name || user?.username || ""}
-              </Text>
-              <BadgeCheck size={12} color="#ff6b35" />
-            </Row>
-            <Text variant="body-default-xs" style={{ color: C.profileSub }}>
-              Level {user?.level ?? 1}
-            </Text>
-          </Column>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              signOut();
-              router.push("/");
-            }}
-            title="Sign out"
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            key="profile-info"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: "4px",
-              borderRadius: "6px",
-              color: "rgba(0,0,0,0.3)",
               display: "flex",
               alignItems: "center",
-              flexShrink: 0,
-              transition: "color 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#FF3B30";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "rgba(0,0,0,0.3)";
+              gap: "10px",
+              flex: 1,
+              overflow: "hidden",
             }}
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <Column style={{ gap: "1px", overflow: "hidden", flex: 1 }}>
+              <Row style={{ alignItems: "center", gap: "4px" }}>
+                <Text
+                  variant="body-default-s"
+                  style={{
+                    color: C.profileName,
+                    fontWeight: 600,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {user?.display_name || user?.username || ""}
+                </Text>
+                <BadgeCheck size={12} color="#ff6b35" />
+              </Row>
+              <Text variant="body-default-xs" style={{ color: C.profileSub }}>
+                Level {user?.level ?? 1}
+              </Text>
+            </Column>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                signOut();
+                router.push("/");
+              }}
+              title="Sign out"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px",
+                borderRadius: "6px",
+                color: "rgba(0,0,0,0.3)",
+                display: "flex",
+                alignItems: "center",
+                flexShrink: 0,
+                transition: "color 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "#FF3B30";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.color = "rgba(0,0,0,0.3)";
+              }}
             >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-          </button>
-        </>
-      )}
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Row>
   );
 }

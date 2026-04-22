@@ -160,7 +160,8 @@ class ChallengeTracker:
                 func.date(ChallengeProgressLog.created_at) == today
             )
         )
-        count = await db.scalar(count_query)
+        result = await db.execute(count_query)
+        count = result.scalar()
         return count < cap
 
 

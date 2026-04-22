@@ -27,6 +27,7 @@ export interface CreatePostModalProps {
   isOpen: boolean;
   onClose: () => void;
   onPostCreated?: (event: ContentCreatedEvent) => void;
+  initialType?: ComposerType;
 }
 
 const TABS: { value: ComposerType; label: string; icon: React.ElementType }[] =
@@ -39,10 +40,18 @@ export function CreatePostModal({
   isOpen,
   onClose,
   onPostCreated,
+  initialType = "post",
 }: CreatePostModalProps) {
   const { user } = useAuth();
 
-  const [postType, setPostType] = useState<ComposerType>("post");
+  const [postType, setPostType] = useState<ComposerType>(initialType);
+
+  // Sync postType when modal opens or initialType changes
+  useEffect(() => {
+    if (isOpen) {
+      setPostType(initialType);
+    }
+  }, [isOpen, initialType]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [review, setReview] = useState("");

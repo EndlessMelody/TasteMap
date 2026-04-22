@@ -90,7 +90,8 @@ async def process_swipe_batch(
     if not user_key:
         try:
             db_user_id = int(user_id)
-            user_db = await db.scalar(select(User).filter(User.id == db_user_id))
+            result = await db.execute(select(User).filter(User.id == db_user_id))
+            user_db = result.scalar_one_or_none()
             if user_db:
                 # Nạp vào Redis
                 user_key = f"user:{domain}:db_{db_user_id}"
@@ -154,7 +155,8 @@ async def process_swipe_batch(
     # Đồng bộ ngược lại DB để profile / DB check luôn up to date!
     try:
         db_user_id = int(user_id)
-        user_to_update = await db.scalar(select(User).filter(User.id == db_user_id))
+        result = await db.execute(select(User).filter(User.id == db_user_id))
+        user_to_update = result.scalar_one_or_none()
         if user_to_update:
             if domain == "place":
                 user_to_update.place_vector = updated_vector

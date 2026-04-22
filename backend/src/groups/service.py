@@ -58,7 +58,8 @@ async def create_group(db: AsyncSession, data, creator_id: int) -> dict:
         # Generate unique invite code for private rooms
         for _ in range(10):
             code = _generate_invite_code()
-            exists = await db.scalar(select(Group).where(Group.invite_code == code))
+            result = await db.execute(select(Group).where(Group.invite_code == code))
+            exists = result.scalar_one_or_none()
             if not exists:
                 payload["invite_code"] = code
                 break
@@ -69,7 +70,8 @@ async def create_group(db: AsyncSession, data, creator_id: int) -> dict:
     await db.flush()
 
     # Load creator's vector to clone as session_vector
-    user = await db.scalar(select(User).where(User.id == creator_id))
+    result = await db.execute(select(User).where(User.id == creator_id))
+    user = result.scalar_one_or_none()
     if not user:
         raise HTTPException(status_code=404, detail="User không tồn tại")
 
@@ -105,7 +107,8 @@ async def list_groups(db: AsyncSession, status: str = "active", limit: int = 10,
 
 async def join_by_code(db: AsyncSession, invite_code: str, user_id: int) -> dict:
     """Join a private room using its invite code."""
-    group = await db.scalar(select(Group).where(Group.invite_code == invite_code.upper().strip()))
+    result = await db.execute(select(Group).where(Group.invite_code == invite_code.upper().strip()))
+    group = result.scalar_one_or_none()
     if not group:
         raise HTTPException(status_code=404, detail="Invalid invite code")
     if group.status != "active":
@@ -141,7 +144,8 @@ async def join_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
         return {"status": "already_joined"}
 
     # Clone user vector gốc thành session_vector
-    user = await db.scalar(select(User).where(User.id == user_id))
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
     if not user:
         raise HTTPException(status_code=404, detail="User không tồn tại")
 
@@ -180,6 +184,17 @@ async def set_ready(db: AsyncSession, group_id: int, user_id: int, is_ready: boo
     member.is_ready = is_ready
     await db.commit()
     return {"is_ready": is_ready}
+
+
+async def is_group_member(db: AsyncSession, group_id: int, user_id: int) -> bool:
+    """Check whether a user belongs to a group."""
+    result = await db.execute(
+        select(GroupMember.id).where(
+            GroupMember.group_id == group_id,
+            GroupMember.user_id == user_id,
+        )
+    )
+    return result.scalar_one_or_none() is not None
 
 
 # ─── #4: Minimax Referee (Refactored — reads SESSION VECTOR) ────────────
@@ -714,7 +729,8 @@ async def create_group_message(
     await db.commit()
     await db.refresh(msg)
     
-    user = await db.scalar(select(User).where(User.id == user_id))
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
     
     return {
         "id": msg.id,

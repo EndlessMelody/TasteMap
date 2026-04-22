@@ -42,6 +42,7 @@ import { useMediaUpload } from "@/hooks/useMediaUpload";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import { apiGet, apiPost, apiPatch } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -114,7 +115,10 @@ function mapMember(m: ApiMember): RoomMember {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function normalizeMimeType(mimeType: string): string {
-  return mimeType.split(";", 1)[0]?.trim()?.toLowerCase() || "application/octet-stream";
+  return (
+    mimeType.split(";", 1)[0]?.trim()?.toLowerCase() ||
+    "application/octet-stream"
+  );
 }
 
 function getAudioFileExtension(mimeType: string): string {
@@ -151,9 +155,10 @@ function getDateLabel(createdAt?: string): string {
 
 function bubbleRadius(
   sender: "me" | "them",
-  pos: "single" | "first" | "middle" | "last"
+  pos: "single" | "first" | "middle" | "last",
 ): string {
-  const R = 18, t = 4;
+  const R = 18,
+    t = 4;
   if (sender === "me") {
     if (pos === "single") return `${R}px ${R}px ${t}px ${R}px`;
     if (pos === "first") return `${R}px ${R}px ${t}px ${R}px`;
@@ -168,32 +173,99 @@ function bubbleRadius(
 }
 
 const EMOJI_LIST = [
-  "😀", "😂", "😍", "😎", "🤔", "🥺", "🙏", "👏", "🔥", "✨", "🎉", "💯",
-  "❤️", "🧡", "💛", "💚", "💙", "💜", "👍", "👎", "👌", "🤣", "😇", "🫡",
-  "😋", "🤤", "🥳", "😴", "🍔", "🍜", "🍣", "🍕", "🧋", "☕", "🍰", "🥗",
+  "😀",
+  "😂",
+  "😍",
+  "😎",
+  "🤔",
+  "🥺",
+  "🙏",
+  "👏",
+  "🔥",
+  "✨",
+  "🎉",
+  "💯",
+  "❤️",
+  "🧡",
+  "💛",
+  "💚",
+  "💙",
+  "💜",
+  "👍",
+  "👎",
+  "👌",
+  "🤣",
+  "😇",
+  "🫡",
+  "😋",
+  "🤤",
+  "🥳",
+  "😴",
+  "🍔",
+  "🍜",
+  "🍣",
+  "🍕",
+  "🧋",
+  "☕",
+  "🍰",
+  "🥗",
 ];
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 function DateSeparator({ label }: { label: string }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 4px" }}>
-      <div style={{ flex: 1, height: 1, background: "linear-gradient(to right, transparent, #E5E5EA)" }} />
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "10px 4px",
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          height: 1,
+          background: "linear-gradient(to right, transparent, #E5E5EA)",
+        }}
+      />
       <span
         style={{
-          fontSize: 10, fontWeight: 700, color: "#AEAEB2", letterSpacing: "0.06em",
-          textTransform: "uppercase", backgroundColor: "#F5F5F7", padding: "4px 12px",
-          borderRadius: 20, border: "1px solid #E5E5EA", whiteSpace: "nowrap",
+          fontSize: 10,
+          fontWeight: 700,
+          color: "#AEAEB2",
+          letterSpacing: "0.06em",
+          textTransform: "uppercase",
+          backgroundColor: "#F5F5F7",
+          padding: "4px 12px",
+          borderRadius: 20,
+          border: "1px solid #E5E5EA",
+          whiteSpace: "nowrap",
         }}
       >
         {label}
       </span>
-      <div style={{ flex: 1, height: 1, background: "linear-gradient(to left, transparent, #E5E5EA)" }} />
+      <div
+        style={{
+          flex: 1,
+          height: 1,
+          background: "linear-gradient(to left, transparent, #E5E5EA)",
+        }}
+      />
     </div>
   );
 }
 
-function VoicePlayer({ src, isMe, durationHint }: { src: string; isMe: boolean; durationHint?: number }) {
+function VoicePlayer({
+  src,
+  isMe,
+  durationHint,
+}: {
+  src: string;
+  isMe: boolean;
+  durationHint?: number;
+}) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -203,32 +275,54 @@ function VoicePlayer({ src, isMe, durationHint }: { src: string; isMe: boolean; 
 
   useEffect(() => {
     const a = audioRef.current;
-    return () => { a?.pause(); };
+    return () => {
+      a?.pause();
+    };
   }, []);
 
   const toggle = () => {
     const a = audioRef.current;
     if (!a) return;
-    if (a.paused) { void a.play(); setIsPlaying(true); }
-    else { a.pause(); setIsPlaying(false); }
+    if (a.paused) {
+      void a.play();
+      setIsPlaying(true);
+    } else {
+      a.pause();
+      setIsPlaying(false);
+    }
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 200 }}>
+    <div
+      style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 200 }}
+    >
       <audio
         ref={audioRef}
         src={src}
         preload="metadata"
-        onLoadedMetadata={() => { const d = audioRef.current?.duration ?? 0; if (isFinite(d) && d > 0) setDuration(d); }}
+        onLoadedMetadata={() => {
+          const d = audioRef.current?.duration ?? 0;
+          if (isFinite(d) && d > 0) setDuration(d);
+        }}
         onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime ?? 0)}
-        onEnded={() => { setIsPlaying(false); setCurrentTime(0); }}
+        onEnded={() => {
+          setIsPlaying(false);
+          setCurrentTime(0);
+        }}
         style={{ display: "none" }}
       />
       <button
         onClick={toggle}
         style={{
-          width: 28, height: 28, borderRadius: "50%", border: "none", cursor: "pointer",
-          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+          width: 28,
+          height: 28,
+          borderRadius: "50%",
+          border: "none",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
           background: isMe ? "rgba(255,255,255,0.2)" : "rgba(255,107,53,0.14)",
           color: isMe ? "#fff" : "#ff6b35",
         }}
@@ -236,7 +330,10 @@ function VoicePlayer({ src, isMe, durationHint }: { src: string; isMe: boolean; 
         {isPlaying ? <Pause size={13} /> : <Play size={13} />}
       </button>
       <input
-        type="range" min={0} max={Math.max(total, 0.1)} step={0.05}
+        type="range"
+        min={0}
+        max={Math.max(total, 0.1)}
+        step={0.05}
         value={Math.min(currentTime, Math.max(total, 0.1))}
         onChange={(e) => {
           const t = Number(e.target.value);
@@ -245,7 +342,13 @@ function VoicePlayer({ src, isMe, durationHint }: { src: string; isMe: boolean; 
         }}
         style={{ flex: 1, accentColor: isMe ? "#fff" : "#ff6b35" }}
       />
-      <span style={{ fontSize: 11, color: isMe ? "rgba(255,255,255,0.85)" : "#8E8E93", whiteSpace: "nowrap" }}>
+      <span
+        style={{
+          fontSize: 11,
+          color: isMe ? "rgba(255,255,255,0.85)" : "#8E8E93",
+          whiteSpace: "nowrap",
+        }}
+      >
         {formatVoiceDuration(currentTime)} / {formatVoiceDuration(total)}
       </span>
     </div>
@@ -261,18 +364,25 @@ function ReadyBar({ members }: { members: RoomMember[] }) {
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-center justify-between">
-        <span className="text-[12px] font-bold text-[#8E8E93] uppercase tracking-wider">Ready Status</span>
+        <span className="text-[12px] font-bold text-[#8E8E93] uppercase tracking-wider">
+          Ready Status
+        </span>
         <span
           className="text-[13px] font-bold px-2.5 py-0.5 rounded-full"
           style={{
             color: allReady ? "#1FAD45" : "#C47200",
-            backgroundColor: allReady ? "rgba(52,199,89,0.12)" : "rgba(255,149,0,0.12)",
+            backgroundColor: allReady
+              ? "rgba(52,199,89,0.12)"
+              : "rgba(255,149,0,0.12)",
           }}
         >
           {readyCount} / {total}
         </span>
       </div>
-      <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: "#EBEBF0" }}>
+      <div
+        className="h-1.5 rounded-full overflow-hidden"
+        style={{ backgroundColor: "#EBEBF0" }}
+      >
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
@@ -282,7 +392,9 @@ function ReadyBar({ members }: { members: RoomMember[] }) {
             background: allReady
               ? "linear-gradient(90deg, #34C759, #30D158)"
               : "linear-gradient(90deg, #FF9500, #FFCC02)",
-            boxShadow: allReady ? "0 0 8px rgba(52,199,89,0.5)" : "0 0 8px rgba(255,149,0,0.4)",
+            boxShadow: allReady
+              ? "0 0 8px rgba(52,199,89,0.5)"
+              : "0 0 8px rgba(255,149,0,0.4)",
           }}
         />
       </div>
@@ -293,10 +405,17 @@ function ReadyBar({ members }: { members: RoomMember[] }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.96 }}
             className="flex items-center gap-2 px-3.5 py-2.5 rounded-[12px]"
-            style={{ background: "linear-gradient(135deg, rgba(52,199,89,0.12), rgba(48,209,88,0.06))", border: "1px solid rgba(52,199,89,0.2)" }}
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(52,199,89,0.12), rgba(48,209,88,0.06))",
+              border: "1px solid rgba(52,199,89,0.2)",
+            }}
           >
             <Zap size={13} style={{ color: "#34C759" }} />
-            <span className="text-[12px] font-bold" style={{ color: "#1FAD45" }}>
+            <span
+              className="text-[12px] font-bold"
+              style={{ color: "#1FAD45" }}
+            >
               All systems go! Host can launch the tour.
             </span>
           </motion.div>
@@ -317,7 +436,9 @@ function MemberRow({ member, isMe }: { member: RoomMember; isMe?: boolean }) {
         background: member.is_speaking
           ? "linear-gradient(135deg, rgba(52,199,89,0.08), rgba(52,199,89,0.04))"
           : "transparent",
-        border: member.is_speaking ? "1px solid rgba(52,199,89,0.2)" : "1px solid transparent",
+        border: member.is_speaking
+          ? "1px solid rgba(52,199,89,0.2)"
+          : "1px solid transparent",
       }}
       whileHover={{ backgroundColor: "rgba(0,0,0,0.03)" } as never}
     >
@@ -325,18 +446,26 @@ function MemberRow({ member, isMe }: { member: RoomMember; isMe?: boolean }) {
         <div
           className="rounded-full overflow-hidden"
           style={{
-            width: 38, height: 38,
+            width: 38,
+            height: 38,
             boxShadow: member.is_speaking
               ? "0 0 0 2.5px #34C759, 0 0 12px rgba(52,199,89,0.3)"
               : "0 0 0 2px rgba(0,0,0,0.06)",
             transition: "box-shadow 0.3s ease",
           }}
         >
-          <img src={member.avatar} alt={member.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img
+            src={member.avatar}
+            alt={member.name}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
         </div>
         {member.is_host && (
           <div className="absolute -top-1.5 -right-1.5 w-4.5 h-4.5 flex items-center justify-center">
-            <Crown size={11} className="text-[#F59E0B] fill-[#F59E0B] drop-shadow-sm" />
+            <Crown
+              size={11}
+              className="text-[#F59E0B] fill-[#F59E0B] drop-shadow-sm"
+            />
           </div>
         )}
         <div
@@ -346,17 +475,24 @@ function MemberRow({ member, isMe }: { member: RoomMember; isMe?: boolean }) {
             transition: "background-color 0.25s ease",
           }}
         >
-          {member.is_ready && <Check size={7} className="text-white" strokeWidth={3} />}
+          {member.is_ready && (
+            <Check size={7} className="text-white" strokeWidth={3} />
+          )}
         </div>
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 mb-0.5">
-          <span className="text-[13.5px] font-semibold text-[#1C1C1E] truncate">{member.name}</span>
+          <span className="text-[13.5px] font-semibold text-[#1C1C1E] truncate">
+            {member.name}
+          </span>
           {isMe && (
             <span
               className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full"
-              style={{ color: "#ff6b35", backgroundColor: "rgba(255,107,53,0.12)" }}
+              style={{
+                color: "#ff6b35",
+                backgroundColor: "rgba(255,107,53,0.12)",
+              }}
             >
               You
             </span>
@@ -364,22 +500,36 @@ function MemberRow({ member, isMe }: { member: RoomMember; isMe?: boolean }) {
           {member.is_host && (
             <span
               className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full"
-              style={{ color: "#F59E0B", backgroundColor: "rgba(245,158,11,0.12)" }}
+              style={{
+                color: "#F59E0B",
+                backgroundColor: "rgba(245,158,11,0.12)",
+              }}
             >
               Host
             </span>
           )}
         </div>
-        <p className="text-[11px] font-medium" style={{ color: member.is_ready ? "#34C759" : "#AEAEB2" }}>
-          {member.is_speaking ? "🎙 Speaking..." : member.is_ready ? "✓ Ready to go" : "Not ready"}
+        <p
+          className="text-[11px] font-medium"
+          style={{ color: member.is_ready ? "#34C759" : "#AEAEB2" }}
+        >
+          {member.is_speaking
+            ? "🎙 Speaking..."
+            : member.is_ready
+              ? "✓ Ready to go"
+              : "Not ready"}
         </p>
       </div>
 
       <div className="flex items-center">
-        {member.is_muted
-          ? <MicOff size={13} style={{ color: "#FF3B30" }} />
-          : <Mic size={13} style={{ color: member.is_speaking ? "#34C759" : "#C7C7CC" }} />
-        }
+        {member.is_muted ? (
+          <MicOff size={13} style={{ color: "#FF3B30" }} />
+        ) : (
+          <Mic
+            size={13}
+            style={{ color: member.is_speaking ? "#34C759" : "#C7C7CC" }}
+          />
+        )}
       </div>
     </motion.div>
   );
@@ -430,7 +580,7 @@ function RichChatPanel({
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res = await apiGet<{ items: any[] }>(
-        `/api/v1/groups/${roomId}/messages`
+        `/api/v1/groups/${roomId}/messages`,
       );
       const items = Array.isArray(res?.items) ? res.items : [];
       setMessages(
@@ -456,7 +606,7 @@ function RichChatPanel({
             is_pending: false,
             sender: isMe ? "me" : "them",
           };
-        })
+        }),
       );
     } catch {
       // silently ignore poll errors
@@ -466,7 +616,9 @@ function RichChatPanel({
   useEffect(() => {
     fetchMessages();
     pollRef.current = setInterval(fetchMessages, 4000);
-    return () => { if (pollRef.current) clearInterval(pollRef.current); };
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
   }, [fetchMessages]);
 
   // ── Auto scroll ──
@@ -479,7 +631,8 @@ function RichChatPanel({
   useEffect(() => {
     if (!showEmoji) return;
     const handler = (e: MouseEvent) => {
-      if (emojiRef.current && !emojiRef.current.contains(e.target as Node)) setShowEmoji(false);
+      if (emojiRef.current && !emojiRef.current.contains(e.target as Node))
+        setShowEmoji(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -493,7 +646,7 @@ function RichChatPanel({
   // ── Add optimistic message ──
   const addOptimistic = (
     text: string,
-    opts?: Partial<GroupChatMessage>
+    opts?: Partial<GroupChatMessage>,
   ): string => {
     const tempId = `opt-${Date.now()}`;
     const now = new Date();
@@ -559,8 +712,14 @@ function RichChatPanel({
   };
 
   // ── Upload & send media ──
-  const sendMedia = async (file: File, forcedType?: "image" | "voice" | "video" | "file") => {
-    const tempId = addOptimistic(file.name, { content_type: forcedType ?? "file", is_pending: true });
+  const sendMedia = async (
+    file: File,
+    forcedType?: "image" | "voice" | "video" | "file",
+  ) => {
+    const tempId = addOptimistic(file.name, {
+      content_type: forcedType ?? "file",
+      is_pending: true,
+    });
     try {
       const result = await uploadFile(file);
       const mimeType = result.file_type ?? file.type;
@@ -596,11 +755,18 @@ function RichChatPanel({
       const duration = Math.max(0, Math.round(recordingTime));
       const blob = await stopRecording();
       if (!blob) return;
-      const mime = normalizeMimeType(blob.type || audioMimeType || "audio/webm");
+      const mime = normalizeMimeType(
+        blob.type || audioMimeType || "audio/webm",
+      );
       const ext = getAudioFileExtension(mime);
-      const file = new File([blob], `voice_${Date.now()}.${ext}`, { type: mime });
+      const file = new File([blob], `voice_${Date.now()}.${ext}`, {
+        type: mime,
+      });
 
-      const tempId = addOptimistic("", { content_type: "voice", is_pending: true });
+      const tempId = addOptimistic("", {
+        content_type: "voice",
+        is_pending: true,
+      });
       try {
         const result = await uploadFile(file);
         await apiPost(`/api/v1/groups/${roomId}/messages`, {
@@ -653,25 +819,51 @@ function RichChatPanel({
       {/* Header */}
       <div
         style={{
-          display: "flex", alignItems: "center", gap: 10,
-          padding: "14px 16px", borderBottom: "1px solid rgba(0,0,0,0.05)", flexShrink: 0,
-          background: "linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.95) 100%)",
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "14px 16px",
+          borderBottom: "1px solid rgba(0,0,0,0.05)",
+          flexShrink: 0,
+          background:
+            "linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.95) 100%)",
         }}
       >
         <div
           style={{
-            width: 28, height: 28, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
-            background: "linear-gradient(135deg, rgba(255,107,53,0.15), rgba(255,107,53,0.06))",
+            width: 28,
+            height: 28,
+            borderRadius: 8,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background:
+              "linear-gradient(135deg, rgba(255,107,53,0.15), rgba(255,107,53,0.06))",
           }}
         >
           <Hash size={14} style={{ color: "#ff6b35" }} />
         </div>
-        <span style={{ fontSize: 14, fontWeight: 700, color: "#1C1C1E", letterSpacing: "-0.01em" }}>Room Chat</span>
+        <span
+          style={{
+            fontSize: 14,
+            fontWeight: 700,
+            color: "#1C1C1E",
+            letterSpacing: "-0.01em",
+          }}
+        >
+          Room Chat
+        </span>
         <div
           style={{
-            marginLeft: "auto", fontSize: 10, fontWeight: 700, letterSpacing: "0.04em",
-            textTransform: "uppercase", color: "#AEAEB2", background: "#F2F2F7",
-            padding: "3px 10px", borderRadius: 20,
+            marginLeft: "auto",
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            color: "#AEAEB2",
+            background: "#F2F2F7",
+            padding: "3px 10px",
+            borderRadius: 20,
           }}
         >
           {messages.length} msgs
@@ -681,28 +873,59 @@ function RichChatPanel({
       {/* Messages */}
       <div
         className="no-scrollbar"
-        style={{ flex: 1, overflowY: "auto", padding: "12px 12px 4px", display: "flex", flexDirection: "column", gap: 2 }}
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          padding: "12px 12px 4px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+        }}
       >
         {enriched.length === 0 ? (
           <div
             style={{
-              flex: 1, display: "flex", flexDirection: "column",
-              alignItems: "center", justifyContent: "center", gap: 12,
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 12,
               paddingTop: 40,
             }}
           >
             <div
               style={{
-                width: 60, height: 60, borderRadius: 20, display: "flex", alignItems: "center", justifyContent: "center",
-                background: "linear-gradient(135deg, rgba(255,107,53,0.12), rgba(255,107,53,0.05))",
+                width: 60,
+                height: 60,
+                borderRadius: 20,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background:
+                  "linear-gradient(135deg, rgba(255,107,53,0.12), rgba(255,107,53,0.05))",
                 border: "1px solid rgba(255,107,53,0.15)",
               }}
             >
-              <MessageSquare size={26} style={{ color: "#ff6b35", opacity: 0.7 }} />
+              <MessageSquare
+                size={26}
+                style={{ color: "#ff6b35", opacity: 0.7 }}
+              />
             </div>
             <div style={{ textAlign: "center" }}>
-              <p style={{ fontSize: 14, fontWeight: 700, color: "#3C3C43", marginBottom: 4 }}>No messages yet</p>
-              <p style={{ fontSize: 12, color: "#AEAEB2", lineHeight: 1.5 }}>Be the first to say hi to the group! 👋</p>
+              <p
+                style={{
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "#3C3C43",
+                  marginBottom: 4,
+                }}
+              >
+                No messages yet
+              </p>
+              <p style={{ fontSize: 12, color: "#AEAEB2", lineHeight: 1.5 }}>
+                Be the first to say hi to the group! 👋
+              </p>
             </div>
           </div>
         ) : (
@@ -721,7 +944,8 @@ function RichChatPanel({
                     flexDirection: me ? "row-reverse" : "row",
                     alignItems: "flex-end",
                     gap: 6,
-                    marginBottom: msg.pos === "last" || msg.pos === "single" ? 6 : 1,
+                    marginBottom:
+                      msg.pos === "last" || msg.pos === "single" ? 6 : 1,
                   }}
                 >
                   {/* Avatar — only on last/single bubble of "them" */}
@@ -730,29 +954,63 @@ function RichChatPanel({
                       <img
                         src={msg.avatar}
                         alt={msg.user}
-                        style={{ width: 28, height: 28, borderRadius: "50%", objectFit: "cover" }}
+                        style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
                       />
                     ) : null}
                   </div>
 
-                  <div style={{ maxWidth: "72%", display: "flex", flexDirection: "column", alignItems: me ? "flex-end" : "flex-start" }}>
+                  <div
+                    style={{
+                      maxWidth: "72%",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: me ? "flex-end" : "flex-start",
+                    }}
+                  >
                     {/* Name + time — only for first/single of "them" */}
                     {!me && (msg.pos === "first" || msg.pos === "single") && (
-                      <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 3 }}>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: "#3C3C43" }}>{msg.user}</span>
-                        <span style={{ fontSize: 10, color: "#C7C7CC" }}>{msg.ts}</span>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "baseline",
+                          gap: 6,
+                          marginBottom: 3,
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 700,
+                            color: "#3C3C43",
+                          }}
+                        >
+                          {msg.user}
+                        </span>
+                        <span style={{ fontSize: 10, color: "#C7C7CC" }}>
+                          {msg.ts}
+                        </span>
                       </div>
                     )}
                     {me && (msg.pos === "last" || msg.pos === "single") && (
                       <div style={{ marginBottom: 2 }}>
-                        <span style={{ fontSize: 10, color: "#C7C7CC" }}>{msg.ts}</span>
+                        <span style={{ fontSize: 10, color: "#C7C7CC" }}>
+                          {msg.ts}
+                        </span>
                       </div>
                     )}
 
                     {/* Bubble */}
                     <div
                       style={{
-                        padding: msg.content_type?.toLowerCase() === "image" ? 4 : "10px 14px",
+                        padding:
+                          msg.content_type?.toLowerCase() === "image"
+                            ? 4
+                            : "10px 14px",
                         borderRadius: bubbleRadius(msg.sender, msg.pos),
                         background: me
                           ? "linear-gradient(145deg, #ff7a46, #e6521a)"
@@ -769,35 +1027,46 @@ function RichChatPanel({
                       }}
                     >
                       {/* Image */}
-                      {msg.content_type?.toLowerCase() === "image" && msg.media_url ? (
+                      {msg.content_type?.toLowerCase() === "image" &&
+                      msg.media_url ? (
                         <img
                           src={msg.media_url}
                           alt="Attached image"
                           style={{
-                            maxWidth: 240, maxHeight: 200, borderRadius: 14,
-                            objectFit: "cover", display: "block",
+                            maxWidth: 240,
+                            maxHeight: 200,
+                            borderRadius: 14,
+                            objectFit: "cover",
+                            display: "block",
                           }}
                           onError={(e) => {
                             // Fallback nếu ảnh lỗi
-                            (e.target as HTMLImageElement).style.display = 'none';
-                            (e.target as HTMLImageElement).insertAdjacentHTML('afterend', '<span style="font-size: 11px; font-style: italic;">[Image unavailable]</span>');
+                            (e.target as HTMLImageElement).style.display =
+                              "none";
+                            (e.target as HTMLImageElement).insertAdjacentHTML(
+                              "afterend",
+                              '<span style="font-size: 11px; font-style: italic;">[Image unavailable]</span>',
+                            );
                           }}
                         />
-                      ) : msg.content_type?.toLowerCase() === "voice" && msg.media_url ? (
+                      ) : msg.content_type?.toLowerCase() === "voice" &&
+                        msg.media_url ? (
                         /* Voice */
                         <VoicePlayer
                           src={msg.media_url}
                           isMe={me}
                           durationHint={msg.media_meta?.duration}
                         />
-                      ) : msg.content_type?.toLowerCase() === "video" && msg.media_url ? (
+                      ) : msg.content_type?.toLowerCase() === "video" &&
+                        msg.media_url ? (
                         /* Video */
                         <video
                           src={msg.media_url}
                           controls
                           style={{ maxWidth: 240, borderRadius: 14 }}
                         />
-                      ) : msg.content_type?.toLowerCase() === "file" && msg.media_url ? (
+                      ) : msg.content_type?.toLowerCase() === "file" &&
+                        msg.media_url ? (
                         /* File */
                         <a
                           href={msg.media_url}
@@ -805,7 +1074,9 @@ function RichChatPanel({
                           rel="noopener noreferrer"
                           style={{
                             color: me ? "rgba(255,255,255,0.9)" : "#ff6b35",
-                            textDecoration: "underline", fontSize: 12, fontWeight: 600,
+                            textDecoration: "underline",
+                            fontSize: 12,
+                            fontWeight: 600,
                           }}
                         >
                           📎 {msg.text || "Attached File"}
@@ -813,7 +1084,11 @@ function RichChatPanel({
                       ) : (
                         /* Text (Fallback mặc định) */
                         <span>
-                          {msg.text ? msg.text : <i style={{ opacity: 0.6 }}>[Unsupported media]</i>}
+                          {msg.text ? (
+                            msg.text
+                          ) : (
+                            <i style={{ opacity: 0.6 }}>[Unsupported media]</i>
+                          )}
                         </span>
                       )}
                     </div>
@@ -832,26 +1107,52 @@ function RichChatPanel({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           style={{
-            display: "flex", alignItems: "center", gap: 10,
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
             padding: "11px 16px",
-            background: "linear-gradient(135deg, rgba(255,59,48,0.07), rgba(255,59,48,0.03))",
+            background:
+              "linear-gradient(135deg, rgba(255,59,48,0.07), rgba(255,59,48,0.03))",
             borderTop: "1px solid rgba(255,59,48,0.12)",
           }}
         >
           <motion.div
             animate={{ scale: [1, 1.3, 1], opacity: [1, 0.4, 1] }}
             transition={{ duration: 1.2, repeat: Infinity }}
-            style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: "#FF3B30", flexShrink: 0, boxShadow: "0 0 6px rgba(255,59,48,0.6)" }}
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              backgroundColor: "#FF3B30",
+              flexShrink: 0,
+              boxShadow: "0 0 6px rgba(255,59,48,0.6)",
+            }}
           />
-          <span style={{ fontSize: 12, fontWeight: 700, color: "#FF3B30", flex: 1, letterSpacing: "-0.01em" }}>
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: "#FF3B30",
+              flex: 1,
+              letterSpacing: "-0.01em",
+            }}
+          >
             Recording · {formatVoiceDuration(recordingTime)}
           </span>
           <button
             onClick={() => resetRecording()}
             style={{
-              background: "rgba(255,59,48,0.1)", border: "none", cursor: "pointer",
-              color: "#FF3B30", padding: "4px 8px", borderRadius: 8,
-              display: "flex", alignItems: "center", gap: 4, fontSize: 11, fontWeight: 600,
+              background: "rgba(255,59,48,0.1)",
+              border: "none",
+              cursor: "pointer",
+              color: "#FF3B30",
+              padding: "4px 8px",
+              borderRadius: 8,
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: 11,
+              fontWeight: 600,
             }}
           >
             <X size={12} /> Cancel
@@ -869,23 +1170,45 @@ function RichChatPanel({
             exit={{ opacity: 0, y: 12, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             style={{
-              position: "absolute", bottom: 68, left: 12, right: 12,
-              background: "#fff", borderRadius: 20, padding: "12px 14px",
+              position: "absolute",
+              bottom: 68,
+              left: 12,
+              right: 12,
+              background: "#fff",
+              borderRadius: 20,
+              padding: "12px 14px",
               boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
-              border: "1px solid rgba(0,0,0,0.07)", zIndex: 20,
-              display: "flex", flexWrap: "wrap", gap: 6,
+              border: "1px solid rgba(0,0,0,0.07)",
+              zIndex: 20,
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 6,
             }}
           >
             {EMOJI_LIST.map((emoji) => (
               <button
                 key={emoji}
-                onClick={() => { setInput((prev) => prev + emoji); setShowEmoji(false); }}
-                style={{
-                  fontSize: 20, background: "none", border: "none", cursor: "pointer",
-                  padding: "4px 5px", borderRadius: 8, transition: "background 0.12s",
+                onClick={() => {
+                  setInput((prev) => prev + emoji);
+                  setShowEmoji(false);
                 }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.background = "#F2F2F7")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.background = "none")}
+                style={{
+                  fontSize: 20,
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: "4px 5px",
+                  borderRadius: 8,
+                  transition: "background 0.12s",
+                }}
+                onMouseEnter={(e) =>
+                  ((e.currentTarget as HTMLButtonElement).style.background =
+                    "#F2F2F7")
+                }
+                onMouseLeave={(e) =>
+                  ((e.currentTarget as HTMLButtonElement).style.background =
+                    "none")
+                }
               >
                 {emoji}
               </button>
@@ -940,7 +1263,7 @@ function RichChatPanel({
             border: "1.5px solid rgba(0,0,0,0.06)",
             transition: "border-color 0.2s, box-shadow 0.2s",
           }}
-          onFocus={() => { }}
+          onFocus={() => {}}
         >
           {/* Nút Attach (Gộp chung nếu màn hình nhỏ, ở đây giữ nguyên) */}
           <div style={{ display: "flex", gap: 2, paddingBottom: 2 }}>
@@ -948,13 +1271,27 @@ function RichChatPanel({
               onClick={() => attachRef.current?.click()}
               disabled={isRecording || uploading}
               style={{
-                width: 30, height: 30, borderRadius: "50%", border: "none", background: "none",
-                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#AEAEB2", transition: "color 0.15s, background 0.15s",
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#AEAEB2",
+                transition: "color 0.15s, background 0.15s",
                 opacity: isRecording || uploading ? 0.4 : 1,
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "#ff6b35"; e.currentTarget.style.background = "rgba(255,107,53,0.08)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "#AEAEB2"; e.currentTarget.style.background = "none"; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#ff6b35";
+                e.currentTarget.style.background = "rgba(255,107,53,0.08)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "#AEAEB2";
+                e.currentTarget.style.background = "none";
+              }}
             >
               <Paperclip size={16} />
             </button>
@@ -963,13 +1300,27 @@ function RichChatPanel({
               onClick={() => imageRef.current?.click()}
               disabled={isRecording || uploading}
               style={{
-                width: 30, height: 30, borderRadius: "50%", border: "none", background: "none",
-                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#AEAEB2", transition: "color 0.15s, background 0.15s",
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#AEAEB2",
+                transition: "color 0.15s, background 0.15s",
                 opacity: isRecording || uploading ? 0.4 : 1,
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "#ff6b35"; e.currentTarget.style.background = "rgba(255,107,53,0.08)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = "#AEAEB2"; e.currentTarget.style.background = "none"; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#ff6b35";
+                e.currentTarget.style.background = "rgba(255,107,53,0.08)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "#AEAEB2";
+                e.currentTarget.style.background = "none";
+              }}
             >
               <ImageIcon size={16} />
             </button>
@@ -980,15 +1331,28 @@ function RichChatPanel({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendText(); }
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendText();
+              }
             }}
-            placeholder={isRecording ? "Đang ghi âm..." : "Nhắn tin cho nhóm..."}
+            placeholder={
+              isRecording ? "Đang ghi âm..." : "Nhắn tin cho nhóm..."
+            }
             disabled={isRecording || uploading}
             rows={1}
             style={{
-              flex: 1, background: "none", border: "none", outline: "none",
-              fontSize: 14, color: "#1C1C1E", resize: "none", lineHeight: "1.5",
-              padding: "6px 4px", maxHeight: 100, overflowY: "auto",
+              flex: 1,
+              background: "none",
+              border: "none",
+              outline: "none",
+              fontSize: 14,
+              color: "#1C1C1E",
+              resize: "none",
+              lineHeight: "1.5",
+              padding: "6px 4px",
+              maxHeight: 100,
+              overflowY: "auto",
               fontFamily: "inherit",
               opacity: isRecording ? 0.4 : 1,
             }}
@@ -1000,10 +1364,17 @@ function RichChatPanel({
             onClick={() => setShowEmoji((v) => !v)}
             disabled={uploading}
             style={{
-              width: 30, height: 30, borderRadius: "50%", border: "none",
+              width: 30,
+              height: 30,
+              borderRadius: "50%",
+              border: "none",
               background: showEmoji ? "rgba(255,107,53,0.1)" : "none",
-              cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-              color: showEmoji ? "#ff6b35" : "#AEAEB2", paddingBottom: 2,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: showEmoji ? "#ff6b35" : "#AEAEB2",
+              paddingBottom: 2,
               transition: "color 0.15s, background 0.15s",
             }}
           >
@@ -1011,7 +1382,14 @@ function RichChatPanel({
           </button>
 
           {/* Cụm Nút Send / Ghi âm / Quick Like (Hiển thị thông minh) */}
-          <div style={{ display: "flex", alignItems: "center", gap: 5, paddingBottom: 2 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
+              paddingBottom: 2,
+            }}
+          >
             {canSend || isRecording ? (
               // Nếu có gõ chữ hoặc đang ghi âm -> Hiện nút SEND màu cam
               <motion.button
@@ -1020,14 +1398,25 @@ function RichChatPanel({
                 onClick={isRecording ? handleVoiceToggle : sendText}
                 disabled={sending || uploading}
                 style={{
-                  width: 34, height: 34, borderRadius: "50%", border: "none",
+                  width: 34,
+                  height: 34,
+                  borderRadius: "50%",
+                  border: "none",
                   background: "linear-gradient(145deg, #ff7a46, #e6521a)",
-                  color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "#fff",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   boxShadow: "0 3px 10px rgba(255,107,53,0.4)",
                   opacity: sending || uploading ? 0.6 : 1,
                 }}
               >
-                {isRecording ? <StopCircle size={16} /> : <Send size={14} style={{ marginLeft: 2 }} />}
+                {isRecording ? (
+                  <StopCircle size={16} />
+                ) : (
+                  <Send size={14} style={{ marginLeft: 2 }} />
+                )}
               </motion.button>
             ) : (
               // Nếu khung nhập TRỐNG -> Hiện nút Mic và Quick Like
@@ -1038,8 +1427,15 @@ function RichChatPanel({
                   onClick={handleVoiceToggle}
                   disabled={uploading}
                   style={{
-                    width: 30, height: 30, borderRadius: "50%", border: "none", background: "none",
-                    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
+                    width: 30,
+                    height: 30,
+                    borderRadius: "50%",
+                    border: "none",
+                    background: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     color: "#AEAEB2",
                   }}
                 >
@@ -1052,10 +1448,17 @@ function RichChatPanel({
                   onClick={sendQuickEmoji}
                   disabled={sending || uploading}
                   style={{
-                    width: 34, height: 34, borderRadius: "50%", border: "none",
+                    width: 34,
+                    height: 34,
+                    borderRadius: "50%",
+                    border: "none",
                     background: "linear-gradient(145deg, #ff7a46, #e6521a)",
-                    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "#fff", boxShadow: "0 3px 10px rgba(255,107,53,0.35)",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#fff",
+                    boxShadow: "0 3px 10px rgba(255,107,53,0.35)",
                   }}
                 >
                   <ThumbsUp size={16} />
@@ -1067,7 +1470,16 @@ function RichChatPanel({
 
         {/* Loading Indicator (Chỉ hiện khi đang upload) */}
         {uploading && (
-          <div style={{ position: "absolute", top: -20, left: 24, fontSize: 11, color: "#8E8E93", fontWeight: 600 }}>
+          <div
+            style={{
+              position: "absolute",
+              top: -20,
+              left: 24,
+              fontSize: 11,
+              color: "#8E8E93",
+              fontWeight: 600,
+            }}
+          >
             Đang gửi file...
           </div>
         )}
@@ -1098,7 +1510,9 @@ function VoiceBar({
       <div
         className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-[10px]"
         style={{
-          backgroundColor: isInCall ? "rgba(52,199,89,0.1)" : "rgba(0,0,0,0.04)",
+          backgroundColor: isInCall
+            ? "rgba(52,199,89,0.1)"
+            : "rgba(0,0,0,0.04)",
           border: `1px solid ${isInCall ? "rgba(52,199,89,0.25)" : "transparent"}`,
         }}
       >
@@ -1109,7 +1523,10 @@ function VoiceBar({
             boxShadow: isInCall ? "0 0 6px #34C759" : "none",
           }}
         />
-        <span className="text-[12px] font-semibold" style={{ color: isInCall ? "#1FAD45" : "#8E8E93" }}>
+        <span
+          className="text-[12px] font-semibold"
+          style={{ color: isInCall ? "#1FAD45" : "#8E8E93" }}
+        >
           {isInCall ? "Connected" : "Voice Chat"}
         </span>
       </div>
@@ -1121,7 +1538,9 @@ function VoiceBar({
         disabled={!isInCall}
         className="w-8 h-8 rounded-[10px] flex items-center justify-center transition-colors disabled:opacity-40"
         style={{
-          backgroundColor: isMuted ? "rgba(255,59,48,0.1)" : "rgba(52,199,89,0.1)",
+          backgroundColor: isMuted
+            ? "rgba(255,59,48,0.1)"
+            : "rgba(52,199,89,0.1)",
           color: isMuted ? "#FF3B30" : "#34C759",
         }}
       >
@@ -1169,7 +1588,18 @@ export default function GroupRoomPage() {
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const myUserIdRef = useRef<number | null>(null);
 
-  const voice = useVoiceRoom(roomId);
+  const [voiceToken, setVoiceToken] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setVoiceToken(session?.access_token || "");
+    })();
+  }, [user]);
+
+  const voice = useVoiceRoom(roomId, user?.id || 0, voiceToken);
 
   // ── Fetch room + join on mount ──
   useEffect(() => {
@@ -1203,12 +1633,16 @@ export default function GroupRoomPage() {
         if (myMember) setMeReady(myMember.is_ready);
       } catch (err: unknown) {
         if (!cancelled)
-          toast.error(err instanceof Error ? err.message : "Failed to load room.");
+          toast.error(
+            err instanceof Error ? err.message : "Failed to load room.",
+          );
       } finally {
         if (!cancelled) setLoadingRoom(false);
       }
     })();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [roomId, user]);
 
   // ── Poll room members every 5s ──
@@ -1223,7 +1657,9 @@ export default function GroupRoomPage() {
         // silently ignore
       }
     }, 5000);
-    return () => { if (pollRef.current) clearInterval(pollRef.current); };
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
   }, [roomId, loadingRoom]);
 
   const readyCount = members.filter((m) => m.is_ready).length;
@@ -1243,13 +1679,18 @@ export default function GroupRoomPage() {
     try {
       await apiPatch(`/api/v1/groups/${roomId}/ready`, { is_ready: next });
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : "Failed to update ready state.");
+      toast.error(
+        err instanceof Error ? err.message : "Failed to update ready state.",
+      );
       setMeReady(!next);
     }
   }, [meReady, roomId]);
 
   const handleLaunch = useCallback(() => {
-    if (!allReady) { toast.error("Wait for everyone to be ready!"); return; }
+    if (!allReady) {
+      toast.error("Wait for everyone to be ready!");
+      return;
+    }
     setCountdown(5);
     countdownRef.current = setInterval(() => {
       setCountdown((c) => {
@@ -1280,13 +1721,20 @@ export default function GroupRoomPage() {
         {loadingRoom ? (
           <>
             <div className="w-10 h-10 border-4 border-[#ff6b35]/30 border-t-[#ff6b35] rounded-full animate-spin" />
-            <p className="text-[15px] text-[#8E8E93] font-medium">Joining room…</p>
+            <p className="text-[15px] text-[#8E8E93] font-medium">
+              Joining room…
+            </p>
           </>
         ) : (
           <>
             <div className="text-5xl">🚨</div>
-            <p className="text-[18px] font-bold text-[#1C1C1E]">Room not found</p>
-            <Link href="/group-rooms" className="text-[14px] text-[#ff6b35] font-semibold">
+            <p className="text-[18px] font-bold text-[#1C1C1E]">
+              Room not found
+            </p>
+            <Link
+              href="/group-rooms"
+              className="text-[14px] text-[#ff6b35] font-semibold"
+            >
               Back to rooms
             </Link>
           </>
@@ -1303,39 +1751,59 @@ export default function GroupRoomPage() {
   // Build currentUser object for RichChatPanel
   const currentUserForChat = user
     ? {
-      id: user.id,
-      username:
-        (user as unknown as { username?: string }).username ??
-        (user as unknown as { display_name?: string }).display_name ??
-        "You",
-      avatar: (user as unknown as { avatar_url?: string }).avatar_url,
-    }
+        id: user.id,
+        username:
+          (user as unknown as { username?: string }).username ??
+          (user as unknown as { display_name?: string }).display_name ??
+          "You",
+        avatar: (user as unknown as { avatar_url?: string }).avatar_url,
+      }
     : null;
 
   return (
     <div
       className="flex flex-col h-full overflow-hidden"
       style={{
-        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
         backgroundColor: "#F2F2F7",
       }}
     >
       {/* ── COVER BANNER ── */}
       <div className="relative h-[155px] shrink-0 overflow-hidden">
-        <img src={coverImage} alt={room.name} className="w-full h-full object-cover" style={{ filter: "brightness(0.9)" }} />
+        <img
+          src={coverImage}
+          alt={room.name}
+          className="w-full h-full object-cover"
+          style={{ filter: "brightness(0.9)" }}
+        />
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.72) 100%)" }}
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.72) 100%)",
+          }}
         />
         {/* Subtle noise texture overlay */}
-        <div className="absolute inset-0" style={{ opacity: 0.03, backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")" }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            opacity: 0.03,
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")",
+          }}
+        />
 
         <Link href="/group-rooms" className="absolute top-4 left-4">
           <motion.div
             whileHover={{ scale: 1.05, x: -2 }}
             whileTap={{ scale: 0.93 }}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-[13px] font-semibold"
-            style={{ backgroundColor: "rgba(0,0,0,0.3)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.18)" }}
+            style={{
+              backgroundColor: "rgba(0,0,0,0.3)",
+              backdropFilter: "blur(16px)",
+              border: "1px solid rgba(255,255,255,0.18)",
+            }}
           >
             <ChevronLeft size={15} /> Group Rooms
           </motion.div>
@@ -1344,8 +1812,12 @@ export default function GroupRoomPage() {
         <div
           className="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide"
           style={{
-            backgroundColor: room.is_public ? "rgba(52,199,89,0.8)" : "rgba(99,102,241,0.85)",
-            color: "#fff", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)",
+            backgroundColor: room.is_public
+              ? "rgba(52,199,89,0.8)"
+              : "rgba(99,102,241,0.85)",
+            color: "#fff",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.2)",
             letterSpacing: "0.05em",
           }}
         >
@@ -1357,7 +1829,10 @@ export default function GroupRoomPage() {
           <p className="text-white/60 text-[11px] font-semibold uppercase tracking-[0.1em] mb-1">
             {room.route_description ?? "Group Room"}
           </p>
-          <h1 className="text-white text-[23px] font-extrabold tracking-tight leading-tight" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>
+          <h1
+            className="text-white text-[23px] font-extrabold tracking-tight leading-tight"
+            style={{ textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}
+          >
             {room.name}
           </h1>
         </div>
@@ -1371,12 +1846,16 @@ export default function GroupRoomPage() {
           style={{ backgroundColor: "#fff" }}
         >
           {/* Room info bar */}
-          <div className="flex items-center gap-3 px-5 py-3 border-b border-[#F2F2F7]" style={{ backgroundColor: "#FAFAFA" }}>
+          <div
+            className="flex items-center gap-3 px-5 py-3 border-b border-[#F2F2F7]"
+            style={{ backgroundColor: "#FAFAFA" }}
+          >
             <div
               className="flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-full"
               style={{ backgroundColor: "#F0F0F5", color: "#636366" }}
             >
-              <Users size={12} style={{ color: "#ff6b35" }} /> {members.length}/{room.max_spots}
+              <Users size={12} style={{ color: "#ff6b35" }} /> {members.length}/
+              {room.max_spots}
             </div>
             <div
               className="flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-full"
@@ -1384,7 +1863,10 @@ export default function GroupRoomPage() {
             >
               <Clock size={12} style={{ color: "#ff6b35" }} />
               {room.scheduled_time
-                ? new Date(room.scheduled_time).toLocaleString([], { dateStyle: "short", timeStyle: "short" })
+                ? new Date(room.scheduled_time).toLocaleString([], {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })
                 : "Tonight at 8 PM"}
             </div>
             {!room.is_public && room.invite_code && (
@@ -1394,11 +1876,27 @@ export default function GroupRoomPage() {
                 className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-bold transition-all"
                 style={
                   codeCopied
-                    ? { backgroundColor: "#D1FAE5", color: "#059669", border: "1px solid rgba(5,150,105,0.2)" }
-                    : { backgroundColor: "rgba(99,102,241,0.1)", color: "#6366F1", border: "1px solid rgba(99,102,241,0.2)" }
+                    ? {
+                        backgroundColor: "#D1FAE5",
+                        color: "#059669",
+                        border: "1px solid rgba(5,150,105,0.2)",
+                      }
+                    : {
+                        backgroundColor: "rgba(99,102,241,0.1)",
+                        color: "#6366F1",
+                        border: "1px solid rgba(99,102,241,0.2)",
+                      }
                 }
               >
-                {codeCopied ? <><Check size={11} /> Copied!</> : <><Copy size={11} /> {room.invite_code}</>}
+                {codeCopied ? (
+                  <>
+                    <Check size={11} /> Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy size={11} /> {room.invite_code}
+                  </>
+                )}
               </motion.button>
             )}
           </div>
@@ -1406,6 +1904,21 @@ export default function GroupRoomPage() {
           {/* ── READY BAR + LAUNCH ── */}
           <div className="px-5 py-4 border-b border-[#F2F2F7] flex flex-col gap-3.5">
             <ReadyBar members={members} />
+
+            {/* Voice Chat Bar */}
+            <VoiceBar
+              isMuted={voice.isMuted}
+              isInCall={voice.isConnected}
+              onToggleMute={voice.toggleMute}
+              onToggleCall={() => {
+                if (voice.isConnected) {
+                  voice.disconnect();
+                } else {
+                  voice.connect();
+                }
+              }}
+            />
+
             <div className="flex items-center gap-2.5">
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -1415,24 +1928,33 @@ export default function GroupRoomPage() {
                 style={
                   meReady
                     ? {
-                      background: "linear-gradient(135deg, rgba(52,199,89,0.15), rgba(52,199,89,0.06))",
-                      border: "1.5px solid rgba(52,199,89,0.4)",
-                      color: "#1FAD45",
-                      boxShadow: "0 2px 10px rgba(52,199,89,0.15)",
-                    }
+                        background:
+                          "linear-gradient(135deg, rgba(52,199,89,0.15), rgba(52,199,89,0.06))",
+                        border: "1.5px solid rgba(52,199,89,0.4)",
+                        color: "#1FAD45",
+                        boxShadow: "0 2px 10px rgba(52,199,89,0.15)",
+                      }
                     : {
-                      backgroundColor: "#F5F5F7",
-                      border: "1.5px solid #E5E5EA",
-                      color: "#3C3C43",
-                    }
+                        backgroundColor: "#F5F5F7",
+                        border: "1.5px solid #E5E5EA",
+                        color: "#3C3C43",
+                      }
                 }
               >
-                {meReady ? <><Check size={15} /> Ready!</> : "Mark as Ready"}
+                {meReady ? (
+                  <>
+                    <Check size={15} /> Ready!
+                  </>
+                ) : (
+                  "Mark as Ready"
+                )}
               </motion.button>
 
               {isHost && (
                 <motion.button
-                  whileHover={{ scale: allReady && countdown === null ? 1.03 : 1 }}
+                  whileHover={{
+                    scale: allReady && countdown === null ? 1.03 : 1,
+                  }}
                   whileTap={{ scale: 0.97 }}
                   onClick={countdown !== null ? undefined : handleLaunch}
                   disabled={!allReady || countdown !== null}
@@ -1442,14 +1964,21 @@ export default function GroupRoomPage() {
                       allReady && countdown === null
                         ? "linear-gradient(135deg, #34C759, #1FAD45)"
                         : "linear-gradient(135deg, #C7C7CC, #AEAEB2)",
-                    boxShadow: allReady ? "0 4px 16px rgba(52,199,89,0.4)" : "none",
+                    boxShadow: allReady
+                      ? "0 4px 16px rgba(52,199,89,0.4)"
+                      : "none",
                     minWidth: 130,
                   }}
                 >
                   {countdown !== null ? (
-                    <><Clock size={14} /> <CountdownDisplay seconds={countdown} /></>
+                    <>
+                      <Clock size={14} />{" "}
+                      <CountdownDisplay seconds={countdown} />
+                    </>
                   ) : (
-                    <><Play size={14} /> Launch Tour</>
+                    <>
+                      <Play size={14} /> Launch Tour
+                    </>
                   )}
                 </motion.button>
               )}
@@ -1462,7 +1991,9 @@ export default function GroupRoomPage() {
               animate={{ scale: [1, 1.04, 1] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               className="w-24 h-24 rounded-[28px] flex items-center justify-center mb-5"
-              style={{ background: `linear-gradient(135deg, ${accentColor}22, ${accentColor}44)` }}
+              style={{
+                background: `linear-gradient(135deg, ${accentColor}22, ${accentColor}44)`,
+              }}
             >
               <Zap size={36} style={{ color: accentColor }} />
             </motion.div>
@@ -1509,14 +2040,21 @@ export default function GroupRoomPage() {
                     : { color: "#8E8E93" }
                 }
               >
-                {tab === "chat" ? <MessageSquare size={14} /> : <Users size={14} />}
+                {tab === "chat" ? (
+                  <MessageSquare size={14} />
+                ) : (
+                  <Users size={14} />
+                )}
                 {tab === "chat" ? "Chat" : `Members (${members.length})`}
               </button>
             ))}
           </div>
 
           {/* Tab content */}
-          <div className="flex-1 overflow-hidden" style={{ position: "relative" }}>
+          <div
+            className="flex-1 overflow-hidden"
+            style={{ position: "relative" }}
+          >
             <AnimatePresence mode="wait">
               {activeTab === "chat" ? (
                 <motion.div
@@ -1559,12 +2097,19 @@ export default function GroupRoomPage() {
                   ))}
 
                   {/* Empty slots */}
-                  {Array.from({ length: Math.max(0, room.max_spots - members.length) }).map((_, i) => (
-                    <div key={`empty-${i}`} className="flex items-center gap-3 px-3 py-2.5 opacity-40">
+                  {Array.from({
+                    length: Math.max(0, room.max_spots - members.length),
+                  }).map((_, i) => (
+                    <div
+                      key={`empty-${i}`}
+                      className="flex items-center gap-3 px-3 py-2.5 opacity-40"
+                    >
                       <div className="w-9 h-9 rounded-full border-2 border-dashed border-[#C7C7CC] flex items-center justify-center">
                         <Users size={13} className="text-[#C7C7CC]" />
                       </div>
-                      <span className="text-[13px] text-[#C7C7CC]">Waiting for explorer...</span>
+                      <span className="text-[13px] text-[#C7C7CC]">
+                        Waiting for explorer...
+                      </span>
                     </div>
                   ))}
                 </motion.div>
