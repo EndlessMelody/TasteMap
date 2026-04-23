@@ -405,29 +405,33 @@ export function useVoiceRoom(
         audioCtxRef.current = ctx;
         analyserRef.current = analyser;
 
+        let lastIsSpeaking = false;
         const buf = new Uint8Array(analyser.frequencyBinCount);
         const tick = () => {
           analyser.getByteFrequencyData(buf);
           const avg = buf.reduce((a, b) => a + b, 0) / buf.length;
 
-          // Send speaking state via WebSocket
+          // Send speaking state via WebSocket only on change
           const isSpeaking = avg > 12;
-          if (wsRef.current?.readyState === WebSocket.OPEN) {
-            wsRef.current.send(
-              JSON.stringify({
-                type: "speaking",
-                payload: { is_speaking: isSpeaking },
-              }),
-            );
-          }
+          if (isSpeaking !== lastIsSpeaking) {
+            lastIsSpeaking = isSpeaking;
+            if (wsRef.current?.readyState === WebSocket.OPEN) {
+              wsRef.current.send(
+                JSON.stringify({
+                  type: "speaking",
+                  payload: { is_speaking: isSpeaking },
+                }),
+              );
+            }
 
-          // Local speaking indicator
-          setSpeakingUsers((prev) => {
-            const next = new Set(prev);
-            if (isSpeaking) next.add(userId);
-            else next.delete(userId);
-            return next;
-          });
+            // Local speaking indicator
+            setSpeakingUsers((prev) => {
+              const next = new Set(prev);
+              if (isSpeaking) next.add(userId);
+              else next.delete(userId);
+              return next;
+            });
+          }
 
           rafRef.current = requestAnimationFrame(tick);
         };
@@ -614,6 +618,10 @@ export function useVoiceRoom(
                     data: answer,
                   },
                 }),
+              );
+            } else if (signal_type === "ice_candidate") {
+              await pc.addIceCandidate(
+                new RTCIceCandidate(data as unknown as RTCLocalIceCandidateInit),
               );
             }
           } else {
@@ -850,7 +858,7 @@ export function useVoiceRoom(
     // Cleanup VAD
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     analyserRef.current?.disconnect();
-    audioCtxRef.current?.close().catch(() => {});
+    audioCtxRef.current?.close().catch(() => { });
     audioCtxRef.current = null;
     analyserRef.current = null;
 
@@ -961,7 +969,7 @@ export function useVoiceRoom(
         // Restart VAD with the new input stream.
         if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
         analyserRef.current?.disconnect();
-        audioCtxRef.current?.close().catch(() => {});
+        audioCtxRef.current?.close().catch(() => { });
         audioCtxRef.current = null;
         analyserRef.current = null;
         startVAD(replacementStream);
