@@ -11,11 +11,13 @@ import { AppStatusBar } from "./common/AppStatusBar";
 import { UserVectorProvider } from "@/context/UserVectorContext";
 
 import { Sidebar } from "./common/Sidebar";
-import { RightSidebar } from "./common/RightSidebar";
-import { CreatePostModal } from "@/components/modals/CreatePostModal";
 import { useUiStore } from "@/store/uiStore";
 import { ChatProvider, useChat } from "@/context/ChatContext";
-import { MessagingSidebar } from "./features/foodies/MessagingSidebar";
+import dynamic from "next/dynamic";
+
+const RightSidebar = dynamic(() => import("./common/RightSidebar").then(mod => mod.RightSidebar), { ssr: false });
+const CreatePostModal = dynamic(() => import("@/components/modals/CreatePostModal").then(mod => mod.CreatePostModal), { ssr: false });
+const MessagingSidebar = dynamic(() => import("./features/foodies/MessagingSidebar").then(mod => mod.MessagingSidebar), { ssr: false });
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { AuthProvider as HooksAuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/context/ThemeContext";

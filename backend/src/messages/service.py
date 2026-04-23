@@ -102,11 +102,12 @@ async def get_conversation(
                 ChatMessage.is_deleted == False,  # Exclude soft-deleted
             )
         )
-        .order_by(ChatMessage.created_at.asc())
+        .order_by(ChatMessage.created_at.desc())
         .limit(limit)
         .offset(offset)
     )
-    return [_to_dict(m, user_id) for m in result.scalars().all()]
+    messages = result.scalars().all()
+    return [_to_dict(m, user_id) for m in reversed(messages)]
 
 
 async def send_message(

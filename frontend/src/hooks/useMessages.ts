@@ -113,15 +113,22 @@ export function useMessages(otherUserId: number | null) {
   const otherIdRef = useRef(otherUserId);
   otherIdRef.current = otherUserId;
 
+  const [limit, setLimit] = useState(20);
+  const [hasMore, setHasMore] = useState(false);
+  const limitRef = useRef(limit);
+  limitRef.current = limit;
+
   const fetchMessages = useCallback(async () => {
     const id = otherIdRef.current;
     if (!id) return;
+    const currentLimit = limitRef.current;
 
     try {
-      const data = await apiGet<ChatMessage[]>(`/api/v1/messages/${id}`);
+      const data = await apiGet<ChatMessage[]>(`/api/v1/messages/${id}?limit=${currentLimit}`);
       if (otherIdRef.current !== id) return;
 
       const serverMessages = Array.isArray(data) ? data : [];
+      setHasMore(serverMessages.length >= currentLimit);
       setMessages((prev) => {
         const stableClientKeysById = new Map<number, string>();
         for (const message of prev) {
@@ -161,6 +168,8 @@ export function useMessages(otherUserId: number | null) {
       setMessages([]);
       return;
     }
+    
+    setLimit(20);
 
     setLoading(true);
     fetchMessages().finally(() => setLoading(false));
@@ -262,5 +271,13 @@ export function useMessages(otherUserId: number | null) {
     [fetchMessages],
   );
 
-  return { messages, loading, sending, sendMessage, refetch: fetchMessages };
+  const loadMore = useCallback(() => {
+    setLimit((prev) => prev + 20);
+    // Explicitly call fetchMessages to eagerly load immediately after increment
+    // Note: setTimeout 0 allows setLimit to render and ref to update but the next normal interval will pick it up anyway,
+    // It's cleaner to just update the limit state and let a dedicated effect or the user polling capture it.
+    setTimeout(fetchMessages, 0);
+  }, [fetchMessages]);
+
+  return { messages, loading, sending, sendMessage, refetch: fetchMessages, loadMore, hasMore };
 }

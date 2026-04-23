@@ -1,10 +1,11 @@
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 from src.db.database import get_db
 from src.feed.schemas import FeedResponse
 from src.feed.service import get_feed_cards
+from src.core.cache import cached_response
 from typing import Optional
 
 router = APIRouter()
@@ -15,7 +16,9 @@ router = APIRouter()
     summary="Lấy thẻ swipe (Tinder-style) với cursor pagination",
     description="Trả kèm photos và reviews_preview để hỗ trợ Flip Card UI. Dùng cursor để infinite scroll."
 )
+@cached_response(ttl=300)
 async def get_cards(
+    request: Request,
     user_id: Optional[str] = Query(None),
     category: str = Query("place", description="'food' hoặc 'place'"),
     lat: Optional[float] = Query(None, description="Tọa độ user — backend tính distance_km ở tầng DB"),

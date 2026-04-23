@@ -396,6 +396,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
     sending,
     sendMessage,
     refetch: refetchMessages,
+    loadMore,
+    hasMore,
   } = useMessages(activeUser?.id ?? null);
   const {
     uploadFile,
@@ -1274,6 +1276,35 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
           </Column>
         ) : (
           <>
+            {hasMore && (
+              <Row horizontal="center" style={{ width: "100%", padding: "8px 0", marginBottom: 16 }}>
+                <button
+                  type="button"
+                  onClick={loadMore}
+                  style={{
+                    padding: "6px 16px",
+                    borderRadius: 20,
+                    border: "1px solid var(--dsc-border)",
+                    backgroundColor: "var(--dsc-surface-muted)",
+                    color: "var(--dsc-text)",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    transition: "all 0.15s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "var(--dsc-surface)";
+                    e.currentTarget.style.borderColor = "var(--dsc-accent-warm)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "var(--dsc-surface-muted)";
+                    e.currentTarget.style.borderColor = "var(--dsc-border)";
+                  }}
+                >
+                  Load previous messages
+                </button>
+              </Row>
+            )}
             <AnimatePresence initial={false}>
               {enriched.map((msg, idx) => {
                 const isMe = msg.sender === "me";

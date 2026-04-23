@@ -233,7 +233,8 @@ export function useVoiceRoom(
 
     if (typeof window !== "undefined") {
       const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      add(`${wsProtocol}://${window.location.hostname}:8000`);
+      add(`${wsProtocol}//${window.location.host}`);
+      add(`${wsProtocol}//${window.location.hostname}:8000`);
       add("ws://127.0.0.1:8000");
       add("ws://localhost:8000");
     }
