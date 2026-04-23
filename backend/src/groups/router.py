@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
 from src.groups import service
@@ -14,6 +14,7 @@ from src.groups.websocket import voice_manager, validate_ws_token
 from typing import Optional
 
 router = APIRouter()
+import json
 
 
 @router.post("/", summary="Tạo lobby nhóm mới", status_code=201)
@@ -202,86 +203,117 @@ async def voice_websocket(
     - mute_toggle: User muted/unmuted
     - speaking: User started/stopped speaking
     """
-    # Authenticate user
-    user = await validate_ws_token(token, db)
-    if not user:
-        await websocket.close(code=4001, reason="Invalid token")
-        return
-    
-    # Verify group membership
-    is_member = await service.is_group_member(db, group_id, user.id)
-    if not is_member:
-        await websocket.close(code=4002, reason="Not a group member")
-        return
-    
-    # Join voice channel
-    await voice_manager.join_voice(websocket, group_id, user.id)
-    
+    # Accept first so close codes/reasons can be delivered to browser reliably.
+    await websocket.accept()
+
     try:
-        while True:
-            data = await websocket.receive_text()
-            message = json.loads(data)
-            
-            msg_type = message.get("type")
-            payload = message.get("payload", {})
-            
-            if msg_type == "signal":
-                # Relay WebRTC signaling messages
-                target_user_id = payload.get("target_user_id")
-                signal_type = payload.get("signal_type")  # offer, answer, ice_candidate
+        # Authenticate user
+        user = await validate_ws_token(token, db)
+        if not user:
+            await websocket.send_json({
+                "type": "voice_error",
+                "payload": {
+                    "code": "invalid_token",
+                    "message": "Voice auth failed (invalid token)",
+                },
+            })
+            await websocket.close(code=4001, reason="Invalid token")
+            return
+        
+        # Verify group membership
+        is_member = await service.is_group_member(db, group_id, user.id)
+        if not is_member:
+            try:
+                await service.join_group(db, group_id, user.id)
+                is_member = True
+            except HTTPException:
+                is_member = False
+
+            if not is_member:
+                await websocket.send_json({
+                    "type": "voice_error",
+                    "payload": {
+                        "code": "not_member",
+                        "message": "You must join the room before voice chat",
+                    },
+                })
+                await websocket.close(code=4002, reason="Not a group member")
+                return
+        
+        # Join voice channel
+        await voice_manager.join_voice(websocket, group_id, user.id)
+        
+        try:
+            while True:
+                data = await websocket.receive_text()
+                message = json.loads(data)
                 
-                if target_user_id and signal_type:
-                    await voice_manager.send_to_user(
+                msg_type = message.get("type")
+                payload = message.get("payload", {})
+                
+                if msg_type == "signal":
+                    target_user_id = payload.get("target_user_id")
+                    signal_type = payload.get("signal_type")
+                    
+                    if target_user_id and signal_type:
+                        await voice_manager.send_to_user(
+                            group_id,
+                            target_user_id,
+                            {
+                                "type": "signal",
+                                "payload": {
+                                    "from_user_id": user.id,
+                                    "signal_type": signal_type,
+                                    "data": payload.get("data")
+                                }
+                            }
+                        )
+                
+                elif msg_type == "mute_toggle":
+                    await voice_manager.broadcast_to_voice(
                         group_id,
-                        target_user_id,
                         {
-                            "type": "signal",
+                            "type": "mute_toggle",
                             "payload": {
-                                "from_user_id": user.id,
-                                "signal_type": signal_type,
-                                "data": payload.get("data")
+                                "user_id": user.id,
+                                "is_muted": payload.get("is_muted", False)
                             }
                         }
                     )
-            
-            elif msg_type == "mute_toggle":
-                # Broadcast mute state to all participants
-                await voice_manager.broadcast_to_voice(
-                    group_id,
-                    {
-                        "type": "mute_toggle",
-                        "payload": {
-                            "user_id": user.id,
-                            "is_muted": payload.get("is_muted", False)
-                        }
-                    }
-                )
-            
-            elif msg_type == "speaking":
-                # Broadcast speaking state to all participants
-                await voice_manager.broadcast_to_voice(
-                    group_id,
-                    {
-                        "type": "speaking",
-                        "payload": {
-                            "user_id": user.id,
-                            "is_speaking": payload.get("is_speaking", False)
-                        }
-                    },
-                    exclude_user_id=user.id
-                )
-            
-    except WebSocketDisconnect:
-        pass
+                
+                elif msg_type == "speaking":
+                    await voice_manager.broadcast_to_voice(
+                        group_id,
+                        {
+                            "type": "speaking",
+                            "payload": {
+                                "user_id": user.id,
+                                "is_speaking": payload.get("is_speaking", False)
+                            }
+                        },
+                        exclude_user_id=user.id
+                    )
+                
+        except WebSocketDisconnect:
+            pass
+        finally:
+            voice_manager.leave_voice(group_id, user.id)
+            await voice_manager.broadcast_to_voice(
+                group_id,
+                {
+                    "type": "user_left_voice",
+                    "payload": {"user_id": user.id}
+                }
+            )
+
     except Exception as e:
-        print(f"Voice WebSocket error: {e}")
-    finally:
-        voice_manager.leave_voice(group_id, user.id)
-        # Notify others
-        await voice_manager.broadcast_to_voice(
-            group_id,
-            {
-                "type": "user_left_voice",
-                "payload": {"user_id": user.id}
-            }
-        )
+        import traceback
+        print(f"Voice WebSocket FATAL CRASH: {e}\n{traceback.format_exc()}")
+        try:
+            await websocket.send_json({
+                "type": "voice_error",
+                "payload": {"code": "server_crash", "message": str(e)}
+            })
+            await websocket.close(code=4005, reason="Server crash")
+        except:
+            pass

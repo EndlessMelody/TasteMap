@@ -9,6 +9,28 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
   "http://127.0.0.1:8000";
 
+function getBaseUrlCandidates(): string[] {
+  const urls: string[] = [];
+  const add = (value?: string) => {
+    if (!value) return;
+    const normalized = value.replace(/\/$/, "");
+    if (!urls.includes(normalized)) urls.push(normalized);
+  };
+
+  add(BASE_URL);
+
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host) {
+      add(`http://${host}:8000`);
+    }
+    add("http://127.0.0.1:8000");
+    add("http://localhost:8000");
+  }
+
+  return urls;
+}
+
 // ─── Custom Error ────────────────────────────────────────────────────────────
 
 export class ApiError extends Error {
@@ -42,8 +64,11 @@ if (typeof window !== "undefined") {
 // ─── Core Helpers ─────────────────────────────────────────────────────────────
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const url = `${BASE_URL}${path}`;
   const { headers, ...restOptions } = options;
+  const method = (restOptions.method ?? "GET").toUpperCase();
+  const baseHeaders: Record<string, string> = {
+    ...(headers as Record<string, string> | undefined),
+  };
 
   let token: string | undefined = cachedToken;
 
@@ -53,14 +78,41 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     token = await initialSessionPromise;
   }
 
-  const res = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(headers || {}),
-    },
-    ...restOptions,
-  });
+  if (token) {
+    baseHeaders.Authorization = `Bearer ${token}`;
+  }
+
+  // Only send JSON content-type for methods that may include a body.
+  if (method !== "GET" && method !== "HEAD" && !baseHeaders["Content-Type"]) {
+    baseHeaders["Content-Type"] = "application/json";
+  }
+
+  const candidateBaseUrls = getBaseUrlCandidates();
+  let res: Response | null = null;
+  let lastNetworkError: unknown;
+
+  for (const baseUrl of candidateBaseUrls) {
+    const url = `${baseUrl}${path}`;
+    try {
+      res = await fetch(url, {
+        headers: baseHeaders,
+        ...restOptions,
+      });
+      break;
+    } catch (err) {
+      lastNetworkError = err;
+      // Retry next candidate only for network-level fetch failures.
+      if (!(err instanceof TypeError)) {
+        throw err;
+      }
+    }
+  }
+
+  if (!res) {
+    throw lastNetworkError instanceof Error
+      ? lastNetworkError
+      : new TypeError("Failed to fetch");
+  }
 
   if (!res.ok) {
     let message = `HTTP ${res.status}`;

@@ -18,8 +18,8 @@ import {
   MessageSquare,
   Mic,
   MicOff,
-  Phone,
-  PhoneOff,
+  Signal,
+  Settings2,
   Users,
   Zap,
   Send,
@@ -1491,101 +1491,6 @@ function RichChatPanel({
   );
 }
 
-// ─── Voice Bar ────────────────────────────────────────────────────────────────
-
-function VoiceBar({
-  isMuted,
-  isDeafened,
-  isInCall,
-  onToggleMute,
-  onToggleDeafen,
-  onToggleCall,
-}: {
-  isMuted: boolean;
-  isDeafened: boolean;
-  isInCall: boolean;
-  onToggleMute: () => void;
-  onToggleDeafen: () => void;
-  onToggleCall: () => void;
-}) {
-  return (
-    <div
-      className="flex items-center gap-2 px-3 py-3 border-t border-[#E5E5EA]"
-      style={{ backgroundColor: "#F9F9FB" }}
-    >
-      <div
-        className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-[10px]"
-        style={{
-          backgroundColor: isInCall
-            ? "rgba(52,199,89,0.1)"
-            : "rgba(0,0,0,0.04)",
-          border: `1px solid ${isInCall ? "rgba(52,199,89,0.25)" : "transparent"}`,
-        }}
-      >
-        <div
-          className="w-2 h-2 rounded-full"
-          style={{
-            backgroundColor: isInCall ? "#34C759" : "#C7C7CC",
-            boxShadow: isInCall ? "0 0 6px #34C759" : "none",
-          }}
-        />
-        <span
-          className="text-[12px] font-semibold"
-          style={{ color: isInCall ? "#1FAD45" : "#8E8E93" }}
-        >
-          {isInCall
-            ? isDeafened
-              ? "Connected (Speaker Off)"
-              : "Connected"
-            : "Voice Chat"}
-        </span>
-      </div>
-
-      <motion.button
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.92 }}
-        onClick={onToggleDeafen}
-        disabled={!isInCall}
-        className="w-8 h-8 rounded-[10px] flex items-center justify-center transition-colors disabled:opacity-40"
-        style={{
-          backgroundColor: isDeafened
-            ? "rgba(255,149,0,0.14)"
-            : "rgba(52,199,89,0.1)",
-          color: isDeafened ? "#FF9500" : "#34C759",
-        }}
-      >
-        {isDeafened ? <VolumeX size={14} /> : <Volume2 size={14} />}
-      </motion.button>
-
-      <motion.button
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.92 }}
-        onClick={onToggleMute}
-        disabled={!isInCall}
-        className="w-8 h-8 rounded-[10px] flex items-center justify-center transition-colors disabled:opacity-40"
-        style={{
-          backgroundColor: isMuted
-            ? "rgba(255,59,48,0.1)"
-            : "rgba(52,199,89,0.1)",
-          color: isMuted ? "#FF3B30" : "#34C759",
-        }}
-      >
-        {isMuted ? <MicOff size={14} /> : <Mic size={14} />}
-      </motion.button>
-
-      <motion.button
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.92 }}
-        onClick={onToggleCall}
-        className="w-8 h-8 rounded-[10px] flex items-center justify-center text-white transition-colors"
-        style={{ backgroundColor: isInCall ? "#FF3B30" : "#34C759" }}
-      >
-        {isInCall ? <PhoneOff size={14} /> : <Phone size={14} />}
-      </motion.button>
-    </div>
-  );
-}
-
 function CountdownDisplay({ seconds }: { seconds: number }) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -1605,6 +1510,18 @@ function VoiceChatPanel({
   voice: VoiceRoomState;
   myUserId: number | null;
 }) {
+  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+
+  const toggleSettings = () => {
+    setShowVoiceSettings((prev) => {
+      const next = !prev;
+      if (next) {
+        void voice.refreshAudioDevices();
+      }
+      return next;
+    });
+  };
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="px-4 py-3 border-b border-[#E5E5EA] bg-white/70">
@@ -1616,20 +1533,32 @@ function VoiceChatPanel({
       <div className="flex-1 overflow-y-auto p-3 grid grid-cols-2 gap-3 no-scrollbar">
         {members.map((m) => {
           const isMe = m.id === myUserId;
-          const isSpeaking = voice.speakingUsers.has(m.id);
-          const isMuted = isMe ? voice.isMuted : voice.mutedUsers.has(m.id);
+          const isOnline = isMe
+            ? voice.isConnected
+            : voice.voiceParticipants.has(m.id);
+          const isSpeaking = isOnline && voice.speakingUsers.has(m.id);
+          const isMuted = isOnline
+            ? isMe
+              ? voice.isMuted
+              : voice.mutedUsers.has(m.id)
+            : true;
           return (
             <div
               key={m.id}
               className="rounded-[16px] border p-3 flex flex-col items-center justify-center gap-2"
               style={{
                 aspectRatio: "1 / 1",
-                background: isSpeaking
-                  ? "linear-gradient(135deg, rgba(255,107,53,0.12), rgba(255,107,53,0.04))"
-                  : "#fff",
-                borderColor: isSpeaking
-                  ? "rgba(255,107,53,0.35)"
-                  : "rgba(0,0,0,0.08)",
+                background: !isOnline
+                  ? "linear-gradient(135deg, rgba(142,142,147,0.22), rgba(142,142,147,0.12))"
+                  : isSpeaking
+                    ? "linear-gradient(135deg, rgba(255,107,53,0.12), rgba(255,107,53,0.04))"
+                    : "#fff",
+                borderColor: !isOnline
+                  ? "rgba(99,99,102,0.45)"
+                  : isSpeaking
+                    ? "rgba(255,107,53,0.35)"
+                    : "rgba(0,0,0,0.08)",
+                opacity: isOnline ? 1 : 0.86,
               }}
             >
               <div
@@ -1647,6 +1576,11 @@ function VoiceChatPanel({
                   src={m.avatar}
                   alt={m.name}
                   className="w-full h-full object-cover"
+                  style={{
+                    filter: isOnline
+                      ? "none"
+                      : "grayscale(0.65) saturate(0.75)",
+                  }}
                 />
               </div>
 
@@ -1655,11 +1589,22 @@ function VoiceChatPanel({
                   {m.name}
                 </div>
                 <div className="text-[10px] text-[#8E8E93] mt-1">
-                  {isSpeaking ? "Speaking..." : "Idle"}
+                  {!isOnline ? "Offline" : isSpeaking ? "Speaking..." : "Idle"}
                 </div>
               </div>
 
               <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                <span
+                  className="text-[10px] font-semibold px-2 py-1 rounded-full"
+                  style={{
+                    backgroundColor: isOnline
+                      ? "rgba(52,199,89,0.14)"
+                      : "rgba(99,99,102,0.18)",
+                    color: isOnline ? "#1FAD45" : "#3A3A3C",
+                  }}
+                >
+                  {isOnline ? "Online" : "Offline"}
+                </span>
                 <span
                   className="text-[10px] font-semibold px-2 py-1 rounded-full"
                   style={{
@@ -1698,21 +1643,64 @@ function VoiceChatPanel({
         >
           {voice.error
             ? voice.error
-            : voice.isConnected
-              ? voice.isDeafened
-                ? "Connected - Speaker Off"
-                : "Connected"
-              : "Not connected"}
+            : voice.isConnecting
+              ? "Connecting..."
+              : voice.isConnected
+                ? voice.isDeafened
+                  ? "Connected - Speaker Off"
+                  : "Connected"
+                : "Not connected"}
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={voice.toggleDeafen}
-            className="w-9 h-9 rounded-[10px] flex items-center justify-center"
+            onClick={() => {
+              if (voice.isConnecting) return;
+              if (voice.isConnected) {
+                voice.disconnect();
+              } else {
+                void voice.connect();
+              }
+            }}
+            disabled={voice.isConnecting}
+            className="w-9 h-9 rounded-[10px] flex items-center justify-center disabled:opacity-60"
             style={{
-              backgroundColor: voice.isDeafened
-                ? "rgba(255,149,0,0.15)"
-                : "rgba(52,199,89,0.12)",
-              color: voice.isDeafened ? "#FF9500" : "#34C759",
+              backgroundColor: voice.isConnecting
+                ? "rgba(255,149,0,0.2)"
+                : voice.isConnected
+                  ? "rgba(52,199,89,0.16)"
+                  : "rgba(0,0,0,0.06)",
+              color: voice.isConnecting
+                ? "#FF9500"
+                : voice.isConnected
+                  ? "#1FAD45"
+                  : "#636366",
+            }}
+            title={
+              voice.isConnecting
+                ? "Connecting..."
+                : voice.isConnected
+                  ? "Disconnect"
+                  : "Establish Connection"
+            }
+          >
+            <Signal size={16} />
+          </button>
+
+          <button
+            onClick={voice.toggleDeafen}
+            disabled={!voice.isConnected || voice.isConnecting}
+            className="w-9 h-9 rounded-[10px] flex items-center justify-center disabled:opacity-40"
+            style={{
+              backgroundColor: !voice.isConnected
+                ? "rgba(0,0,0,0.06)"
+                : voice.isDeafened
+                  ? "rgba(255,149,0,0.15)"
+                  : "rgba(52,199,89,0.12)",
+              color: !voice.isConnected
+                ? "#8E8E93"
+                : voice.isDeafened
+                  ? "#FF9500"
+                  : "#34C759",
             }}
             title={voice.isDeafened ? "Speaker Off" : "Speaker On"}
           >
@@ -1721,13 +1709,19 @@ function VoiceChatPanel({
 
           <button
             onClick={voice.toggleMute}
-            disabled={!voice.isConnected}
+            disabled={!voice.isConnected || voice.isConnecting}
             className="w-9 h-9 rounded-[10px] flex items-center justify-center disabled:opacity-40"
             style={{
-              backgroundColor: voice.isMuted
-                ? "rgba(255,59,48,0.14)"
-                : "rgba(52,199,89,0.12)",
-              color: voice.isMuted ? "#FF3B30" : "#34C759",
+              backgroundColor: !voice.isConnected
+                ? "rgba(0,0,0,0.06)"
+                : voice.isMuted
+                  ? "rgba(255,59,48,0.14)"
+                  : "rgba(52,199,89,0.12)",
+              color: !voice.isConnected
+                ? "#8E8E93"
+                : voice.isMuted
+                  ? "#FF3B30"
+                  : "#34C759",
             }}
             title={voice.isMuted ? "Mic Off" : "Mic On"}
           >
@@ -1735,23 +1729,101 @@ function VoiceChatPanel({
           </button>
 
           <button
-            onClick={() => {
-              if (voice.isConnected) {
-                voice.disconnect();
-              } else {
-                void voice.connect();
-              }
-            }}
-            className="w-9 h-9 rounded-[10px] flex items-center justify-center text-white"
+            onClick={toggleSettings}
+            className="w-9 h-9 rounded-[10px] flex items-center justify-center"
             style={{
-              backgroundColor: voice.isConnected ? "#FF3B30" : "#34C759",
+              backgroundColor: showVoiceSettings
+                ? "rgba(0,122,255,0.14)"
+                : "rgba(0,0,0,0.06)",
+              color: showVoiceSettings ? "#007AFF" : "#636366",
             }}
-            title={voice.isConnected ? "Disconnect" : "Connect"}
+            title="Voice Settings"
           >
-            {voice.isConnected ? <PhoneOff size={16} /> : <Phone size={16} />}
+            <Settings2 size={16} />
           </button>
         </div>
       </div>
+
+      {showVoiceSettings && (
+        <div className="px-4 py-3 border-t border-[#E5E5EA] bg-white">
+          <div className="text-[11px] font-bold text-[#8E8E93] uppercase tracking-wider mb-3">
+            Voice Settings
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="block text-[12px] font-semibold text-[#3C3C43] mb-1">
+                Input Device (Microphone)
+              </label>
+              <select
+                value={voice.selectedInputDeviceId ?? ""}
+                onChange={(e) => {
+                  void voice.setInputDevice(e.target.value);
+                }}
+                className="w-full text-[12px] px-2.5 py-2 rounded-[10px] border border-[#E5E5EA] bg-[#FAFAFA]"
+              >
+                {voice.availableInputDevices.map((device) => (
+                  <option key={device.deviceId} value={device.deviceId}>
+                    {device.label ||
+                      `Microphone ${device.deviceId.slice(0, 6)}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[12px] font-semibold text-[#3C3C43] mb-1">
+                Input Volume ({Math.round(voice.inputVolume * 100)}%)
+              </label>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={Math.round(voice.inputVolume * 100)}
+                onChange={(e) => {
+                  voice.setInputVolume(Number(e.target.value) / 100);
+                }}
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[12px] font-semibold text-[#3C3C43] mb-1">
+                Output Device (Speaker)
+              </label>
+              <select
+                value={voice.selectedOutputDeviceId ?? ""}
+                onChange={(e) => {
+                  void voice.setOutputDevice(e.target.value);
+                }}
+                className="w-full text-[12px] px-2.5 py-2 rounded-[10px] border border-[#E5E5EA] bg-[#FAFAFA]"
+              >
+                {voice.availableOutputDevices.map((device) => (
+                  <option key={device.deviceId} value={device.deviceId}>
+                    {device.label || `Speaker ${device.deviceId.slice(0, 6)}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[12px] font-semibold text-[#3C3C43] mb-1">
+                Output Volume ({Math.round(voice.outputVolume * 100)}%)
+              </label>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={Math.round(voice.outputVolume * 100)}
+                onChange={(e) => {
+                  voice.setOutputVolume(Number(e.target.value) / 100);
+                }}
+                className="w-full"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1779,12 +1851,27 @@ export default function GroupRoomPage() {
   const [voiceToken, setVoiceToken] = useState("");
 
   useEffect(() => {
+    let mounted = true;
+
     (async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      setVoiceToken(session?.access_token || "");
+      if (mounted) setVoiceToken(session?.access_token || "");
     })();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (mounted) {
+        setVoiceToken(session?.access_token || "");
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, [user]);
 
   const voice = useVoiceRoom(roomId, user?.id || 0, voiceToken);
@@ -2132,22 +2219,6 @@ export default function GroupRoomPage() {
           <div className="px-5 py-4 border-b border-[#F2F2F7] flex flex-col gap-3.5">
             <ReadyBar members={members} />
 
-            {/* Voice Chat Bar */}
-            <VoiceBar
-              isMuted={voice.isMuted}
-              isDeafened={voice.isDeafened}
-              isInCall={voice.isConnected}
-              onToggleMute={voice.toggleMute}
-              onToggleDeafen={voice.toggleDeafen}
-              onToggleCall={() => {
-                if (voice.isConnected) {
-                  voice.disconnect();
-                } else {
-                  voice.connect();
-                }
-              }}
-            />
-
             <div className="flex items-center gap-2.5">
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -2342,26 +2413,6 @@ export default function GroupRoomPage() {
               )}
             </AnimatePresence>
           </div>
-
-          {/* Voice bar */}
-          {/* <VoiceBar
-            isMuted={voice.isMuted}
-            isInCall={voice.isConnected}
-            onToggleMute={voice.toggleMute}
-            onToggleCall={async () => {
-              if (voice.isConnected) {
-                voice.disconnect();
-                toast("Left voice channel");
-              } else {
-                try {
-                  await voice.connect();
-                  toast.success("Joined voice channel 🎙️");
-                } catch {
-                  toast.error(voice.error ?? "Could not access microphone");
-                }
-              }
-            }}
-          /> */}
         </div>
       </div>
     </div>

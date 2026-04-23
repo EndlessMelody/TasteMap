@@ -10,21 +10,35 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { supabase } from "@/lib/supabase";
+import { apiPost } from "@/lib/api";
 
 export interface VoiceRoomState {
   isConnected: boolean;
   isConnecting: boolean;
   isMuted: boolean;
   isDeafened: boolean;
+  inputVolume: number;
+  outputVolume: number;
+  selectedInputDeviceId: string | null;
+  selectedOutputDeviceId: string | null;
+  availableInputDevices: MediaDeviceInfo[];
+  availableOutputDevices: MediaDeviceInfo[];
   localStream: MediaStream | null;
   error: string | null;
   speakingUsers: Set<number>;
+  voiceParticipants: Set<number>;
   mutedUsers: Set<number>;
   remoteStreams: Map<number, MediaStream>;
   connect: () => Promise<void>;
   disconnect: () => void;
   toggleMute: () => void;
   toggleDeafen: () => void;
+  setInputVolume: (volume: number) => void;
+  setOutputVolume: (volume: number) => void;
+  setInputDevice: (deviceId: string) => Promise<void>;
+  setOutputDevice: (deviceId: string) => Promise<void>;
+  refreshAudioDevices: () => Promise<void>;
 }
 
 export function useVoiceRoom(
@@ -32,14 +46,50 @@ export function useVoiceRoom(
   userId: number,
   token: string,
 ): VoiceRoomState {
+  const iceServers = useRef<RTCIceServer[]>([
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" },
+  ]);
+
+  if (typeof window !== "undefined") {
+    const rawIceServers = process.env.NEXT_PUBLIC_WEBRTC_ICE_SERVERS;
+    if (rawIceServers) {
+      try {
+        const parsed = JSON.parse(rawIceServers) as RTCIceServer[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          iceServers.current = parsed;
+        }
+      } catch {
+        // Keep default STUN servers if env parsing fails.
+      }
+    }
+  }
+
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   // Default voice state on join: muted + deafened until user opts in.
   const [isMuted, setIsMuted] = useState(true);
   const [isDeafened, setIsDeafened] = useState(true);
+  const [inputVolume, setInputVolumeState] = useState(1);
+  const [outputVolume, setOutputVolumeState] = useState(1);
+  const [selectedInputDeviceId, setSelectedInputDeviceId] = useState<
+    string | null
+  >(null);
+  const [selectedOutputDeviceId, setSelectedOutputDeviceId] = useState<
+    string | null
+  >(null);
+  const [availableInputDevices, setAvailableInputDevices] = useState<
+    MediaDeviceInfo[]
+  >([]);
+  const [availableOutputDevices, setAvailableOutputDevices] = useState<
+    MediaDeviceInfo[]
+  >([]);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [speakingUsers, setSpeakingUsers] = useState<Set<number>>(new Set());
+  const [voiceParticipants, setVoiceParticipants] = useState<Set<number>>(
+    new Set(),
+  );
   const [mutedUsers, setMutedUsers] = useState<Set<number>>(new Set());
   const [remoteStreams, setRemoteStreams] = useState<Map<number, MediaStream>>(
     new Map(),
@@ -53,6 +103,251 @@ export function useVoiceRoom(
   const audioCtxRef = useRef<AudioContext | null>(null);
   const rafRef = useRef<number | null>(null);
   const speakingTimeoutRef = useRef<Map<number, NodeJS.Timeout>>(new Map());
+  const tokenRef = useRef(token);
+  const authRetryRef = useRef(false);
+
+  const selectedInputDeviceIdRef = useRef<string | null>(null);
+  const selectedOutputDeviceIdRef = useRef<string | null>(null);
+
+  const outputVolumeRef = useRef(1);
+  const inputVolumeRef = useRef(1);
+
+  useEffect(() => {
+    tokenRef.current = token;
+  }, [token]);
+
+  useEffect(() => {
+    selectedInputDeviceIdRef.current = selectedInputDeviceId;
+  }, [selectedInputDeviceId]);
+
+  useEffect(() => {
+    selectedOutputDeviceIdRef.current = selectedOutputDeviceId;
+  }, [selectedOutputDeviceId]);
+
+  useEffect(() => {
+    outputVolumeRef.current = outputVolume;
+    remoteAudioElsRef.current.forEach((audioEl) => {
+      audioEl.volume = outputVolume;
+    });
+  }, [outputVolume]);
+
+  useEffect(() => {
+    inputVolumeRef.current = inputVolume;
+  }, [inputVolume]);
+
+  const refreshAudioDevices = useCallback(async () => {
+    if (
+      typeof navigator === "undefined" ||
+      !navigator.mediaDevices?.enumerateDevices
+    ) {
+      return;
+    }
+
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const inputs = devices.filter((d) => d.kind === "audioinput");
+      const outputs = devices.filter((d) => d.kind === "audiooutput");
+      setAvailableInputDevices(inputs);
+      setAvailableOutputDevices(outputs);
+
+      if (!selectedInputDeviceIdRef.current && inputs[0]) {
+        setSelectedInputDeviceId(inputs[0].deviceId);
+      }
+      if (!selectedOutputDeviceIdRef.current && outputs[0]) {
+        setSelectedOutputDeviceId(outputs[0].deviceId);
+      }
+    } catch {
+      // Ignore device listing errors (permissions/browser support).
+    }
+  }, []);
+
+  const applyInputVolume = useCallback(async (stream: MediaStream) => {
+    const target = Math.max(0, Math.min(1, inputVolumeRef.current));
+    await Promise.all(
+      stream.getAudioTracks().map(async (track) => {
+        try {
+          await track.applyConstraints({
+            advanced: [{ volume: target } as MediaTrackConstraintSet],
+          });
+        } catch {
+          // Not all browsers support volume constraint.
+        }
+      }),
+    );
+  }, []);
+
+  const createLocalAudioStream = useCallback(async () => {
+    const audio: MediaTrackConstraints = {
+      ...(selectedInputDeviceIdRef.current
+        ? { deviceId: { exact: selectedInputDeviceIdRef.current } }
+        : {}),
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+    };
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio,
+      video: false,
+    });
+    await applyInputVolume(stream);
+    return stream;
+  }, [applyInputVolume]);
+
+  const applyOutputDevice = useCallback(async (audioEl: HTMLAudioElement) => {
+    const sinkId = selectedOutputDeviceIdRef.current;
+    if (!sinkId) return;
+
+    type AudioWithSink = HTMLAudioElement & {
+      setSinkId?: (id: string) => Promise<void>;
+    };
+
+    const withSink = audioEl as AudioWithSink;
+    if (!withSink.setSinkId) return;
+
+    try {
+      await withSink.setSinkId(sinkId);
+    } catch {
+      // Ignore unsupported or permission-blocked output routing.
+    }
+  }, []);
+
+  const resolveWsBaseCandidates = useCallback(() => {
+    const urls: string[] = [];
+    const add = (value?: string) => {
+      if (!value) return;
+      const normalized = value.replace(/\/$/, "");
+      if (!urls.includes(normalized)) urls.push(normalized);
+    };
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+    if (apiUrl) {
+      try {
+        const parsed = new URL(apiUrl);
+        const wsProtocol = parsed.protocol === "https:" ? "wss:" : "ws:";
+        add(`${wsProtocol}//${parsed.host}`);
+      } catch {
+        // Ignore malformed env and continue with runtime candidates.
+      }
+    }
+
+    if (typeof window !== "undefined") {
+      const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      add(`${wsProtocol}://${window.location.hostname}:8000`);
+      add("ws://127.0.0.1:8000");
+      add("ws://localhost:8000");
+    }
+
+    if (urls.length === 0) {
+      add("ws://127.0.0.1:8000");
+    }
+
+    return urls;
+  }, []);
+
+  const openVoiceSocket = useCallback(
+    async (
+      authToken: string,
+    ): Promise<{ ws: WebSocket; wsBaseUrl: string }> => {
+      const candidates = resolveWsBaseCandidates();
+      let lastError = "Connection error";
+
+      type AttemptResult =
+        | { ws: WebSocket; wsBaseUrl: string }
+        | { fatalError: string }
+        | null;
+
+      for (const wsBaseUrl of candidates) {
+        const wsUrl = `${wsBaseUrl}/api/v1/groups/${roomId}/voice?token=${encodeURIComponent(authToken)}`;
+
+        const result = await new Promise<AttemptResult>((resolve) => {
+          const ws = new WebSocket(wsUrl);
+          let settled = false;
+
+          const finish = (value: AttemptResult) => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timeoutId);
+            resolve(value);
+          };
+
+          const timeoutId = setTimeout(() => {
+            try {
+              ws.close();
+            } catch {
+              // ignore close errors
+            }
+            finish(null);
+          }, 4500);
+
+          ws.onopen = () => {
+            ws.onopen = null;
+            ws.onerror = null;
+            ws.onclose = null;
+            finish({ ws, wsBaseUrl });
+          };
+
+          ws.onerror = () => {
+            finish(null);
+          };
+
+          ws.onclose = (event) => {
+            if (event.code === 4001) {
+              finish({ fatalError: "Voice auth failed (invalid token)" });
+              return;
+            }
+            if (event.code === 4002) {
+              finish({
+                fatalError: "You must join the room before voice chat",
+              });
+              return;
+            }
+            finish(null);
+          };
+        });
+
+        if (result && "ws" in result) {
+          return result;
+        }
+
+        if (result && "fatalError" in result) {
+          throw new Error(result.fatalError);
+        }
+
+        lastError = `Connection error (${wsBaseUrl})`;
+      }
+
+      throw new Error(lastError);
+    },
+    [roomId, resolveWsBaseCandidates],
+  );
+
+  const resolveVoiceToken = useCallback(async (forceRefresh = false) => {
+    let current = tokenRef.current?.trim() ?? "";
+
+    if (current && !forceRefresh) {
+      return current;
+    }
+
+    try {
+      if (forceRefresh) {
+        const { data } = await supabase.auth.refreshSession();
+        current = data.session?.access_token?.trim() ?? "";
+      } else {
+        const { data } = await supabase.auth.getSession();
+        current = data.session?.access_token?.trim() ?? "";
+        if (!current) {
+          const refreshed = await supabase.auth.refreshSession();
+          current = refreshed.data.session?.access_token?.trim() ?? "";
+        }
+      }
+    } catch {
+      current = "";
+    }
+
+    tokenRef.current = current;
+    return current;
+  }, []);
 
   const attachRemoteAudio = useCallback(
     (remoteUserId: number, remoteStream: MediaStream) => {
@@ -70,7 +365,8 @@ export function useVoiceRoom(
       }
 
       audioEl.muted = isDeafened;
-      audioEl.volume = 1;
+      audioEl.volume = outputVolumeRef.current;
+      void applyOutputDevice(audioEl);
 
       const playPromise = audioEl.play();
       if (playPromise && typeof playPromise.catch === "function") {
@@ -79,7 +375,7 @@ export function useVoiceRoom(
         });
       }
     },
-    [isDeafened],
+    [isDeafened, applyOutputDevice],
   );
 
   const cleanupRemoteAudio = useCallback((remoteUserId: number) => {
@@ -89,6 +385,12 @@ export function useVoiceRoom(
     audioEl.srcObject = null;
     remoteAudioElsRef.current.delete(remoteUserId);
   }, []);
+
+  // Deterministic offerer selection prevents "offer glare" when both peers join together.
+  const shouldInitiateOffer = useCallback(
+    (remoteUserId: number) => userId < remoteUserId,
+    [userId],
+  );
 
   // ── Voice activity detection (VAD) on local mic ──────────────────────────
   const startVAD = useCallback(
@@ -140,11 +442,14 @@ export function useVoiceRoom(
   const createPeerConnection = useCallback(
     async (remoteUserId: number): Promise<RTCPeerConnection> => {
       const pc = new RTCPeerConnection({
-        iceServers: [
-          { urls: "stun:stun.l.google.com:19302" },
-          { urls: "stun:stun1.l.google.com:19302" },
-        ],
+        iceServers: iceServers.current,
       });
+
+      pc.onconnectionstatechange = () => {
+        if (pc.connectionState === "failed") {
+          setError("Peer connection failed. TURN relay may be required.");
+        }
+      };
 
       // Handle incoming tracks
       pc.ontrack = (event) => {
@@ -196,7 +501,13 @@ export function useVoiceRoom(
           // New participants joined - initiate connection to each
           const participants: number[] =
             (payload.participants as number[]) || [];
+          setVoiceParticipants(() => {
+            const next = new Set<number>([userId]);
+            participants.forEach((id) => next.add(id));
+            return next;
+          });
           for (const remoteUserId of participants) {
+            if (!shouldInitiateOffer(remoteUserId)) continue;
             if (!peerConnectionsRef.current.has(remoteUserId)) {
               const pc = await createPeerConnection(remoteUserId);
               const offer = await pc.createOffer();
@@ -219,6 +530,12 @@ export function useVoiceRoom(
         case "user_joined_voice":
           // New user joined - initiate connection
           const newUserId = payload.user_id as number;
+          setVoiceParticipants((prev) => {
+            const next = new Set(prev);
+            next.add(newUserId);
+            return next;
+          });
+          if (!shouldInitiateOffer(newUserId)) break;
           if (!peerConnectionsRef.current.has(newUserId)) {
             const pc = await createPeerConnection(newUserId);
             const offer = await pc.createOffer();
@@ -240,6 +557,11 @@ export function useVoiceRoom(
         case "user_left_voice":
           // User left - cleanup connection
           const leftUserId = payload.user_id as number;
+          setVoiceParticipants((prev) => {
+            const next = new Set(prev);
+            next.delete(leftUserId);
+            return next;
+          });
           const pc = peerConnectionsRef.current.get(leftUserId);
           if (pc) {
             pc.close();
@@ -295,6 +617,10 @@ export function useVoiceRoom(
             }
           } else {
             if (signal_type === "offer") {
+              if (remotePc.signalingState !== "stable") {
+                // Ignore colliding offers; deterministic initiator rule handles negotiation.
+                break;
+              }
               await remotePc.setRemoteDescription(
                 new RTCSessionDescription(data),
               );
@@ -321,6 +647,10 @@ export function useVoiceRoom(
               );
             }
           }
+          break;
+
+        case "voice_error":
+          setError((payload.message as string) || "Voice connection failed");
           break;
 
         case "mute_toggle":
@@ -369,7 +699,7 @@ export function useVoiceRoom(
           break;
       }
     },
-    [createPeerConnection, cleanupRemoteAudio],
+    [createPeerConnection, cleanupRemoteAudio, shouldInitiateOffer, userId],
   );
 
   // ── Connect ───────────────────────────────────────────────────────────────
@@ -378,18 +708,23 @@ export function useVoiceRoom(
     setIsConnecting(true);
     setError(null);
 
-    if (!token) {
+    const authToken = await resolveVoiceToken();
+    if (!authToken) {
       setError("Missing auth token for voice connection");
       setIsConnecting(false);
       return;
     }
 
     try {
+      // Ensure membership is persisted before websocket auth gate checks it.
+      try {
+        await apiPost(`/api/v1/groups/${roomId}/join`);
+      } catch {
+        // Ignore non-fatal join fallback errors (already joined, etc.)
+      }
+
       // Get local media stream
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: false,
-      });
+      const stream = await createLocalAudioStream();
       streamRef.current = stream;
       setLocalStream(stream);
       stream.getAudioTracks().forEach((track) => {
@@ -398,33 +733,34 @@ export function useVoiceRoom(
       startVAD(stream);
 
       // Connect to WebSocket signaling server
-      const wsUrl = `${process.env.NEXT_PUBLIC_API_URL?.replace("http", "ws") || "ws://localhost:8000"}/api/v1/groups/${roomId}/voice?token=${token}`;
-      const ws = new WebSocket(wsUrl);
+      const { ws, wsBaseUrl } = await openVoiceSocket(authToken);
       wsRef.current = ws;
 
-      ws.onopen = () => {
-        setIsConnected(true);
-        setIsConnecting(false);
-        setMutedUsers((prev) => {
-          const next = new Set(prev);
-          if (isMuted) next.add(userId);
-          else next.delete(userId);
-          return next;
-        });
+      authRetryRef.current = false;
+      setIsConnected(true);
+      setIsConnecting(false);
+      setVoiceParticipants(new Set([userId]));
+      setMutedUsers((prev) => {
+        const next = new Set(prev);
+        if (isMuted) next.add(userId);
+        else next.delete(userId);
+        return next;
+      });
 
-        // Broadcast initial local mute state so others render status correctly.
-        ws.send(
-          JSON.stringify({
-            type: "mute_toggle",
-            payload: { is_muted: isMuted },
-          }),
-        );
-      };
+      // Broadcast initial local mute state so others render status correctly.
+      ws.send(
+        JSON.stringify({
+          type: "mute_toggle",
+          payload: { is_muted: isMuted },
+        }),
+      );
 
       ws.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data);
-          handleWebSocketMessage(message);
+          void handleWebSocketMessage(message).catch((err) => {
+            console.error("Voice signaling message failed:", err);
+          });
         } catch (err) {
           console.error("Failed to parse WebSocket message:", err);
         }
@@ -432,20 +768,41 @@ export function useVoiceRoom(
 
       ws.onerror = (error) => {
         console.error("WebSocket error:", error);
-        setError("Connection error");
+        setError(`Connection error (${wsBaseUrl})`);
         setIsConnecting(false);
       };
 
       ws.onclose = (event) => {
         setIsConnected(false);
         setIsConnecting(false);
+        setVoiceParticipants(new Set());
 
         if (event.code === 4001) {
+          if (!authRetryRef.current) {
+            authRetryRef.current = true;
+            void (async () => {
+              const refreshedToken = await resolveVoiceToken(true);
+              if (refreshedToken) {
+                await connect();
+              } else {
+                setError("Voice auth failed (invalid token)");
+              }
+            })();
+            return;
+          }
           setError("Voice auth failed (invalid token)");
         } else if (event.code === 4002) {
           setError("You must join the room before voice chat");
         } else if (event.code !== 1000 && event.reason) {
           setError(event.reason);
+        } else if (event.code !== 1000) {
+          if (event.code === 1006) {
+            setError(
+              "Voice socket closed (code 1006) - check backend URL/network",
+            );
+          } else {
+            setError(`Voice socket closed (code ${event.code})`);
+          }
         }
       };
     } catch (err: unknown) {
@@ -458,11 +815,13 @@ export function useVoiceRoom(
     isConnected,
     isConnecting,
     roomId,
-    token,
     isMuted,
     userId,
     startVAD,
     handleWebSocketMessage,
+    createLocalAudioStream,
+    resolveVoiceToken,
+    openVoiceSocket,
   ]);
 
   // ── Disconnect ────────────────────────────────────────────────────────────
@@ -500,6 +859,7 @@ export function useVoiceRoom(
 
     // Reset state
     setSpeakingUsers(new Set());
+    setVoiceParticipants(new Set());
     setMutedUsers(new Set());
     setRemoteStreams(new Map());
     setIsConnected(false);
@@ -509,6 +869,11 @@ export function useVoiceRoom(
 
   // ── Mute toggle ───────────────────────────────────────────────────────────
   const toggleMute = useCallback(() => {
+    if (!isConnected) {
+      setError("Please establish connection first");
+      return;
+    }
+
     setIsMuted((prev) => {
       const next = !prev;
       streamRef.current?.getAudioTracks().forEach((t) => {
@@ -534,7 +899,82 @@ export function useVoiceRoom(
 
       return next;
     });
-  }, [userId]);
+  }, [isConnected, userId]);
+
+  const setInputVolume = useCallback(
+    (volume: number) => {
+      const next = Math.max(0, Math.min(1, volume));
+      setInputVolumeState(next);
+      const stream = streamRef.current;
+      if (!stream) return;
+      void applyInputVolume(stream);
+    },
+    [applyInputVolume],
+  );
+
+  const setOutputVolume = useCallback((volume: number) => {
+    const next = Math.max(0, Math.min(1, volume));
+    setOutputVolumeState(next);
+  }, []);
+
+  const setOutputDevice = useCallback(
+    async (deviceId: string) => {
+      setSelectedOutputDeviceId(deviceId);
+      selectedOutputDeviceIdRef.current = deviceId;
+      await Promise.all(
+        Array.from(remoteAudioElsRef.current.values()).map((audioEl) =>
+          applyOutputDevice(audioEl),
+        ),
+      );
+    },
+    [applyOutputDevice],
+  );
+
+  const setInputDevice = useCallback(
+    async (deviceId: string) => {
+      setSelectedInputDeviceId(deviceId);
+      selectedInputDeviceIdRef.current = deviceId;
+
+      if (!isConnected) return;
+
+      try {
+        const replacementStream = await createLocalAudioStream();
+        const newTrack = replacementStream.getAudioTracks()[0];
+        if (!newTrack) return;
+
+        await Promise.all(
+          Array.from(peerConnectionsRef.current.values()).map(async (pc) => {
+            const sender = pc
+              .getSenders()
+              .find((s) => s.track && s.track.kind === "audio");
+            if (sender) await sender.replaceTrack(newTrack);
+          }),
+        );
+
+        const oldStream = streamRef.current;
+        streamRef.current = replacementStream;
+        setLocalStream(replacementStream);
+
+        oldStream?.getTracks().forEach((track) => track.stop());
+
+        // Restart VAD with the new input stream.
+        if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+        analyserRef.current?.disconnect();
+        audioCtxRef.current?.close().catch(() => {});
+        audioCtxRef.current = null;
+        analyserRef.current = null;
+        startVAD(replacementStream);
+
+        // Preserve mute state after device switch.
+        replacementStream.getAudioTracks().forEach((track) => {
+          track.enabled = !isMuted;
+        });
+      } catch {
+        setError("Failed to switch microphone device");
+      }
+    },
+    [isConnected, createLocalAudioStream, startVAD, isMuted],
+  );
 
   // ── Deafen toggle (speaker on/off) ──────────────────────────────────────
   const toggleDeafen = useCallback(() => {
@@ -561,6 +1001,29 @@ export function useVoiceRoom(
     });
   }, [remoteStreams, attachRemoteAudio]);
 
+  useEffect(() => {
+    void refreshAudioDevices();
+
+    if (
+      typeof navigator === "undefined" ||
+      !navigator.mediaDevices?.addEventListener
+    ) {
+      return;
+    }
+
+    const handleDeviceChange = () => {
+      void refreshAudioDevices();
+    };
+
+    navigator.mediaDevices.addEventListener("devicechange", handleDeviceChange);
+    return () => {
+      navigator.mediaDevices.removeEventListener(
+        "devicechange",
+        handleDeviceChange,
+      );
+    };
+  }, [refreshAudioDevices]);
+
   // ── Cleanup on unmount ────────────────────────────────────────────────────
   useEffect(() => {
     return () => {
@@ -574,14 +1037,26 @@ export function useVoiceRoom(
     isConnecting,
     isMuted,
     isDeafened,
+    inputVolume,
+    outputVolume,
+    selectedInputDeviceId,
+    selectedOutputDeviceId,
+    availableInputDevices,
+    availableOutputDevices,
     localStream,
     error,
     speakingUsers,
+    voiceParticipants,
     mutedUsers,
     remoteStreams,
     connect,
     disconnect,
     toggleMute,
     toggleDeafen,
+    setInputVolume,
+    setOutputVolume,
+    setInputDevice,
+    setOutputDevice,
+    refreshAudioDevices,
   };
 }

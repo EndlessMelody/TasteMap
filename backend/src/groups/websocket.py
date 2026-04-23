@@ -22,7 +22,6 @@ class VoiceConnectionManager:
     
     async def join_voice(self, websocket: WebSocket, group_id: int, user_id: int):
         """User joins voice channel."""
-        await websocket.accept()
         
         # Initialize group if needed
         if group_id not in self.voice_connections:
@@ -124,3 +123,4 @@ async def validate_ws_token(token: str, db: AsyncSession):
         return result.scalar_one_or_none()
     except Exception:
         return None
+
