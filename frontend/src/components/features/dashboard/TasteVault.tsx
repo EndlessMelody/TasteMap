@@ -255,7 +255,16 @@ export const TasteVault: React.FC = () => {
           className="no-scrollbar"
         >
           {bookmarks.map((bm, i) => {
-            let cardData = {
+            let cardData: {
+              title: string;
+              xp: string;
+              img: string;
+              tags: string;
+              rating: number;
+              authorName?: string;
+              authorAvatar?: string;
+              authorSub?: string;
+            } = {
               title: "Unknown",
               xp: "0XP",
               img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=520&h=360&fit=crop",
@@ -268,24 +277,30 @@ export const TasteVault: React.FC = () => {
                 title: bm.location.name,
                 xp: `${bm.xp_earned || 0}XP`,
                 img: bm.location.image_url || cardData.img,
-                tags: `Food • ${bm.location.price_range || "$$"}`,
+                tags: `${bm.location.category || "Food"} • ${bm.location.price_range || "$$"}`,
                 rating: bm.location.rating || 0
               };
             } else if (bm.post) {
               cardData = {
-                title: "Saved Post",
-                xp: "Social",
+                title: bm.post.spot_name || "Saved Post",
+                xp: "Saved",
                 img: bm.post.image_url || cardData.img,
-                tags: "Foodie Feed • Review",
-                rating: 0
+                tags: bm.post.review || "Foodie Feed • Review",
+                rating: 0,
+                authorName: bm.post.author_name,
+                authorAvatar: bm.post.author_avatar,
+                authorSub: `@${bm.post.author_username || "foodie"}`,
               };
             } else if (bm.reel) {
               cardData = {
                 title: bm.reel.title || "Saved Reel",
-                xp: "Reel",
+                xp: "Saved",
                 img: bm.reel.thumbnail_url || cardData.img,
                 tags: "Discover • Video",
-                rating: 0
+                rating: 0,
+                authorName: bm.reel.author_name,
+                authorAvatar: bm.reel.author_avatar,
+                authorSub: `@${bm.reel.author_username || "foodie"}`,
               };
             }
 
@@ -298,6 +313,9 @@ export const TasteVault: React.FC = () => {
                 tags={cardData.tags}
                 rating={cardData.rating}
                 index={i}
+                authorName={cardData.authorName}
+                authorAvatar={cardData.authorAvatar}
+                authorSub={cardData.authorSub}
               />
             );
           })}

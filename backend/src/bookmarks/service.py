@@ -128,21 +128,41 @@ async def _bookmark_to_dict(db: AsyncSession, bm: Bookmark) -> dict:
                 "rating": loc.rating, "category": loc.category, "price_range": loc.price_range
             }
     
-    if bm.post_id:
-        # Giả sử quan hệ 'post' đã được load nhờ lazy="selectin" trong models.py
-        if bm.post:
-            res["post"] = {
-                "id": bm.post.id,
-                "image_url": bm.post.image_url,
-                "review": bm.post.review[:100] + "..." if bm.post.review and len(bm.post.review) > 100 else bm.post.review
-            }
+    if bm.post_id and bm.post:
+        post = bm.post
+        # Load author info
+        from src.users.models import User
+        author_q = await db.execute(select(User).where(User.id == post.user_id))
+        author = author_q.scalars().first()
+        # Load spot name from location if linked
+        spot_name = None
+        if post.location_id:
+            from src.locations.models import Location as Loc
+            loc_q2 = await db.execute(select(Loc).where(Loc.id == post.location_id))
+            loc2 = loc_q2.scalars().first()
+            spot_name = loc2.name if loc2 else None
+        res["post"] = {
+            "id": post.id,
+            "image_url": post.image_url,
+            "review": post.review[:100] + "..." if post.review and len(post.review) > 100 else post.review,
+            "spot_name": spot_name,
+            "author_name": author.display_name or author.username if author else None,
+            "author_avatar": author.avatar_url if author else None,
+            "author_username": author.username if author else None,
+        }
             
-    if bm.reel_id:
-        if bm.reel:
-            res["reel"] = {
-                "id": bm.reel.id,
-                "title": bm.reel.title,
-                "thumbnail_url": bm.reel.thumbnail_url
-            }
+    if bm.reel_id and bm.reel:
+        reel = bm.reel
+        from src.users.models import User
+        author_q = await db.execute(select(User).where(User.id == reel.user_id))
+        author = author_q.scalars().first()
+        res["reel"] = {
+            "id": reel.id,
+            "title": reel.title,
+            "thumbnail_url": reel.thumbnail_url,
+            "author_name": author.display_name or author.username if author else None,
+            "author_avatar": author.avatar_url if author else None,
+            "author_username": author.username if author else None,
+        }
             
     return res

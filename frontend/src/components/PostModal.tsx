@@ -39,6 +39,7 @@ export default function PostModal({
       state.posts.find((p) => p.id === initialData.id),
     ) || initialData;
   const [isSaved, setIsSaved] = React.useState(data.isSaved || false);
+  const [isSaving, setIsSaving] = React.useState(false);
   const [commentsList, setCommentsList] = React.useState<any[]>([]);
   const [loadingComments, setLoadingComments] = React.useState(false);
   const [newComment, setNewComment] = React.useState("");
@@ -67,11 +68,20 @@ export default function PostModal({
   }, [isOpen, data.id]);
 
   const handleToggleSave = async () => {
+    if (isSaving) return;
+    // Optimistic flip — instant feedback
+    setIsSaved((prev) => !prev);
+    setIsSaving(true);
     try {
       const res: any = await apiPost(`/api/v1/bookmarks/toggle`, { post_id: data.id });
+      // Correct state from server truth
       setIsSaved(res.action === "created");
     } catch (err) {
+      // Revert on error
+      setIsSaved((prev) => !prev);
       console.error("Failed to toggle bookmark:", err);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -463,25 +473,34 @@ export default function PostModal({
 
                 {/* Save */}
                 <motion.button
-                  whileTap={{ scale: 0.85 }}
+                  whileTap={isSaving ? {} : { scale: 0.85 }}
+                  animate={isSaving ? { opacity: 0.5 } : { opacity: 1 }}
                   style={{
                     background: "none",
                     border: "none",
-                    cursor: "pointer",
+                    cursor: isSaving ? "not-allowed" : "pointer",
                     padding: "6px",
                     borderRadius: "50%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    transition: "opacity 0.15s",
                   }}
                   onClick={handleToggleSave}
+                  disabled={isSaving}
                 >
-                  <Bookmark
-                    size={20}
-                    color={isSaved ? "#ff6b35" : "#C0C0C0"}
-                    fill={isSaved ? "#ff6b35" : "none"}
-                    strokeWidth={isSaved ? 2.5 : 2}
-                  />
+                  <motion.span
+                    animate={isSaved ? { scale: [1, 1.35, 1] } : { scale: 1 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    style={{ display: "inline-flex" }}
+                  >
+                    <Bookmark
+                      size={20}
+                      color={isSaved ? "#ff6b35" : "#C0C0C0"}
+                      fill={isSaved ? "#ff6b35" : "none"}
+                      strokeWidth={isSaved ? 2.5 : 2}
+                    />
+                  </motion.span>
                 </motion.button>
               </div>
 
