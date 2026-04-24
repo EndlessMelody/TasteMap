@@ -18,9 +18,9 @@ export interface PostData {
   id: number;
   name: string;
   avatar: string;
-  user?: { 
-    id: number; 
-    display_name?: string; 
+  user?: {
+    id: number;
+    display_name?: string;
     avatar_url?: string;
     title?: string;
     level?: number;
@@ -50,6 +50,25 @@ export interface PostData {
     icon_name: string;
     accent_color: string;
   } | null;
+}
+
+export interface PostCardProps {
+  post: PostData;
+  onLike: (id: number) => void;
+  onComment: (id: number) => void;
+  onSave: (id: number) => void;
+  onShare: (id: number) => void;
+  onOpen: (post: PostData) => void;
+}
+
+export interface FeedBrowserProps {
+  posts: PostData[];
+  onLike: (id: number) => void;
+  onComment: (id: number) => void;
+  onSave: (id: number) => void;
+  onShare: (id: number) => void;
+  isLoading?: boolean;
+  onLoadMore?: () => void;
 }
 
 export interface AIPickData {
