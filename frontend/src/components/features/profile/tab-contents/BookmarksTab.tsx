@@ -10,7 +10,11 @@ import { GlassCard } from "@/components/primitives";
 const FALLBACK_AVATAR = "https://api.dicebear.com/7.x/notionists/svg?seed=default";
 const FALLBACK_IMG = "https://images.unsplash.com/photo-1544025162-d76694265947?w=520&h=360&fit=crop";
 
-export const BookmarksTab: React.FC = () => {
+interface BookmarksTabProps {
+  onItemClick?: (item: any) => void;
+}
+
+export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
   const [bookmarks, setBookmarks] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
@@ -113,6 +117,7 @@ export const BookmarksTab: React.FC = () => {
         return (
           <div
             key={bm.id}
+            onClick={() => onItemClick?.(bm)}
             style={{
               borderRadius: "20px",
               overflow: "hidden",

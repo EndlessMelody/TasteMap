@@ -31,9 +31,14 @@ export interface PostItem {
 interface PostsTabProps {
   postsLoading: boolean;
   userPosts: PostItem[];
+  onPostClick?: (post: PostItem) => void;
 }
 
-export const PostsTab: React.FC<PostsTabProps> = ({ postsLoading, userPosts }) => {
+export const PostsTab: React.FC<PostsTabProps> = ({ 
+  postsLoading, 
+  userPosts,
+  onPostClick 
+}) => {
   if (postsLoading) {
     return (
       <div
@@ -115,6 +120,7 @@ export const PostsTab: React.FC<PostsTabProps> = ({ postsLoading, userPosts }) =
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: idx * 0.05 }}
+          onClick={() => onPostClick?.(post)}
           style={{
             borderRadius: "20px",
             overflow: "hidden",
