@@ -202,26 +202,14 @@ export default function ReelModal({
               </div>
 
               <div
-                className="no-scrollbar"
                 style={{
                   flex: 1,
-                  overflowY: "auto",
-                  padding: "16px 20px 0",
                   display: "flex",
                   flexDirection: "column",
                   minHeight: 0,
+                  overflow: "hidden",
                 }}
               >
-                <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
-                  <Avatar src={data.userAvatar} size="s" />
-                  <p style={{ margin: 0, fontSize: "0.83rem", lineHeight: 1.55, color: "#1C1C1E", flex: 1 }}>
-                    <span style={{ fontWeight: 700, marginRight: "5px" }}>{data.user}</span>
-                    {data.title}
-                  </p>
-                </div>
-
-                <div style={{ height: "1px", backgroundColor: "#F0F0F0", margin: "16px 0" }} />
-
                 <CommentSection
                   entityType="reel"
                   entityId={data.id}
@@ -230,11 +218,23 @@ export default function ReelModal({
                     updateReel(data.id, { comments: (data.comments || 0) + 1 })
                   }
                   rootStyle={{ flex: 1 }}
+                  listStyle={{ padding: "16px 20px" }}
+                  header={
+                    <>
+                      <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                        <Avatar src={data.userAvatar} size="s" />
+                        <p style={{ margin: 0, fontSize: "0.83rem", lineHeight: 1.55, color: "#1C1C1E", flex: 1 }}>
+                          <span style={{ fontWeight: 700, marginRight: "5px" }}>{data.user}</span>
+                          {data.title}
+                        </p>
+                      </div>
+                      <div style={{ height: "1px", backgroundColor: "#F0F0F0", margin: "16px 0" }} />
+                    </>
+                  }
                   footer={
                     <div
                       style={{
-                        padding: "12px 0",
-                        marginTop: "8px",
+                        padding: "12px 20px",
                         borderTop: "1px solid #F0F0F0",
                         display: "flex",
                         alignItems: "center",

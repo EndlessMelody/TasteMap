@@ -41,6 +41,7 @@ interface CommentSectionProps {
   emptyMessage: string;
   onCommentAdded?: () => void;
   footer?: React.ReactNode;
+  header?: React.ReactNode;
   rootStyle?: React.CSSProperties;
   listStyle?: React.CSSProperties;
   inputWrapperStyle?: React.CSSProperties;
@@ -150,36 +151,38 @@ function CommentItem({
               border: isReply ? "1px solid rgba(255, 107, 53, 0.12)" : "none",
             }}
           >
-            <p style={{ margin: 0, fontSize: "0.8rem", lineHeight: 1.5, color: "#1C1C1E" }}>
-              <span style={{ fontWeight: 700, marginRight: "5px" }}>{name}</span>
-              {(comment.user?.title || comment.user?.level) && (
-                <span
-                  style={{
-                    backgroundColor: comment.user?.title
-                      ? "rgba(255, 107, 53, 0.12)"
-                      : "rgba(0, 0, 0, 0.05)",
-                    color: comment.user?.title ? "#ff6b35" : "#888",
-                    padding: "2px 6px",
-                    borderRadius: "6px",
-                    fontSize: "0.6rem",
-                    fontWeight: 700,
-                    marginRight: "6px",
-                    textTransform: comment.user?.title ? "uppercase" : "none",
-                    letterSpacing: "0.4px",
-                    display: "inline-block",
-                    verticalAlign: "middle",
-                    lineHeight: "1",
-                    marginTop: "-2px",
-                    border: comment.user?.title
-                      ? "1px solid rgba(255, 107, 53, 0.2)"
-                      : "1px solid rgba(0, 0, 0, 0.08)",
-                  }}
-                >
-                  {comment.user?.title || `Lv. ${comment.user?.level || 1}`}
-                </span>
-              )}
-              <span>{comment.content}</span>
-            </p>
+            <div style={{ fontSize: "0.8rem", lineHeight: 1.5, color: "#1C1C1E" }}>
+              <div style={{ marginBottom: "2px" }}>
+                <span style={{ fontWeight: 700, marginRight: "5px" }}>{name}</span>
+                {(comment.user?.title || comment.user?.level) && (
+                  <span
+                    style={{
+                      backgroundColor: comment.user?.title
+                        ? "rgba(255, 107, 53, 0.12)"
+                        : "rgba(0, 0, 0, 0.05)",
+                      color: comment.user?.title ? "#ff6b35" : "#888",
+                      padding: "2px 6px",
+                      borderRadius: "6px",
+                      fontSize: "0.6rem",
+                      fontWeight: 700,
+                      marginRight: "6px",
+                      textTransform: comment.user?.title ? "uppercase" : "none",
+                      letterSpacing: "0.4px",
+                      display: "inline-block",
+                      verticalAlign: "middle",
+                      lineHeight: "1",
+                      marginTop: "-2px",
+                      border: comment.user?.title
+                        ? "1px solid rgba(255, 107, 53, 0.2)"
+                        : "1px solid rgba(0, 0, 0, 0.08)",
+                    }}
+                  >
+                    {comment.user?.title || `Lv. ${comment.user?.level || 1}`}
+                  </span>
+                )}
+              </div>
+              <div style={{ wordBreak: "break-word" }}>{comment.content}</div>
+            </div>
           </div>
           <div style={{ display: "flex", gap: "12px", marginTop: "5px", paddingLeft: "4px" }}>
             <span style={{ color: "#C0C0C0", fontSize: "0.68rem" }}>
@@ -226,6 +229,7 @@ export function CommentSection({
   emptyMessage,
   onCommentAdded,
   footer,
+  header,
   rootStyle,
   listStyle,
   inputWrapperStyle,
@@ -308,20 +312,26 @@ export function CommentSection({
       style={{
         display: "flex",
         flexDirection: "column",
+        flex: 1,
         minHeight: 0,
+        overflow: "hidden",
         ...rootStyle,
       }}
     >
       <div
+        className="no-scrollbar"
         style={{
+          flex: 1,
+          overflowY: "auto",
           display: "flex",
           flexDirection: "column",
           gap: "16px",
           ...listStyle,
         }}
       >
+        {header}
         {loadingComments ? (
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: "8px", alignItems: "center", padding: "0 16px" }}>
             {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
@@ -337,9 +347,17 @@ export function CommentSection({
             <p style={{ margin: "8px 0 0", color: "#C0C0C0", fontSize: "0.8rem" }}>{emptyMessage}</p>
           </div>
         ) : (
-          comments.map((comment) => (
-            <CommentItem key={comment.id} comment={comment} onReply={handleReply} />
-          ))
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+            }}
+          >
+            {comments.map((comment) => (
+              <CommentItem key={comment.id} comment={comment} onReply={handleReply} />
+            ))}
+          </div>
         )}
       </div>
 

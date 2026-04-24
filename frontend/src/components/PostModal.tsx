@@ -164,61 +164,14 @@ export default function PostModal({
               </div>
 
               <div
-                className="no-scrollbar"
                 style={{
                   flex: 1,
-                  overflowY: "auto",
-                  padding: "16px 20px 0",
                   display: "flex",
                   flexDirection: "column",
                   minHeight: 0,
+                  overflow: "hidden",
                 }}
               >
-                <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
-                  <Avatar src={data.avatar} size="s" />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        marginBottom: "8px",
-                      }}
-                    >
-                      <MapPin size={13} color="#8E8E93" />
-                      <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1C1C1E" }}>
-                        {data.spotName}
-                      </span>
-                    </div>
-                    <p style={{ margin: 0, fontSize: "0.83rem", lineHeight: 1.55, color: "#1C1C1E" }}>
-                      <span style={{ fontWeight: 700, marginRight: "5px" }}>{data.name}</span>
-                      {data.review}
-                    </p>
-                    {data.tags?.length ? (
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "10px" }}>
-                        {data.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            style={{
-                              padding: "3px 10px",
-                              backgroundColor: "#FFF0EA",
-                              borderRadius: "20px",
-                              fontSize: "0.68rem",
-                              fontWeight: 600,
-                              color: "#ff6b35",
-                              border: "1px solid rgba(255,107,53,0.15)",
-                            }}
-                          >
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div style={{ height: "1px", backgroundColor: "#F0F0F0", margin: "16px 0" }} />
-
                 <CommentSection
                   entityType="post"
                   entityId={data.id}
@@ -227,11 +180,58 @@ export default function PostModal({
                     updatePost(data.id, { comments: (data.comments || 0) + 1 })
                   }
                   rootStyle={{ flex: 1 }}
+                  listStyle={{ padding: "16px 20px" }}
+                  header={
+                    <>
+                      <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                        <Avatar src={data.avatar} size="s" />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "6px",
+                              marginBottom: "8px",
+                            }}
+                          >
+                            <MapPin size={13} color="#8E8E93" />
+                            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1C1C1E" }}>
+                              {data.spotName}
+                            </span>
+                          </div>
+                          <p style={{ margin: 0, fontSize: "0.83rem", lineHeight: 1.55, color: "#1C1C1E" }}>
+                            <span style={{ fontWeight: 700, marginRight: "5px" }}>{data.name}</span>
+                            {data.review}
+                          </p>
+                          {data.tags?.length ? (
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "10px" }}>
+                              {data.tags.map((tag) => (
+                                <span
+                                  key={tag}
+                                  style={{
+                                    padding: "3px 10px",
+                                    backgroundColor: "#FFF0EA",
+                                    borderRadius: "20px",
+                                    fontSize: "0.68rem",
+                                    fontWeight: 600,
+                                    color: "#ff6b35",
+                                    border: "1px solid rgba(255,107,53,0.15)",
+                                  }}
+                                >
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div style={{ height: "1px", backgroundColor: "#F0F0F0", margin: "16px 0" }} />
+                    </>
+                  }
                   footer={
                     <div
                       style={{
-                        padding: "12px 0",
-                        marginTop: "8px",
+                        padding: "12px 20px",
                         borderTop: "1px solid #F0F0F0",
                         display: "flex",
                         alignItems: "center",
