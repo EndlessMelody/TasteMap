@@ -137,7 +137,7 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
           gap: 8,
         }}
       >
-        <BookmarkButton
+        {/* <BookmarkButton
           entityType="reel"
           entityId={reel.id}
           isBookmarked={reel.isSaved ?? false}
@@ -148,7 +148,7 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
             backdropFilter: "blur(10px)",
             WebkitBackdropFilter: "blur(10px)",
           }}
-        />
+        /> */}
         <div
           style={{
             display: "inline-flex",

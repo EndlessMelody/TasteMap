@@ -21,7 +21,9 @@
  * scroller and shows more social activity per-fold.
  */
 import React from "react";
-import { SlidersHorizontal, MessageCircle, AlertTriangle } from "lucide-react";
+import { SlidersHorizontal, MessageCircle, AlertTriangle, Zap } from "lucide-react";
+import Link from "next/link";
+
 
 import { DiscoverSection, GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
@@ -101,6 +103,43 @@ const LocalPill: React.FC<{ location?: string }> = ({
     Local · {location}
   </span>
 );
+
+const SurfingButton: React.FC = () => (
+  <Link
+    href="/feed"
+    style={{
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: tokens.space[2],
+      paddingTop: 6,
+      paddingBottom: 6,
+      paddingLeft: tokens.space[4],
+      paddingRight: tokens.space[4],
+      borderRadius: tokens.radius.pill,
+      backgroundColor: tokens.color.warm,
+      border: `1px solid ${tokens.color.warm}`,
+      color: "white",
+      fontSize: tokens.type.size.caption,
+      fontWeight: tokens.type.weight.bold,
+      cursor: "pointer",
+      textDecoration: "none",
+      transition: "transform 150ms var(--dsc-ease-out), opacity 150ms",
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = "translateY(-1px)";
+      e.currentTarget.style.opacity = "0.9";
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = "translateY(0)";
+      e.currentTarget.style.opacity = "1";
+    }}
+  >
+    <Zap size={13} fill="currentColor" />
+    Lướt Ngay
+  </Link>
+);
+
 
 // ─── Skeletons ───────────────────────────────────────────────────
 const PostSkeleton: React.FC = () => (
@@ -232,6 +271,7 @@ export const FoodieFeed: React.FC<FoodieFeedProps> = ({ onPostClick }) => {
         gap: tokens.space[2],
       }}
     >
+      <SurfingButton />
       <FilterButton />
       <LocalPill />
     </div>

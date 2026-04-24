@@ -192,11 +192,11 @@ export function PostCard({
                 ...(isExpanded
                   ? {}
                   : {
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical" as const,
-                      overflow: "hidden",
-                    }),
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical" as const,
+                    overflow: "hidden",
+                  }),
               }}
             >
               {review}

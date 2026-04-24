@@ -129,10 +129,10 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const { isInitializing, isLoggedIn } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isRightExpanded, setIsRightExpanded] = useState(false);
-  
+
   // Global Modals State
   const { isCreatePostModalOpen, closeCreatePost, createPostType } = useUiStore();
-  
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -237,8 +237,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       <Column
         fillHeight
         horizontal={isFoodies && isChatOpen ? "start" : "center"}
-        vertical="stretch"
-        gap="0"
+        vertical="between"
+        gap={0}
         flexGrow={isFoodies && isChatOpen ? 0 : 1}
         flexShrink={isFoodies && isChatOpen ? 0 : 1}
         flexBasis={isFoodies && isChatOpen ? "320px" : "0%"}
@@ -252,8 +252,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
           key={pathname}
           fillWidth
           fillHeight
-          vertical="stretch"
-          gap="0"
+          vertical="between"
+          gap={0}
           flexGrow={1}
           flexShrink={1}
           flexBasis="0%"
@@ -268,7 +268,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             marginRight: isFoodies && isChatOpen ? "0" : "auto",
             paddingBottom: "0",
             paddingTop: "0",
-            overflow: "hidden",
+            overflowY: "auto",
             position: "relative",
             minHeight: "1px",
             transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)",

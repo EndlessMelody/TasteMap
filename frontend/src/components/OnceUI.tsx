@@ -370,6 +370,9 @@ export const Row = React.forwardRef<HTMLDivElement, FlexProps>(
 );
 Row.displayName = "Row";
 
+export const Flex = Row;
+
+
 interface GridProps extends HTMLAttributes<HTMLDivElement> {
   columns?: string;
   gap?: number;
