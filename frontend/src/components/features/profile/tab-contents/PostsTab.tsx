@@ -8,7 +8,19 @@ import { Text } from "@/components/OnceUI";
 export interface PostItem {
   id: number;
   user_id?: number;
-  user?: { id: number; display_name?: string; avatar_url?: string };
+  user?: { 
+    id: number; 
+    display_name?: string; 
+    avatar_url?: string;
+    title?: string;
+    level?: number;
+    primary_badge?: {
+      id: number;
+      name: string;
+      icon_name: string;
+      accent_color: string;
+    } | null;
+  };
   location_id?: number;
   location?: {
     id: number;
@@ -31,9 +43,14 @@ export interface PostItem {
 interface PostsTabProps {
   postsLoading: boolean;
   userPosts: PostItem[];
+  onPostClick?: (post: PostItem) => void;
 }
 
-export const PostsTab: React.FC<PostsTabProps> = ({ postsLoading, userPosts }) => {
+export const PostsTab: React.FC<PostsTabProps> = ({ 
+  postsLoading, 
+  userPosts,
+  onPostClick 
+}) => {
   if (postsLoading) {
     return (
       <div
@@ -115,6 +132,7 @@ export const PostsTab: React.FC<PostsTabProps> = ({ postsLoading, userPosts }) =
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: idx * 0.05 }}
+          onClick={() => onPostClick?.(post)}
           style={{
             borderRadius: "20px",
             overflow: "hidden",

@@ -233,6 +233,7 @@ export default function ProfilePage() {
           badges={badges}
           totalBadges={totalBadges}
           badgesLoading={badgesLoading}
+          isOwner={true}
         />
       </Column>
 

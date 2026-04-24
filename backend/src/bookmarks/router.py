@@ -23,6 +23,13 @@ async def add_bookmark(
     return await service.add_bookmark(db, user_id, body)
 
 
+@router.post("/toggle", summary="Bật/tắt bookmark")
+async def toggle_bookmark(
+    body: BookmarkCreate, user_id: int = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)
+):
+    return await service.toggle_bookmark(db, user_id, body)
+
+
 @router.delete("/{bookmark_id}", summary="Bỏ bookmark")
 async def delete_bookmark(
     bookmark_id: int, user_id: int = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)

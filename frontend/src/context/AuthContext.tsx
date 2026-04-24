@@ -35,6 +35,12 @@ export interface UserData {
     following: number;
   };
   badges?: BadgeSummary[];
+  primary_badge?: {
+    id: number;
+    name: string;
+    icon_name: string;
+    accent_color: string;
+  } | null;
 }
 
 interface AuthContextValue {

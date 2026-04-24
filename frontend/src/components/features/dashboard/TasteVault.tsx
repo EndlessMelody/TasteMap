@@ -1,20 +1,5 @@
 "use client";
 
-/**
- * TasteVault — Discover v5 (orchestrator)
- * ─────────────────────────────────────────────────────────────────
- * Composes Fold 4 — COLLECTION:
- *
- *   ┌─ COLLECTION · The Taste Vault ── [←] [→] ─┐
- *   │  Curated foods worth saving                   │
- *   │  ─────────────────────────────────────────   │
- *   │  [VaultCard][VaultCard][VaultCard][VaultCard]→│
- *   └───────────────────────────────────────────────┘
- *
- * Horizontal scroll with prev/next arrow controls. Each card shows
- * XP value (match-based) with animated glow, rating badge, and quick
- * metadata. Skeleton, error, and empty states included.
- */
 import React, { useRef } from "react";
 import {
   Bookmark,
@@ -25,7 +10,7 @@ import {
 
 import { DiscoverSection, GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
-import { useRecommendations } from "@/hooks/useRecommendations";
+import { apiGet } from "@/lib/api";
 
 import { VaultCardV2 } from "./vault";
 
@@ -176,10 +161,36 @@ const InlineNotice: React.FC<{
   );
 };
 
+import { PostData, ReelData } from "@/types/dashboard";
+
 // ─── Main component ──────────────────────────────────────────────
-export const TasteVault: React.FC = () => {
+interface TasteVaultProps {
+  onPostClick?: (post: PostData) => void;
+  onReelClick?: (reel: ReelData) => void;
+}
+
+export const TasteVault: React.FC<TasteVaultProps> = ({ onPostClick, onReelClick }) => {
   const vaultRef = useRef<HTMLDivElement>(null);
-  const { picks, loading, error } = useRecommendations(6, undefined, "food");
+  const [bookmarks, setBookmarks] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+
+  const fetchBookmarks = React.useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res: any = await apiGet("/api/v1/bookmarks?limit=50");
+      setBookmarks(res.items || []);
+    } catch (err: any) {
+      setError(err.message || "Failed to load bookmarks");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    fetchBookmarks();
+  }, [fetchBookmarks]);
 
   const scrollVault = (direction: "left" | "right") => {
     if (vaultRef.current) {
@@ -191,17 +202,17 @@ export const TasteVault: React.FC = () => {
   };
 
   const subtitle = loading
-    ? "Curating foods worth saving…"
+    ? "Fetching your saved items…"
     : error
       ? "Couldn't reach the vault"
-      : picks.length > 0
-        ? `Curated foods worth saving · ${picks.length} items`
-        : "No items in your vault yet — start swiping to collect";
+      : bookmarks.length > 0
+        ? `Your curated collection · ${bookmarks.length} items`
+        : "Your vault is empty — save locations, posts, or reels to see them here";
 
   return (
     <DiscoverSection
       eyebrow="Collection"
-      title="Your Taste Vault"
+      title="The Taste Vault"
       subtitle={subtitle}
       icon={<Bookmark size={18} />}
       accent={tokens.color.warning}
@@ -233,11 +244,11 @@ export const TasteVault: React.FC = () => {
           message={error}
           tone="danger"
         />
-      ) : picks.length === 0 ? (
+      ) : bookmarks.length === 0 ? (
         <InlineNotice
           icon={<Bookmark size={18} strokeWidth={2.2} />}
           title="Your vault is empty"
-          message="Start swiping to collect foods worth saving."
+          message="Save interesting food spots, posts, or reels to your collection."
         />
       ) : (
         <div
@@ -250,27 +261,104 @@ export const TasteVault: React.FC = () => {
           }}
           className="no-scrollbar"
         >
-          {picks.map((pick, i) => {
-            const matchPct =
-              pick.match_score > 1 ? pick.match_score : pick.match_score * 100;
+          {bookmarks.map((bm, i) => {
+            let cardData: {
+              title: string;
+              xp: string;
+              img: string;
+              tags: string;
+              rating: number;
+              authorName?: string;
+              authorAvatar?: string;
+              authorSub?: string;
+            } = {
+              title: "Unknown",
+              xp: "0XP",
+              img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=520&h=360&fit=crop",
+              tags: "Saved Item",
+              rating: 0
+            };
+
+            if (bm.location) {
+              cardData = {
+                title: bm.location.name,
+                xp: `${bm.xp_earned || 0}XP`,
+                img: bm.location.image_url || cardData.img,
+                tags: `${bm.location.category || "Food"} • ${bm.location.price_range || "$$"}`,
+                rating: bm.location.rating || 0
+              };
+            } else if (bm.post) {
+              cardData = {
+                title: bm.post.spot_name || "Saved Post",
+                xp: "Saved",
+                img: bm.post.image_url || cardData.img,
+                tags: bm.post.review || "Foodie Feed • Review",
+                rating: 0,
+                authorName: bm.post.author_name,
+                authorAvatar: bm.post.author_avatar,
+                authorSub: `@${bm.post.author_username || "foodie"}`,
+              };
+            } else if (bm.reel) {
+              cardData = {
+                title: bm.reel.title || "Saved Reel",
+                xp: "Saved",
+                img: bm.reel.thumbnail_url || cardData.img,
+                tags: "Discover • Video",
+                rating: 0,
+                authorName: bm.reel.author_name,
+                authorAvatar: bm.reel.author_avatar,
+                authorSub: `@${bm.reel.author_username || "foodie"}`,
+              };
+            }
+
+            const handleCardClick = () => {
+              if (bm.post && onPostClick) {
+                onPostClick({
+                  id: bm.post.id,
+                  name: bm.post.author_name || "User",
+                  avatar: bm.post.author_avatar || "",
+                  time: bm.post.created_at || "",
+                  location: bm.post.location_name || "",
+                  spotName: bm.post.spot_name || "Unknown Spot",
+                  rating: bm.post.rating || 0,
+                  review: bm.post.review || "",
+                  img: bm.post.image_url || cardData.img,
+                  tags: bm.post.tags || [],
+                  likes: bm.post.likes_count || 0,
+                  comments: bm.post.comments_count || 0,
+                  isLiked: bm.post.is_liked,
+                  isSaved: true,
+                });
+              } else if (bm.reel && onReelClick) {
+                onReelClick({
+                  id: bm.reel.id,
+                  title: bm.reel.title || "",
+                  user: bm.reel.author_name || "User",
+                  views: bm.reel.views_count?.toString() || "0",
+                  userAvatar: bm.reel.author_avatar || "",
+                  img: bm.reel.thumbnail_url || cardData.img,
+                  videoUrl: bm.reel.video_url,
+                  likes: bm.reel.likes_count,
+                  comments: bm.reel.comments_count,
+                  isLiked: bm.reel.is_liked,
+                  isSaved: true,
+                });
+              }
+            };
+
             return (
               <VaultCardV2
-                key={pick.place_id}
-                title={pick.name}
-                xp={`${Math.round(matchPct)}XP`}
-                img={
-                  pick.image_url ||
-                  "https://images.unsplash.com/photo-1544025162-d76694265947?w=520&h=360&fit=crop"
-                }
-                tags={
-                  pick.price_range
-                    ? `Food • ${pick.price_range}`
-                    : "Recommended Food"
-                }
-                rating={Number(
-                  Math.min(5, Math.max(3.8, matchPct / 20)).toFixed(1),
-                )}
+                key={bm.id}
+                title={cardData.title}
+                xp={cardData.xp}
+                img={cardData.img}
+                tags={cardData.tags}
+                rating={cardData.rating}
                 index={i}
+                authorName={cardData.authorName}
+                authorAvatar={cardData.authorAvatar}
+                authorSub={cardData.authorSub}
+                onClick={handleCardClick}
               />
             );
           })}

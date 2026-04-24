@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Form, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
-from src.users.schemas import UserCreate, UserResponse, UserProfile, UserMe, UserUpdate, TopSpotResponse, SocialContextResponse
+from src.users.schemas import UserCreate, UserResponse, UserProfile, UserMe, UserUpdate, TopSpotResponse, SocialContextResponse, PrimaryBadgeUpdate
 from src.users.service import UserService
 from src.core.dependencies import get_current_user_id
 from src.db.supabase_client import supabase_storage
@@ -93,6 +93,21 @@ async def update_me(
 
     body = UserUpdate(**update_data)
     return await service.update_me(user_id, body)
+
+
+@router.put(
+    "/me/primary-badge",
+    summary="Cập nhật badge chính",
+    description="Chọn 1 huy hiệu đã sở hữu để hiển thị cạnh tên trong comment."
+)
+async def set_primary_badge(
+    payload: PrimaryBadgeUpdate,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db)
+):
+    from src.gamification import service as gamification_service
+    success = await gamification_service.set_primary_badge(db, user_id, payload.badge_id)
+    return {"success": success}
 
 
 @router.get(

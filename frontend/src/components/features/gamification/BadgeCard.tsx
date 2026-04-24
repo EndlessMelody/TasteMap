@@ -25,9 +25,18 @@ import { BadgeSummary } from "@/types/gamification";
 interface BadgeCardProps {
   badge: BadgeSummary;
   delay?: number;
+  isOwner?: boolean;
+  isPrimary?: boolean;
+  onEquip?: (badgeId: number | null) => void;
 }
 
-const BadgeCard: React.FC<BadgeCardProps> = ({ badge, delay = 0 }) => {
+const BadgeCard: React.FC<BadgeCardProps> = ({ 
+  badge, 
+  delay = 0, 
+  isOwner = false, 
+  isPrimary = false, 
+  onEquip 
+}) => {
   const IconMap: Record<string, any> = {
     Star,
     Utensils,
@@ -236,10 +245,31 @@ const BadgeCard: React.FC<BadgeCardProps> = ({ badge, delay = 0 }) => {
         {badge.earned_at && (
           <Text
             variant="body-default-xs"
-            style={{ color: "rgba(0,0,0,0.3)", marginTop: "auto" }}
+            style={{ color: "rgba(0,0,0,0.3)", marginTop: "8px" }}
           >
             {new Date(badge.earned_at).toLocaleDateString("vi-VN")}
           </Text>
+        )}
+
+        {isOwner && (
+          <button
+            onClick={() => onEquip?.(isPrimary ? null : badge.id)}
+            style={{
+              marginTop: "12px",
+              padding: "6px 16px",
+              borderRadius: "12px",
+              border: "none",
+              backgroundColor: isPrimary ? "rgba(0,0,0,0.05)" : "#ff6b35",
+              color: isPrimary ? "#8E8E93" : "#fff",
+              fontSize: "12px",
+              fontWeight: 700,
+              cursor: "pointer",
+              transition: "all 0.2s",
+              width: "100%",
+            }}
+          >
+            {isPrimary ? "Unequip Badge" : "Set as Primary"}
+          </button>
         )}
       </div>
     </motion.div>

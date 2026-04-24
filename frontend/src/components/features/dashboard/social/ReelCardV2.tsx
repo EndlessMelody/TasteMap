@@ -21,6 +21,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Eye, Play, Flame } from "lucide-react";
 
+import { BookmarkButton } from "@/components/common/BookmarkButton";
 import { tokens } from "@/styles/tokens";
 import type { ReelData } from "@/types/dashboard";
 
@@ -130,26 +131,47 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
           position: "absolute",
           top: tokens.space[3],
           right: tokens.space[3],
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 4,
-          paddingTop: 4,
-          paddingBottom: 4,
-          paddingLeft: tokens.space[2],
-          paddingRight: tokens.space[2],
-          borderRadius: tokens.radius.sm,
-          backgroundColor: "rgba(0,0,0,0.45)",
-          backdropFilter: "blur(10px)",
-          WebkitBackdropFilter: "blur(10px)",
-          border: `1px solid rgba(255,255,255,0.12)`,
-          color: "#fff",
-          fontSize: 10,
-          fontWeight: tokens.type.weight.bold,
-          letterSpacing: tokens.type.tracking.normal,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          gap: 8,
         }}
       >
-        <Eye size={10} strokeWidth={2.4} />
-        {reel.views}
+        <BookmarkButton
+          entityType="reel"
+          entityId={reel.id}
+          isBookmarked={reel.isSaved ?? false}
+          size={32}
+          iconSize={16}
+          inactiveColor="rgba(255,255,255,0.78)"
+          style={{
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+          }}
+        />
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4,
+            paddingTop: 4,
+            paddingBottom: 4,
+            paddingLeft: tokens.space[2],
+            paddingRight: tokens.space[2],
+            borderRadius: tokens.radius.sm,
+            backgroundColor: "rgba(0,0,0,0.45)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            border: `1px solid rgba(255,255,255,0.12)`,
+            color: "#fff",
+            fontSize: 10,
+            fontWeight: tokens.type.weight.bold,
+            letterSpacing: tokens.type.tracking.normal,
+          }}
+        >
+          <Eye size={10} strokeWidth={2.4} />
+          {reel.views}
+        </div>
       </div>
 
       {/* ── Pulsing play button (center) ── */}

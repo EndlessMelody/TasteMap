@@ -9,9 +9,14 @@ import { PostItem } from "@/app/profile/page";
 interface ReviewsTabProps {
   postsLoading: boolean;
   userPosts: PostItem[];
+  onReviewClick?: (post: PostItem) => void;
 }
 
-export const ReviewsTab: React.FC<ReviewsTabProps> = ({ postsLoading, userPosts }) => {
+export const ReviewsTab: React.FC<ReviewsTabProps> = ({ 
+  postsLoading, 
+  userPosts,
+  onReviewClick
+}) => {
   const reviews = userPosts.filter((p) => p.rating != null);
 
   return (
@@ -104,6 +109,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ postsLoading, userPosts 
             initial={{ opacity: 0, x: -12 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.25, delay: idx * 0.05 }}
+            onClick={() => onReviewClick?.(review)}
             style={{
               borderRadius: "18px",
               border: "1px solid #F2F2F7",

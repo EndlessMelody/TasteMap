@@ -7,6 +7,7 @@ from typing import Optional
 
 from src.reels.models import Reel, ReelLike
 from src.users.models import User
+from src.bookmarks.models import Bookmark
 from src.reels.schemas import ReelCreate
 from src.challenges import service as challenges_service
 
@@ -22,6 +23,7 @@ async def list_reels(db: AsyncSession, sort: str = "trending", limit: int = 10, 
 
     # Batch fetch likes to avoid N+1
     liked_reel_ids = set()
+    bookmarked_reel_ids = set()
     if viewer_id and reels:
         reel_ids = [r.id for r in reels]
         likes_result = await db.execute(
@@ -29,6 +31,11 @@ async def list_reels(db: AsyncSession, sort: str = "trending", limit: int = 10, 
             .where(ReelLike.user_id == viewer_id, ReelLike.reel_id.in_(reel_ids))
         )
         liked_reel_ids = {row[0] for row in likes_result.all()}
+        bookmarks_result = await db.execute(
+            select(Bookmark.reel_id)
+            .where(Bookmark.user_id == viewer_id, Bookmark.reel_id.in_(reel_ids))
+        )
+        bookmarked_reel_ids = {row[0] for row in bookmarks_result.all() if row[0] is not None}
 
     items = []
     for r in reels:
@@ -42,6 +49,7 @@ async def list_reels(db: AsyncSession, sort: str = "trending", limit: int = 10, 
             "video_url": r.video_url, "thumbnail_url": r.thumbnail_url,
             "views_count": r.views_count, "likes_count": r.likes_count, "comments_count": r.comments_count,
             "is_liked": r.id in liked_reel_ids,
+            "is_bookmarked": r.id in bookmarked_reel_ids,
             "created_at": r.created_at,
         })
 
@@ -122,9 +130,14 @@ async def _reel_to_dict(db: AsyncSession, reel: Reel, viewer_id: Optional[int] =
         user = user_q.scalars().first()
         
     is_liked = False
+    is_bookmarked = False
     if viewer_id:
         like_q = await db.execute(select(ReelLike).where(ReelLike.reel_id == reel.id, ReelLike.user_id == viewer_id))
         is_liked = like_q.scalars().first() is not None
+        bookmark_q = await db.execute(
+            select(Bookmark).where(Bookmark.reel_id == reel.id, Bookmark.user_id == viewer_id)
+        )
+        is_bookmarked = bookmark_q.scalars().first() is not None
 
     return {
         "id": reel.id, "title": reel.title,
@@ -132,5 +145,6 @@ async def _reel_to_dict(db: AsyncSession, reel: Reel, viewer_id: Optional[int] =
         "video_url": reel.video_url, "thumbnail_url": reel.thumbnail_url,
         "views_count": reel.views_count, "likes_count": reel.likes_count, "comments_count": reel.comments_count,
         "is_liked": is_liked,
+        "is_bookmarked": is_bookmarked,
         "created_at": reel.created_at,
     }

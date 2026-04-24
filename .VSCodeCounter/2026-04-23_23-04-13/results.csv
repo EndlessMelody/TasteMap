@@ -1,0 +1,498 @@
+"filename", "language", "Markdown", "PowerShell", "Batch", "Python", "JSON with Comments", "YAML", "XML", "JSON", "TypeScript", "TypeScript JSX", "Log", "pip requirements", "Ini", "MS SQL", "CSS", "JavaScript", "comment", "blank", "total"
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\rules\00-tastemap-context.md", "Markdown", 165, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 207
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\rules\01-frontend-ui.md", "Markdown", 387, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 475
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\rules\02-backend-api.md", "Markdown", 513, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 141, 654
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\rules\03-database-vectors.md", "Markdown", 541, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 158, 699
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\rules\04-ai-algorithm.md", "Markdown", 578, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 183, 761
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\rules\05-realtime-websocket.md", "Markdown", 696, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 147, 843
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\rules\06-onceUI-styling.md", "Markdown", 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 41
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\rules\07-docs-first.md", "Markdown", 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 59
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\workflows\ai-feature.md", "Markdown", 700, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 201, 901
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\workflows\api-endpoint.md", "Markdown", 563, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 140, 703
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\workflows\component-creation.md", "Markdown", 406, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 91, 497
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\workflows\discover-plan.md", "Markdown", 367, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 179, 546
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\workflows\feature-implementation.md", "Markdown", 317, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 94, 411
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.agents\workflows\migration-safe.md", "Markdown", 436, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 143, 579
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\rules\00-tastemap-context.md", "Markdown", 165, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 207
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\rules\01-frontend-ui.md", "Markdown", 387, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 476
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\rules\02-backend-api.md", "Markdown", 513, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 142, 655
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\rules\03-database-vectors.md", "Markdown", 413, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 125, 538
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\rules\04-ai-algorithm.md", "Markdown", 578, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 762
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\rules\05-realtime-websocket.md", "Markdown", 696, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 147, 843
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\rules\06-onceUI-styling.md", "Markdown", 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 41
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\rules\07-docs-first.md", "Markdown", 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 59
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\workflows\ai-feature.md", "Markdown", 700, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 201, 901
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\workflows\api-endpoint.md", "Markdown", 563, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 140, 703
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\workflows\component-creation.md", "Markdown", 406, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 91, 497
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\workflows\discover-plan.md", "Markdown", 367, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 179, 546
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\workflows\feature-implementation.md", "Markdown", 317, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 94, 411
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\.windsurf\workflows\migration-safe.md", "Markdown", 436, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 143, 579
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\README.md", "Markdown", 233, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 102, 335
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\add_indexes.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 6, 5, 21
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic.ini", "Ini", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 123, 0, 0, 0, 0, 27, 150
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\env.py", "Python", 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 29, 99
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\136626150244_implement_real_db_models.py", "Python", 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 33
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\188aa48b49c8_add_media_fields_to_groupchatmessage.py", "Python", 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 9, 45
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\3ec3a499417c_add_group_chat_messages.py", "Python", 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 46
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\42e95493ea6a_add_role_column.py", "Python", 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 28
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\50d8f6a8ec0c_add_updated_user_columns.py", "Python", 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 57
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\5a3465e321cd_add_reel_likes.py", "Python", 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 56
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\71a7150cfb6f_merge_badge_system_with_user_columns.py", "Python", 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 29
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\808c5d2b84dc_add_badge_system_schema.py", "Python", 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 15, 74
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\8b66a71fd32b_initial_schema.py", "Python", 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 69
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\8ceefb75c059_implement_real_db_models.py", "Python", 0, 0, 0, 78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 9, 92
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\95af5c100ac0_add_new_profile_fields.py", "Python", 0, 0, 0, 264, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 9, 278
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\9c256869b983_merge_badge_system_with_chat_messages.py", "Python", 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 29
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\a1b2c3d4e5f6_add_group_lobby_fields.py", "Python", 0, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 12, 55
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\b07df7e53b5f_add_supabase_uid_to_users.py", "Python", 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\b425b6d0fccf_add_chat_messages.py", "Python", 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 49
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\bcad833be5b4_implement_real_db_models.py", "Python", 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 33
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\c2d3e4f5a6b7_add_group_visibility.py", "Python", 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 31
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\d1e2f3a4b5c6_cleanup_xp_columns.py", "Python", 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 15, 80
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\e40d90cc4887_add_challenges_system.py", "Python", 0, 0, 0, 132, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 11, 148
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\f1a2b3c4d5e6_enhance_chat_messages_media_reactions.py", "Python", 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 17, 84
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\alembic\versions\f9c9ee2699c2_add_default_vectors.py", "Python", 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 11, 49
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\error.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3570, 0, 0, 0, 0, 0, 0, 256, 3826
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\package-lock.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\package.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\render.yml", "YAML", 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 13
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\requirements.txt", "pip requirements", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 157, 0, 0, 0, 0, 0, 0, 157
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scratch\verify_redis.py", "Python", 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 14, 62
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scratch\verify_routing.py", "Python", 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 56
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scratch\verify_seed.py", "Python", 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\award_badge.py", "Python", 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 26
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\badges.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 274, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 274
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\crawl_hcmc_locations.py", "Python", 0, 0, 0, 203, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 43, 278
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\debug_db.py", "Python", 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\fix_badges.py", "Python", 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 13, 51
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\import_to_postgres.py", "Python", 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 24, 94
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\modify_user_xp.py", "Python", 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 42
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\query_db.py", "Python", 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 21, 95
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\seed.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 95, 16, 111
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\seed_badges.py", "Python", 0, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 12, 62
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\seed_challenges.py", "Python", 0, 0, 0, 129, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 139
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\seed_levels.py", "Python", 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 13, 76
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\seed_locations.py", "Python", 0, 0, 0, 409, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 86, 541
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\seed_osm_data.py", "Python", 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 14, 77
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\scripts\sync_leaderboard.py", "Python", 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 18, 71
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\setup_db.ps1", "PowerShell", 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 9
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\analytics\router.py", "Python", 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 18
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\analytics\schemas.py", "Python", 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\analytics\service.py", "Python", 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7, 31
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\api\auth_router.py", "Python", 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 54, 260
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\api\deps.py", "Python", 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 10
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\api\router.py", "Python", 0, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 16, 78
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\auth\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\auth\router.py", "Python", 0, 0, 0, 222, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 35, 271
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\auth\schemas.py", "Python", 0, 0, 0, 38, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 61
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\auth\service.py", "Python", 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 10, 47
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\bookmarks\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\bookmarks\models.py", "Python", 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\bookmarks\router.py", "Python", 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 31
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\bookmarks\schemas.py", "Python", 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 29
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\bookmarks\service.py", "Python", 0, 0, 0, 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 14, 67
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\challenges\leaderboard_service.py", "Python", 0, 0, 0, 69, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 12, 86
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\challenges\models.py", "Python", 0, 0, 0, 114, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 43, 161
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\challenges\router.py", "Python", 0, 0, 0, 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 135
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\challenges\schemas.py", "Python", 0, 0, 0, 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 122
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\challenges\service.py", "Python", 0, 0, 0, 286, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 56, 361
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\challenges\streak_service.py", "Python", 0, 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 95
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\challenges\tracker.py", "Python", 0, 0, 0, 155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 27, 201
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\challenges\xp_service.py", "Python", 0, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 31, 176
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\core\cache.py", "Python", 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 61
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\core\config.py", "Python", 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 13, 51
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\core\dependencies.py", "Python", 0, 0, 0, 139, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 24, 166
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\core\email_service.py", "Python", 0, 0, 0, 163, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 20, 186
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\culture\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\culture\router.py", "Python", 0, 0, 0, 155, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 35, 199
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\culture\schemas.py", "Python", 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 36
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\culture\service.py", "Python", 0, 0, 0, 308, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 49, 364
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\data_test\database_vungtau.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 442, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 442
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\db\database.py", "Python", 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 12, 57
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\db\redis.py", "Python", 0, 0, 0, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 17, 70
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\db\seed.py", "Python", 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 11, 137
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\db\supabase_client.py", "Python", 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 12
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\deals\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\deals\models.py", "Python", 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7, 29
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\deals\router.py", "Python", 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 29
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\deals\schemas.py", "Python", 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 40
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\deals\service.py", "Python", 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 54
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\feed\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\feed\router.py", "Python", 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 9, 57
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\feed\schemas.py", "Python", 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 5, 26
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\feed\service.py", "Python", 0, 0, 0, 164, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 39, 233
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\gamification\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\gamification\models.py", "Python", 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 11, 46
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\gamification\router.py", "Python", 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 12, 55
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\gamification\schemas.py", "Python", 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 46
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\gamification\service.py", "Python", 0, 0, 0, 71, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 86
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\groups\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\groups\models.py", "Python", 0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 23, 93
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\groups\router.py", "Python", 0, 0, 0, 268, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 48, 320
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\groups\schemas.py", "Python", 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 61, 196
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\groups\service.py", "Python", 0, 0, 0, 629, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 121, 800
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\groups\websocket.py", "Python", 0, 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 25, 127
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\health\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\health\router.py", "Python", 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 7
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\interactions\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\interactions\models.py", "Python", 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 12, 51
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\interactions\router.py", "Python", 0, 0, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 77
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\interactions\schemas.py", "Python", 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 15, 51
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\interactions\service.py", "Python", 0, 0, 0, 150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 25, 189
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\locations\models.py", "Python", 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 13, 55
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\locations\router.py", "Python", 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 74
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\locations\schemas.py", "Python", 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 50
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\locations\service.py", "Python", 0, 0, 0, 132, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 26, 167
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\main.py", "Python", 0, 0, 0, 133, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 34, 174
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\media\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\media\router.py", "Python", 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 19
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\media\service.py", "Python", 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 22, 128
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\messages\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\messages\models.py", "Python", 0, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 14, 56
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\messages\router.py", "Python", 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 27, 154
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\messages\service.py", "Python", 0, 0, 0, 307, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 57, 391
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\notifications\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\notifications\models.py", "Python", 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 9, 33
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\notifications\router.py", "Python", 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\notifications\schemas.py", "Python", 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 23
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\notifications\service.py", "Python", 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 56
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\posts\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\posts\models.py", "Python", 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 22, 84
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\posts\router.py", "Python", 0, 0, 0, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 18, 69
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\posts\schemas.py", "Python", 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 58
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\posts\service.py", "Python", 0, 0, 0, 203, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 48, 259
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\recommendations\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\recommendations\router.py", "Python", 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 63
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\recommendations\schemas.py", "Python", 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 19, 67
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\recommendations\service.py", "Python", 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 37, 236
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\reels\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\reels\models.py", "Python", 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14, 53
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\reels\router.py", "Python", 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 42
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\reels\schemas.py", "Python", 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 37
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\reels\service.py", "Python", 0, 0, 0, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 24, 137
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\sessions\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\sessions\router.py", "Python", 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 20
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\sessions\schemas.py", "Python", 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 11
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\sessions\service.py", "Python", 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 45
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\social\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\social\models.py", "Python", 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\social\router.py", "Python", 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 54
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\social\schemas.py", "Python", 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 48
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\social\service.py", "Python", 0, 0, 0, 233, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 39, 275
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\tasks\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\tasks\interaction_cleanup.py", "Python", 0, 0, 0, 123, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 27, 159
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\tours\__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\tours\models.py", "Python", 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14, 49
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\tours\router.py", "Python", 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 70
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\tours\schemas.py", "Python", 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 66
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\tours\service.py", "Python", 0, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 26, 155
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\users\auth_service.py", "Python", 0, 0, 0, 150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 35, 192
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\users\models.py", "Python", 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 72
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\users\otp_service.py", "Python", 0, 0, 0, 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 29, 103
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\users\router.py", "Python", 0, 0, 0, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22, 140
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\users\schemas.py", "Python", 0, 0, 0, 194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 70, 277
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\users\service.py", "Python", 0, 0, 0, 319, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 30, 358
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\src\users\settings_router.py", "Python", 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9, 54
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\start.ps1", "PowerShell", 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 17
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\test_results_3.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 612, 0, 0, 0, 0, 0, 0, 33, 645
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\29.3.py", "Python", 0, 0, 0, 147, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 34, 214
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\check_db.py", "Python", 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 53
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\check_db_direct.py", "Python", 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\check_supabase.py", "Python", 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 8, 46
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\debug_jwt.py", "Python", 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 9, 62
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\debug_swipe.py", "Python", 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 47
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\package-lock.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 48
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\package.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_all_apis.py", "Python", 0, 0, 0, 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 17, 114
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_ambiguity.py", "Python", 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 21
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_apis.py", "Python", 0, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 11, 130
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_auth_insert.py", "Python", 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 28
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_db.py", "Python", 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 16
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_full_journey.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1365, 0, 0, 0, 0, 0, 0, 105, 1470
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_full_journey.py", "Python", 0, 0, 0, 575, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 108, 134, 817
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_groq.py", "Python", 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 13
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_journey.py", "Python", 0, 0, 0, 152, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 36, 206
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_query.py", "Python", 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_results.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 199, 0, 0, 0, 0, 0, 0, 0, 199
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_results_2.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 917, 0, 0, 0, 0, 0, 0, 0, 917
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_results_3.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 612, 0, 0, 0, 0, 0, 0, 34, 646
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_super_journey.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 311, 0, 0, 0, 0, 0, 0, 21, 332
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\uvicorn.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\uvicorn_err.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docker-compose.yml", "YAML", 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 17
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\api\README.md", "Markdown", 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 33
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\api\auth.md", "Markdown", 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 128
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\api\content.md", "Markdown", 275, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 105, 380
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\api\discovery.md", "Markdown", 230, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 85, 315
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\api\gamification.md", "Markdown", 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 125
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\api\shared_types.md", "Markdown", 86, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 107
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\api\social.md", "Markdown", 319, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 147, 466
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\api\system.md", "Markdown", 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 72
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\api\users.md", "Markdown", 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 126
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\architecture.md", "Markdown", 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 18
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\challenges_design.md", "Markdown", 956, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 230, 1186
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\create_content_refactor_tracker.md", "Markdown", 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 41
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\database_schema\README.md", "Markdown", 26, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 40
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\database_schema\content.md", "Markdown", 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 136
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\database_schema\core.md", "Markdown", 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 40
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\database_schema\gamification.md", "Markdown", 110, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 138
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\database_schema\interactions.md", "Markdown", 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\database_schema\social.md", "Markdown", 88, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 113
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\flows\README.md", "Markdown", 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\flows\auth_registration.md", "Markdown", 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 101
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\flows\challenges_gamification.md", "Markdown", 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 78
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\flows\discovery_swipe.md", "Markdown", 143, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 199
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\flows\social_profile.md", "Markdown", 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 69
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\group_lobby_spec.md", "Markdown", 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 67
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\math_models.md", "Markdown", 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 12
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\openapi (1).json", "JSON", 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\proposal.md", "Markdown", 188, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 298
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\proposal_new.md", "Markdown", 1523, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 434, 1957
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\ui_upgrade_phase_plan.md", "Markdown", 118, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 71, 189
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\docs\vector_dimensions.md", "Markdown", 47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 57
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\README.md", "Markdown", 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 37
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\eslint.config.mjs", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 2, 3, 19
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\next.config.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, 0, 3, 20
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\package-lock.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 8529, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8530
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\package.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 46
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\postcss.config.mjs", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 2, 8
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\public\file.svg", "XML", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\public\globe.svg", "XML", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\public\next.svg", "XML", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\public\vercel.svg", "XML", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\public\window.svg", "XML", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\admin\analytics\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 0, 0, 0, 0, 3, 9, 73
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\admin\challenges\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 748, 0, 0, 0, 0, 0, 0, 23, 55, 826
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\admin\locations\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1951, 0, 0, 0, 0, 0, 0, 41, 64, 2056
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\admin\login\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 119, 0, 0, 0, 0, 0, 0, 5, 12, 136
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\admin\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 216, 0, 0, 0, 0, 0, 0, 12, 17, 245
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\ai-planner\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\ai-planner\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2727, 0, 0, 0, 0, 0, 0, 68, 90, 2885
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\auth\callback\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 0, 0, 0, 0, 4, 5, 70
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\banned\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 0, 0, 0, 0, 0, 9, 14, 97
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\challenges\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\challenges\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 918, 0, 0, 0, 0, 0, 0, 9, 51, 978
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\culture\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1423, 0, 0, 0, 0, 0, 0, 24, 65, 1512
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\discover\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\discover\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 168, 0, 0, 0, 0, 0, 0, 11, 19, 198
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\explore\ExploreClient.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1215, 0, 0, 0, 0, 0, 0, 26, 67, 1308
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\explore\components\DetailOverlay.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 105, 0, 0, 0, 0, 0, 0, 1, 4, 110
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\explore\components\SpotCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 129, 0, 0, 0, 0, 0, 0, 0, 5, 134
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\explore\components\VirtualizedSpotList.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 103, 0, 0, 0, 0, 0, 0, 5, 12, 120
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\explore\data.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 242, 0, 0, 0, 0, 0, 0, 0, 0, 4, 246
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\explore\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\explore\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 2, 6
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\explore\types.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 1, 19
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\explore\ui-constants.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 3, 36
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\foodies\[id]\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 886, 0, 0, 0, 0, 0, 0, 102, 66, 1054
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\foodies\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\foodies\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1316, 0, 0, 0, 0, 0, 0, 20, 34, 1370
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\globals.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 371, 0, 0, 51, 422
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\group-rooms\[id]\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2248, 0, 0, 0, 0, 0, 0, 52, 121, 2421
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\group-rooms\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\group-rooms\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1229, 0, 0, 0, 0, 0, 0, 38, 59, 1326
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\hot-routes\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\hot-routes\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1119, 0, 0, 0, 0, 0, 0, 19, 41, 1179
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 6, 53
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 0, 0, 0, 0, 0, 1, 42
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\login\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 425, 0, 0, 0, 0, 0, 0, 16, 14, 455
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 4, 33
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\profile\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\profile\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 212, 0, 0, 0, 0, 0, 0, 22, 28, 262
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\template.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 7, 71
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\components\BudgetBadge.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 0, 0, 0, 5, 42
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\components\RouteChip.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 5, 36
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\components\StatPill.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 4, 38
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\components\StatusBadge.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 7, 55
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\components\StopCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 176, 0, 0, 0, 0, 0, 0, 8, 13, 197
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\components\TimelineNode.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 1, 8, 119
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\components\TourSkeleton.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 4, 6, 131
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\components\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 2, 13
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1329, 0, 0, 0, 0, 0, 0, 55, 64, 1448
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\app\tour-builder\tokens.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 0, 17, 21, 149
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\BottomSheet.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 127, 0, 0, 0, 0, 0, 0, 5, 9, 141
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\DashboardLayout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 288, 0, 0, 0, 0, 0, 0, 9, 24, 321
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\Discovery\ActionControls.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 79, 0, 0, 0, 0, 0, 0, 2, 6, 87
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\Discovery\CardStack.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 0, 9, 121
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\Discovery\DiscoveryView.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 145, 0, 0, 0, 0, 0, 0, 8, 23, 176
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\Discovery\SkeletonCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 65, 0, 0, 0, 0, 0, 0, 5, 5, 75
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\Discovery\SwipeCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 233, 0, 0, 0, 0, 0, 0, 10, 13, 256
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\FloatingInsight.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 0, 0, 0, 0, 0, 0, 4, 13, 153
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\IOSLobbies.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 265, 0, 0, 0, 0, 0, 0, 20, 22, 307
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\LobbyModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 231, 0, 0, 0, 0, 0, 0, 8, 11, 250
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\Map.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 1, 4, 22
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\MapWidget.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 386, 0, 0, 0, 0, 0, 0, 10, 33, 429
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\OnceUI.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 635, 0, 0, 0, 0, 0, 0, 11, 42, 688
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\PostModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 513, 0, 0, 0, 0, 0, 0, 15, 15, 543
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\ReelModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 528, 0, 0, 0, 0, 0, 0, 13, 16, 557
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\Skeleton.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 4, 25
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\Skeletons.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 238, 0, 0, 0, 0, 0, 0, 0, 8, 246
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\StaggerContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 0, 0, 0, 0, 0, 8, 69
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\cards\ContextCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 133, 0, 0, 0, 0, 0, 0, 4, 3, 140
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\cards\LobbyCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 165, 0, 0, 0, 0, 0, 0, 4, 7, 176
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\cards\PostCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0, 0, 0, 0, 0, 0, 9, 11, 312
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\cards\ReelCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 185, 0, 0, 0, 0, 0, 0, 5, 6, 196
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\cards\VaultCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 157, 0, 0, 0, 0, 0, 0, 5, 6, 168
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\common\AppStatusBar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 167, 0, 0, 0, 0, 0, 0, 3, 7, 177
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\common\AvatarWithStatus.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 3, 42
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\common\ClientOnly.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 7, 28
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\common\NotificationPanel.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 14, 26, 360
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\common\PageSkeleton.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 0, 0, 0, 0, 0, 3, 5, 60
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\common\ProfileMenuItem.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 3, 60
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\common\RightSidebar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 641, 0, 0, 0, 0, 0, 0, 14, 25, 680
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\common\Sidebar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 745, 0, 0, 0, 0, 0, 0, 21, 30, 796
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\auth\LoginBranding.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 295, 0, 0, 0, 0, 0, 0, 6, 10, 311
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\auth\LoginForm.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 837, 0, 0, 0, 0, 0, 0, 18, 37, 892
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\AIPicksSection.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 779, 0, 0, 0, 0, 0, 0, 34, 37, 850
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\ContextRibbon.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 393, 0, 0, 0, 0, 0, 0, 12, 20, 425
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\ContextualNavigator.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 167, 0, 0, 0, 0, 0, 0, 0, 4, 171
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\DashboardHeader.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 835, 0, 0, 0, 0, 0, 0, 16, 21, 872
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\FoodieFeed.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 261, 0, 0, 0, 0, 0, 0, 8, 15, 284
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\HeroSection.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 0, 0, 0, 1, 5, 59
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\LocationSelector.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 611, 0, 0, 0, 0, 0, 0, 25, 46, 682
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\TasteMapProBanner.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 649, 0, 0, 0, 0, 0, 0, 27, 24, 700
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\TasteVault.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 267, 0, 0, 0, 0, 0, 0, 4, 11, 282
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\TrendingReels.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 209, 0, 0, 0, 0, 0, 0, 5, 11, 225
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\ai-picks\AIPickDeckCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 142, 0, 0, 0, 0, 0, 0, 3, 11, 156
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\ai-picks\AIPickHeroCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 198, 0, 0, 0, 0, 0, 0, 7, 15, 220
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\ai-picks\TasteMapMascot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 236, 0, 0, 0, 0, 0, 0, 19, 25, 280
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\ai-picks\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 2, 11
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\hero\ContinueTourCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 175, 0, 0, 0, 0, 0, 0, 5, 10, 190
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\hero\HeroTour.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 328, 0, 0, 0, 0, 0, 0, 12, 17, 357
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\hero\NearbyNowCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 261, 0, 0, 0, 0, 0, 0, 7, 12, 280
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\hero\QuickActionDock.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 154, 0, 0, 0, 0, 0, 0, 4, 9, 167
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\hero\TasteSignatureCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 188, 0, 0, 0, 0, 0, 0, 9, 11, 208
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\hero\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 1, 2, 21
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\social\PostCardV2.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 408, 0, 0, 0, 0, 0, 0, 13, 17, 438
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\social\ReelCardV2.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 222, 0, 0, 0, 0, 0, 0, 6, 11, 239
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\social\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 2, 11
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\vault\VaultCardV2.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 208, 0, 0, 0, 0, 0, 0, 5, 9, 222
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\dashboard\vault\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\foodies\AddFriendSearch.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 331, 0, 0, 0, 0, 0, 0, 5, 18, 354
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\foodies\FriendRow.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 733, 0, 0, 0, 0, 0, 0, 13, 24, 770
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\foodies\MessagingSidebar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1947, 0, 0, 0, 0, 0, 0, 38, 130, 2115
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\gamification\BadgeCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 232, 0, 0, 0, 0, 0, 0, 5, 13, 250
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\lobby\LobbyCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 0, 0, 0, 0, 3, 6, 70
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\lobby\LobbyDetailModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 140, 0, 0, 0, 0, 0, 0, 7, 12, 159
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\lobby\LobbySection.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 139, 0, 0, 0, 0, 0, 0, 6, 7, 152
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\lobby\LobbyUI.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 5, 63
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\lobby\data.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 391, 0, 0, 0, 0, 0, 0, 0, 0, 2, 393
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\lobby\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 5, 6, 32
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\lobby\types.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 8, 83
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\EditProfileModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 642, 0, 0, 0, 0, 0, 0, 18, 42, 702
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\FlavorProfileCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 141, 0, 0, 0, 0, 0, 0, 0, 5, 146
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\FriendsListCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 345, 0, 0, 0, 0, 0, 0, 4, 9, 358
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\ProfileAvatarGroup.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 95, 0, 0, 0, 0, 0, 0, 3, 8, 106
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\ProfileBentoStats.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\ProfileCover.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 133, 0, 0, 0, 0, 0, 0, 2, 7, 142
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\ProfileHero.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\ProfileIdentityCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 298, 0, 0, 0, 0, 0, 0, 5, 10, 313
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\ProfileStickyHeader.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 129, 0, 0, 0, 0, 0, 0, 0, 5, 134
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\ProfileTabs.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 106, 0, 0, 0, 0, 0, 0, 2, 6, 114
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\ProfileTraits.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\QuickActionsCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 0, 0, 0, 0, 0, 0, 3, 7, 117
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\TasteDNACard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 5, 126
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\TasteMapStatsCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 0, 0, 0, 0, 0, 0, 0, 4, 101
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\TopHighlightsCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 198, 0, 0, 0, 0, 0, 0, 0, 6, 204
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 3, 16
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\tab-contents\AchievementsTab.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 0, 0, 0, 0, 0, 0, 6, 58
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\tab-contents\PostsTab.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 239, 0, 0, 0, 0, 0, 0, 6, 11, 256
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\tab-contents\ReviewsTab.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 218, 0, 0, 0, 0, 0, 0, 10, 9, 237
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\tab-contents\VisitedTab.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 3, 37
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\profile\types.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\promo\PromoCTA.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 84, 0, 0, 0, 0, 0, 0, 3, 6, 93
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\promo\PromoFeatures.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 148, 0, 0, 0, 0, 0, 0, 2, 5, 155
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\promo\PromoFooter.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 196, 0, 0, 0, 0, 0, 0, 4, 7, 207
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\promo\PromoHero.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 646, 0, 0, 0, 0, 0, 0, 21, 26, 693
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\promo\PromoHowItWorks.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 4, 6, 92
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\promo\PromoNav.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 244, 0, 0, 0, 0, 0, 0, 4, 10, 258
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\promo\PromoPlans.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 292, 0, 0, 0, 0, 0, 0, 6, 10, 308
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\promo\PromoSocialProof.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 458, 0, 0, 0, 0, 0, 0, 9, 17, 484
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\features\promo\PromoWhySection.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 317, 0, 0, 0, 0, 0, 0, 6, 10, 333
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\CreatePostModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 178, 0, 0, 0, 0, 0, 0, 4, 6, 188
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\CreateRoomModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 160, 0, 0, 0, 0, 0, 0, 0, 3, 163
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\EditProfileModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\QRCodeModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 106, 0, 0, 0, 0, 0, 0, 5, 5, 116
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\SettingsModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 475, 0, 0, 0, 0, 0, 0, 3, 14, 492
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\ChipInput.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 9, 84
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\ContentPreview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 122, 0, 0, 0, 0, 0, 0, 3, 12, 137
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\CreatePostModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 411, 0, 0, 0, 0, 0, 0, 14, 36, 461
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\DestinationBadge.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 5, 33
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\DropZone.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 93, 0, 0, 0, 0, 0, 0, 0, 9, 102
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\FormField.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0, 4, 50
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\IconInput.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 5, 45
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\MediaUpload.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 4, 48
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\ModalFooter.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 98, 0, 0, 0, 0, 0, 0, 0, 7, 105
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\PostForm.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 191, 0, 0, 0, 0, 0, 0, 8, 15, 214
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\PostTypeSelector.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 5, 25
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\RatingInput.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 8, 65
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\ReelForm.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 0, 0, 0, 0, 3, 7, 91
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\SegmentedControl.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 1, 9, 92
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\StickyCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 4, 23
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\TagInput.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 0, 0, 4, 37
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\TextAreaField.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0, 0, 0, 0, 5, 27
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\modals\create-post\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\primitives\DiscoverSection.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 160, 0, 0, 0, 0, 0, 0, 2, 9, 171
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\primitives\GlassCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 119, 0, 0, 0, 0, 0, 0, 1, 10, 130
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\primitives\MatchRing.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 136, 0, 0, 0, 0, 0, 0, 3, 8, 147
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\primitives\PulseDot.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 98, 0, 0, 0, 0, 0, 0, 3, 6, 107
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\components\primitives\index.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 4, 23
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\constants\foodies-data.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 137, 0, 0, 0, 0, 0, 0, 0, 0, 4, 141
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\constants\mock-data.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 340, 0, 0, 0, 0, 0, 0, 0, 0, 9, 349
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\context\AuthContext.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 202, 0, 0, 0, 0, 0, 0, 11, 19, 232
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\context\ChatContext.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 7, 33
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\context\LanguageContext.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 0, 0, 0, 0, 0, 0, 4, 12, 106
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\context\ThemeContext.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 1, 14, 64
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\context\UserVectorContext.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 131, 0, 0, 0, 0, 0, 0, 4, 25, 160
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useAuth.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 0, 0, 0, 0, 0, 0, 12, 15, 124
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useBadges.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 1, 6, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useFeedCards.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 101, 0, 0, 0, 0, 0, 0, 0, 3, 15, 119
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useFoodies.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 151, 0, 0, 0, 0, 0, 0, 0, 2, 17, 170
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useGroups.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 3, 14, 106
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useInbox.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 86, 0, 0, 0, 0, 0, 0, 0, 6, 12, 104
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useLocation.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 12, 88
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useMediaUpload.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 1, 10, 51
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useMessages.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 238, 0, 0, 0, 0, 0, 0, 0, 5, 41, 284
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useNotifications.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 85, 0, 0, 0, 0, 0, 0, 0, 0, 12, 97
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\usePosts.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 142, 0, 0, 0, 0, 0, 0, 0, 3, 20, 165
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useProfileActions.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 0, 0, 0, 0, 0, 0, 7, 8, 61
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useProfileEdit.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useRecommendations.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 3, 11, 78
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useReels.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 3, 13, 116
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useUserFriends.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useUserPosts.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useVoiceRecorder.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 240, 0, 0, 0, 0, 0, 0, 0, 3, 44, 287
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useVoiceRoom.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 903, 0, 0, 0, 0, 0, 0, 0, 50, 119, 1072
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\hooks\useWeather.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 135, 0, 0, 0, 0, 0, 0, 0, 3, 14, 152
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\lib\api.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 290, 0, 0, 0, 0, 0, 0, 0, 17, 63, 370
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\lib\cn.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\lib\geolocation.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 285, 0, 0, 0, 0, 0, 0, 0, 20, 60, 365
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\lib\image-utils.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 6, 9, 85
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\lib\media.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 9, 41
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\lib\motion.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 133, 0, 0, 0, 0, 0, 0, 0, 6, 20, 159
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\lib\supabase.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\lib\vietnam-api.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 171, 0, 0, 0, 0, 0, 0, 0, 8, 25, 204
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\lib\vietnam-districts.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 280, 0, 0, 0, 0, 0, 0, 0, 0, 5, 285
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\middleware.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 13, 15, 98
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\store\badgeStore.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 9, 10, 62
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\store\socialStore.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 3, 31
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\store\uiStore.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 3, 18
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\store\useTourBuilderStore.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 103, 0, 0, 0, 0, 0, 0, 0, 4, 21, 128
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\styles\tokens.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 138, 0, 0, 0, 0, 0, 0, 0, 15, 15, 168
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\types\contentCreation.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 9, 63
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\types\dashboard.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 101, 0, 0, 0, 0, 0, 0, 0, 0, 8, 109
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\types\gamification.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 88, 0, 0, 0, 0, 0, 0, 0, 0, 9, 97
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\utils\dashboard-utils.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 0, 0, 0, 0, 0, 3, 50
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\utils\supabase\client.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 2, 15
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\src\utils\supabase\server.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 3, 3, 30
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\frontend\tsconfig.json", "JSON with Comments", 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 35
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\scripts\seed_data.py", "Python", 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 27
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\scripts\start-all.ps1", "PowerShell", 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 7, 22
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\scripts\start-backend.bat", "Batch", 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 23
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\scripts\start-frontend.bat", "Batch", 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 11
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\scripts\test_math.py", "Python", 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 20
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\start-backend.ps1", "PowerShell", 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 7, 31
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\start-frontend.ps1", "PowerShell", 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 4, 14
+"d:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\start-tunnels.ps1", "PowerShell", 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3, 13
+"Total", "-", 16514, 60, 22, 12195, 34, 23, 5, 9350, 5904, 47104, 7586, 157, 123, 10, 371, 20, 2601, 11753, 113832

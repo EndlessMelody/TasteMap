@@ -159,7 +159,10 @@ export default function DiscoverPage() {
                 <LobbySection />
               </motion.div>
               <motion.div variants={itemVariants} style={{ marginTop: "32px" }}>
-                <TasteVault />
+                <TasteVault 
+                  onPostClick={(post) => setSelectedPost(post)}
+                  onReelClick={(reel) => setSelectedReel(reel)}
+                />
               </motion.div>
               <motion.div variants={itemVariants} style={{ marginTop: "32px" }}>
                 <TasteMapProBanner />

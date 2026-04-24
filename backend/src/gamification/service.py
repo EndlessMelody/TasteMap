@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 
 from src.gamification.models import Badge, UserBadge
 from src.gamification import schemas
+from src.users.models import User
 
 async def list_all_badges(db: AsyncSession) -> List[Badge]:
     """Returns all badges (public view)."""
@@ -83,3 +84,23 @@ async def award_badge(db: AsyncSession, user_id: int, badge_id: int) -> dict:
     db.add(ub)
     await db.commit()
     return {"status": "awarded"}
+
+async def set_primary_badge(db: AsyncSession, user_id: int, badge_id: Optional[int]) -> bool:
+    """Sets a primary badge for the user. Validates ownership."""
+    user = await db.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if badge_id is None:
+        user.primary_badge_id = None
+    else:
+        # Check ownership
+        ownership_q = await db.execute(
+            select(UserBadge).where(UserBadge.user_id == user_id, UserBadge.badge_id == badge_id)
+        )
+        if not ownership_q.scalars().first():
+            raise HTTPException(status_code=400, detail="User does not own this badge")
+        user.primary_badge_id = badge_id
+        
+    await db.commit()
+    return True

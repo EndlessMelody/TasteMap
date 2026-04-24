@@ -27,13 +27,13 @@ import { motion } from "framer-motion";
 import {
   Heart,
   MessageCircle,
-  Bookmark,
   Star,
   MapPin,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
 
+import { BookmarkButton } from "@/components/common/BookmarkButton";
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
 import type { PostData } from "@/types/dashboard";
@@ -57,8 +57,6 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
   onToggleLike,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-
   const img = post.img?.trim() !== "" ? post.img : FALLBACK_IMG;
   const isLiked = !!post.isLiked;
 
@@ -405,30 +403,13 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
             </div>
 
             {/* Save */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsSaved((v) => !v);
-              }}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                padding: 0,
-                border: "none",
-                background: "transparent",
-                cursor: "pointer",
-                color: isSaved ? tokens.color.warm : tokens.color.textMuted,
-                transition: "color 150ms var(--dsc-ease-out)",
-              }}
-            >
-              <Bookmark
-                size={16}
-                strokeWidth={2.4}
-                color={isSaved ? tokens.color.warm : tokens.color.textMuted}
-                fill={isSaved ? tokens.color.warm : "none"}
-              />
-            </button>
+            <BookmarkButton
+              entityType="post"
+              entityId={post.id}
+              isBookmarked={post.isSaved ?? false}
+              size={30}
+              iconSize={16}
+            />
           </div>
         </div>
       </GlassCard>

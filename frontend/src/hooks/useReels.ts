@@ -20,6 +20,7 @@ interface ApiReel {
   likes_count: number;
   comments_count: number;
   is_liked?: boolean;
+  is_bookmarked?: boolean;
   created_at: string;
   user: {
     id: number;
@@ -64,6 +65,7 @@ function adaptReel(r: ApiReel): ReelData {
     likes: r.likes_count,
     comments: r.comments_count,
     isLiked: r.is_liked ?? false,
+    isSaved: r.is_bookmarked ?? false,
   };
 }
 
@@ -105,7 +107,7 @@ export function useReels(limit: number = 8): UseReelsResult {
     } finally {
       setLoading(false);
     }
-  }, [limit]);
+  }, [limit, setReels]);
 
   useEffect(() => {
     fetchReels();

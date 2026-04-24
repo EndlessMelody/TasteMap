@@ -5,17 +5,34 @@ import { Column, Row, Heading, Text, Button } from "@/components/OnceUI";
 import { Award } from "lucide-react";
 import BadgeCard from "@/components/features/gamification/BadgeCard";
 
+import { useAuth } from "@/context/AuthContext";
+import { apiPut } from "@/lib/api";
+import { toast } from "sonner";
+
 interface AchievementsTabProps {
   badges: any[];
   totalBadges: number;
   badgesLoading: boolean;
+  isOwner?: boolean;
 }
 
 export const AchievementsTab: React.FC<AchievementsTabProps> = ({ 
   badges, 
   totalBadges, 
-  badgesLoading 
+  badgesLoading,
+  isOwner = false
 }) => {
+  const { user, refreshUser } = useAuth();
+
+  const handleEquipBadge = async (badgeId: number | null) => {
+    try {
+      await apiPut("/api/v1/users/me/primary-badge", { badge_id: badgeId });
+      await refreshUser();
+      toast.success(badgeId ? "Badge equipped!" : "Badge unequipped!");
+    } catch (err) {
+      toast.error("Failed to update primary badge");
+    }
+  };
   return (
     <Column fillWidth gap={24}>
       <Row fillWidth horizontal="center" vertical="center" paddingX="8">
@@ -39,7 +56,14 @@ export const AchievementsTab: React.FC<AchievementsTabProps> = ({
         }}
       >
         {badges.map((badge: any, index: number) => (
-          <BadgeCard key={badge.id || index} badge={badge} delay={index * 0.05} />
+          <BadgeCard 
+            key={badge.id || index} 
+            badge={badge} 
+            delay={index * 0.05}
+            isOwner={isOwner}
+            isPrimary={user?.primary_badge?.id === badge.id}
+            onEquip={handleEquipBadge}
+          />
         ))}
 
         {badges.length === 0 && !badgesLoading && (

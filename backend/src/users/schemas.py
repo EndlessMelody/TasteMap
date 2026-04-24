@@ -10,14 +10,24 @@ class UserStats(BaseModel):
     following: int = 0
 
 
+class BadgeStub(BaseModel):
+    id: int
+    name: str
+    icon_name: str
+    accent_color: str
+
+    class Config:
+        from_attributes = True
+
+
 class BadgeSummary(BaseModel):
     id: int
     name: str
     description: Optional[str] = None
     icon_name: str
-    rarity: str
-    accent_color: str
-    is_hidden: bool
+    rarity: str = "Common"
+    accent_color: str = "#007AFF"
+    is_hidden: bool = False
     earned_at: Optional[datetime] = None
 
     class Config:
@@ -77,6 +87,7 @@ class UserResponse(BaseModel):
     level: int = 1
     next_level_xp: int = 100
     total_xp_earned: int = 0
+    primary_badge: Optional[BadgeStub] = None
 
     class Config:
         from_attributes = True
@@ -98,6 +109,7 @@ class UserProfile(BaseModel):
     total_xp_earned: int = 0   # Tổng XP tích lũy (absolute)
     created_at: Optional[datetime] = None
     stats: UserStats = UserStats()
+    primary_badge: Optional[BadgeStub] = None
     badges: List[BadgeSummary] = []
 
     class Config:
@@ -126,10 +138,15 @@ class UserMe(BaseModel):
     settings: Optional[dict] = None
     created_at: Optional[datetime] = None
     stats: UserStats = UserStats()
+    primary_badge: Optional[BadgeStub] = None
     badges: List[BadgeSummary] = []
 
     class Config:
         from_attributes = True
+
+
+class PrimaryBadgeUpdate(BaseModel):
+    badge_id: Optional[int] = None
 
 
 # ─── Authentication Schemas ───
@@ -245,6 +262,7 @@ class ProfileResponse(BaseModel):
     radarData: List[RadarDataPoint]
     
     # Achievements
+    primary_badge: Optional[BadgeStub] = None
     badges: List[BadgeSummary]
     
     # Content

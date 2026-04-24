@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from src.gamification.schemas import BadgeStub
 from typing import Optional, List
 from datetime import datetime
 
@@ -14,9 +15,11 @@ class PostCreate(BaseModel):
 class UserStub(BaseModel):
     id: int
     display_name: Optional[str] = None
+    username: Optional[str] = None
     avatar_url: Optional[str] = None
     title: Optional[str] = None
     level: Optional[int] = None
+    primary_badge: Optional[BadgeStub] = None
 
 
 class LocationStub(BaseModel):
@@ -40,13 +43,16 @@ class PostListResponse(BaseModel):
 
 class CommentCreate(BaseModel):
     content: str
+    parent_id: Optional[int] = None
 
 
 class CommentResponse(BaseModel):
     id: int
     user: Optional[UserStub] = None
     content: str
+    parent_id: Optional[int] = None
     created_at: Optional[datetime] = None
+    replies: List["CommentResponse"] = []
 
     class Config:
         from_attributes = True
@@ -55,3 +61,6 @@ class CommentResponse(BaseModel):
 class CommentListResponse(BaseModel):
     items: List[CommentResponse]
     total: int
+
+
+CommentResponse.model_rebuild()

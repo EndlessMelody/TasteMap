@@ -70,6 +70,7 @@ import { BadgeSummary } from "@/types/gamification";
 import BadgeCard from "@/components/features/gamification/BadgeCard";
 import { useBadges } from "@/hooks/useBadges";
 import { useChat } from "@/context/ChatContext";
+import { useAuth } from "@/context/AuthContext";
 import type { Friend } from "@/components/features/foodies/FriendRow";
 import { useMediaUpload } from "@/hooks/useMediaUpload";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
@@ -497,6 +498,7 @@ export default function FoodieProfilePage() {
   const router = useRouter();
   const { radarData: myRadarData } = useUserVector();
   const { setActiveFriend, setIsChatOpen } = useChat();
+  const { user } = useAuth();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [social, setSocial] = useState<SocialContext | null>(null);
@@ -1045,6 +1047,7 @@ export default function FoodieProfilePage() {
             badges={badges}
             totalBadges={totalBadges}
             badgesLoading={badgesLoading}
+            isOwner={user?.id === profile.id}
           />
         </div>
       </div>

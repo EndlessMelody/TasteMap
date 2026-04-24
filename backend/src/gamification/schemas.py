@@ -11,6 +11,15 @@ class BadgeBase(BaseModel):
     accent_color: str = Field(default="#007AFF", max_length=20)
     is_hidden: bool = Field(default=False)
 
+class BadgeStub(BaseModel):
+    id: int
+    name: str
+    icon_name: str
+    accent_color: str
+
+    class Config:
+        from_attributes = True
+
 class BadgeCreate(BadgeBase):
     pass
 

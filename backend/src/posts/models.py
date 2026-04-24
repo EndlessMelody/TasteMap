@@ -72,6 +72,7 @@ class Comment(Base):
     # Nullable — comment thuộc về post HOẶC reel
     post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"), nullable=True, index=True)
     reel_id = Column(Integer, ForeignKey("reels.id", ondelete="CASCADE"), nullable=True, index=True)
+    parent_id = Column(Integer, ForeignKey("comments.id", ondelete="CASCADE"), nullable=True, index=True)
 
     content = Column(Text, nullable=False)
 
@@ -81,3 +82,11 @@ class Comment(Base):
     user = relationship("User", back_populates="comments")
     post = relationship("Post", back_populates="comments")
     reel = relationship("Reel", back_populates="comments")
+    parent = relationship("Comment", remote_side=[id], back_populates="replies")
+    replies = relationship(
+        "Comment",
+        back_populates="parent",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+        order_by="Comment.created_at.asc()",
+    )

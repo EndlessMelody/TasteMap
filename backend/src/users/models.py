@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, func
+from sqlalchemy import Column, Integer, String, Text, DateTime, func, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
 from pgvector.sqlalchemy import Vector
 from sqlalchemy.orm import relationship
@@ -40,6 +40,8 @@ class User(Base):
     next_level_xp = Column(Integer, default=100)   # Cumulative threshold để lên level tiếp (từ LevelConfig)
     total_xp_earned = Column(Integer, default=0)   # Tổng XP tuyệt đối, nguồn sự thật duy nhất
 
+    primary_badge_id = Column(Integer, ForeignKey("badges.id", ondelete="SET NULL"), nullable=True)
+
     # User settings — JSONB cho linh hoạt, không cần table riêng
     # VD: {"theme": "dark", "language": "vi", "notif_friends": true, "notif_deals": true, ...}
     settings = Column(JSONB, nullable=True, default={})
@@ -69,3 +71,5 @@ class User(Base):
     user_challenges = relationship("UserChallenge", back_populates="user", lazy="selectin")
     user_streaks = relationship("UserStreak", back_populates="user", lazy="selectin", uselist=False)
     xp_transactions = relationship("XpTransaction", back_populates="user", lazy="selectin")
+
+    primary_badge = relationship("Badge", foreign_keys=[primary_badge_id], lazy="selectin")

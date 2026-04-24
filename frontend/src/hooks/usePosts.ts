@@ -19,6 +19,7 @@ interface ApiPost {
   likes_count: number;
   comments_count: number;
   is_liked: boolean;
+  is_bookmarked?: boolean;
   rating?: number; // direct field on post
   created_at: string;
   location: {
@@ -78,6 +79,7 @@ function adaptPost(p: ApiPost): PostData {
     likes: p.likes_count ?? 0,
     comments: p.comments_count ?? 0,
     isLiked: p.is_liked ?? false,
+    isSaved: p.is_bookmarked ?? false,
   };
 }
 
@@ -113,7 +115,7 @@ export function usePosts(limit: number = 8): UsePostsResult {
     } finally {
       setLoading(false);
     }
-  }, [limit]);
+  }, [limit, setPosts]);
 
   useEffect(() => {
     fetchPosts();

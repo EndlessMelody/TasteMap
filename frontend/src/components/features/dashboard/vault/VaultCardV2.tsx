@@ -5,9 +5,10 @@
  * ─────────────────────────────────────────────────────────────────
  * Collection card for TasteVault. Horizontal scroll friendly.
  * Highlights XP value with animated glow badge.
+ * Shows author chip on top-left (like TasteMap Feed cards).
  *
  *   ┌─────────────────────┐
- *   │ ✨ 85XP      ★ 4.2 │
+ *   │ @user     ✨ 85XP   │
  *   │                     │
  *   │ Title of spot       │
  *   │ Food • $$           │
@@ -28,7 +29,13 @@ export interface VaultCardV2Props {
   rating: number;
   index?: number;
   onClick?: () => void;
+  // Author chip
+  authorName?: string;
+  authorAvatar?: string;
+  authorSub?: string;
 }
+
+const FALLBACK_AVATAR = "https://api.dicebear.com/7.x/notionists/svg?seed=default";
 
 export const VaultCardV2: React.FC<VaultCardV2Props> = ({
   title,
@@ -38,6 +45,9 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
   rating,
   index = 0,
   onClick,
+  authorName,
+  authorAvatar,
+  authorSub,
 }) => {
   return (
     <motion.div
@@ -86,21 +96,87 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
             }}
           />
 
-          {/* Gradient overlay for badge legibility */}
+          {/* Gradient overlay */}
           <div
             style={{
               position: "absolute",
               top: 0,
               left: 0,
               right: 0,
-              height: "50%",
+              height: "60%",
               background:
-                "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 100%)",
+                "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 100%)",
               pointerEvents: "none",
             }}
           />
 
-          {/* XP badge — animated glow */}
+          {/* Author chip — top-left (like TasteMap Feed) */}
+          {authorName && (
+            <div
+              style={{
+                position: "absolute",
+                top: tokens.space[3],
+                left: tokens.space[3],
+                display: "inline-flex",
+                alignItems: "center",
+                gap: tokens.space[2],
+                paddingTop: 4,
+                paddingBottom: 4,
+                paddingLeft: 4,
+                paddingRight: tokens.space[3],
+                borderRadius: tokens.radius.pill,
+                backgroundColor: "rgba(255,255,255,0.92)",
+                backdropFilter: "blur(10px)",
+                WebkitBackdropFilter: "blur(10px)",
+                border: `1px solid rgba(255,255,255,0.6)`,
+                boxShadow: tokens.shadow.sm,
+                maxWidth: "75%",
+                zIndex: 3,
+              }}
+            >
+              <img
+                src={authorAvatar || FALLBACK_AVATAR}
+                alt={authorName}
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  flexShrink: 0,
+                }}
+              />
+              <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: tokens.type.weight.bold,
+                    color: tokens.color.text,
+                    letterSpacing: tokens.type.tracking.tight,
+                    lineHeight: 1.15,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {authorName}
+                </span>
+                {authorSub && (
+                  <span
+                    style={{
+                      fontSize: 8,
+                      fontWeight: tokens.type.weight.medium,
+                      color: tokens.color.textMuted,
+                      lineHeight: 1.15,
+                    }}
+                  >
+                    {authorSub}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* XP badge — top-right when author present, top-left otherwise */}
           <motion.div
             animate={{
               boxShadow: [
@@ -113,7 +189,7 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
             style={{
               position: "absolute",
               top: tokens.space[3],
-              left: tokens.space[3],
+              right: tokens.space[3],
               zIndex: 3,
               display: "inline-flex",
               alignItems: "center",
@@ -145,42 +221,44 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
             </span>
           </motion.div>
 
-          {/* Rating badge */}
-          <div
-            style={{
-              position: "absolute",
-              top: tokens.space[3],
-              right: tokens.space[3],
-              zIndex: 3,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 3,
-              paddingTop: 4,
-              paddingBottom: 4,
-              paddingLeft: tokens.space[2],
-              paddingRight: tokens.space[2],
-              borderRadius: tokens.radius.sm,
-              backgroundColor: "rgba(255,255,255,0.92)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-              border: `1px solid rgba(255,255,255,0.6)`,
-            }}
-          >
-            <Star
-              size={11}
-              color={tokens.color.warning}
-              fill={tokens.color.warning}
-            />
-            <span
+          {/* Rating badge — only show if rating > 0 */}
+          {rating > 0 && !authorName && (
+            <div
               style={{
-                fontSize: 10,
-                fontWeight: tokens.type.weight.bold,
-                color: tokens.color.warning,
+                position: "absolute",
+                top: tokens.space[3],
+                right: tokens.space[3],
+                zIndex: 3,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 3,
+                paddingTop: 4,
+                paddingBottom: 4,
+                paddingLeft: tokens.space[2],
+                paddingRight: tokens.space[2],
+                borderRadius: tokens.radius.sm,
+                backgroundColor: "rgba(255,255,255,0.92)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                border: `1px solid rgba(255,255,255,0.6)`,
               }}
             >
-              {rating.toFixed(1)}
-            </span>
-          </div>
+              <Star
+                size={11}
+                color={tokens.color.warning}
+                fill={tokens.color.warning}
+              />
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: tokens.type.weight.bold,
+                  color: tokens.color.warning,
+                }}
+              >
+                {rating.toFixed(1)}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* ── Text area ── */}
