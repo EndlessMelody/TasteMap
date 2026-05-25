@@ -1,0 +1,331 @@
+🚀 BẮT ĐẦU SUPER USER JOURNEY (TEST FULL MODULES LÕI)
+
+======================================================================
+📌 BƯỚC: PHẦN 1: AUTH & PROFILE
+📝 Đăng ký, Đăng nhập lấy Token và Update Profile
+======================================================================
+
+[➡] POST /users/
+{
+  "username": "foodie_1774723105",
+  "email": "foodie_1774723105@example.com",
+  "password": "strongpassword123"
+}
+
+[⬅] Status Code: 200
+{
+  "id": 27,
+  "username": "foodie_1774723105",
+  "email": "foodie_1774723105@example.com",
+  "display_name": null,
+  "food_vector": [
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5
+  ],
+  "place_vector": [
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5
+  ],
+  "xp": 0,
+  "level": 1
+}
+------------------------------------------------------------
+
+[➡] POST /auth/login
+{
+  "email": "foodie_1774723105@example.com",
+  "password": "strongpassword123"
+}
+
+[⬅] Status Code: 200
+{
+  "access_token": "dXNlcjoyNw==",
+  "token_type": "bearer",
+  "user_id": 27,
+  "username": "foodie_1774723105",
+  "display_name": null
+}
+------------------------------------------------------------
+
+[➡] PATCH /users/me
+[Headers] Authorization: Bearer dXNlcjoyNw==...
+{
+  "display_name": "Foodie Chúa Tể",
+  "bio": "Không cay không về!",
+  "location": "Làng Đại Học, Thủ Đức"
+}
+
+[⬅] Status Code: 200
+{
+  "id": 27,
+  "username": "foodie_1774723105",
+  "email": "foodie_1774723105@example.com",
+  "display_name": "Foodie Chúa Tể",
+  "avatar_url": null,
+  "bio": "Không cay không về!",
+  "cover_url": null,
+  "location": "Làng Đại Học, Thủ Đức",
+  "title": null,
+  "phone": null,
+  "xp": 0,
+  "level": 1,
+  "food_vector": [
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5
+  ],
+  "place_vector": [
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5
+  ],
+  "settings": {},
+  "created_at": "2026-03-28T18:38:26.229193Z",
+  "stats": {
+    "reviews": 0,
+    "visited": 0,
+    "followers": 0,
+    "following": 0
+  },
+  "badges": []
+}
+------------------------------------------------------------
+
+======================================================================
+📌 BƯỚC: PHẦN 2: LOCATIONS & FEED
+📝 Tạo địa điểm mới và quét thẻ xung quanh
+======================================================================
+
+[➡] POST /locations/
+[Headers] Authorization: Bearer dXNlcjoyNw==...
+{
+  "name": "Bún Bò Làng Đại Học",
+  "lat": 10.87,
+  "lng": 106.8,
+  "category": "food",
+  "price_range": "35k",
+  "characteristics": {
+    "spicy": 0.9,
+    "street_food": 0.8
+  }
+}
+
+[⬅] Status Code: 201
+{
+  "id": 102,
+  "name": "Bún Bò Làng Đại Học",
+  "lat": 10.87,
+  "lng": 106.8,
+  "address": null,
+  "city": null,
+  "category": "food",
+  "image_url": null,
+  "price_range": "35k",
+  "open_hours": null,
+  "rating": 0.0,
+  "characteristics": {
+    "spicy": 0.9,
+    "street_food": 0.8
+  },
+  "created_at": "2026-03-28T18:38:27.009885Z"
+}
+------------------------------------------------------------
+
+[➡] GET /feed/cards
+{
+  "type": "food",
+  "lat": 10.87,
+  "lng": 106.8,
+  "limit": 5
+}
+
+[⬅] Status Code: 200
+{
+  "cards": [
+    {
+      "id": 9,
+      "name": "Bưu điện Trung tâm Sài Gòn",
+      "image_url": "https://picsum.photos/seed/place8/400/300",
+      "tags": [],
+      "price_range": null,
+      "rating": null,
+      "distance_km": 14.47,
+      "match_percent": null,
+      "photos": [
+        "https://picsum.photos/seed/place8/400/300"
+      ],
+      "reviews_preview": []
+    },
+    {
+      "id": 13,
+      "name": "Bến Nhà Rồng #13",
+      "image_url": "https://picsum.photos/seed/place12/400/300",
+      "tags": [],
+      "price_range": null,
+      "rating": null,
+      "distance_km": 14.7,
+      "match_percent": null,
+      "photos": [
+        "https://picsum.photos/seed/place12/400/300"
+      ],
+      "reviews_preview": []
+    },
+    {
+      "id": 19,
+      "name": "Bưu điện Trung tâm Sài Gòn #19",
+      "image_url": "https://picsum.photos/seed/place18/400/300",
+      "tags": [],
+      "price_range": null,
+      "rating": null,
+      "distance_km": 14.74,
+      "match_percent": null,
+      "photos": [
+        "https://picsum.photos/seed/place18/400/300"
+      ],
+      "reviews_preview": []
+    },
+    {
+      "id": 18,
+      "name": "Nhà thờ Đức Bà #18",
+      "image_url": "https://picsum.photos/seed/place17/400/300",
+      "tags": [],
+      "price_range": null,
+      "rating": null,
+      "distance_km": 14.79,
+      "match_percent": null,
+      "photos": [
+        "https://picsum.photos/seed/place17/400/300"
+      ],
+      "reviews_preview": []
+    },
+    {
+      "id": 38,
+      "name": "Nhà thờ Đức Bà #38",
+      "image_url": "https://picsum.photos/seed/place37/400/300",
+      "tags": [],
+      "price_range": null,
+      "rating": null,
+      "distance_km": 14.86,
+      "match_percent": null,
+      "photos": [
+        "https://picsum.photos/seed/place37/400/300"
+      ],
+      "reviews_preview": []
+    }
+  ]
+}
+------------------------------------------------------------
+
+======================================================================
+📌 BƯỚC: PHẦN 3: LOBBY & AI MINIMAX
+📝 Tạo phòng, vào phòng và chạy AI trọng tài
+======================================================================
+
+[➡] POST /groups/
+[Headers] Authorization: Bearer dXNlcjoyNw==...
+{
+  "name": "Team Ăn Khuya Chạy Đồ Án",
+  "max_spots": 4
+}
+
+[⬅] Status Code: 201
+{
+  "status": "active",
+  "id": 2,
+  "route_description": null,
+  "max_spots": 4,
+  "accent_color": null,
+  "name": "Team Ăn Khuya Chạy Đồ Án",
+  "scheduled_time": null,
+  "cover_image_url": null,
+  "created_at": "2026-03-28T18:38:27.469949+00:00",
+  "members": [
+    {
+      "group_id": 2,
+      "user_id": 27,
+      "id": 2,
+      "joined_at": "2026-03-28T18:38:27.469949+00:00",
+      "compromise_score": 0.0,
+      "is_ready": false
+    }
+  ]
+}
+------------------------------------------------------------
+
+======================================================================
+📌 BƯỚC: PHẦN 4: TOUR BUILDER
+📝 Tạo lịch trình Tour đi ăn
+======================================================================
+
+[➡] POST /tours/
+[Headers] Authorization: Bearer dXNlcjoyNw==...
+
+[⬅] Status Code: 201
+{
+  "id": 2,
+  "estimated_cost": null,
+  "created_at": "2026-03-28T18:38:27.673956+00:00",
+  "user_id": 27,
+  "total_distance": null,
+  "estimated_duration": null,
+  "status": "building",
+  "stops": []
+}
+------------------------------------------------------------
+
+======================================================================
+📌 BƯỚC: PHẦN 5: SOCIAL & GAMIFICATION
+📝 Đăng bài review và lưu Taste Vault
+======================================================================
+
+✅ HOÀN TẤT SUPER USER JOURNEY!

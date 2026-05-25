@@ -1,0 +1,1469 @@
+
+                   🚀 BẮT ĐẦU TEST FULL API JOURNEY                    
+======================================================================
+
+======================================================================
+📌  PHẦN 0: HEALTH CHECK
+    ℹ  Kiểm tra server có đang chạy không
+======================================================================
+
+  [➡ GET]  /health
+  [⬅ 307]  Health check
+   
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 1: GUEST USER
+    ℹ  Không cần tài khoản, dùng device_id
+======================================================================
+
+  [➡ POST]  /users/init
+  Body: {
+    "device_id": "guest-device-1775041897",
+    "domain": "place"
+}
+  [⬅ 200]  Init Session (Guest)
+  {
+    "user_id": "guest-device-1775041897",
+    "current_vector": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+    ]
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /feed/cards
+  Params: {'category': 'place', 'limit': 5, 'lat': 10.7769, 'lng': 106.7009}
+  [⬅ 200]  Feed Cards (place)
+  {
+    "cards": []
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /feed/cards
+  Params: {'category': 'food', 'limit': 3}
+  [⬅ 200]  Feed Cards (food)
+  {
+    "cards": [
+        {
+            "id": 1,
+            "name": "Quán Cơm Nhà Làm 1775032767",
+            "image_url": "",
+            "tags": [],
+            "price_range": null,
+            "rating": 0.0,
+            "distance_km": null,
+            "match_percent": null,
+            "photos": [],
+            "reviews_preview": [
+                "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜"
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Quán Cơm Nhà Làm 1775035052",
+            "image_url": "",
+            "tags": [],
+            "pric
+  ------------------------------------------------------------------
+
+  [➡ POST]  /interactions/swipe-batch
+  Body: {
+    "user_id": "guest-device-1775041897",
+    "category": "place",
+    "actions": [
+        {
+            "place_id": 1,
+            "direction": "RIGHT",
+            "client_timestamp": 1775041900.6702757
+        },
+        {
+            "place_id": 2,
+            "direction": "LEFT",
+            "client_timestamp": 1775041902.1702757
+        },
+        {
+            "place_id": 3,
+            
+  [⬅ 200]  Swipe Batch (Guest)
+  {
+    "status": "success",
+    "processed_count": 1,
+    "penalty_triggered": false,
+    "updated_vector": [
+        0.42,
+        0.48,
+        0.44,
+        0.46,
+        0.45,
+        0.43,
+        0.47,
+        0.44,
+        0.45,
+        0.46,
+        0.43,
+        0.47,
+        0.42,
+        0.45,
+        0.44
+    ]
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /recommendations/
+  Body: {
+    "user_vector": [
+        0.42,
+        0.48,
+        0.44,
+        0.46,
+        0.45,
+        0.43,
+        0.47,
+        0.44,
+        0.45,
+        0.46,
+        0.43,
+        0.47,
+        0.42,
+        0.45,
+        0.44
+    ],
+    "top_n": 3,
+    "category": "place"
+}
+  [⬅ 200]  Recommend vector-only (Guest)
+  {
+    "recommendations": []
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 2: AUTH + USER MANAGEMENT
+    ℹ  Đăng ký User A và User B, đăng nhập, xem profile
+======================================================================
+
+  [➡ POST]  /users/
+  Body: {
+    "username": "alice_1775041897",
+    "email": "alice_1775041897@example.com",
+    "password": "Password@123",
+    "device_id": "guest-device-1775041897"
+}
+  [⬅ 200]  Register User A
+  {
+    "id": 5,
+    "username": "alice_1775041897",
+    "email": "alice_1775041897@example.com",
+    "display_name": null,
+    "food_vector": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+    ],
+    "place_vector": [
+        0.41999998688697815,
+        0.47999998927116394,
+        0.4399999976158142,
+        0.46000000834465027,
+        0.44999998807907104,
+        0.4300000071525574,
+        0.4699999988079071,
+        0.4399999976158142,
+      
+  ------------------------------------------------------------------
+
+  [➡ POST]  /users/
+  Body: {
+    "username": "bob_1775041897",
+    "email": "bob_1775041897@example.com",
+    "password": "Password@123"
+}
+  [⬅ 200]  Register User B
+  {
+    "id": 6,
+    "username": "bob_1775041897",
+    "email": "bob_1775041897@example.com",
+    "display_name": null,
+    "food_vector": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+    ],
+    "place_vector": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+    ],
+    "xp": 0,
+    "level": 1
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /auth/login
+  Body: {
+    "email": "alice_1775041897@example.com",
+    "password": "Password@123"
+}
+  [⬅ 200]  Login (User A)
+  {
+    "access_token": "dXNlcjo1",
+    "token_type": "bearer",
+    "user_id": 5,
+    "username": "alice_1775041897",
+    "display_name": null
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /auth/logout
+  [⬅ 200]  Logout
+  {
+    "status": "ok"
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /users/me
+  [⬅ 200]  GET /users/me
+  {
+    "id": 5,
+    "username": "alice_1775041897",
+    "email": "alice_1775041897@example.com",
+    "display_name": null,
+    "avatar_url": null,
+    "bio": null,
+    "cover_url": null,
+    "location": null,
+    "title": null,
+    "phone": null,
+    "xp": 0,
+    "level": 1,
+    "food_vector": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+    ],
+    "place_vector": [
+        0.41999998688697815,
+        0.47999998927116394,
+        0.4399999976158
+  ------------------------------------------------------------------
+
+  [➡ GET]  /users/5
+  [⬅ 200]  GET /users/{id}
+  {
+    "id": 5,
+    "username": "alice_1775041897",
+    "display_name": null,
+    "avatar_url": null,
+    "bio": null,
+    "cover_url": null,
+    "location": null,
+    "title": null,
+    "xp": 0,
+    "level": 1,
+    "created_at": "2026-04-01T11:11:40.033933Z",
+    "stats": {
+        "reviews": 0,
+        "visited": 0,
+        "followers": 0,
+        "following": 0
+    },
+    "badges": []
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /users/5/top-spots
+  [⬅ 200]  GET /users/{id}/top-spots
+  []
+  ------------------------------------------------------------------
+
+  [➡ PATCH]  /users/me
+  Body: {
+    "bio": "Mình là Alice, mê ẩm thực Sài Gòn!",
+    "city": "Ho Chi Minh"
+}
+  [⬅ 200]  PATCH /users/me
+  {
+    "id": 5,
+    "username": "alice_1775041897",
+    "email": "alice_1775041897@example.com",
+    "display_name": null,
+    "avatar_url": null,
+    "bio": "Mình là Alice, mê ẩm thực Sài Gòn!",
+    "cover_url": null,
+    "location": null,
+    "title": null,
+    "phone": null,
+    "xp": 0,
+    "level": 1,
+    "food_vector": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+    ],
+    "place_vector": [
+        0.41999998688697815,
+        0.4799999892
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 3: LOCATIONS
+    ℹ  Tạo địa điểm, list, lấy chi tiết
+======================================================================
+
+  [➡ POST]  /locations/
+  Body: {
+    "name": "Quán Cơm Nhà Làm 1775041897",
+    "category": "food",
+    "city": "Ho Chi Minh",
+    "address": "123 Nguyễn Trãi, Q.1",
+    "lat": 10.7769,
+    "lng": 106.7009,
+    "price_range": "25k-50k",
+    "vector": [
+        0.8,
+        0.2,
+        0.6,
+        0.4,
+        0.5,
+        0.7,
+        0.3,
+        0.6,
+        0.5,
+        0.4,
+        0.7,
+        0.3,
+        0.8,
+        0
+  [⬅ 201]  Create Location (Admin)
+  {
+    "id": 3,
+    "name": "Quán Cơm Nhà Làm 1775041897",
+    "lat": 10.7769,
+    "lng": 106.7009,
+    "address": "123 Nguyễn Trãi, Q.1",
+    "city": "Ho Chi Minh",
+    "category": "food",
+    "image_url": null,
+    "price_range": "25k-50k",
+    "open_hours": null,
+    "rating": 0.0,
+    "characteristics": null,
+    "created_at": "2026-04-01T11:11:58.497952Z"
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /locations/
+  Params: {'category': 'food', 'city': 'Ho Chi Minh', 'limit': 5}
+  [⬅ 200]  List Locations
+  {
+    "items": [
+        {
+            "id": 1,
+            "name": "Quán Cơm Nhà Làm 1775032767",
+            "lat": 10.7769,
+            "lng": 106.7009,
+            "address": "123 Nguyễn Trãi, Q.1",
+            "city": "Ho Chi Minh",
+            "category": "food",
+            "image_url": null,
+            "price_range": null,
+            "open_hours": null,
+            "rating": 0.0,
+            "characteristics": null,
+            "created_at": "2026-04-01T08:39:50.496669Z"
+        },
+        {
+            "id": 2,
+            "name": "Quán Cơm Nhà Làm 1775035052",
+            "lat": 10
+  ------------------------------------------------------------------
+
+  [➡ GET]  /locations/
+  Params: {'search': 'cơm', 'min_rating': 3.0, 'limit': 5}
+  [⬅ 200]  List Locations (search)
+  {
+    "items": [],
+    "total": 0,
+    "limit": 5,
+    "offset": 0
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /locations/3
+  [⬅ 200]  GET Location Detail
+  {
+    "id": 3,
+    "name": "Quán Cơm Nhà Làm 1775041897",
+    "lat": 10.7769,
+    "lng": 106.7009,
+    "address": "123 Nguyễn Trãi, Q.1",
+    "city": "Ho Chi Minh",
+    "category": "food",
+    "image_url": null,
+    "price_range": "25k-50k",
+    "open_hours": null,
+    "rating": 0.0,
+    "characteristics": null,
+    "created_at": "2026-04-01T11:11:58.497952Z",
+    "recent_posts": [],
+    "active_deals": []
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 4: INTERACTIONS
+    ℹ  Swipe batch + lịch sử swipe
+======================================================================
+
+  [➡ POST]  /interactions/swipe-batch
+  Body: {
+    "user_id": 5,
+    "category": "place",
+    "actions": [
+        {
+            "place_id": 1,
+            "direction": "RIGHT",
+            "client_timestamp": 1775041924.60829
+        },
+        {
+            "place_id": 2,
+            "direction": "RIGHT",
+            "client_timestamp": 1775041926.60829
+        },
+        {
+            "place_id": 3,
+            "direction": "RIGHT",
+     
+  [⬅ 200]  Swipe Batch (User A)
+  {
+    "status": "success",
+    "processed_count": 2,
+    "penalty_triggered": false,
+    "updated_vector": [
+        0.58,
+        0.52,
+        0.56,
+        0.54,
+        0.55,
+        0.57,
+        0.53,
+        0.56,
+        0.55,
+        0.54,
+        0.57,
+        0.53,
+        0.58,
+        0.55,
+        0.56
+    ]
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /interactions/history
+  Params: {'user_id': 5, 'limit': 10}
+  [⬅ 200]  Interaction History
+  {
+    "items": [],
+    "total": 0
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /interactions/history
+  Params: {'user_id': 5, 'action': 'RIGHT', 'limit': 5}
+  [⬅ 200]  Interaction History (RIGHT only)
+  {
+    "items": [],
+    "total": 0
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 5: RECOMMENDATIONS
+    ℹ  Vector-only, Contextual (thời tiết + khoảng cách), Rescue Me
+======================================================================
+
+  [➡ POST]  /recommendations/
+  Body: {
+    "user_vector": [
+        0.58,
+        0.52,
+        0.56,
+        0.54,
+        0.55,
+        0.57,
+        0.53,
+        0.56,
+        0.55,
+        0.54,
+        0.57,
+        0.53,
+        0.58,
+        0.55,
+        0.56
+    ],
+    "top_n": 5,
+    "category": "place"
+}
+  [⬅ 200]  Recommend vector-only
+  {
+    "recommendations": []
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /recommendations/contextual
+  Body: {
+    "user_id": 5,
+    "lat": 10.7769,
+    "lng": 106.7009,
+    "category": "food",
+    "radius_km": 3.0,
+    "top_n": 5,
+    "time_context": "lunch"
+}
+  [⬅ 500]  Recommend Contextual
+   Internal Server Error
+  ------------------------------------------------------------------
+
+  [➡ POST]  /recommendations/rescue-me
+  Body: {
+    "user_id": 5,
+    "lat": 10.7769,
+    "lng": 106.7009,
+    "category": "food"
+}
+  [⬅ 500]  Rescue Me
+   Internal Server Error
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 6: BOOKMARKS
+    ℹ  Bookmark / bỏ bookmark địa điểm
+======================================================================
+
+  [➡ POST]  /bookmarks/
+  Body: {
+    "location_id": 3
+}
+  [⬅ 201]  Add Bookmark
+  {
+    "id": 3,
+    "xp_earned": 10,
+    "total_xp": 10
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /bookmarks/
+  [⬅ 200]  List Bookmarks
+  {
+    "items": [
+        {
+            "id": 3,
+            "location": {
+                "id": 3,
+                "name": "Quán Cơm Nhà Làm 1775041897",
+                "image_url": null,
+                "rating": 0.0,
+                "category": "food",
+                "price_range": "25k-50k"
+            },
+            "xp_earned": 10,
+            "created_at": "2026-04-01T11:12:13.066334+00:00"
+        }
+    ],
+    "total": 1
+}
+  ------------------------------------------------------------------
+
+  [➡ DELETE]  /bookmarks/3
+  [⬅ 200]  Delete Bookmark
+  {
+    "status": "deleted"
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 7: POSTS (REVIEWS)
+    ℹ  Tạo, list, like, comment, xóa
+======================================================================
+
+  [➡ POST]  /posts/
+  Body: {
+    "location_id": 3,
+    "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
+    "rating": 4.5,
+    "media_urls": []
+}
+  [⬅ 201]  Create Post
+  {
+    "id": 3,
+    "user": {
+        "id": 5,
+        "display_name": null,
+        "avatar_url": null
+    },
+    "location": {
+        "id": 3,
+        "name": "Quán Cơm Nhà Làm 1775041897"
+    },
+    "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
+    "rating": 4.5,
+    "image_url": null,
+    "tags": null,
+    "likes_count": 0,
+    "comments_count": 0,
+    "is_liked": false,
+    "created_at": "2026-04-01T11:12:17.638881+00:00"
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /posts/
+  Params: {'limit': 10}
+  [⬅ 200]  List Posts
+  {
+    "items": [
+        {
+            "id": 3,
+            "user": {
+                "id": 5,
+                "display_name": null,
+                "avatar_url": null
+            },
+            "location": {
+                "id": 3,
+                "name": "Quán Cơm Nhà Làm 1775041897"
+            },
+            "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
+            "rating": 4.5,
+            "image_url": null,
+            "tags": null,
+            "likes_count": 0,
+            "comments_count": 0,
+            "is_liked": false,
+            "created_at": "2
+  ------------------------------------------------------------------
+
+  [➡ GET]  /posts/
+  Params: {'location_id': 3, 'limit': 5}
+  [⬅ 200]  List Posts by Location
+  {
+    "items": [
+        {
+            "id": 3,
+            "user": {
+                "id": 5,
+                "display_name": null,
+                "avatar_url": null
+            },
+            "location": {
+                "id": 3,
+                "name": "Quán Cơm Nhà Làm 1775041897"
+            },
+            "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
+            "rating": 4.5,
+            "image_url": null,
+            "tags": null,
+            "likes_count": 0,
+            "comments_count": 0,
+            "is_liked": false,
+            "created_at": "2
+  ------------------------------------------------------------------
+
+  [➡ GET]  /posts/3
+  [⬅ 200]  GET Post Detail
+  {
+    "id": 3,
+    "user": {
+        "id": 5,
+        "display_name": null,
+        "avatar_url": null
+    },
+    "location": {
+        "id": 3,
+        "name": "Quán Cơm Nhà Làm 1775041897"
+    },
+    "review": "Quán ngon, phục vụ nhiệt tình! Mình recommend mọi người thử nha 🍜",
+    "rating": 4.5,
+    "image_url": null,
+    "tags": null,
+    "likes_count": 0,
+    "comments_count": 0,
+    "is_liked": false,
+    "created_at": "2026-04-01T11:12:17.638881+00:00"
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /posts/3/like
+  [⬅ 200]  Like Post
+  {
+    "liked": true,
+    "likes_count": 1
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /posts/3/comments
+  Body: {
+    "content": "Đồng ý! Tui cũng hay ghé đây 😄"
+}
+  [⬅ 200]  Add Comment
+  {
+    "id": 5,
+    "user": {
+        "id": 5,
+        "display_name": null,
+        "avatar_url": null
+    },
+    "content": "Đồng ý! Tui cũng hay ghé đây 😄",
+    "created_at": "2026-04-01T11:12:36.735689+00:00"
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /posts/3/comments
+  [⬅ 200]  List Comments
+  {
+    "items": [
+        {
+            "id": 5,
+            "user": {
+                "id": 5,
+                "display_name": null,
+                "avatar_url": null
+            },
+            "content": "Đồng ý! Tui cũng hay ghé đây 😄",
+            "created_at": "2026-04-01T11:12:36.735689+00:00"
+        }
+    ],
+    "total": 1
+}
+  ------------------------------------------------------------------
+
+  [➡ DELETE]  /comments/5
+  [⬅ 200]  Delete Comment
+  {
+    "status": "deleted"
+}
+  ------------------------------------------------------------------
+
+  [➡ DELETE]  /posts/3
+  [⬅ 200]  Delete Post
+  {
+    "status": "deleted"
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 8: REELS
+    ℹ  Tạo reel, list, like, comment
+======================================================================
+
+  [➡ GET]  /reels/
+  Params: {'sort': 'trending', 'limit': 5}
+  [⬅ 200]  List Reels (trending)
+  {
+    "items": [
+        {
+            "id": 1,
+            "title": "Bữa trưa tuyệt vời! #TasteMap #HCMC",
+            "user": {
+                "id": 1,
+                "username": "alice_1775032767",
+                "avatar_url": null
+            },
+            "video_url": "https://cdn.tastemap.vn/reels/sample.mp4",
+            "thumbnail_url": "https://cdn.tastemap.vn/reels/thumb.jpg",
+            "views_count": 1,
+            "likes_count": 1,
+            "comments_count": 1,
+            "created_at": "2026-04-01T08:40:34.094894+00:00"
+        },
+        {
+            "id": 2,
+          
+  ------------------------------------------------------------------
+
+  [➡ POST]  /reels/
+  Body: {
+    "location_id": 3,
+    "video_url": "https://cdn.tastemap.vn/reels/sample.mp4",
+    "thumbnail_url": "https://cdn.tastemap.vn/reels/thumb.jpg",
+    "title": "Bữa trưa tuyệt vời! #TasteMap #HCMC"
+}
+  [⬅ 201]  Create Reel
+  {
+    "id": 3,
+    "title": "Bữa trưa tuyệt vời! #TasteMap #HCMC",
+    "user": {
+        "id": 5,
+        "username": "alice_1775041897",
+        "avatar_url": null
+    },
+    "video_url": "https://cdn.tastemap.vn/reels/sample.mp4",
+    "thumbnail_url": "https://cdn.tastemap.vn/reels/thumb.jpg",
+    "views_count": 0,
+    "likes_count": 0,
+    "comments_count": 0,
+    "created_at": "2026-04-01T11:12:48.179620+00:00"
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /reels/3
+  [⬅ 200]  GET Reel Detail
+  {
+    "id": 3,
+    "title": "Bữa trưa tuyệt vời! #TasteMap #HCMC",
+    "user": {
+        "id": 5,
+        "username": "alice_1775041897",
+        "avatar_url": null
+    },
+    "video_url": "https://cdn.tastemap.vn/reels/sample.mp4",
+    "thumbnail_url": "https://cdn.tastemap.vn/reels/thumb.jpg",
+    "views_count": 1,
+    "likes_count": 0,
+    "comments_count": 0,
+    "created_at": "2026-04-01T11:12:48.179620+00:00"
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /reels/3/like
+  [⬅ 200]  Like Reel
+  {
+    "likes_count": 1
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /reels/3/comments
+  Body: {
+    "content": "Video đẹp quá trời! 🎬"
+}
+  [⬅ 200]  Add Reel Comment
+  {
+    "id": 6,
+    "user": {
+        "id": 5,
+        "display_name": null,
+        "avatar_url": null
+    },
+    "content": "Video đẹp quá trời! 🎬",
+    "created_at": "2026-04-01T11:12:54.180407+00:00"
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /reels/3/comments
+  [⬅ 200]  List Reel Comments
+  {
+    "items": [
+        {
+            "id": 6,
+            "user": {
+                "id": 5,
+                "display_name": null,
+                "avatar_url": null
+            },
+            "content": "Video đẹp quá trời! 🎬",
+            "created_at": "2026-04-01T11:12:54.180407+00:00"
+        }
+    ],
+    "total": 1
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 9: SOCIAL – BẠN BÈ
+    ℹ  Gửi lời mời → chờ duyệt → chấp nhận → list → xóa
+======================================================================
+
+  [➡ POST]  /friends/request
+  Body: {
+    "friend_id": 6
+}
+  [⬅ 200]  Send Friend Request (A→B)
+  {
+    "status": "pending"
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /friends/requests
+  [⬅ 200]  Pending Requests (B)
+  {
+    "items": [
+        {
+            "friendship_id": 3,
+            "from_user": {
+                "id": 5,
+                "display_name": null,
+                "avatar_url": null
+            },
+            "created_at": "2026-04-01T11:12:59.051434+00:00"
+        }
+    ]
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /friends/
+  [⬅ 200]  List Friends (A)
+  {
+    "items": []
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 10: GROUPS – LOBBY NHÓM
+    ℹ  Tạo → list → join → ready → Minimax recommend → leave
+======================================================================
+
+  [➡ POST]  /groups/
+  Body: {
+    "name": "Nhóm ẩm thực 1775041897",
+    "description": "Nhóm tìm quán ăn sau giờ học",
+    "category": "food",
+    "max_members": 5
+}
+  [⬅ 201]  Create Group
+  {
+    "route_description": null,
+    "status": "active",
+    "id": 3,
+    "max_spots": 6,
+    "accent_color": null,
+    "name": "Nhóm ẩm thực 1775041897",
+    "scheduled_time": null,
+    "cover_image_url": null,
+    "created_at": "2026-04-01T11:13:02.491449+00:00",
+    "members": [
+        {
+            "group_id": 3,
+            "user_id": 5,
+            "id": 5,
+            "joined_at": "2026-04-01T11:13:02.491449+00:00",
+            "compromise_score": 0.0,
+            "is_ready": false
+        }
+    ]
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /groups/
+  Params: {'status': 'active'}
+  [⬅ 200]  List Groups
+  {
+    "items": [
+        {
+            "id": 3,
+            "name": "Nhóm ẩm thực 1775041897",
+            "status": "active",
+            "route_description": null,
+            "scheduled_time": null,
+            "max_spots": 6,
+            "cover_image_url": null,
+            "accent_color": null,
+            "created_at": "2026-04-01T11:13:02.491449+00:00",
+            "members": [
+                {
+                    "user_id": 5,
+                    "display_name": null,
+                    "avatar_url": null,
+                    "is_ready": false
+                }
+            ],
+       
+  ------------------------------------------------------------------
+
+  [➡ GET]  /groups/3
+  [⬅ 200]  GET Group Detail
+  {
+    "id": 3,
+    "name": "Nhóm ẩm thực 1775041897",
+    "status": "active",
+    "route_description": null,
+    "scheduled_time": null,
+    "max_spots": 6,
+    "cover_image_url": null,
+    "accent_color": null,
+    "created_at": "2026-04-01T11:13:02.491449+00:00",
+    "members": [
+        {
+            "user_id": 5,
+            "display_name": null,
+            "avatar_url": null,
+            "is_ready": false
+        }
+    ],
+    "spots_remaining": 5
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /groups/3/join
+  [⬅ 200]  Join Group (B)
+  {
+    "status": "joined"
+}
+  ------------------------------------------------------------------
+
+  [➡ PATCH]  /groups/3/ready
+  Body: {
+    "is_ready": true
+}
+  [⬅ 200]  Set Ready (A)
+  {
+    "is_ready": true
+}
+  ------------------------------------------------------------------
+
+  [➡ PATCH]  /groups/3/ready
+  Body: {
+    "is_ready": true
+}
+  [⬅ 200]  Set Ready (B)
+  {
+    "is_ready": true
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /groups/3/recommend
+  Body: {
+    "category": "food",
+    "lat": 10.7769,
+    "lng": 106.7009,
+    "top_n": 3
+}
+  [⬅ 200]  Group Recommend (Minimax)
+  {
+    "group_vector": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+    ],
+    "recommendations": [
+        {
+            "place_id": 2,
+            "name": "Quán Cơm Nhà Làm 1775035052",
+            "group_score": 0.948,
+            "member_scores": [
+                {
+                    "user_id": 5,
+                    "display_name": "alice_1775041897",
+                    "score": 0.9479620836692002,
+                    "compromise": 0.0
+  
+  ------------------------------------------------------------------
+
+  [➡ POST]  /groups/3/leave
+  [⬅ 200]  Leave Group (A)
+  {
+    "status": "left"
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 11: TOURS – FOOD TOUR BUILDER
+    ℹ  Tạo tour → thêm stops → tối ưu lộ trình → cập nhật status → xóa stop
+======================================================================
+
+  [➡ POST]  /tours/
+  [⬅ 201]  Create Tour
+  {
+    "id": 3,
+    "estimated_cost": null,
+    "created_at": "2026-04-01T11:13:17.680036+00:00",
+    "user_id": 5,
+    "total_distance": null,
+    "estimated_duration": null,
+    "status": "building",
+    "stops": []
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /tours/
+  [⬅ 200]  List Tours
+  {
+    "items": [
+        {
+            "id": 3,
+            "estimated_cost": null,
+            "created_at": "2026-04-01T11:13:17.680036+00:00",
+            "user_id": 5,
+            "total_distance": null,
+            "estimated_duration": null,
+            "status": "building",
+            "stops": []
+        }
+    ]
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /tours/3/stops
+  Body: {
+    "location_id": 3,
+    "order": 1,
+    "duration_min": 45,
+    "note": "Ăn trưa ở đây"
+}
+  [⬅ 200]  Add Stop 1
+  {
+    "id": 5,
+    "stop_order": 1,
+    "location_id": 3
+}
+  ------------------------------------------------------------------
+
+  [➡ POST]  /tours/3/stops
+  Body: {
+    "location_id": 1,
+    "order": 2,
+    "duration_min": 30,
+    "note": "Uống cà phê tráng miệng"
+}
+  [⬅ 200]  Add Stop 2
+  {
+    "id": 6,
+    "stop_order": 2,
+    "location_id": 1
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /tours/3
+  [⬅ 200]  GET Tour Detail
+  {
+    "id": 3,
+    "status": "building",
+    "total_distance": null,
+    "estimated_cost": null,
+    "estimated_duration": null,
+    "created_at": "2026-04-01T11:13:17.680036+00:00",
+    "stops": [
+        {
+            "id": 5,
+            "stop_order": 1,
+            "location": {
+                "id": 3,
+                "name": "Quán Cơm Nhà Làm 1775041897",
+                "lat": 10.7769,
+                "lng": 106.7009,
+                "image_url": null,
+                "price_range": "25k-50k"
+            }
+        },
+        {
+            "id": 6,
+            "stop_order": 2,
+          
+  ------------------------------------------------------------------
+
+  [➡ POST]  /tours/3/optimize
+  Body: {
+    "start_lat": 10.7769,
+    "start_lng": 106.7009,
+    "optimize_by": "distance"
+}
+  [⬅ 200]  Optimize Tour
+  {
+    "optimized_stops": [
+        {
+            "stop_order": 1,
+            "location_id": 3,
+            "estimated_travel_min": 0
+        },
+        {
+            "stop_order": 2,
+            "location_id": 1,
+            "estimated_travel_min": 0
+        }
+    ],
+    "total_distance_km": 0.0,
+    "total_duration_min": 0,
+    "estimated_cost_vnd": 0
+}
+  ------------------------------------------------------------------
+
+  [➡ PATCH]  /tours/3/status
+  Body: {
+    "status": "active"
+}
+  [⬅ 200]  Update Tour Status (active)
+  {
+    "id": 3,
+    "status": "active"
+}
+  ------------------------------------------------------------------
+
+  [➡ DELETE]  /tours/3/stops/5
+  [⬅ 200]  Delete Stop
+  {
+    "status": "deleted"
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 12: DEALS
+    ℹ  Tạo deal, list, chi tiết
+======================================================================
+
+  [➡ POST]  /deals/
+  Body: {
+    "location_id": 3,
+    "title": "Giảm 20% mọi món",
+    "description": "Áp dụng từ 11h-14h các ngày trong tuần",
+    "discount_type": "percent",
+    "discount_value": 20.0,
+    "start_date": "2026-04-01",
+    "end_date": "2026-04-30",
+    "is_sponsored": false
+}
+  [⬅ 201]  Create Deal
+  {
+    "id": 3,
+    "title": "Giảm 20% mọi món",
+    "description": "Áp dụng từ 11h-14h các ngày trong tuần",
+    "discount_percent": null,
+    "banner_image_url": null,
+    "xp_reward": 0,
+    "is_sponsored": false,
+    "location": {
+        "id": 3,
+        "name": "Quán Cơm Nhà Làm 1775041897"
+    },
+    "expires_at": null,
+    "created_at": "2026-04-01T11:13:24.902615+00:00"
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /deals/
+  Params: {'limit': 10}
+  [⬅ 200]  List Deals
+  {
+    "items": []
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /deals/
+  Params: {'location_id': 3}
+  [⬅ 200]  List Deals by Location
+  {
+    "items": []
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /deals/3
+  [⬅ 200]  GET Deal Detail
+  {
+    "id": 3,
+    "title": "Giảm 20% mọi món",
+    "description": "Áp dụng từ 11h-14h các ngày trong tuần",
+    "discount_percent": null,
+    "banner_image_url": null,
+    "xp_reward": 0,
+    "is_sponsored": false,
+    "location": {
+        "id": 3,
+        "name": "Quán Cơm Nhà Làm 1775041897"
+    },
+    "expires_at": null,
+    "created_at": "2026-04-01T11:13:24.902615+00:00"
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 13: GAMIFICATION – BADGES
+    ℹ  List badges, badges của tôi, badges user bất kỳ
+======================================================================
+
+  [➡ GET]  /badges/
+  [⬅ 200]  List All Badges
+  {
+    "items": []
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /badges/me
+  [⬅ 200]  My Badges
+  {
+    "items": []
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /badges/6
+  [⬅ 200]  User B Badges
+  {
+    "items": []
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 14: NOTIFICATIONS
+    ℹ  List thông báo → mark read → mark all read
+======================================================================
+
+  [➡ GET]  /notifications/
+  Params: {'limit': 10}
+  [⬅ 200]  List Notifications
+  {
+    "items": [],
+    "unread_count": 0
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /notifications/
+  Params: {'unread_only': True}
+  [⬅ 200]  List Unread Notifications
+  {
+    "items": [],
+    "unread_count": 0
+}
+  ------------------------------------------------------------------
+
+  [➡ PATCH]  /notifications/read-all
+  [⬅ 200]  Mark All Notifications Read
+  {
+    "status": "all_read",
+    "count": 0
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 15: SETTINGS
+    ℹ  Lấy cài đặt và cập nhật
+======================================================================
+
+  [➡ GET]  /settings/
+  [⬅ 200]  GET Settings
+  {
+    "settings": {}
+}
+  ------------------------------------------------------------------
+
+  [➡ PATCH]  /settings/
+  Body: {
+    "theme": "dark",
+    "language": "vi",
+    "notifications_enabled": true
+}
+  [⬅ 200]  PATCH Settings
+  {
+    "settings": {
+        "theme": "dark",
+        "language": "vi",
+        "notifications_enabled": true
+    }
+}
+  ------------------------------------------------------------------
+
+  [➡ GET]  /settings/
+  [⬅ 200]  GET Settings (after patch)
+  {
+    "settings": {
+        "theme": "dark",
+        "language": "vi",
+        "notifications_enabled": true
+    }
+}
+  ------------------------------------------------------------------
+
+======================================================================
+📌  PHẦN 16: MEDIA – UPLOAD
+    ℹ  Upload file ảnh (multipart/form-data)
+======================================================================
+
+  [➡ POST]  /media/upload?type=avatar  (multipart)
+  [⬅ 400]  Upload Media
+  {
+    "detail": "File type 'image/gif' không được phép cho 'avatar'"
+}
+
+======================================================================
+✅  TỔNG KẾT
+    Tổng số API calls : 75
+    Thành công         : 72
+    Thất bại           : 3
+    Skip               : 0
+    Tỷ lệ thành công   : 96.0%
+======================================================================
+
+📄  Log được lưu tại: D:\Code\01_University\2526-HK2\TuDuyTinhToan_Backup\backend\tests\test_full_journey.log
+
+🏁  HOÀN TẤT TEST FULL JOURNEY!

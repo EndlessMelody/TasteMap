@@ -1,0 +1,16 @@
+# docker-compose.yml — TasteMap local dev services
+# NOTE: PostgreSQL đã được migrate sang Supabase (managed cloud).
+#       File này chỉ còn Redis cho local development.
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: tdtt_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

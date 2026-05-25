@@ -1,0 +1,341 @@
+/* ═══════════════════════════════════════════════════════════
+   TasteMap Concierge — UI Primitive Styles
+   ────────────────────────────────────────────────────────────
+   Stateful styling (hover, focus, disabled) for primitives in
+   src/components/ui/. Static values still come from tokens.ts;
+   this file only handles what inline style cannot.
+
+   Naming: .ui-<primitive> [+ .ui-<primitive>--<modifier>]
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Focus ring (shared) ────────────────────────────────── */
+.ui-btn:focus-visible,
+.ui-icon-btn:focus-visible,
+.ui-field__shell:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--dsc-bg), 0 0 0 4px var(--dsc-border-focus);
+}
+
+/* ═══════════════ BUTTON ═══════════════ */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dsc-space-2);
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: var(--dsc-radius-sm);
+  transition:
+    background-color var(--dsc-duration-fast) var(--dsc-ease-out),
+    color var(--dsc-duration-fast) var(--dsc-ease-out),
+    border-color var(--dsc-duration-fast) var(--dsc-ease-out),
+    box-shadow var(--dsc-duration-fast) var(--dsc-ease-out),
+    transform var(--dsc-duration-fast) var(--dsc-ease-out);
+  white-space: nowrap;
+  user-select: none;
+}
+.ui-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.ui-btn:disabled,
+.ui-btn--loading {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Sizes */
+.ui-btn--sm {
+  height: 32px;
+  padding: 0 var(--dsc-space-3);
+  font-size: var(--dsc-font-body-sm);
+}
+.ui-btn--md {
+  height: 40px;
+  padding: 0 var(--dsc-space-5);
+  font-size: var(--dsc-font-body);
+}
+.ui-btn--lg {
+  height: 48px;
+  padding: 0 var(--dsc-space-6);
+  font-size: var(--dsc-font-body);
+}
+.ui-btn--full {
+  width: 100%;
+}
+
+/* Variants — primary (warm) */
+.ui-btn--primary {
+  background: var(--dsc-accent-warm);
+  color: var(--dsc-text-inverse);
+}
+.ui-btn--primary:hover:not(:disabled) {
+  background: #e65a25;
+}
+
+/* Variants — secondary (neutral surface) */
+.ui-btn--secondary {
+  background: var(--dsc-surface);
+  color: var(--dsc-text);
+  border-color: var(--dsc-border-strong);
+}
+.ui-btn--secondary:hover:not(:disabled) {
+  background: var(--dsc-surface-muted);
+}
+
+/* Variants — ghost (transparent) */
+.ui-btn--ghost {
+  background: transparent;
+  color: var(--dsc-text);
+}
+.ui-btn--ghost:hover:not(:disabled) {
+  background: var(--dsc-surface-muted);
+}
+
+/* Variants — magic (AI only) */
+.ui-btn--magic {
+  background: var(--dsc-accent-magic);
+  color: var(--dsc-text-inverse);
+}
+.ui-btn--magic:hover:not(:disabled) {
+  background: #9333ea;
+  box-shadow: var(--dsc-shadow-glow-magic);
+}
+
+/* Variants — danger (destructive) */
+.ui-btn--danger {
+  background: var(--dsc-accent-danger);
+  color: var(--dsc-text-inverse);
+}
+.ui-btn--danger:hover:not(:disabled) {
+  background: #d12c39;
+}
+
+.ui-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ui-btn__label {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ═══════════════ ICON BUTTON ═══════════════ */
+.ui-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--dsc-radius-pill);
+  cursor: pointer;
+  transition: inherit;
+  flex-shrink: 0;
+}
+.ui-icon-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.ui-icon-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.ui-icon-btn--sm {
+  width: 32px;
+  height: 32px;
+}
+.ui-icon-btn--md {
+  width: 40px;
+  height: 40px;
+}
+.ui-icon-btn--lg {
+  width: 48px;
+  height: 48px;
+}
+
+/* ═══════════════ PILL / CHIP ═══════════════ */
+.ui-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dsc-space-1);
+  border-radius: var(--dsc-radius-pill);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition: background-color var(--dsc-duration-fast) var(--dsc-ease-out);
+}
+.ui-pill--sm {
+  height: 22px;
+  padding: 0 var(--dsc-space-2);
+  font-size: var(--dsc-font-caption);
+}
+.ui-pill--md {
+  height: 28px;
+  padding: 0 var(--dsc-space-3);
+  font-size: var(--dsc-font-body-sm);
+}
+
+.ui-pill__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* Subtle (default) — tinted background */
+.ui-pill--neutral {
+  background: var(--dsc-surface-muted);
+  color: var(--dsc-text-muted);
+}
+.ui-pill--warm {
+  background: rgba(255, 107, 53, 0.1);
+  color: var(--dsc-accent-warm);
+}
+.ui-pill--magic {
+  background: rgba(168, 85, 247, 0.1);
+  color: var(--dsc-accent-magic);
+}
+.ui-pill--cool {
+  background: rgba(10, 132, 255, 0.1);
+  color: var(--dsc-accent-cool);
+}
+.ui-pill--success {
+  background: rgba(52, 199, 89, 0.12);
+  color: #1f8f3a;
+}
+.ui-pill--warning {
+  background: rgba(251, 191, 36, 0.16);
+  color: #92580d;
+}
+.ui-pill--danger {
+  background: rgba(230, 57, 70, 0.1);
+  color: var(--dsc-accent-danger);
+}
+
+/* Solid variant — flip background/foreground */
+.ui-pill--solid.ui-pill--neutral {
+  background: var(--dsc-text);
+  color: var(--dsc-text-inverse);
+}
+.ui-pill--solid.ui-pill--warm {
+  background: var(--dsc-accent-warm);
+  color: var(--dsc-text-inverse);
+}
+.ui-pill--solid.ui-pill--magic {
+  background: var(--dsc-accent-magic);
+  color: var(--dsc-text-inverse);
+}
+.ui-pill--solid.ui-pill--cool {
+  background: var(--dsc-accent-cool);
+  color: var(--dsc-text-inverse);
+}
+.ui-pill--solid.ui-pill--success {
+  background: var(--dsc-accent-success);
+  color: var(--dsc-text-inverse);
+}
+.ui-pill--solid.ui-pill--warning {
+  background: var(--dsc-accent-warning);
+  color: #2a1700;
+}
+.ui-pill--solid.ui-pill--danger {
+  background: var(--dsc-accent-danger);
+  color: var(--dsc-text-inverse);
+}
+
+/* ═══════════════ FIELD ═══════════════ */
+.ui-field__shell {
+  display: flex;
+  align-items: center;
+  gap: var(--dsc-space-2);
+  padding: 0 var(--dsc-space-3);
+  background: var(--dsc-surface);
+  border: 1px solid var(--dsc-border-strong);
+  border-radius: var(--dsc-radius-sm);
+  transition:
+    border-color var(--dsc-duration-fast) var(--dsc-ease-out),
+    background-color var(--dsc-duration-fast) var(--dsc-ease-out);
+}
+.ui-field__shell:hover {
+  border-color: var(--dsc-text-muted);
+}
+.ui-field__shell--error,
+.ui-field--error .ui-field__shell {
+  border-color: var(--dsc-accent-danger);
+}
+.ui-field__slot {
+  display: inline-flex;
+  align-items: center;
+  color: var(--dsc-text-muted);
+  flex-shrink: 0;
+}
+.ui-field__input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--dsc-text);
+  font-family: inherit;
+  font-size: var(--dsc-font-body);
+  letter-spacing: -0.005em;
+  padding: 10px 0;
+  min-height: 40px;
+  resize: vertical;
+}
+textarea.ui-field__input {
+  padding: 12px 0;
+  min-height: 80px;
+  line-height: 1.5;
+}
+.ui-field__input::placeholder {
+  color: var(--dsc-text-subtle);
+}
+.ui-field__input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ═══════════════ SKELETON ═══════════════ */
+.ui-skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--dsc-surface-inset);
+}
+.ui-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 100%
+  );
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+[data-theme="dark"] .ui-skeleton::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+}
+
+/* ═══════════════ REDUCED MOTION ═══════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .ui-btn,
+  .ui-icon-btn,
+  .ui-pill,
+  .ui-field__shell,
+  .dsc-lift {
+    transition: none;
+  }
+  .ui-skeleton::after,
+  .dsc-pulse-live {
+    animation: none;
+  }
+}

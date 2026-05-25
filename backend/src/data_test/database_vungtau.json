@@ -1,0 +1,442 @@
+[
+    {
+        "id": 1,
+        "metadata": {
+            "name": "Tượng Chúa Dang Tay",
+            "category": "Biểu tượng / Tôn giáo",
+            "image_url": "img_01.jpg",
+            "coordinates": {
+                "lat": 10.327,
+                "lng": 107.084
+            }
+        },
+        "vector": [
+            1.0,
+            1.0,
+            0.75,
+            0.75,
+            0.5,
+            0.25,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "id": 2,
+        "metadata": {
+            "name": "Ngọn Hải Đăng",
+            "category": "Cảnh quan / Lịch sử",
+            "image_url": "img_02.jpg",
+            "coordinates": {
+                "lat": 10.336,
+                "lng": 107.074
+            }
+        },
+        "vector": [
+            1.0,
+            0.25,
+            0.75,
+            0.75,
+            0.25,
+            0.25,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "id": 3,
+        "metadata": {
+            "name": "Bảo tàng Vũ khí cổ",
+            "category": "Bảo tàng / Lịch sử",
+            "image_url": "img_03.jpg",
+            "coordinates": {
+                "lat": 10.345,
+                "lng": 107.072
+            }
+        },
+        "vector": [
+            0.0,
+            0.5,
+            1.0,
+            0.25,
+            0.5,
+            0.25,
+            0.75,
+            0.75
+        ]
+    },
+    {
+        "id": 4,
+        "metadata": {
+            "name": "Bãi Sau (Thùy Vân)",
+            "category": "Biển / Giải trí",
+            "image_url": "img_04.jpg",
+            "coordinates": {
+                "lat": 10.339,
+                "lng": 107.094
+            }
+        },
+        "vector": [
+            1.0,
+            0.75,
+            0.0,
+            1.0,
+            0.75,
+            0.25,
+            0.5,
+            1.0
+        ]
+    },
+    {
+        "id": 5,
+        "metadata": {
+            "name": "Bạch Dinh",
+            "category": "Di tích / Lịch sử",
+            "image_url": "img_05.jpg",
+            "coordinates": {
+                "lat": 10.351,
+                "lng": 107.069
+            }
+        },
+        "vector": [
+            0.5,
+            0.5,
+            1.0,
+            0.5,
+            0.5,
+            0.25,
+            0.75,
+            0.75
+        ]
+    },
+    {
+        "id": 6,
+        "metadata": {
+            "name": "Hẻm Trần Phú",
+            "category": "Check-in / Sống ảo",
+            "image_url": "img_06.jpg",
+            "coordinates": {
+                "lat": 10.36,
+                "lng": 107.062
+            }
+        },
+        "vector": [
+            1.0,
+            0.25,
+            0.0,
+            0.5,
+            0.0,
+            0.0,
+            1.0,
+            0.75
+        ]
+    },
+    {
+        "id": 7,
+        "metadata": {
+            "name": "Hồ Mây Park",
+            "category": "Khu vui chơi lớn",
+            "image_url": "img_07.jpg",
+            "coordinates": {
+                "lat": 10.354,
+                "lng": 107.06
+            }
+        },
+        "vector": [
+            0.5,
+            0.75,
+            0.0,
+            0.75,
+            1.0,
+            0.5,
+            0.75,
+            0.75
+        ]
+    },
+    {
+        "id": 8,
+        "metadata": {
+            "name": "Mũi Nghinh Phong",
+            "category": "Thiên nhiên / Cảnh quan",
+            "image_url": "img_08.jpg",
+            "coordinates": {
+                "lat": 10.325,
+                "lng": 107.086
+            }
+        },
+        "vector": [
+            1.0,
+            0.5,
+            0.0,
+            0.75,
+            0.25,
+            0.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "id": 9,
+        "metadata": {
+            "name": "Đồi Con Heo",
+            "category": "Check-in / Hoang sơ",
+            "image_url": "img_09.jpg",
+            "coordinates": {
+                "lat": 10.33,
+                "lng": 107.082
+            }
+        },
+        "vector": [
+            1.0,
+            0.5,
+            0.0,
+            0.5,
+            0.25,
+            0.0,
+            1.0,
+            0.75
+        ]
+    },
+    {
+        "id": 10,
+        "metadata": {
+            "name": "Chợ Đêm Vũng Tàu",
+            "category": "Chợ / Ẩm thực",
+            "image_url": "img_10.jpg",
+            "coordinates": {
+                "lat": 10.347,
+                "lng": 107.089
+            }
+        },
+        "vector": [
+            1.0,
+            0.5,
+            0.5,
+            1.0,
+            0.5,
+            0.75,
+            0.25,
+            1.0
+        ]
+    },
+    {
+        "id": 11,
+        "metadata": {
+            "name": "Hòn Bà",
+            "category": "Tôn giáo / Thiên nhiên",
+            "image_url": "img_11.jpg",
+            "coordinates": {
+                "lat": 10.323,
+                "lng": 107.088
+            }
+        },
+        "vector": [
+            1.0,
+            0.75,
+            0.75,
+            0.5,
+            0.5,
+            0.0,
+            0.75,
+            0.75
+        ]
+    },
+    {
+        "id": 12,
+        "metadata": {
+            "name": "Lotte Mart Vũng Tàu",
+            "category": "Mua sắm / TTTM",
+            "image_url": "img_12.jpg",
+            "coordinates": {
+                "lat": 10.362,
+                "lng": 107.112
+            }
+        },
+        "vector": [
+            0.0,
+            0.5,
+            0.0,
+            0.75,
+            0.5,
+            1.0,
+            0.25,
+            0.75
+        ]
+    },
+    {
+        "id": 13,
+        "metadata": {
+            "name": "Bến Du Thuyền Marina",
+            "category": "Check-in / Sang trọng",
+            "image_url": "img_13.jpg",
+            "coordinates": {
+                "lat": 10.428,
+                "lng": 107.124
+            }
+        },
+        "vector": [
+            1.0,
+            0.25,
+            0.0,
+            0.5,
+            0.25,
+            0.0,
+            1.0,
+            0.75
+        ]
+    },
+    {
+        "id": 14,
+        "metadata": {
+            "name": "Niết Bàn Tịnh Xá",
+            "category": "Tôn giáo",
+            "image_url": "img_14.jpg",
+            "coordinates": {
+                "lat": 10.335,
+                "lng": 107.075
+            }
+        },
+        "vector": [
+            0.5,
+            0.25,
+            1.0,
+            0.5,
+            0.25,
+            0.25,
+            0.75,
+            0.75
+        ]
+    },
+    {
+        "id": 15,
+        "metadata": {
+            "name": "Chùa Quan Âm Nam Hải",
+            "category": "Tôn giáo",
+            "image_url": "img_15.jpg",
+            "coordinates": {
+                "lat": 10.324,
+                "lng": 107.079
+            }
+        },
+        "vector": [
+            0.5,
+            0.25,
+            0.75,
+            0.75,
+            0.25,
+            0.25,
+            0.5,
+            0.75
+        ]
+    },
+    {
+        "id": 16,
+        "metadata": {
+            "name": "Làng Bè Long Sơn",
+            "category": "Trải nghiệm / Ẩm thực",
+            "image_url": "img_16.jpg",
+            "coordinates": {
+                "lat": 10.457,
+                "lng": 107.098
+            }
+        },
+        "vector": [
+            1.0,
+            0.25,
+            0.5,
+            0.5,
+            0.75,
+            0.5,
+            0.75,
+            0.75
+        ]
+    },
+    {
+        "id": 17,
+        "metadata": {
+            "name": "Bãi Trước",
+            "category": "Biển / Công viên",
+            "image_url": "img_17.jpg",
+            "coordinates": {
+                "lat": 10.345,
+                "lng": 107.07
+            }
+        },
+        "vector": [
+            1.0,
+            0.25,
+            0.0,
+            0.75,
+            0.25,
+            0.25,
+            0.75,
+            1.0
+        ]
+    },
+    {
+        "id": 18,
+        "metadata": {
+            "name": "Nhà Úp Ngược",
+            "category": "Giải trí / Check-in",
+            "image_url": "img_18.jpg",
+            "coordinates": {
+                "lat": 10.356,
+                "lng": 107.085
+            }
+        },
+        "vector": [
+            0.0,
+            0.25,
+            0.0,
+            0.5,
+            0.25,
+            0.0,
+            1.0,
+            0.5
+        ]
+    },
+    {
+        "id": 19,
+        "metadata": {
+            "name": "Trại Cừu Suối Nghệ",
+            "category": "Trải nghiệm / Chụp ảnh",
+            "image_url": "img_19.jpg",
+            "coordinates": {
+                "lat": 10.601,
+                "lng": 107.214
+            }
+        },
+        "vector": [
+            1.0,
+            0.5,
+            0.0,
+            0.5,
+            0.5,
+            0.0,
+            1.0,
+            0.5
+        ]
+    },
+    {
+        "id": 20,
+        "metadata": {
+            "name": "Khu Du Lịch Hồ Tràm",
+            "category": "Nghỉ dưỡng / Biển",
+            "image_url": "img_20.jpg",
+            "coordinates": {
+                "lat": 10.485,
+                "lng": 107.452
+            }
+        },
+        "vector": [
+            1.0,
+            0.5,
+            0.0,
+            0.5,
+            1.0,
+            0.25,
+            1.0,
+            0.75
+        ]
+    }
+]

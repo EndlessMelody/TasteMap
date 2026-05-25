@@ -1,0 +1,19 @@
+# General AI Assistant Rules
+
+## Context
+This project revolves around Computational Thinking (Tư Duy Tính Toán). When interacting with the user, prioritize clarity, logical problem-solving, and clean, simple explanations.
+
+## Communication
+- Default Language: English/Vietnamese as requested by the user. If unsure, prioritize English for code and Vietnamese or English for explanations if the user prompts in Vietnamese.
+- Tone: Professional, helpful, and concise.
+
+## Coding Standards
+- Write modular, clean, and reusable code.
+- Avoid unnecessary dependencies.
+- Follow the official style guide for whichever technology stack is initiated in `01-project-init.md`.
+- Include thoughtful comments only where the abstract logic is non-trivial.
+
+## AI Workflows
+- For initializing the project, run `.agents/workflows/01-project-init.md`.
+- For testing changes, run `.agents/workflows/02-testing.md`.
+- For deployment, run `.agents/workflows/03-deployment.md`.
