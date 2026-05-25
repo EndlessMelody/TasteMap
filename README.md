@@ -201,7 +201,8 @@ PORT=8000
 DATABASE_URL=postgresql+asyncpg://postgres:[password]@[host]:5432/postgres
 REDIS_URL=redis://localhost:6379
 SECRET_KEY=your-secret-key
-OPENAI_API_KEY=sk-...
+GROQ_API_KEY=gsk_your_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_JWT_SECRET=your-jwt-secret
@@ -269,10 +270,11 @@ SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_JWT_SECRET=your-jwt-secret
 
 # ─────────────────────────────────────────
-# AI & Embeddings
+# AI (Groq) — get free key at console.groq.com
 # ─────────────────────────────────────────
-OPENAI_API_KEY=sk-...
-EMBEDDING_MODEL=text-embedding-3-small
+GROQ_API_KEY=gsk_your_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+CULTURE_TEXT_MODEL=llama-3.3-70b-versatile
 
 # ─────────────────────────────────────────
 # Interaction Logic
