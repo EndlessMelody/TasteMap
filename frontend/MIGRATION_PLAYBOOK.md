@@ -18,7 +18,7 @@ modules**, organized by page, working in **both light and dark**.
 | 2 `styles/theme.scss` brand → `#ff6b35` | ✅ committed |
 | 3a Dedup dead modal + 4 unused legacy cards | ✅ committed |
 | 3b Lift providers out of `DashboardLayout` (now chrome-only) | ✅ committed |
-| 3c Route groups `(marketing)`/`(app)` + move chrome to `components/layout` | ⬜ TODO |
+| 3c Route groups `(marketing)`/`(app)` + move chrome to `components/layout` | ✅ committed |
 | 4 Swap clone imports app-wide + delete clone | ⬜ in progress (admin started) |
 | 5 Per-page restyle (22 routes) | ⬜ admin analytics + login ✅; rest TODO |
 | 6 Remove Tailwind, delete legacy tokens, `globals.css`→scss, ESLint guardrails | ⬜ TODO |

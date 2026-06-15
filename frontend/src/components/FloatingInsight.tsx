@@ -10,7 +10,7 @@ import { BrainCircuit } from "lucide-react";
 import { useUserVector } from "@/context/UserVectorContext";
 import ClientOnly from "./common/ClientOnly";
 import { motion, AnimatePresence } from "framer-motion";
-import { accent } from "@/app/tour-builder/tokens";
+import { accent } from "@/app/(app)/tour-builder/tokens";
 
 interface FloatingInsightProps {
   cardsLeft?: number;

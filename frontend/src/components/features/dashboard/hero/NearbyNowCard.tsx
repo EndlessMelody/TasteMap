@@ -22,7 +22,7 @@ import { MapPin, ArrowUpRight } from "lucide-react";
 import Map from "@/components/Map";
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
-import type { Spot } from "@/app/explore/types";
+import type { Spot } from "@/app/(app)/explore/types";
 
 // ─── Default center (Dĩ An area) ─────────────────────────────────
 const DEFAULT_CENTER: [number, number] = [10.897, 106.772];

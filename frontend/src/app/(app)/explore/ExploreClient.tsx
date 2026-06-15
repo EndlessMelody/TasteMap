@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import type { ItineraryStop } from "@/app/ai-planner/components/types";
+import type { ItineraryStop } from "@/app/(app)/ai-planner/components/types";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
 import {

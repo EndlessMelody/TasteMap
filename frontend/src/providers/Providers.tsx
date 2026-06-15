@@ -8,9 +8,8 @@
  * the design tokens resolve correctly.
  *
  * The TasteMap-specific app providers (Auth, Language, UserVector, Chat, …)
- * are still mounted inside `DashboardLayout` for now; Phase 3 of the migration
- * lifts them up into this file so the app chrome can be split into route-group
- * layouts.
+ * are mounted here so the app chrome can be split into route-group layouts
+ * (`app/(marketing)/layout.tsx` and `app/(app)/layout.tsx`).
  *
  * Theme config mirrors the static `data-*` attributes set on <html> in
  * `app/layout.tsx` — keep them in sync to avoid a flash on first paint.
@@ -24,9 +23,8 @@ import {
   ToastProvider,
 } from "@once-ui-system/core";
 
-// TasteMap app providers (lifted out of DashboardLayout in Phase 3 so the app
-// chrome is no longer a provider host). `ThemeProvider` is aliased to avoid a
-// clash with Once UI's ThemeProvider.
+// TasteMap app providers. `ThemeProvider` is aliased to avoid a clash with
+// Once UI's ThemeProvider.
 import { ThemeProvider as AppThemeProvider } from "@/context/ThemeContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { AuthProvider } from "@/context/AuthContext";

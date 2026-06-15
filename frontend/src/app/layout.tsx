@@ -9,6 +9,8 @@ import "./globals.css";
 // TasteMap brand overrides — must load after Once UI tokens + app globals.
 import "@/styles/theme.scss";
 import { Providers } from "@/providers/Providers";
+// Per-route-group shells: app/(marketing)/layout.tsx (no chrome) and
+// app/(app)/layout.tsx (sidebars, status bar, global modals).
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,8 +26,6 @@ export const metadata: Metadata = {
   title: "TasteMap — Discover Food Together",
   description: "Social food discovery platform for friends and foodies",
 };
-
-import DashboardLayout from "@/components/DashboardLayout";
 
 export default function RootLayout({
   children,
@@ -49,9 +49,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body suppressHydrationWarning className="min-h-full flex flex-col m-0 p-0 overflow-hidden">
-        <Providers>
-          <DashboardLayout>{children}</DashboardLayout>
-        </Providers>
+        <Providers>{children}</Providers>
         <Toaster
           theme="dark"
           position="bottom-center"

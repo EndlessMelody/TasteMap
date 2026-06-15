@@ -11,7 +11,7 @@ import Map, { Marker, MapRef, Source, Layer, useMap } from "react-map-gl/mapbox"
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Coffee, Pizza, Utensils, Wine, Croissant, Martini, Map as MapIcon } from "lucide-react";
 
-import type { Spot } from "@/app/explore/types";
+import type { Spot } from "@/app/(app)/explore/types";
 
 const FOOD_ICONS = [Pizza, Coffee, Utensils, Wine, Croissant, Martini];
 

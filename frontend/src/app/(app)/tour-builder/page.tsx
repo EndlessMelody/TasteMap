@@ -37,7 +37,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import type { ItineraryStop } from "@/app/ai-planner/components/types";
+import type { ItineraryStop } from "@/app/(app)/ai-planner/components/types";
 
 // Tour Builder tokens & components
 import { surface, accent, text, border, radius, shadow } from "./tokens";
