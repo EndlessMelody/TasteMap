@@ -6,6 +6,8 @@ import { Toaster } from "sonner";
 import "@once-ui-system/core/css/styles.css";
 import "@once-ui-system/core/css/tokens.css";
 import "./globals.css";
+// TasteMap brand overrides — must load after Once UI tokens + app globals.
+import "@/styles/theme.scss";
 import { Providers } from "@/providers/Providers";
 
 const geistSans = Geist({

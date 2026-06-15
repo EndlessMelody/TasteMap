@@ -1,0 +1,24 @@
+/* ─────────────────────────────────────────────────────────────────────────
+ * TasteMap brand layer on top of Once UI tokens.
+ *
+ * Once UI resolves brand colors through a scheme ramp:
+ *   --brand-solid-*  ->  --function-brand-N  ->  --scheme-orange-N   (data-brand="orange")
+ *
+ * Overriding the three core steps of the orange scheme is the single, clean
+ * injection point: it cascades *consistently* into every brand-derived token
+ * (solid / background / border / alpha) so primary actions and accents render
+ * in TasteMap's signature orange instead of Once UI's default orange.
+ *
+ * This file is loaded after Once UI's tokens.css (see app/layout.tsx).
+ *
+ * MIGRATION NOTE: As Phase 5 replaces the legacy `--*` (globals.css) and
+ * `--dsc-*` (styles/tokens.ts) variables, fold any surviving TasteMap semantic
+ * tokens into this file so there is a single source of truth. Full per-step
+ * palette tuning is intentionally deferred to that visual pass.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+[data-brand="orange"] {
+  --scheme-orange-500: #ff7d4d; /* brand-solid-weak   */
+  --scheme-orange-600: #ff6b35; /* brand-solid-medium — TasteMap signature */
+  --scheme-orange-700: #ec5a24; /* brand-solid-strong */
+}
