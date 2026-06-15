@@ -24,6 +24,16 @@ import {
   ToastProvider,
 } from "@once-ui-system/core";
 
+// TasteMap app providers (lifted out of DashboardLayout in Phase 3 so the app
+// chrome is no longer a provider host). `ThemeProvider` is aliased to avoid a
+// clash with Once UI's ThemeProvider.
+import { ThemeProvider as AppThemeProvider } from "@/context/ThemeContext";
+import { LanguageProvider } from "@/context/LanguageContext";
+import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider as HooksAuthProvider } from "@/hooks/useAuth";
+import { UserVectorProvider } from "@/context/UserVectorContext";
+import { ChatProvider } from "@/context/ChatContext";
+
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider
@@ -40,7 +50,19 @@ export function Providers({ children }: { children: ReactNode }) {
     >
       <LayoutProvider>
         <IconProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            <AppThemeProvider>
+              <LanguageProvider>
+                <AuthProvider>
+                  <HooksAuthProvider>
+                    <UserVectorProvider>
+                      <ChatProvider>{children}</ChatProvider>
+                    </UserVectorProvider>
+                  </HooksAuthProvider>
+                </AuthProvider>
+              </LanguageProvider>
+            </AppThemeProvider>
+          </ToastProvider>
         </IconProvider>
       </LayoutProvider>
     </ThemeProvider>

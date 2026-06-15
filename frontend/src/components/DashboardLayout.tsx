@@ -8,20 +8,15 @@ import {
 } from "@/components/OnceUI";
 import { AppStatusBar } from "./common/AppStatusBar";
 
-import { UserVectorProvider } from "@/context/UserVectorContext";
-
 import { Sidebar } from "./common/Sidebar";
 import { useUiStore } from "@/store/uiStore";
-import { ChatProvider, useChat } from "@/context/ChatContext";
+import { useChat } from "@/context/ChatContext";
 import dynamic from "next/dynamic";
 
 const RightSidebar = dynamic(() => import("./common/RightSidebar").then(mod => mod.RightSidebar), { ssr: false });
 const CreatePostModal = dynamic(() => import("@/components/modals/CreatePostModal").then(mod => mod.CreatePostModal), { ssr: false });
 const MessagingSidebar = dynamic(() => import("./features/foodies/MessagingSidebar").then(mod => mod.MessagingSidebar), { ssr: false });
-import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { AuthProvider as HooksAuthProvider } from "@/hooks/useAuth";
-import { ThemeProvider } from "@/context/ThemeContext";
-import { LanguageProvider } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 
 function SplashScreen() {
@@ -103,26 +98,14 @@ function SplashScreen() {
 
 
 
+// App chrome only. The provider stack now lives in `@/providers/Providers`
+// (mounted in app/layout.tsx above this component).
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <AuthProvider>
-          <HooksAuthProvider>
-            <UserVectorProvider>
-              <ChatProvider>
-                <LayoutContent>{children}</LayoutContent>
-              </ChatProvider>
-            </UserVectorProvider>
-          </HooksAuthProvider>
-        </AuthProvider>
-      </LanguageProvider>
-    </ThemeProvider>
-  );
+  return <LayoutContent>{children}</LayoutContent>;
 }
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
