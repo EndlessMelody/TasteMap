@@ -11,7 +11,7 @@ import {
   Avatar,
   IconButton,
   Input,
-} from "@/components/OnceUI";
+} from "@once-ui-system/core";
 
 // ── Premium Icons (lucide-react) ──
 import {
@@ -924,7 +924,6 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
       >
         <Row vertical="center" style={{ gap: 12 }}>
           <IconButton
-            icon={<PanelRightClose size={18} strokeWidth={2} />}
             onClick={onToggle}
             style={{
               borderRadius: 10,
@@ -935,7 +934,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               border: "1px solid var(--dsc-border)",
               transition: "background-color 0.15s",
             }}
-          />
+          >
+            <PanelRightClose size={18} strokeWidth={2} />
+          </IconButton>
           {activeUser ? (
             <Row
               vertical="center"
@@ -1034,7 +1035,6 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
 
         <Row vertical="center" style={{ gap: 6 }}>
           <IconButton
-            icon={<PhoneCall size={17} strokeWidth={2.25} />}
             style={{
               borderRadius: "50%",
               width: 36,
@@ -1043,9 +1043,10 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               backgroundColor: "rgba(255,107,53,0.06)",
               transition: "background-color 0.15s",
             }}
-          />
+          >
+            <PhoneCall size={17} strokeWidth={2.25} />
+          </IconButton>
           <IconButton
-            icon={<Video size={17} strokeWidth={2.25} />}
             style={{
               borderRadius: "50%",
               width: 36,
@@ -1054,11 +1055,12 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               backgroundColor: "rgba(255,107,53,0.06)",
               transition: "background-color 0.15s",
             }}
-          />
+          >
+            <Video size={17} strokeWidth={2.25} />
+          </IconButton>
 
           <div ref={headerMenuRef} style={{ position: "relative" }}>
             <IconButton
-              icon={<MoreVertical size={17} strokeWidth={2.25} />}
               onClick={handleToggleHeaderMenu}
               style={{
                 borderRadius: "50%",
@@ -1070,7 +1072,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   : "var(--dsc-surface-muted)",
                 transition: "background-color 0.15s",
               }}
-            />
+            >
+              <MoreVertical size={17} strokeWidth={2.25} />
+            </IconButton>
 
             <AnimatePresence>
               {isHeaderMenuOpen && (
@@ -1213,11 +1217,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
       {/* ── CHAT AREA ── */}
       <Column
         fillWidth
-        flexGrow={1}
-        flexShrink={1}
-        flexBasis="0%"
         className="no-scrollbar"
         style={{
+          flexGrow: 1,
+          flexShrink: 1,
+          flexBasis: "0%",
           minHeight: 0,
           overflowY: "auto",
           padding: "32px 48px",
@@ -1635,7 +1639,6 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                             >
                               {canEditMessage && (
                                 <IconButton
-                                  icon={<Edit2 size={12} strokeWidth={2.25} />}
                                   onClick={() =>
                                     msg.text &&
                                     handleEditMessage(msg.id, msg.text)
@@ -1647,10 +1650,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                       ? "white"
                                       : "var(--dsc-text-subtle)",
                                   }}
-                                />
+                                >
+                                  <Edit2 size={12} strokeWidth={2.25} />
+                                </IconButton>
                               )}
                               <IconButton
-                                icon={<Trash2 size={12} strokeWidth={2.25} />}
                                 onClick={() => handleDeleteMessage(msg.id)}
                                 style={{
                                   width: 24,
@@ -1659,7 +1663,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                     ? "white"
                                     : "var(--dsc-text-subtle)",
                                 }}
-                              />
+                              >
+                                <Trash2 size={12} strokeWidth={2.25} />
+                              </IconButton>
                             </Row>
                           )}
 
@@ -1747,7 +1753,6 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
 
         {/* Attachment button */}
         <IconButton
-          icon={<Paperclip size={17} strokeWidth={2.2} />}
           variant="tertiary"
           onClick={canUseMediaButtons ? handleAttachmentClick : undefined}
           tooltip="Attach media"
@@ -1760,11 +1765,12 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             borderRadius: "50%",
             opacity: canCompose ? 1 : 0.45,
           }}
-        />
+        >
+          <Paperclip size={17} strokeWidth={2.2} />
+        </IconButton>
 
         {/* Image button */}
         <IconButton
-          icon={<ImageIcon size={17} strokeWidth={2.2} />}
           variant="tertiary"
           onClick={canUseMediaButtons ? handleImageClick : undefined}
           tooltip="Upload photo"
@@ -1777,11 +1783,12 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             borderRadius: "50%",
             opacity: canCompose ? 1 : 0.45,
           }}
-        />
+        >
+          <ImageIcon size={17} strokeWidth={2.2} />
+        </IconButton>
 
         {/* Voice button */}
         <IconButton
-          icon={<Mic size={17} strokeWidth={2.2} />}
           variant="tertiary"
           onClick={
             canUseMediaButtons ? () => void handleVoiceToggle() : undefined
@@ -1796,11 +1803,12 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             borderRadius: "50%",
             opacity: canCompose ? 1 : 0.45,
           }}
-        />
+        >
+          <Mic size={17} strokeWidth={2.2} />
+        </IconButton>
 
         {/* GIF button */}
         <IconButton
-          icon={<Film size={17} strokeWidth={2.2} />}
           variant="tertiary"
           onClick={canUseMediaButtons ? handleGifClick : undefined}
           tooltip="Upload GIF"
@@ -1813,7 +1821,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             borderRadius: "50%",
             opacity: canCompose ? 1 : 0.45,
           }}
-        />
+        >
+          <Film size={17} strokeWidth={2.2} />
+        </IconButton>
 
         {/* Input field with smile trigger */}
         <div
@@ -1831,6 +1841,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
           }}
         >
           <Input
+            id="messaging-composer-input"
             placeholder={activeUser ? "Aa" : "Pick a foodie to start messaging"}
             value={message}
             disabled={!canCompose}
@@ -1890,13 +1901,6 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
           style={{ flexShrink: 0 }}
         >
           <IconButton
-            icon={
-              hasComposerDraft ? (
-                <Send size={18} strokeWidth={2.25} />
-              ) : (
-                <ThumbsUp size={18} strokeWidth={2.25} />
-              )
-            }
             onClick={hasComposerDraft ? handleSend : handleQuickEmoji}
             disabled={quickActionDisabled}
             tooltip={hasComposerDraft ? "Send" : "Quick emoji"}
@@ -1915,7 +1919,13 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               transition: "background 0.2s, box-shadow 0.2s",
               opacity: quickActionDisabled ? 0.55 : 1,
             }}
-          />
+          >
+            {hasComposerDraft ? (
+              <Send size={18} strokeWidth={2.25} />
+            ) : (
+              <ThumbsUp size={18} strokeWidth={2.25} />
+            )}
+          </IconButton>
         </motion.div>
       </Row>
 
@@ -2097,7 +2107,6 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             </Text>
           </div>
           <IconButton
-            icon={<X size={16} strokeWidth={2.25} />}
             onClick={handleCancelRecording}
             style={{
               width: 32,
@@ -2106,7 +2115,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               backgroundColor: "var(--dsc-surface-muted)",
               color: "var(--dsc-text-subtle)",
             }}
-          />
+          >
+            <X size={16} strokeWidth={2.25} />
+          </IconButton>
         </motion.div>
       )}
     </Column>

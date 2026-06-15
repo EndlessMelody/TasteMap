@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Row, Column, Text, Button } from "@/components/OnceUI";
+import { Row, Column, Text, Button } from "@once-ui-system/core";
 import { motion } from "framer-motion";
 
 interface ModalFooterProps {
@@ -36,9 +36,10 @@ export function ModalFooter({
   return (
     <Row
       fillWidth
-      horizontal="space-between"
+      horizontal="between"
       vertical="center"
-      padding="16 20"
+      paddingY="16"
+      paddingX="20"
       borderTop="neutral-alpha-weak"
       style={{
         background: "#FFFFFF",
@@ -46,7 +47,7 @@ export function ModalFooter({
         minHeight: "80px",
       }}
     >
-      <Column gap="6" style={{ flex: 1, maxWidth: "200px" }}>
+      <Column gap="8" style={{ flex: 1, maxWidth: "200px" }}>
         <div
           style={{
             display: "flex",

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Column, Row, Heading, Text } from "@/components/OnceUI";
+import { Column, Row, Heading, Text } from "@once-ui-system/core";
 import { motion } from "framer-motion";
 import { Sparkles, Navigation, DollarSign } from "lucide-react";
 import { surface, accent, text, border, radius, shadow, spacing } from "../tokens";

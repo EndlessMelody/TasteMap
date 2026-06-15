@@ -4,14 +4,14 @@ import React, { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Column, Row } from "@once-ui-system/core";
-import { AppStatusBar } from "@/components/common/AppStatusBar";
-import { Sidebar } from "@/components/common/Sidebar";
+import { AppStatusBar } from "@/components/layout/AppStatusBar";
+import { Sidebar } from "@/components/layout/Sidebar";
 import { SplashScreen } from "@/components/layout/SplashScreen";
 import { useUiStore } from "@/store/uiStore";
 import { useChat } from "@/context/ChatContext";
 import { useAuth } from "@/context/AuthContext";
 
-const RightSidebar = dynamic(() => import("@/components/common/RightSidebar").then((mod) => mod.RightSidebar), { ssr: false });
+const RightSidebar = dynamic(() => import("@/components/layout/RightSidebar").then((mod) => mod.RightSidebar), { ssr: false });
 const CreatePostModal = dynamic(() => import("@/components/modals/CreatePostModal").then((mod) => mod.CreatePostModal), { ssr: false });
 const MessagingSidebar = dynamic(() => import("@/components/features/foodies/MessagingSidebar").then((mod) => mod.MessagingSidebar), { ssr: false });
 

@@ -7,7 +7,7 @@ import {
   Text,
   IconButton,
   Button,
-} from "@/components/OnceUI";
+} from "@once-ui-system/core";
 import {
   X,
   Palette,
@@ -122,7 +122,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   {t("settingsTitle")}
                 </Heading>
                 <IconButton
-                  icon={<X size={16} color={textMuted} />}
                   onClick={onClose}
                   style={{
                     backgroundColor: isDark ? "#2C2C2E" : "#F2F2F7",
@@ -131,7 +130,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     height: "32px",
                     cursor: "pointer",
                   }}
-                />
+                >
+                  <X size={16} color={textMuted} />
+                </IconButton>
               </Row>
 
               {[

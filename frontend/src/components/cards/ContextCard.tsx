@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Column, Row, Text } from "../OnceUI";
+import { Column, Row, Text } from "@once-ui-system/core";
 import { Sparkles, Navigation } from "lucide-react";
 
 export function ContextCard({

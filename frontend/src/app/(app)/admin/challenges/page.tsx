@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Column, Row, Heading, Text, Button, IconButton
-} from "@/components/OnceUI";
+} from "@once-ui-system/core";
 import {
     Trophy, Plus, Search, Filter, MoreVertical,
     CheckCircle2, Clock, AlertCircle, TrendingUp
@@ -141,7 +141,7 @@ export default function ChallengeManagementPage() {
 
     if (isLoading) {
         return (
-            <Column fillWidth fillHeight vertical="center" horizontal="center" gap={16} background="page">
+            <Column fillWidth fillHeight vertical="center" horizontal="center" gap="16" background="page">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#007AFF]"></div>
                 <Text variant="body-default-m" style={{ color: "#8E8E93" }}>Đang kết nối Command Center...</Text>
             </Column>
@@ -150,7 +150,7 @@ export default function ChallengeManagementPage() {
 
     if (error) {
         return (
-            <Column fillWidth fillHeight vertical="center" horizontal="center" gap={16} background="page">
+            <Column fillWidth fillHeight vertical="center" horizontal="center" gap="16" background="page">
                 <AlertCircle size={48} className="text-[#FF3B30]" />
                 <Text variant="body-strong-m">Lỗi hệ thống</Text>
                 <Text variant="body-default-s" style={{ color: "#8E8E93" }}>{error}</Text>
@@ -186,8 +186,8 @@ export default function ChallengeManagementPage() {
 
                 <div className="relative max-w-[1400px] mx-auto w-full flex flex-col">
                     <Row fillWidth horizontal="between" vertical="end" style={{ marginBottom: 32 }}>
-                        <Column gap={8}>
-                            <Row gap={12} vertical="center">
+                        <Column gap="8">
+                            <Row gap="12" vertical="center">
                                 <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
                                     <Trophy size={28} className="text-[#FBBF24]" />
                                 </div>
@@ -236,7 +236,7 @@ export default function ChallengeManagementPage() {
                                     borderRadius: "24px",
                                 }}
                             >
-                                <Row gap={8} vertical="center" style={{ marginBottom: 12 }}>
+                                <Row gap="8" vertical="center" style={{ marginBottom: 12 }}>
                                     <div style={{ color: stat.color }}>{stat.icon}</div>
                                     <Text variant="body-default-xs" style={{ color: "rgba(255,255,255,0.4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                                         {stat.label}
@@ -254,7 +254,7 @@ export default function ChallengeManagementPage() {
 
                 {/* Toolbar: Search & Tabs */}
                 <Row fillWidth horizontal="between" vertical="center" style={{ flexWrap: "wrap", gap: 20 }}>
-                    <Row gap={4} style={{ background: "rgba(0,0,0,0.05)", padding: 4, borderRadius: 16 }}>
+                    <Row gap="4" style={{ background: "rgba(0,0,0,0.05)", padding: 4, borderRadius: 16 }}>
                         {["All", "Active", "Scheduled", "Draft", "Expired"].map((tab) => (
                             <button
                                 key={tab}
@@ -270,7 +270,7 @@ export default function ChallengeManagementPage() {
                         ))}
                     </Row>
 
-                    <Row gap={12} style={{ flex: 1, maxWidth: 400 }}>
+                    <Row gap="12" style={{ flex: 1, maxWidth: 400 }}>
                         <div className="relative w-full">
                             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8E93]" />
                             <input
@@ -281,7 +281,9 @@ export default function ChallengeManagementPage() {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
-                        <IconButton icon={<Filter size={18} />} variant="tertiary" />
+                        <IconButton variant="tertiary">
+                            <Filter size={18} />
+                        </IconButton>
                     </Row>
                 </Row>
 
@@ -308,16 +310,16 @@ export default function ChallengeManagementPage() {
                                     boxShadow: "0 4px 20px rgba(0,0,0,0.02)"
                                 }}
                             >
-                                <Row gap={20} vertical="center" style={{ flex: 2 }}>
+                                <Row gap="20" vertical="center" style={{ flex: 2 }}>
                                     <div className={`p-4 rounded-2xl ${challenge.difficulty === 'Easy' ? 'bg-green-50 text-green-600' :
                                         challenge.difficulty === 'Medium' ? 'bg-blue-50 text-blue-600' :
                                             'bg-red-50 text-red-600'
                                         }`}>
                                         <Zap size={20} />
                                     </div>
-                                    <Column gap={4}>
+                                    <Column gap="4">
                                         <Text variant="body-strong-m" style={{ color: "#1C1C1E" }}>{challenge.title}</Text>
-                                        <Row gap={12} vertical="center">
+                                        <Row gap="12" vertical="center">
                                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>{challenge.category}</Text>
                                             <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#D1D1D6" }} />
                                             <Text variant="body-default-xs" style={{
@@ -331,16 +333,16 @@ export default function ChallengeManagementPage() {
                                     </Column>
                                 </Row>
 
-                                <Row gap={40} vertical="center" style={{ flex: 3, justifyContent: "center" }}>
-                                    <Column align="center">
+                                <Row gap="40" vertical="center" style={{ flex: 3, justifyContent: "center" }}>
+                                    <Column horizontal="center">
                                         <Text variant="body-default-xs" style={{ color: "#8E8E93", marginBottom: 4 }}>XP Reward</Text>
                                         <Text variant="body-strong-s" style={{ color: "#FBBF24" }}>+{challenge.xp_reward} XP</Text>
                                     </Column>
-                                    <Column align="center">
+                                    <Column horizontal="center">
                                         <Text variant="body-default-xs" style={{ color: "#8E8E93", marginBottom: 4 }}>Participants</Text>
                                         <Text variant="body-strong-s">{challenge.participants_count?.toLocaleString() || 0}</Text>
                                     </Column>
-                                    <Column align="center" style={{ minWidth: 100 }}>
+                                    <Column horizontal="center" style={{ minWidth: 100 }}>
                                         <Text variant="body-default-xs" style={{ color: "#8E8E93", marginBottom: 4 }}>Completion</Text>
                                         <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
                                             <div className="h-full bg-[#007AFF]" style={{ width: `${challenge.completion_rate}%` }} />
@@ -349,18 +351,18 @@ export default function ChallengeManagementPage() {
                                     </Column>
                                 </Row>
 
-                                <Row gap={8} style={{ flex: 1, justifyContent: "flex-end" }}>
+                                <Row gap="8" style={{ flex: 1, justifyContent: "flex-end" }}>
                                     <IconButton
-                                        icon={<Eye size={16} />}
                                         variant="tertiary"
                                         size="s"
                                         onClick={() => {
                                             setSelectedChallenge(challenge);
                                             setIsViewOpen(true);
                                         }}
-                                    />
+                                    >
+                                        <Eye size={16} />
+                                    </IconButton>
                                     <IconButton
-                                        icon={<Edit3 size={16} />}
                                         variant="tertiary"
                                         size="s"
                                         onClick={() => {
@@ -368,9 +370,10 @@ export default function ChallengeManagementPage() {
                                             setSelectedChallenge(challenge);
                                             setIsFormOpen(true);
                                         }}
-                                    />
+                                    >
+                                        <Edit3 size={16} />
+                                    </IconButton>
                                     <IconButton
-                                        icon={<Trash2 size={16} />}
                                         variant="tertiary"
                                         size="s"
                                         style={{ color: "#FF3B30" }}
@@ -378,7 +381,9 @@ export default function ChallengeManagementPage() {
                                             setSelectedChallenge(challenge);
                                             setIsDeleteOpen(true);
                                         }}
-                                    />
+                                    >
+                                        <Trash2 size={16} />
+                                    </IconButton>
                                 </Row>
                             </Row>
                         ))}
@@ -481,13 +486,15 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                     <Heading variant="heading-strong-m">
                         {mode === "create" ? "Tạo Thử Thách Mới" : "Chỉnh Sửa Thử Thách"}
                     </Heading>
-                    <IconButton icon={<X size={20} />} variant="tertiary" onClick={onClose} />
+                    <IconButton variant="tertiary" onClick={onClose}>
+                        <X size={20} />
+                    </IconButton>
                 </div>
 
                 <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-8">
-                    <Column gap={24}>
+                    <Column gap="24">
                         {/* Section 1: Basic Info */}
-                        <Column gap={12}>
+                        <Column gap="12">
                             <Text variant="body-strong-s" style={{ color: "#007AFF", textTransform: "uppercase" }}>Basic Information</Text>
                             <input
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#007AFF]/20 outline-none transition-all"
@@ -506,9 +513,9 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                         </Column>
 
                         {/* Section 2: Mechanics */}
-                        <Column gap={12}>
+                        <Column gap="12">
                             <Text variant="body-strong-s" style={{ color: "#007AFF", textTransform: "uppercase" }}>Mechanics & Reward</Text>
-                            <Row gap={12}>
+                            <Row gap="12">
                                 <div className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Category</Text>
                                     <select
@@ -535,7 +542,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                 </div>
                             </Row>
 
-                            <Row gap={12}>
+                            <Row gap="12">
                                 <div className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>XP Reward</Text>
                                     <input
@@ -566,7 +573,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                 </div>
                             </Row>
 
-                            <Row gap={12}>
+                            <Row gap="12">
                                 <div className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Icon (Lucide name)</Text>
                                     <input
@@ -595,9 +602,9 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                         </Column>
 
                         {/* Section 3: Timing & Validation */}
-                        <Column gap={12}>
+                        <Column gap="12">
                             <Text variant="body-strong-s" style={{ color: "#007AFF", textTransform: "uppercase" }}>Timing & Validation</Text>
-                            <Row gap={12}>
+                            <Row gap="12">
                                 <div className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Action Type</Text>
                                     <select
@@ -622,7 +629,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                 </div>
                             </Row>
 
-                            <Row gap={12}>
+                            <Row gap="12">
                                 <div className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Start Date</Text>
                                     <input
@@ -653,7 +660,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                             </div>
                         </Column>
 
-                        <Row gap={20}>
+                        <Row gap="20">
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" checked={formData.is_active} onChange={e => setFormData({ ...formData, is_active: e.target.checked })} />
                                 <Text variant="body-default-s">Kích hoạt ngay</Text>
@@ -670,7 +677,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                     <Button variant="tertiary" onClick={onClose} disabled={isSubmitting}>Huỷ</Button>
                     <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
                         {isSubmitting ? "Đang lưu..." : (
-                            <Row gap={8} vertical="center">
+                            <Row gap="8" vertical="center">
                                 <Save size={18} />
                                 {mode === "create" ? "Tạo thử thách" : "Lưu thay đổi"}
                             </Row>
@@ -711,8 +718,8 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: any) {
             >
                 <div className="p-8">
                     <Row horizontal="between" vertical="start">
-                        <Column gap={8}>
-                            <Row gap={8} vertical="center">
+                        <Column gap="8">
+                            <Row gap="8" vertical="center">
                                 <StatusBadge status={challenge.computedStatus} />
                                 <div className="px-3 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold rounded-full uppercase tracking-wider">
                                     {challenge.category}
@@ -722,7 +729,9 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: any) {
                         </Column>
                         <div className="flex gap-2">
                             <div className="w-12 h-12 rounded-2xl flex items-center justify-center border-2" style={{ borderColor: challenge.accent_color, color: challenge.accent_color }}>
-                                <IconButton icon={<X size={20} />} variant="tertiary" onClick={onClose} />
+                                <IconButton variant="tertiary" onClick={onClose}>
+                                    <X size={20} />
+                                </IconButton>
                             </div>
                         </div>
                     </Row>
@@ -747,27 +756,27 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: any) {
                     </div>
 
                     <div className="mt-8 grid grid-cols-2 gap-y-4 gap-x-12">
-                        <Column gap={2}>
+                        <Column gap="2">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Hành động yêu cầu</Text>
                             <Text variant="body-strong-s">{challenge.action_type} ({challenge.target_count} lần)</Text>
                         </Column>
-                        <Column gap={2}>
+                        <Column gap="2">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Badge ID</Text>
                             <Text variant="body-strong-s">{challenge.badge_id || "None"}</Text>
                         </Column>
-                        <Column gap={2}>
+                        <Column gap="2">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Thời hạn (Days)</Text>
                             <Text variant="body-strong-s">{challenge.duration_days || "Vĩnh viễn"}</Text>
                         </Column>
-                        <Column gap={2}>
+                        <Column gap="2">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Định kỳ</Text>
                             <Text variant="body-strong-s">{challenge.is_recurring ? "Có" : "Không"}</Text>
                         </Column>
-                        <Column gap={2}>
+                        <Column gap="2">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Ngày bắt đầu</Text>
                             <Text variant="body-strong-s">{challenge.start_date ? new Date(challenge.start_date).toLocaleDateString() : "N/A"}</Text>
                         </Column>
-                        <Column gap={2}>
+                        <Column gap="2">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Ngày kết thúc</Text>
                             <Text variant="body-strong-s">{challenge.end_date ? new Date(challenge.end_date).toLocaleDateString() : "N/A"}</Text>
                         </Column>
@@ -807,7 +816,7 @@ function DeleteConfirmModal({ isOpen, onClose, onConfirm, challengeTitle, isSubm
                     Hành động này sẽ xoá toàn bộ dữ liệu tham gia của người dùng và không thể hoàn tác.
                 </Text>
 
-                <Row gap={12}>
+                <Row gap="12">
                     <Button variant="tertiary" onClick={onClose} fillWidth disabled={isSubmitting}>Huỷ bỏ</Button>
                     <Button
                         variant="primary"

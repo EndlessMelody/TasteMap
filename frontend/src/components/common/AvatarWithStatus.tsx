@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Avatar } from "../OnceUI";
+import { Avatar } from "@once-ui-system/core";
 
 export function AvatarWithStatus({
   src,

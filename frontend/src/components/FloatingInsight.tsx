@@ -5,7 +5,7 @@ import {
   Column,
   Row,
   Text,
-} from "@/components/OnceUI";
+} from "@once-ui-system/core";
 import { BrainCircuit } from "lucide-react";
 import { useUserVector } from "@/context/UserVectorContext";
 import ClientOnly from "./common/ClientOnly";

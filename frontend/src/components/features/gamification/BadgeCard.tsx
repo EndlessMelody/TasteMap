@@ -19,7 +19,7 @@ import {
   Medal, 
   Trophy 
 } from "lucide-react";
-import { Text } from "@/components/OnceUI";
+import { Text } from "@once-ui-system/core";
 import { BadgeSummary } from "@/types/gamification";
 
 interface BadgeCardProps {

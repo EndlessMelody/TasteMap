@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Row, Column, Text } from "@/components/OnceUI";
+import { Row, Column, Text } from "@once-ui-system/core";
 import { Camera, ChevronLeft, Star, Image as ImageIcon } from "lucide-react";
 
 // Re-export original modal

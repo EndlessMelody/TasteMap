@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Column, Row } from '@/components/OnceUI';
+import { Column, Row } from '@once-ui-system/core';
 import { Skeleton } from '@/components/Skeleton';
 import { surface, text, border, radius, spacing } from '../tokens';
 

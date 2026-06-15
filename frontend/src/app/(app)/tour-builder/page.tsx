@@ -8,7 +8,7 @@ import {
   Text,
   Button,
   IconButton,
-} from "@/components/OnceUI";
+} from "@once-ui-system/core";
 import {
   motion,
   AnimatePresence,
@@ -777,7 +777,7 @@ export default function TourBuilderPage() {
   return (
     <Column
       fillHeight
-      gap={0}
+      gap="0"
       style={{
         flex: 1,
         backgroundColor: "#F8FAFF",
@@ -1263,7 +1263,6 @@ export default function TourBuilderPage() {
           >
             {/* Undo */}
             <IconButton
-              icon={<Undo2 size={22} color="white" />}
               onClick={handleUndo}
               style={{
                 width: "48px",
@@ -1273,7 +1272,9 @@ export default function TourBuilderPage() {
                 cursor: lastDiscarded ? "pointer" : "default",
                 padding: 0,
               }}
-            />
+            >
+              <Undo2 size={22} color="white" />
+            </IconButton>
             {/* Skip */}
             <Button
               onClick={handleSkip}

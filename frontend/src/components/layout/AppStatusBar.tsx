@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Row, Text } from "@/components/OnceUI";
+import { Row, Text } from "@once-ui-system/core";
 import { 
   Database, 
   BrainCircuit, 
@@ -66,7 +66,7 @@ export const AppStatusBar = () => {
       >
         {/* Left: AI & Vector Subsystem */}
         <Row gap="16" vertical="center">
-          <Row gap="6" vertical="center">
+          <Row gap="8" vertical="center">
             <Database size={12} style={{ color: "#ff6b35" }} />
             <Text
               variant="body-default-xs"
@@ -84,7 +84,7 @@ export const AppStatusBar = () => {
               }}
             />
           </Row>
-          <Row gap="6" vertical="center" hide="s">
+          <Row gap="8" vertical="center" s={{ hide: true }}>
             <BrainCircuit size={12} style={{ color: "#8E8E93" }} />
             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>
               Learning: α=0.1
@@ -107,7 +107,7 @@ export const AppStatusBar = () => {
             cursor: "default",
           }}
         >
-          <Row gap="6" vertical="center">
+          <Row gap="8" vertical="center">
             <Cpu size={12} style={{ color: "#ff6b35" }} />
             <Text
               variant="body-default-xs"
@@ -118,7 +118,7 @@ export const AppStatusBar = () => {
             </Text>
           </Row>
           <div style={{ width: 1, height: 10, backgroundColor: "rgba(0,0,0,0.1)" }} />
-          <Row gap="6" vertical="center">
+          <Row gap="8" vertical="center">
             <Activity size={12} style={{ color: "#9333EA" }} />
             <Text
               variant="body-default-xs"
@@ -132,19 +132,19 @@ export const AppStatusBar = () => {
 
         {/* Right: Environment & Telemetry */}
         <Row gap="16" vertical="center">
-          <Row gap="6" vertical="center" hide="m">
+          <Row gap="8" vertical="center" m={{ hide: true }}>
             <Wifi size={12} style={{ color: "#34C759" }} />
             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>
               24ms
             </Text>
           </Row>
-          <Row gap="6" vertical="center" hide="s">
+          <Row gap="8" vertical="center" s={{ hide: true }}>
             <CloudRain size={12} style={{ color: "#8E8E93" }} />
             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>
               Weather: +0.2
             </Text>
           </Row>
-          <Row gap="6" vertical="center">
+          <Row gap="8" vertical="center">
             <Users size={11} style={{ color: "#ff6b35" }} />
             <Text
               variant="body-default-xs"
@@ -160,7 +160,7 @@ export const AppStatusBar = () => {
               backgroundColor: "rgba(0,0,0,0.1)",
             }}
           />
-          <Row gap="6" vertical="center">
+          <Row gap="8" vertical="center">
             <Clock size={12} style={{ color: "#8E8E93" }} />
             <Text
               variant="body-default-xs"

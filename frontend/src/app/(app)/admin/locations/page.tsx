@@ -9,7 +9,7 @@ import {
   Text,
   Button,
   IconButton,
-} from "@/components/OnceUI";
+} from "@once-ui-system/core";
 import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import {
@@ -1388,18 +1388,18 @@ export default function AdminLocationsPage() {
       {/* ─── Content ───────────────────────────────────── */}
       <Column
         fillWidth
-        align="center"
+        horizontal="center"
         style={{ padding: "40px 16px 20px", maxWidth: 960, margin: "0 auto", gap: "24px" }}
       >
         {/* Bulk Import Card */}
-        <Column fillWidth gap={16} style={{ ...cardStyle, padding: 24 }}>
+        <Column fillWidth gap="16" style={{ ...cardStyle, padding: 24 }}>
           <Row
             horizontal="between"
             vertical="center"
             fillWidth
             style={{ flexWrap: "wrap", gap: 16 }}
           >
-            <Row gap={12} vertical="center">
+            <Row gap="12" vertical="center">
               <Row
                 vertical="center"
                 horizontal="center"
@@ -1412,7 +1412,7 @@ export default function AdminLocationsPage() {
               >
                 <UploadCloud size={18} color="var(--brand-solid-strong)" />
               </Row>
-              <Column gap={2}>
+              <Column gap="2">
                 <Heading variant="heading-strong-s">
                   Bulk Import từ Excel
                 </Heading>
@@ -1426,7 +1426,7 @@ export default function AdminLocationsPage() {
               </Column>
             </Row>
 
-            <Row gap={12} style={{ flexWrap: "wrap" }}>
+            <Row gap="12" style={{ flexWrap: "wrap" }}>
               <Button
                 size="s"
                 variant="tertiary"
@@ -1459,7 +1459,7 @@ export default function AdminLocationsPage() {
           {importing && (
             <Column
               fillWidth
-              gap={8}
+              gap="8"
               style={{
                 background: "var(--surface-overlay)",
                 padding: 16,
@@ -1490,7 +1490,7 @@ export default function AdminLocationsPage() {
                   }}
                 />
               </div>
-              <Row gap={16} fillWidth>
+              <Row gap="16" fillWidth>
                 <Text
                   variant="body-default-xs"
                   style={{ color: "var(--success-on-solid)" }}
@@ -1511,12 +1511,12 @@ export default function AdminLocationsPage() {
 
       <Column
         fillWidth
-        align="center"
+        horizontal="center"
         style={{ padding: "24px 16px 80px", maxWidth: 960, margin: "0 auto" }}
       >
         {/* ══ Card 1: Thông tin cơ bản ══ */}
-        <Column fillWidth gap={20} style={{ ...cardStyle, padding: 24 }}>
-          <Row gap={8} vertical="center">
+        <Column fillWidth gap="20" style={{ ...cardStyle, padding: 24 }}>
+          <Row gap="8" vertical="center">
             <Text
               variant="body-default-xs"
               style={{
@@ -1533,7 +1533,7 @@ export default function AdminLocationsPage() {
           </Row>
 
           {/* Name + Category */}
-          <Row fillWidth gap={16} style={{ flexWrap: "wrap" }}>
+          <Row fillWidth gap="16" style={{ flexWrap: "wrap" }}>
             <Column style={{ flex: 2, minWidth: 200 }}>
               <label style={labelStyle}>Tên địa điểm *</label>
               <input
@@ -1557,7 +1557,7 @@ export default function AdminLocationsPage() {
           </Row>
 
           {/* Lat / Lng */}
-          <Row fillWidth gap={16} style={{ flexWrap: "wrap" }}>
+          <Row fillWidth gap="16" style={{ flexWrap: "wrap" }}>
             <Column style={{ flex: 1, minWidth: 150 }}>
               <label style={labelStyle}>Vĩ độ (Latitude) *</label>
               <input
@@ -1599,7 +1599,7 @@ export default function AdminLocationsPage() {
           </Column>
 
           {/* Price / Hours / Image */}
-          <Row fillWidth gap={16} style={{ flexWrap: "wrap" }}>
+          <Row fillWidth gap="16" style={{ flexWrap: "wrap" }}>
             <Column style={{ flex: 1, minWidth: 150 }}>
               <label style={labelStyle}>Mức giá</label>
               <input
@@ -1630,7 +1630,7 @@ export default function AdminLocationsPage() {
           </Row>
 
           {/* Rating / Characteristics */}
-          <Row fillWidth gap={16} style={{ flexWrap: "wrap", marginTop: 4 }}>
+          <Row fillWidth gap="16" style={{ flexWrap: "wrap", marginTop: 4 }}>
             <Column style={{ flex: 1, minWidth: 100 }}>
               <label style={labelStyle}>Đánh giá (Rating)</label>
               <input
@@ -1659,11 +1659,11 @@ export default function AdminLocationsPage() {
         {/* ══ Card 2: Feature Vector 15 Chiều ══ */}
         <Column
           fillWidth
-          gap={16}
+          gap="16"
           style={{ ...cardStyle, padding: 24, marginTop: 20 }}
         >
           <Row fillWidth horizontal="between" vertical="center">
-            <Row gap={8} vertical="center">
+            <Row gap="8" vertical="center">
               <Text
                 variant="body-default-xs"
                 style={{
@@ -1700,7 +1700,7 @@ export default function AdminLocationsPage() {
           </Text>
 
           {/* Vector Dimensions Table */}
-          <Column fillWidth gap={0}>
+          <Column fillWidth gap="0">
             {(category === "food"
               ? FOOD_VECTOR_DIMENSIONS
               : PLACE_VECTOR_DIMENSIONS
@@ -1722,12 +1722,12 @@ export default function AdminLocationsPage() {
                     fillWidth
                     horizontal="between"
                     vertical="center"
-                    gap={12}
+                    gap="12"
                   >
                     {/* Left: index + name + toggle */}
                     <Row
                       vertical="center"
-                      gap={10}
+                      gap="8"
                       style={{ cursor: "pointer", flex: "0 0 220px" }}
                       onClick={() =>
                         setExpandedDim(isExpanded ? null : dim.index)
@@ -1752,7 +1752,7 @@ export default function AdminLocationsPage() {
                       >
                         {dim.index}
                       </Text>
-                      <Column gap={1}>
+                      <Column gap="1">
                         <Text
                           variant="body-default-s"
                           style={{
@@ -1779,7 +1779,7 @@ export default function AdminLocationsPage() {
                     {/* Center: Slider */}
                     <Row
                       vertical="center"
-                      gap={12}
+                      gap="12"
                       style={{ flex: 1, minWidth: 200 }}
                     >
                       <input
@@ -1846,7 +1846,7 @@ export default function AdminLocationsPage() {
                   {isExpanded && (
                     <Column
                       fillWidth
-                      gap={0}
+                      gap="0"
                       style={{
                         marginTop: 12,
                         marginLeft: 38,
@@ -1888,7 +1888,7 @@ export default function AdminLocationsPage() {
                           fillWidth
                           horizontal="between"
                           vertical="center"
-                          gap={8}
+                          gap="8"
                           style={{
                             padding: "10px 14px",
                             borderBottom:
@@ -1928,7 +1928,7 @@ export default function AdminLocationsPage() {
                             ).style.background = "#fff";
                           }}
                         >
-                          <Row gap={10} vertical="center" style={{ flex: 1 }}>
+                          <Row gap="8" vertical="center" style={{ flex: 1 }}>
                             <Text
                               variant="body-default-xs"
                               style={{
@@ -1945,7 +1945,7 @@ export default function AdminLocationsPage() {
                             >
                               {level.value}
                             </Text>
-                            <Column gap={1}>
+                            <Column gap="1">
                               <Text
                                 variant="body-default-s"
                                 style={{ fontWeight: 600 }}
@@ -1971,7 +1971,7 @@ export default function AdminLocationsPage() {
         </Column>
 
         {/* ══ Save Button ══ */}
-        <Row fillWidth gap={12} style={{ marginTop: 20 }}>
+        <Row fillWidth gap="12" style={{ marginTop: 20 }}>
           <Button
             size="l"
             variant="tertiary"
@@ -2002,10 +2002,10 @@ export default function AdminLocationsPage() {
         {recentLocations.length > 0 && (
           <Column
             fillWidth
-            gap={12}
+            gap="12"
             style={{ ...cardStyle, padding: 20, marginTop: 20 }}
           >
-            <Row gap={8} vertical="center">
+            <Row gap="8" vertical="center">
               <Text
                 variant="body-default-xs"
                 style={{
@@ -2020,7 +2020,7 @@ export default function AdminLocationsPage() {
               </Text>
               <Heading variant="heading-strong-xs">Vừa thêm gần đây</Heading>
             </Row>
-            <Column gap={6}>
+            <Column gap="8">
               {recentLocations.map((loc) => (
                 <Row
                   key={loc.id}

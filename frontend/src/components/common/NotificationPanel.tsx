@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Column, Row, Text, Heading } from "@/components/OnceUI";
+import { Column, Row, Text, Heading } from "@once-ui-system/core";
 import { cn } from "@/lib/cn";
 import {
   Bell,

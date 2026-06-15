@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Text } from '@/components/OnceUI';
+import { Text } from '@once-ui-system/core';
 import { radius, spacing } from '../tokens';
 
 interface RouteChipProps {

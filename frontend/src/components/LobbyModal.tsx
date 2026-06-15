@@ -8,7 +8,7 @@ import {
   Text,
   Button,
   Avatar,
-} from "@/components/OnceUI";
+} from "@once-ui-system/core";
 import { Users, MapPin, Clock, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import BottomSheet from "@/components/BottomSheet";

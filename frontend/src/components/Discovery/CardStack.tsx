@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Column, Heading, Text } from "@/components/OnceUI";
+import { Column, Heading, Text } from "@once-ui-system/core";
 import { SwipeCard, LocationData } from "./SwipeCard";
 import { SkeletonCardStack } from "./SkeletonCard";
 
@@ -37,8 +37,8 @@ export const CardStack: React.FC<CardStackProps> = ({
         fillWidth
         fillHeight
         position="relative"
-        justify="center"
-        align="center"
+        vertical="center"
+        horizontal="center"
         style={{ perspective: "1000px" }}
       >
         <SkeletonCardStack />
@@ -51,8 +51,8 @@ export const CardStack: React.FC<CardStackProps> = ({
       <Column
         fillWidth
         fillHeight
-        justify="center"
-        align="center"
+        vertical="center"
+        horizontal="center"
         style={{ perspective: "1000px", minHeight: "600px" }}
       >
         <motion.div
@@ -95,8 +95,8 @@ export const CardStack: React.FC<CardStackProps> = ({
       fillWidth
       fillHeight
       position="relative"
-      justify="center"
-      align="center"
+      vertical="center"
+      horizontal="center"
       style={{ perspective: "1000px", overflow: "hidden" }}
     >
       <AnimatePresence>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Row, Text } from '@/components/OnceUI';
+import { Row, Text } from '@once-ui-system/core';
 import { text, radius, spacing, border } from '../tokens';
 
 interface StatPillProps {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { Column, Heading, Text } from "@/components/OnceUI";
+import { Column, Heading, Text } from "@once-ui-system/core";
 import { CardStack } from "./CardStack";
 import { ActionControls } from "./ActionControls";
 import { LocationData } from "./SwipeCard";
@@ -94,7 +94,7 @@ export const DiscoveryView: React.FC = () => {
 
   if (loading) {
     return (
-      <Column align="center" justify="center" fillHeight fillWidth background="page" gap="16">
+      <Column horizontal="center" vertical="center" fillHeight fillWidth background="page" gap="16">
         <div
           style={{
             width: 48,
@@ -115,7 +115,7 @@ export const DiscoveryView: React.FC = () => {
 
   if (error) {
     return (
-      <Column align="center" justify="center" fillHeight fillWidth background="page" gap="8">
+      <Column horizontal="center" vertical="center" fillHeight fillWidth background="page" gap="8">
         <Text variant="heading-strong-s" style={{ color: "var(--danger-on-solid)" }}>
           Không thể kết nối API
         </Text>
@@ -128,7 +128,7 @@ export const DiscoveryView: React.FC = () => {
 
   if (cards.length === 0) {
     return (
-      <Column align="center" justify="center" fillHeight fillWidth background="page" gap="12">
+      <Column horizontal="center" vertical="center" fillHeight fillWidth background="page" gap="12">
         <Heading variant="display-default-xs" padding="16">
           Không có địa điểm nào
         </Heading>
@@ -142,14 +142,14 @@ export const DiscoveryView: React.FC = () => {
   const locationCards = cards.map(adaptCard);
 
   return (
-    <Column align="center" justify="center" fillHeight fillWidth background="page">
+    <Column horizontal="center" vertical="center" fillHeight fillWidth background="page">
       <Heading variant="display-default-xs" padding="16">
         Khám Phá
       </Heading>
 
       <Column
-        align="center"
-        justify="center"
+        horizontal="center"
+        vertical="center"
         gap="16"
         style={{ width: "100%", maxWidth: "400px", flex: 1 }}
       >

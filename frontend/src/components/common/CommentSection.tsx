@@ -2,7 +2,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Avatar } from "@/components/OnceUI";
+import { Avatar } from "@once-ui-system/core";
+import { getInitials } from "@/lib/avatar";
 import { apiGet, apiPost } from "@/lib/api";
 import { MessageCircle, Send, X } from "lucide-react";
 import { FaMedal } from "react-icons/fa";
@@ -148,7 +149,7 @@ function CommentItem({
         animate={{ opacity: 1, y: 0 }}
         style={{ display: "flex", gap: "9px", alignItems: "flex-start" }}
       >
-        <Avatar src={avatarSrc || DEFAULT_AVATAR} size="s" name={name} />
+        <Avatar src={avatarSrc || DEFAULT_AVATAR} size="s" value={getInitials(name)} />
         <div style={{ flex: 1 }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Avatar } from "@/components/OnceUI";
+import { Avatar } from "@once-ui-system/core";
+import { getInitials } from "@/lib/avatar";
 import { X, Utensils, Clapperboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiPost, apiUploadMedia, ApiError } from "@/lib/api";
@@ -265,7 +266,7 @@ export function CreatePostModal({
                 <div className="relative">
                   <Avatar
                     src={user?.avatar_url}
-                    alt={user?.display_name || user?.username}
+                    value={getInitials(user?.display_name || user?.username)}
                     size="m"
                   />
                   <span

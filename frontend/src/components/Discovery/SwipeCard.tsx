@@ -9,7 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { Check, X } from "lucide-react";
-import { Column, Row, Heading, Text } from "@/components/OnceUI";
+import { Column, Row, Heading, Text } from "@once-ui-system/core";
 
 export interface LocationData {
   id: string;
@@ -227,7 +227,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       <Column
         fillWidth
         fillHeight
-        justify="end"
+        vertical="end"
         style={{
           padding: "28px 28px",
           background:
@@ -237,7 +237,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
         }}
       >
         <Row fillWidth>
-          <Column gap={8}>
+          <Column gap="8">
             <Heading variant="display-strong-xs" style={{ color: "white" }}>
               {data.title}
             </Heading>

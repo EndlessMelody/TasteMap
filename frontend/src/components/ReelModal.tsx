@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Avatar } from "@/components/OnceUI";
+import { Avatar } from "@once-ui-system/core";
 import { Heart, MessageCircle, Play, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 

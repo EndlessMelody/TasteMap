@@ -9,7 +9,7 @@ import {
   Button,
   Input,
   Avatar,
-} from "@/components/OnceUI";
+} from "@once-ui-system/core";
 import { X } from "lucide-react";
 
 interface CreateRoomModalProps {
@@ -67,11 +67,12 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
                 Start Group Room
               </Heading>
               <IconButton
-                icon={<X size={18} color="#636366" />}
                 onClick={onClose}
                 variant="tertiary"
                 style={{ cursor: "pointer" }}
-              />
+              >
+                <X size={18} color="#636366" />
+              </IconButton>
             </Row>
             <Column style={{ gap: "24px" }}>
               <Column style={{ gap: "8px" }}>
@@ -84,6 +85,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
                   Room Name
                 </Text>
                 <Input
+                  id="create-room-name"
                   placeholder="e.g. Saturday Midnight Snacks"
                   style={{ borderRadius: "12px", padding: "14px 16px" }}
                 />

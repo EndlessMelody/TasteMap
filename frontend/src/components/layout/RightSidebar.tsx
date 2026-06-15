@@ -6,7 +6,7 @@ import {
   Heading,
   Text,
   Avatar,
-} from "@/components/OnceUI";
+} from "@once-ui-system/core";
 import {
   Users,
   TrendingUp,

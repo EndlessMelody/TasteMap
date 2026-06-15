@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Row, Text } from '@/components/OnceUI';
+import { Row, Text } from '@once-ui-system/core';
 import { accent, text, radius, spacing } from '../tokens';
 
 type StatusType = 'match' | 'distance' | 'time' | 'price' | 'rating';

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Column, Row, Text } from "@/components/OnceUI";
+import { Column, Row, Text } from "@once-ui-system/core";
 
 interface FormFieldProps {
   label: string;
@@ -22,7 +22,7 @@ export function FormField({
 }: FormFieldProps) {
   return (
     <Column gap="8" fillWidth>
-      <Row fillWidth horizontal="space-between" vertical="center">
+      <Row fillWidth horizontal="between" vertical="center">
         <Text variant="label-default-s" onBackground="neutral-medium">
           {label}
           {optional && (

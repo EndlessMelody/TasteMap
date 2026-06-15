@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { X, Heart } from "lucide-react";
-import { Row } from "@/components/OnceUI";
+import { Row } from "@once-ui-system/core";
 
 interface ActionControlsProps {
   onPass: () => void;
@@ -21,9 +21,9 @@ export const ActionControls: React.FC<ActionControlsProps> = ({
   return (
     <Row
       fillWidth
-      justify="center"
-      align="center"
-      gap={24}
+      horizontal="center"
+      vertical="center"
+      gap="24"
       style={{ padding: "16px" }}
     >
       {/* Pass button */}
