@@ -22,6 +22,7 @@
  */
 import React from "react";
 import { motion } from "framer-motion";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { fadeUp, viewportOnce } from "@/lib/motion";
 import { H2, BodySm, Caption } from "@/components/ui";
@@ -76,63 +77,38 @@ export const DiscoverSection: React.FC<DiscoverSectionProps> = ({
       }}
     >
       {/* ── Header ── */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-end",
-          justifyContent: "space-between",
-          gap: tokens.space[4],
-          width: "100%",
-          paddingLeft: tokens.space[4],
-        }}
+      <Row
+        horizontal="between"
+        vertical="end"
+        fillWidth
+        style={{ gap: tokens.space[4], paddingLeft: tokens.space[4] }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[1],
-            minWidth: 0,
-            flex: 1,
-          }}
-        >
+        <Column style={{ gap: tokens.space[1], minWidth: 0, flex: 1 }}>
           {eyebrow && (
             <Caption style={{ color: accent }}>{eyebrow}</Caption>
           )}
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: tokens.space[3],
-            }}
-          >
+          <Row vertical="center" style={{ gap: tokens.space[3] }}>
             {icon && (
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  color: accent,
-                  flexShrink: 0,
-                }}
-              >
+              <Row as="span" vertical="center" style={{ color: accent, flexShrink: 0 }}>
                 {icon}
-              </span>
+              </Row>
             )}
             <H2>{title}</H2>
-          </div>
+          </Row>
 
           {subtitle && <BodySm tone="muted">{subtitle}</BodySm>}
-        </div>
+        </Column>
 
         {action && (
-          <div style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
+          <Row vertical="center" style={{ flexShrink: 0 }}>
             {action}
-          </div>
+          </Row>
         )}
-      </div>
+      </Row>
 
       {/* ── Body ── */}
-      <div style={{ width: "100%" }}>{children}</div>
+      <Column fillWidth>{children}</Column>
     </Wrapper>
   );
 };

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { ImgHTMLAttributes } from "react";
+import { Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
-import { cn } from "@/lib/cn";
 
 export type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
 
@@ -83,14 +83,15 @@ export const Avatar = ({
   const bg = src ? tokens.color.surfaceMuted : INITIALS_BG[hash(name ?? "?") % INITIALS_BG.length];
 
   return (
-    <span
-      className={cn("ui-avatar", className)}
+    <Row
+      horizontal="center"
+      vertical="center"
+      className={className}
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
         width: px,
         height: px,
+        minWidth: px,
+        minHeight: px,
         borderRadius: tokens.radius.pill,
         background: bg,
         color: tokens.color.textInverse,
@@ -116,6 +117,6 @@ export const Avatar = ({
       ) : (
         <span aria-label={name ?? "avatar"}>{initials(name)}</span>
       )}
-    </span>
+    </Row>
   );
 };

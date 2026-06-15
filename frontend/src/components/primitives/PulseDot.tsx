@@ -17,6 +17,7 @@
  *   <PulseDot size={8} tone="#34C759" label="Active now" />
  */
 import React from "react";
+import { Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 
 export interface PulseDotProps {
@@ -37,19 +38,13 @@ export const PulseDot: React.FC<PulseDotProps> = ({
   static: isStatic = false,
 }) => {
   return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: tokens.space[2],
-      }}
-    >
-      <span
+    <Row as="span" vertical="center" style={{ gap: tokens.space[2] }}>
+      <Row
+        as="span"
         style={{
           position: "relative",
           width: size,
           height: size,
-          display: "inline-block",
           flexShrink: 0,
         }}
       >
@@ -76,7 +71,7 @@ export const PulseDot: React.FC<PulseDotProps> = ({
             boxShadow: `0 0 0 2px var(--dsc-surface, #fff)`,
           }}
         />
-      </span>
+      </Row>
 
       {label && (
         <span
@@ -101,6 +96,6 @@ export const PulseDot: React.FC<PulseDotProps> = ({
           100% { transform: scale(2.4); opacity: 0; }
         }
       `}</style>
-    </span>
+    </Row>
   );
 };

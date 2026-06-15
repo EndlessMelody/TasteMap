@@ -3,6 +3,7 @@
 import React, { HTMLAttributes, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { cn } from "@/lib/cn";
 import { H1, Body, Eyebrow } from "./typography";
@@ -42,11 +43,11 @@ export const PageHeader = ({
   };
 
   return (
-    <header
+    <Row
+      as="header"
+      vertical="center"
       className={cn("ui-page-header", className)}
       style={{
-        display: "flex",
-        alignItems: "center",
         gap: tokens.space[4],
         paddingTop: tokens.space[4],
         paddingBottom: tokens.space[5],
@@ -73,16 +74,16 @@ export const PageHeader = ({
           icon={<ChevronLeft size={20} strokeWidth={1.75} />}
         />
       )}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: tokens.space[1] }}>
+      <Column style={{ flex: 1, gap: tokens.space[1] }}>
         {eyebrow && <Eyebrow tone="muted">{eyebrow}</Eyebrow>}
         <H1>{title}</H1>
         {description && <Body tone="muted">{description}</Body>}
-      </div>
+      </Column>
       {actions && (
-        <div style={{ display: "flex", alignItems: "center", gap: tokens.space[2] }}>
+        <Row vertical="center" style={{ gap: tokens.space[2] }}>
           {actions}
-        </div>
+        </Row>
       )}
-    </header>
+    </Row>
   );
 };

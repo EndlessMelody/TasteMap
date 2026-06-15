@@ -1,6 +1,7 @@
 "use client";
 
 import React, { HTMLAttributes } from "react";
+import { Column } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { cn } from "@/lib/cn";
 
@@ -28,18 +29,16 @@ export const Page = ({
   children,
   ...props
 }: PageProps) => (
-  <div
+  <Column
+    fillWidth
     className={cn("ui-page", className)}
+    horizontal={center ? "center" : undefined}
+    vertical={center ? "center" : undefined}
     style={{
       minHeight: "100vh",
       background: tokens.color.bg,
       color: tokens.color.text,
-      ...(center && {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: tokens.space[6],
-      }),
+      ...(center && { padding: tokens.space[6] }),
       ...style,
     }}
     {...props}
@@ -47,7 +46,8 @@ export const Page = ({
     {center ? (
       children
     ) : (
-      <div
+      <Column
+        fillWidth
         style={{
           maxWidth: bleed ? "none" : "1200px",
           margin: "0 auto",
@@ -58,7 +58,7 @@ export const Page = ({
         }}
       >
         {children}
-      </div>
+      </Column>
     )}
-  </div>
+  </Column>
 );

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { HTMLAttributes, ReactNode } from "react";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { cn } from "@/lib/cn";
 import { H3, Body } from "./typography";
@@ -30,13 +31,11 @@ export const EmptyState = ({
   style,
   ...props
 }: EmptyStateProps) => (
-  <div
+  <Column
+    horizontal="center"
+    align="center"
     className={cn("ui-empty", className)}
     style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      textAlign: "center",
       gap: tokens.space[4],
       padding: compact ? tokens.space[6] : tokens.space[12],
       ...style,
@@ -44,11 +43,10 @@ export const EmptyState = ({
     {...props}
   >
     {icon && (
-      <span
+      <Row
+        horizontal="center"
+        vertical="center"
         style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
           width: compact ? 48 : 64,
           height: compact ? 48 : 64,
           borderRadius: tokens.radius.pill,
@@ -57,12 +55,12 @@ export const EmptyState = ({
         }}
       >
         {icon}
-      </span>
+      </Row>
     )}
-    <div style={{ display: "flex", flexDirection: "column", gap: tokens.space[2], maxWidth: "420px" }}>
+    <Column style={{ gap: tokens.space[2], maxWidth: "420px" }}>
       <H3>{title}</H3>
       {description && <Body tone="muted">{description}</Body>}
-    </div>
-    {action && <div style={{ marginTop: tokens.space[2] }}>{action}</div>}
-  </div>
+    </Column>
+    {action && <Row style={{ marginTop: tokens.space[2] }}>{action}</Row>}
+  </Column>
 );

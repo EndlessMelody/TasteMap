@@ -1,6 +1,7 @@
 "use client";
 
 import React, { HTMLAttributes } from "react";
+import { Column } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { cn } from "@/lib/cn";
 
@@ -32,7 +33,7 @@ export const Skeleton = ({
   style,
   ...props
 }: SkeletonProps) => (
-  <div
+  <Column
     aria-hidden
     className={cn("ui-skeleton", className)}
     style={{

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { HTMLAttributes, ReactNode } from "react";
+import { Row } from "@once-ui-system/core";
 import { cn } from "@/lib/cn";
 
 export type PillTone =
@@ -40,7 +41,9 @@ export const Pill = ({
   children,
   ...props
 }: PillProps) => (
-  <span
+  <Row
+    as="span"
+    vertical="center"
     className={cn(
       "ui-pill",
       `ui-pill--${tone}`,
@@ -54,7 +57,7 @@ export const Pill = ({
     {leftIcon && <span className="ui-pill__icon">{leftIcon}</span>}
     <span>{children}</span>
     {rightIcon && <span className="ui-pill__icon">{rightIcon}</span>}
-  </span>
+  </Row>
 );
 
 /** Alias — `<Chip>` and `<Pill>` are the same primitive. */

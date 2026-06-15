@@ -6,6 +6,7 @@ import React, {
   ReactNode,
   useId,
 } from "react";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { cn } from "@/lib/cn";
 import { Caption, BodySm } from "./typography";
@@ -62,19 +63,12 @@ export const Field = (props: FieldProps) => {
   const hasError = Boolean(error);
 
   return (
-    <div
+    <Column
       className={cn("ui-field", hasError && "ui-field--error", className)}
-      style={{ display: "flex", flexDirection: "column", gap: tokens.space[2] }}
+      style={{ gap: tokens.space[2] }}
     >
       {label && (
-        <label
-          htmlFor={id}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: tokens.space[1],
-          }}
-        >
+        <label htmlFor={id} style={{ display: "inline-flex", alignItems: "center", gap: tokens.space[1] }}>
           <Caption tone="muted">{label}</Caption>
           {required && (
             <span style={{ color: tokens.color.danger }} aria-hidden>
@@ -83,7 +77,7 @@ export const Field = (props: FieldProps) => {
           )}
         </label>
       )}
-      <div className={cn("ui-field__shell", hasError && "ui-field__shell--error")}>
+      <Row vertical="center" className={cn("ui-field__shell", hasError && "ui-field__shell--error")}>
         {leading && <span className="ui-field__slot">{leading}</span>}
         {multiline ? (
           <textarea
@@ -107,7 +101,7 @@ export const Field = (props: FieldProps) => {
           />
         )}
         {trailing && <span className="ui-field__slot">{trailing}</span>}
-      </div>
+      </Row>
       {(error || helper) && (
         <BodySm
           id={`${id}-helper`}
@@ -117,6 +111,6 @@ export const Field = (props: FieldProps) => {
           {error ?? helper}
         </BodySm>
       )}
-    </div>
+    </Column>
   );
 };

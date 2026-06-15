@@ -1,6 +1,7 @@
 "use client";
 
 import React, { HTMLAttributes } from "react";
+import { Column } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { cn } from "@/lib/cn";
 
@@ -64,7 +65,7 @@ export const Card = ({
   children,
   ...props
 }: CardProps) => (
-  <div
+  <Column
     className={cn("ui-card", interactive && "dsc-lift", className)}
     style={{
       background: SURFACE[surface],
@@ -77,5 +78,5 @@ export const Card = ({
     {...props}
   >
     {children}
-  </div>
+  </Column>
 );

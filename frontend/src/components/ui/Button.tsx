@@ -1,15 +1,38 @@
 "use client";
 
 import React, { ButtonHTMLAttributes, ReactNode } from "react";
-import { cn } from "@/lib/cn";
+import { Button as CoreButton, IconButton as CoreIconButton, Row } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 
-export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "ghost"
-  | "magic"
-  | "danger";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "magic" | "danger";
 export type ButtonSize = "sm" | "md" | "lg";
+
+const VARIANT_MAP: Record<ButtonVariant, "primary" | "secondary" | "tertiary" | "danger"> = {
+  primary: "primary",
+  secondary: "secondary",
+  ghost: "tertiary",
+  magic: "primary",
+  danger: "danger",
+};
+
+const ICON_VARIANT_MAP: Record<ButtonVariant, "primary" | "secondary" | "tertiary" | "danger" | "ghost"> = {
+  primary: "primary",
+  secondary: "secondary",
+  ghost: "ghost",
+  magic: "primary",
+  danger: "danger",
+};
+
+const SIZE_MAP: Record<ButtonSize, "s" | "m" | "l"> = {
+  sm: "s",
+  md: "m",
+  lg: "l",
+};
+
+const MAGIC_STYLE: React.CSSProperties = {
+  background: tokens.gradient.signature,
+  border: "none",
+};
 
 interface CommonButtonProps {
   variant?: ButtonVariant;
@@ -18,18 +41,15 @@ interface CommonButtonProps {
   loading?: boolean;
 }
 
-interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    CommonButtonProps {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, CommonButtonProps {
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
 }
 
 /**
  * <Button>
- * Five variants — primary (warm), secondary (neutral), ghost (transparent),
- * magic (AI features only), danger (destructive only).
- * Sizes sm/md/lg. Styles live in ui.css under `.ui-btn`.
+ * Thin wrapper around the real OnceUI Button preserving TasteMap's
+ * variant/size vocabulary (primary/secondary/ghost/magic/danger, sm/md/lg).
  */
 export const Button = ({
   variant = "primary",
@@ -38,33 +58,35 @@ export const Button = ({
   loading,
   leftIcon,
   rightIcon,
-  disabled,
   className,
   children,
+  style,
+  type,
   ...props
 }: ButtonProps) => (
-  <button
-    type={props.type ?? "button"}
-    className={cn(
-      "ui-btn",
-      `ui-btn--${variant}`,
-      `ui-btn--${size}`,
-      fullWidth && "ui-btn--full",
-      loading && "ui-btn--loading",
-      className,
-    )}
-    disabled={disabled || loading}
+  <CoreButton
+    type={type ?? "button"}
+    variant={VARIANT_MAP[variant]}
+    size={SIZE_MAP[size]}
+    fillWidth={fullWidth}
+    loading={loading}
+    className={className}
+    style={variant === "magic" ? { ...MAGIC_STYLE, ...style } : style}
     {...props}
   >
-    {leftIcon && <span className="ui-btn__icon">{leftIcon}</span>}
-    <span className="ui-btn__label">{children}</span>
-    {rightIcon && <span className="ui-btn__icon">{rightIcon}</span>}
-  </button>
+    {leftIcon || rightIcon ? (
+      <Row gap="8" vertical="center">
+        {leftIcon}
+        {children}
+        {rightIcon}
+      </Row>
+    ) : (
+      children
+    )}
+  </CoreButton>
 );
 
-interface IconButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement>,
-    CommonButtonProps {
+interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, CommonButtonProps {
   icon: ReactNode;
   /** Required for a11y when there's no text. */
   "aria-label": string;
@@ -72,29 +94,27 @@ interface IconButtonProps
 
 /**
  * <IconButton>
- * Square icon-only button. Same variants as <Button>. Requires aria-label.
+ * Square icon-only button. Same variant/size vocabulary as <Button>.
  */
 export const IconButton = ({
   variant = "ghost",
   size = "md",
   icon,
-  disabled,
   loading,
   className,
+  style,
+  type,
   ...props
 }: IconButtonProps) => (
-  <button
-    type={props.type ?? "button"}
-    className={cn(
-      "ui-icon-btn",
-      `ui-btn--${variant}`,
-      `ui-icon-btn--${size}`,
-      loading && "ui-btn--loading",
-      className,
-    )}
-    disabled={disabled || loading}
+  <CoreIconButton
+    type={type ?? "button"}
+    variant={ICON_VARIANT_MAP[variant]}
+    size={SIZE_MAP[size]}
+    loading={loading}
+    className={className}
+    style={variant === "magic" ? { ...MAGIC_STYLE, ...style } : style}
     {...props}
   >
     {icon}
-  </button>
+  </CoreIconButton>
 );

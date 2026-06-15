@@ -14,6 +14,7 @@
  */
 import React from "react";
 import { motion } from "framer-motion";
+import { Column } from "@once-ui-system/core";
 import { tokens, matchTone } from "@/styles/tokens";
 
 export type MatchRingSize = "sm" | "md" | "lg" | "xl";
@@ -64,14 +65,14 @@ export const MatchRing: React.FC<MatchRingProps> = ({
   const offset = circumference * (1 - pct / 100);
 
   return (
-    <div
+    <Column
+      as="span"
+      horizontal="center"
+      vertical="center"
       style={{
         width: px,
         height: label ? px + fontSize + 4 : px,
         display: "inline-flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
         gap: label ? 2 : 0,
       }}
     >
@@ -141,6 +142,6 @@ export const MatchRing: React.FC<MatchRingProps> = ({
           {label}
         </span>
       )}
-    </div>
+    </Column>
   );
 };
