@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Column, Row, Heading, Text } from '@/components/OnceUI';
+import { Column, Row, Heading, Text } from '@once-ui-system/core';
 import { apiGet } from '@/lib/api';
 import { Users, Target, MapPin } from 'lucide-react';
 
@@ -10,6 +10,8 @@ interface AnalyticsOverview {
   active_challenges: number;
   total_locations: number;
 }
+
+const ICON_SIZE = 20;
 
 export default function AdminAnalyticsPage() {
   const [data, setData] = useState<AnalyticsOverview | null>(null);
@@ -29,43 +31,49 @@ export default function AdminAnalyticsPage() {
     fetchData();
   }, []);
 
+  const stats: { label: string; value: React.ReactNode; icon: React.ReactNode }[] = [
+    {
+      label: 'Total Users',
+      value: loading ? '...' : data?.total_users ?? '-',
+      icon: <Users size={ICON_SIZE} />,
+    },
+    {
+      label: 'Active Challenges',
+      value: loading ? '...' : data?.active_challenges ?? '-',
+      icon: <Target size={ICON_SIZE} />,
+    },
+    {
+      label: 'Total Locations',
+      value: loading ? '...' : data?.total_locations ?? '-',
+      icon: <MapPin size={ICON_SIZE} />,
+    },
+  ];
+
   return (
     <Column fillWidth padding="32" gap="32">
-      <Heading variant="display-strong-l">Analytics & Statistics</Heading>
+      <Heading variant="display-strong-l">Analytics &amp; Statistics</Heading>
 
-      <Row gap="16" s={{ direction: 'column' }}>
-        {/* Total Users */}
-        <Column background="surface" padding="24" radius="l" gap="16" fillWidth>
-          <Row horizontal="space-between" vertical="center">
-            <Text variant="body-default-m" onBackground="neutral-medium">Total Users</Text>
-            <Users size={20} className="text-neutral-medium" />
-          </Row>
-          <Heading variant="display-strong-m">
-            {loading ? '...' : data?.total_users ?? '-'}
-          </Heading>
-        </Column>
-
-        {/* Active Challenges */}
-        <Column background="surface" padding="24" radius="l" gap="16" fillWidth>
-          <Row horizontal="space-between" vertical="center">
-            <Text variant="body-default-m" onBackground="neutral-medium">Active Challenges</Text>
-            <Target size={20} className="text-neutral-medium" />
-          </Row>
-          <Heading variant="display-strong-m">
-            {loading ? '...' : data?.active_challenges ?? '-'}
-          </Heading>
-        </Column>
-
-        {/* Total Locations */}
-        <Column background="surface" padding="24" radius="l" gap="16" fillWidth>
-          <Row horizontal="space-between" vertical="center">
-            <Text variant="body-default-m" onBackground="neutral-medium">Total Locations</Text>
-            <MapPin size={20} className="text-neutral-medium" />
-          </Row>
-          <Heading variant="display-strong-m">
-            {loading ? '...' : data?.total_locations ?? '-'}
-          </Heading>
-        </Column>
+      <Row gap="16" fillWidth s={{ direction: 'column' }}>
+        {stats.map((stat) => (
+          <Column
+            key={stat.label}
+            background="surface"
+            border="neutral-alpha-weak"
+            padding="24"
+            radius="l"
+            gap="16"
+            fillWidth
+          >
+            <Row horizontal="between" vertical="center">
+              <Text variant="body-default-m" onBackground="neutral-medium">
+                {stat.label}
+              </Text>
+              {/* lucide inherits currentColor; Text.onBackground keeps it theme-aware */}
+              <Text onBackground="neutral-medium">{stat.icon}</Text>
+            </Row>
+            <Heading variant="display-strong-m">{stat.value}</Heading>
+          </Column>
+        ))}
       </Row>
     </Column>
   );
