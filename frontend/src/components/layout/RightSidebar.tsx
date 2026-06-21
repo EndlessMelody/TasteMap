@@ -143,7 +143,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         >
           {isExpanded ? (
             <Row style={{ alignItems: "center", gap: 8 }}>
-              <div
+              <Column
                 style={{
                   width: 6,
                   height: 6,
@@ -172,7 +172,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           )}
         </Row>
 
-        <div
+        <Column
           style={{
             width: "100%",
             height: isExpanded ? 180 : 64,
@@ -230,7 +230,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               </RadarChart>
             </ResponsiveContainer>
           )}
-        </div>
+        </Column>
 
         {isExpanded && topTrait && (
           <motion.div
@@ -274,7 +274,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         )}
       </Column>
 
-      <div
+      <Column
         style={{
           height: 1,
           backgroundColor: "rgba(0,0,0,0.06)",
@@ -296,7 +296,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           {isExpanded ? (
             <>
               <Row style={{ alignItems: "center", gap: 8 }}>
-                <div
+                <Column
                   style={{
                     width: 6,
                     height: 6,
@@ -351,9 +351,9 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               </button>
             </>
           ) : (
-            <div style={{ position: "relative" }}>
+            <Column style={{ position: "relative" }}>
               <Users size={18} color="rgba(0,0,0,0.4)" />
-              <div
+              <Column
                 style={{
                   position: "absolute",
                   top: -2,
@@ -365,7 +365,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   border: "2px solid white",
                 }}
               />
-            </div>
+            </Column>
           )}
         </Row>
 
@@ -393,14 +393,14 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 justifyContent: isExpanded ? "flex-start" : "center",
               }}
             >
-              <div style={{ position: "relative", flexShrink: 0 }}>
+              <Column style={{ position: "relative", flexShrink: 0 }}>
                 <Avatar
                   src={friend.avatar}
                   size="s"
                   style={{ display: "block" }}
                 />
                 {(friend.isOnline || (friend as any).match > 80) && (
-                  <div
+                  <Column
                     style={{
                       position: "absolute",
                       bottom: 0,
@@ -413,7 +413,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                     }}
                   />
                 )}
-              </div>
+              </Column>
 
               {isExpanded && (
                 <Column
@@ -458,7 +458,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         </Column>
       </Column>
 
-      <div
+      <Column
         style={{
           height: 1,
           backgroundColor: "rgba(0,0,0,0.06)",
@@ -516,21 +516,20 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   justifyContent: isExpanded ? "flex-start" : "center",
                 }}
               >
-                <div
+                <Row
+                  horizontal="center"
+                  vertical="center"
                   style={{
                     width: isExpanded ? 36 : 32,
                     height: isExpanded ? 36 : 32,
                     borderRadius: 10,
                     background:
                       "linear-gradient(135deg, rgba(255,107,53,0.1), rgba(255,140,90,0.08))",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     flexShrink: 0,
                   }}
                 >
                   <Utensils size={isExpanded ? 16 : 14} color="#ff6b35" />
-                </div>
+                </Row>
 
                 {isExpanded && (
                   <>
@@ -610,7 +609,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         </Column>
       </Column>
 
-      <div style={{ flex: 1 }} />
+      <Column style={{ flex: 1 }} />
 
       {/* ════════════════════════════════════════════
           Section 4: Quick Stats Footer
@@ -659,12 +658,10 @@ function StatCard({
   value: string;
 }) {
   return (
-    <div
+    <Column
+      horizontal="center"
       style={{
         flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
         gap: 4,
         padding: "10px 6px",
         borderRadius: 12,
@@ -694,6 +691,6 @@ function StatCard({
       >
         {label}
       </span>
-    </div>
+    </Column>
   );
 }

@@ -21,6 +21,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Eye, Play, Flame } from "lucide-react";
 
+import { Column, Row } from "@once-ui-system/core";
 import { BookmarkButton } from "@/components/common/BookmarkButton";
 import { tokens } from "@/styles/tokens";
 import type { ReelData } from "@/types/dashboard";
@@ -87,7 +88,7 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
       />
 
       {/* ── Dark gradient for bottom text legibility ── */}
-      <div
+      <Column
         style={{
           position: "absolute",
           inset: 0,
@@ -99,13 +100,13 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
 
       {/* ── Rank badge (top-left, 1–3 only) ── */}
       {showRank && (
-        <div
+        <Row
+          vertical="center"
           style={{
             position: "absolute",
             top: tokens.space[3],
             left: tokens.space[3],
             display: "inline-flex",
-            alignItems: "center",
             gap: 4,
             paddingTop: 4,
             paddingBottom: 4,
@@ -122,17 +123,15 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
           }}
         >
           <Flame size={10} strokeWidth={2.6} />#{rank}
-        </div>
+        </Row>
       )}
 
       {/* ── Views badge (top-right) ── */}
-      <div
+      <Column
         style={{
           position: "absolute",
           top: tokens.space[3],
           right: tokens.space[3],
-          display: "flex",
-          flexDirection: "column",
           alignItems: "flex-end",
           gap: 8,
         }}
@@ -149,10 +148,10 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
             WebkitBackdropFilter: "blur(10px)",
           }}
         /> */}
-        <div
+        <Row
+          vertical="center"
           style={{
             display: "inline-flex",
-            alignItems: "center",
             gap: 4,
             paddingTop: 4,
             paddingBottom: 4,
@@ -171,17 +170,16 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
         >
           <Eye size={10} strokeWidth={2.4} />
           {reel.views}
-        </div>
-      </div>
+        </Row>
+      </Column>
 
       {/* ── Pulsing play button (center) ── */}
-      <div
+      <Row
+        horizontal="center"
+        vertical="center"
         style={{
           position: "absolute",
           inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           pointerEvents: "none",
         }}
       >
@@ -213,18 +211,16 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
             style={{ marginLeft: 2 }}
           />
         </motion.div>
-      </div>
+      </Row>
 
       {/* ── Bottom text panel ── */}
-      <div
+      <Column
         style={{
           position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
           padding: tokens.space[3],
-          display: "flex",
-          flexDirection: "column",
           gap: 2,
         }}
       >
@@ -254,7 +250,7 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
         >
           {reel.user}
         </span>
-      </div>
+      </Column>
     </motion.div>
   );
 };

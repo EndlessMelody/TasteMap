@@ -1,102 +1,104 @@
 /**
  * Discover V2 Design Tokens
  * ─────────────────────────────────────────────────────────────────
- * Single source of truth for Discover-page design values.
- * Mirrors the `--dsc-*` CSS variables in `globals.css`, but exposed
+ * Single source of truth for Discover-page design values, exposed
  * as a typed JS object so components can consume them via style={}.
  *
  * Usage:
  *   import { tokens } from "@/styles/tokens";
  *   style={{ color: tokens.text.primary, padding: tokens.space[4] }}
  *
- * Rules:
- *   - Never hard-code colors/spacings in Discover components.
- *   - If a new value is needed, add it here first (+ CSS var).
- *   - The `raw` field references the CSS var for SSR-safe runtime reads.
+ * Colors are backed by @once-ui-system/core's CSS variables (theme-aware,
+ * flips automatically with data-theme via ThemeContext). Radius/space/
+ * typography are theme-invariant literals. Motion still uses the
+ * dsc-ease and dsc-duration CSS vars defined in globals.css.
  */
 
-// ─── Color palette ───────────────────────────────────────────────
+// ─── Color palette (Once UI semantic vars — dark-mode aware) ─────
 export const palette = {
   // Surfaces
-  bg: "var(--dsc-bg)",
-  surface: "var(--dsc-surface)",
-  surfaceMuted: "var(--dsc-surface-muted)",
-  surfaceInset: "var(--dsc-surface-inset)",
+  bg: "var(--page-background)",
+  surface: "var(--surface-background)",
+  surfaceMuted: "var(--neutral-background-weak)",
+  surfaceInset: "var(--neutral-background-medium)",
 
   // Borders
-  border: "var(--dsc-border)",
-  borderStrong: "var(--dsc-border-strong)",
-  borderFocus: "var(--dsc-border-focus)",
+  border: "var(--neutral-alpha-weak)",
+  borderStrong: "var(--neutral-alpha-medium)",
+  borderFocus: "var(--brand-alpha-strong)",
 
   // Text
-  text: "var(--dsc-text)",
-  textMuted: "var(--dsc-text-muted)",
-  textSubtle: "var(--dsc-text-subtle)",
-  textInverse: "var(--dsc-text-inverse)",
+  text: "var(--neutral-on-background-strong)",
+  textMuted: "var(--neutral-on-background-medium)",
+  textSubtle: "var(--neutral-on-background-weak)",
+  textInverse: "var(--neutral-on-solid-strong)",
 
-  // Accents (use sparingly)
-  warm: "var(--dsc-accent-warm)",
-  cool: "var(--dsc-accent-cool)",
-  magic: "var(--dsc-accent-magic)",
-  success: "var(--dsc-accent-success)",
-  warning: "var(--dsc-accent-warning)",
-  danger: "var(--dsc-accent-danger)",
+  // Accents (use sparingly) — theme-invariant brand hex (never had a dark
+  // variant), kept literal since several call sites append a hex alpha
+  // suffix (e.g. `${tokens.color.warm}30`), which only works on hex strings.
+  warm: "#ff6b35",
+  cool: "#0a84ff",
+  magic: "#a855f7",
+  success: "#34c759",
+  warning: "#fbbf24",
+  danger: "#e63946",
 } as const;
 
-// ─── Gradients (reserved for AI / magic moments) ─────────────────
+// ─── Gradients (reserved for AI / magic moments — decorative, theme-invariant) ─
 export const gradients = {
-  signature: "var(--dsc-gradient-signature)",
-  signatureSoft: "var(--dsc-gradient-signature-soft)",
+  signature: "linear-gradient(135deg, #ff6b35 0%, #e63946 50%, #7b2ff7 100%)",
+  signatureSoft:
+    "linear-gradient(135deg, rgba(255, 107, 53, 0.12) 0%, rgba(230, 57, 70, 0.1) 50%, rgba(123, 47, 247, 0.12) 100%)",
 } as const;
 
 // ─── Shadows ─────────────────────────────────────────────────────
 export const shadows = {
-  sm: "var(--dsc-shadow-sm)",
-  md: "var(--dsc-shadow-md)",
-  lg: "var(--dsc-shadow-lg)",
-  glowMagic: "var(--dsc-shadow-glow-magic)",
-  glowWarm: "var(--dsc-shadow-glow-warm)",
+  sm: "var(--shadow-card)",
+  md: "var(--shadow-card)",
+  lg: "var(--shadow-elevated)",
+  glowMagic: "0 8px 32px -8px rgba(168, 85, 247, 0.35)",
+  glowWarm: "0 8px 32px -8px rgba(255, 107, 53, 0.35)",
 } as const;
 
-// ─── Radii ───────────────────────────────────────────────────────
+// ─── Radii (theme-invariant) ──────────────────────────────────────
 export const radius = {
-  xs: "var(--dsc-radius-xs)",
-  sm: "var(--dsc-radius-sm)",
-  md: "var(--dsc-radius-md)",
-  lg: "var(--dsc-radius-lg)",
-  xl: "var(--dsc-radius-xl)",
-  pill: "var(--dsc-radius-pill)",
+  xs: "6px",
+  sm: "10px",
+  md: "14px",
+  lg: "20px",
+  xl: "28px",
+  pill: "9999px",
 } as const;
 
-// ─── Spacing (4px base) ──────────────────────────────────────────
+// ─── Spacing (4px base, theme-invariant) ─────────────────────────
 export const space = {
-  1: "var(--dsc-space-1)",
-  2: "var(--dsc-space-2)",
-  3: "var(--dsc-space-3)",
-  4: "var(--dsc-space-4)",
-  5: "var(--dsc-space-5)",
-  6: "var(--dsc-space-6)",
-  8: "var(--dsc-space-8)",
-  10: "var(--dsc-space-10)",
-  12: "var(--dsc-space-12)",
-  16: "var(--dsc-space-16)",
+  1: "4px",
+  2: "8px",
+  3: "12px",
+  4: "16px",
+  5: "20px",
+  6: "24px",
+  8: "32px",
+  10: "40px",
+  12: "48px",
+  16: "64px",
 } as const;
 
-// ─── Typography ──────────────────────────────────────────────────
+// ─── Typography (theme-invariant) ────────────────────────────────
 export const typography = {
   size: {
-    display: "var(--dsc-font-display)",
-    h1: "var(--dsc-font-h1)",
-    h2: "var(--dsc-font-h2)",
-    h3: "var(--dsc-font-h3)",
-    body: "var(--dsc-font-body)",
-    bodySm: "var(--dsc-font-body-sm)",
-    caption: "var(--dsc-font-caption)",
+    display: "3rem",
+    h1: "2rem",
+    h2: "1.375rem",
+    h3: "1.125rem",
+    body: "0.9375rem",
+    bodySm: "0.8125rem",
+    caption: "0.6875rem",
   },
   tracking: {
-    tight: "var(--dsc-tracking-tight)",
-    normal: "var(--dsc-tracking-normal)",
-    wide: "var(--dsc-tracking-wide)",
+    tight: "-0.02em",
+    normal: "-0.005em",
+    wide: "0.06em",
   },
   weight: {
     regular: 400,

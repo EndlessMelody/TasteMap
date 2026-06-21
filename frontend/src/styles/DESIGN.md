@@ -18,7 +18,7 @@
 
 ## 1. The token system
 
-All values live in [`src/styles/tokens.ts`](./tokens.ts), backed by CSS vars in [`src/app/globals.css`](../app/globals.css) under the `--dsc-*` namespace.
+All values live in [`src/styles/tokens.ts`](./tokens.ts). Colors are backed by Once UI's dark-mode-aware CSS vars; radius/space/typography are theme-invariant literals; motion still uses the `--dsc-ease-*`/`--dsc-duration-*` vars in [`src/app/globals.css`](../app/globals.css).
 
 The legacy `--color-primary`, `--surface-*`, `--border-*`, `--text-*`, `--shadow-card`, `--radius-{xs,s,m,l,xl,2xl,full}`, `--spacing-*` variables and the `.glass-premium`, `.card-hover`, `.noise-overlay`, `.focus-ring`, `.skeleton-shimmer` utility classes are **deprecated**. They will be removed at the end of the migration. Do not introduce new usage.
 
@@ -256,7 +256,7 @@ Every token has a dark-mode value already. Pages must work in both themes — ne
 
 1. Don't add it inline. Stop.
 2. Check if an existing token covers the case 80% well — usually yes.
-3. If genuinely missing, add to `tokens.ts` + `globals.css` `--dsc-*` block, document here, then use it.
+3. If genuinely missing, add it to `tokens.ts` (colors → an Once UI semantic CSS var; non-colors → a literal), document here, then use it.
 4. Adding a new accent color requires a written justification in PR description. Default is **no**.
 
 ---

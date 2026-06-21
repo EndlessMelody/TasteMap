@@ -1,25 +1,24 @@
+import { Column, Row } from "@once-ui-system/core";
+
 export default function RootLoading() {
   return (
-    <div
+    <Row
+      horizontal="center"
+      vertical="center"
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
         width: "100%",
         height: "100%",
         minHeight: "100vh",
         backgroundColor: "#F2F2F7",
       }}
     >
-      <div
+      <Column
+        horizontal="center"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
           gap: 16,
         }}
       >
-        <div
+        <Column
           style={{
             width: 40,
             height: 40,
@@ -34,8 +33,8 @@ export default function RootLoading() {
         >
           Loading…
         </span>
-      </div>
+      </Column>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+    </Row>
   );
 }

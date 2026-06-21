@@ -68,7 +68,7 @@ export const PulseDot: React.FC<PulseDotProps> = ({
             inset: 0,
             borderRadius: "50%",
             backgroundColor: tone,
-            boxShadow: `0 0 0 2px var(--dsc-surface, #fff)`,
+            boxShadow: `0 0 0 2px var(--surface-background, #fff)`,
           }}
         />
       </Row>

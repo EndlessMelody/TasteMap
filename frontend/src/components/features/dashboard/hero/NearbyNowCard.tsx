@@ -19,6 +19,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { MapPin, ArrowUpRight } from "lucide-react";
 
+import { Column, Row } from "@once-ui-system/core";
 import Map from "@/components/Map";
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
@@ -116,20 +117,19 @@ export const NearbyNowCard: React.FC = () => {
       }}
     >
       {/* ── Header ── */}
-      <div
+      <Row
+        vertical="center"
         style={{
-          display: "flex",
-          alignItems: "center",
           justifyContent: "space-between",
           gap: tokens.space[3],
           padding: `${tokens.space[3]} ${tokens.space[4]}`,
           borderBottom: `1px solid ${tokens.color.border}`,
         }}
       >
-        <div
+        <Row
+          vertical="center"
           style={{
             display: "inline-flex",
-            alignItems: "center",
             gap: tokens.space[2],
           }}
         >
@@ -158,7 +158,7 @@ export const NearbyNowCard: React.FC = () => {
           >
             Nearby Now
           </span>
-        </div>
+        </Row>
 
         <span
           style={{
@@ -170,10 +170,10 @@ export const NearbyNowCard: React.FC = () => {
         >
           {spots.length} within 2km
         </span>
-      </div>
+      </Row>
 
       {/* ── Map body ── */}
-      <div
+      <Column
         style={{
           flex: 1,
           minHeight: 0,
@@ -195,13 +195,11 @@ export const NearbyNowCard: React.FC = () => {
             interactive={false}
           />
         ) : (
-          <div
+          <Column
+            horizontal="center"
             style={{
               position: "absolute",
               inset: 0,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
               justifyContent: "center",
               gap: tokens.space[2],
               color: tokens.color.textMuted,
@@ -231,9 +229,9 @@ export const NearbyNowCard: React.FC = () => {
             >
               Add a Mapbox token to enable
             </span>
-          </div>
+          </Column>
         )}
-      </div>
+      </Column>
 
       {/* ── Footer (clickable) ── */}
       <button

@@ -39,7 +39,7 @@ export function ReelForm({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.16 }}
-      className="flex flex-col gap-4 w-full"
+      style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%" }}
     >
       {/* Caption */}
       <Column style={{ gap: 6 }}>
@@ -59,7 +59,26 @@ export function ReelForm({
               onTitleChange(e.target.value);
             }
           }}
-          className="w-full h-12 rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 transition-shadow"
+          style={{
+            width: "100%",
+            height: 48,
+            borderRadius: 12,
+            border: "1px solid #E2E8F0",
+            backgroundColor: "#FFFFFF",
+            padding: "0 14px",
+            fontSize: 14,
+            color: "#27272A",
+            outline: "none",
+            transition: "box-shadow 0.15s, border-color 0.15s",
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.boxShadow = "0 0 0 2px #FDBA74";
+            e.currentTarget.style.borderColor = "#FB923C";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.boxShadow = "none";
+            e.currentTarget.style.borderColor = "#E2E8F0";
+          }}
         />
       </Column>
 

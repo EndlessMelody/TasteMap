@@ -3,7 +3,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Column, Row, Text, Heading } from "@once-ui-system/core";
-import { cn } from "@/lib/cn";
 import {
   Bell,
   X,
@@ -36,38 +35,38 @@ export interface NotificationPanelProps {
 
 const TYPE_CFG: Record<
   string,
-  { icon: React.ReactNode; colorClass: string; bgClass: string }
+  { icon: React.ReactNode; color: string; bg: string }
 > = {
   friend_request: {
     icon: <UserPlus size={14} />,
-    colorClass: "text-[#ff6b35]",
-    bgClass: "bg-[#ff6b35]/10",
+    color: "#ff6b35",
+    bg: "rgba(255,107,53,0.1)",
   },
   friend_accepted: {
     icon: <UserPlus size={14} />,
-    colorClass: "text-[#34C759]",
-    bgClass: "bg-[#34C759]/10",
+    color: "#34C759",
+    bg: "rgba(52,199,89,0.1)",
   },
   message: {
     icon: <MessageCircle size={14} />,
-    colorClass: "text-[#FF9500]",
-    bgClass: "bg-[#FF9500]/10",
+    color: "#FF9500",
+    bg: "rgba(255,149,0,0.1)",
   },
   achievement: {
     icon: <Star size={14} />,
-    colorClass: "text-[#AF52DE]",
-    bgClass: "bg-[#AF52DE]/10",
+    color: "#AF52DE",
+    bg: "rgba(175,82,222,0.1)",
   },
 };
 
+const DEFAULT_CFG = {
+  icon: <Info size={14} />,
+  color: "#8E8E93",
+  bg: "rgba(142,142,147,0.1)",
+};
+
 function cfg(type: string) {
-  return (
-    TYPE_CFG[type] ?? {
-      icon: <Info size={14} />,
-      colorClass: "text-[#8E8E93]",
-      bgClass: "bg-[#8E8E93]/10",
-    }
-  );
+  return TYPE_CFG[type] ?? DEFAULT_CFG;
 }
 
 function groupByDate(
@@ -121,48 +120,57 @@ const NotifItem = React.memo(
     const isFriendReq = notif.type === "friend_request" && notif.reference_id;
 
     return (
-      <div
+      <Column
         onClick={() => {
           if (!isFriendReq && !notif.is_read) onMarkRead(notif.id);
         }}
-        className={cn(
-          "px-[18px] py-[14px] border-b border-[rgba(0,0,0,0.045)] transition-colors duration-150",
-          notif.is_read ? "bg-transparent" : "bg-[rgba(0,122,255,0.028)]",
-          isFriendReq ? "cursor-default" : "cursor-pointer",
-        )}
+        style={{
+          padding: "14px 18px",
+          borderBottom: "1px solid rgba(0,0,0,0.045)",
+          transition: "background-color 150ms",
+          backgroundColor: notif.is_read ? "transparent" : "rgba(0,122,255,0.028)",
+          cursor: isFriendReq ? "default" : "pointer",
+        }}
       >
-        <Row className="gap-[12px] items-start">
+        <Row style={{ gap: 12, alignItems: "flex-start" }}>
           {/* Type icon */}
-          <div
-            className={cn(
-              "w-[34px] h-[34px] rounded-full flex items-center justify-center shrink-0",
-              c.bgClass,
-              c.colorClass,
-            )}
+          <Row
+            horizontal="center"
+            vertical="center"
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: "50%",
+              flexShrink: 0,
+              backgroundColor: c.bg,
+              color: c.color,
+            }}
           >
             {c.icon}
-          </div>
+          </Row>
 
           {/* Text content */}
-          <Column className="gap-[3px] flex-1 min-w-0">
+          <Column style={{ gap: 3, flex: 1, minWidth: 0 }}>
             <Text
-              className={cn(
-                "text-[13px] text-[#1C1C1E] leading-[1.4]",
-                notif.is_read ? "font-medium" : "font-bold",
-              )}
+              style={{
+                fontSize: 13,
+                color: "#1C1C1E",
+                lineHeight: 1.4,
+                fontWeight: notif.is_read ? 500 : 700,
+              }}
             >
               {notif.title}
             </Text>
 
             {notif.body && (
-              <Text className="text-[12px] text-black/50 leading-[1.4]">
+              <Text style={{ fontSize: 12, color: "rgba(0,0,0,0.5)", lineHeight: 1.4 }}>
                 {notif.body}
               </Text>
             )}
 
             {/* Inline Accept / Decline for friend requests */}
             {isFriendReq && (
-              <Row className="gap-[8px] mt-[6px]">
+              <Row style={{ gap: 8, marginTop: 6 }}>
                 <button
                   disabled={busy}
                   onClick={async (e) => {
@@ -174,12 +182,16 @@ const NotifItem = React.memo(
                       setBusy(false);
                     }
                   }}
-                  className={cn(
-                    "px-[14px] py-[5px] rounded-[8px] border-none text-[12px] font-bold",
-                    busy
-                      ? "bg-[#FFD4A3] cursor-default"
-                      : "bg-[#ff6b35] cursor-pointer text-white",
-                  )}
+                  style={{
+                    padding: "5px 14px",
+                    borderRadius: 8,
+                    border: "none",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    backgroundColor: busy ? "#FFD4A3" : "#ff6b35",
+                    cursor: busy ? "default" : "pointer",
+                    color: busy ? undefined : "white",
+                  }}
                 >
                   Accept
                 </button>
@@ -194,29 +206,47 @@ const NotifItem = React.memo(
                       setBusy(false);
                     }
                   }}
-                  className={cn(
-                    "px-[14px] py-[5px] rounded-[8px] border-[1.5px] border-black/10 transition-colors",
-                    busy
-                      ? "bg-white cursor-default text-black/55"
-                      : "bg-white cursor-pointer text-black/55 hover:bg-black/5",
-                  )}
+                  style={{
+                    padding: "5px 14px",
+                    borderRadius: 8,
+                    border: "1.5px solid rgba(0,0,0,0.1)",
+                    transition: "background-color 150ms",
+                    backgroundColor: "white",
+                    cursor: busy ? "default" : "pointer",
+                    color: "rgba(0,0,0,0.55)",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!busy) e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "white";
+                  }}
                 >
                   Decline
                 </button>
               </Row>
             )}
 
-            <Text className="text-[11px] text-black/30 mt-[2px]">
+            <Text style={{ fontSize: 11, color: "rgba(0,0,0,0.3)", marginTop: 2 }}>
               {timeAgo(notif.created_at)}
             </Text>
           </Column>
 
           {/* Unread dot */}
           {!notif.is_read && (
-            <div className="w-[7px] h-[7px] rounded-full bg-[#ff6b35] shrink-0 mt-[5px]" />
+            <Column
+              style={{
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                backgroundColor: "#ff6b35",
+                flexShrink: 0,
+                marginTop: 5,
+              }}
+            />
           )}
         </Row>
-      </div>
+      </Column>
     );
   }
 );
@@ -248,7 +278,12 @@ export default function NotificationPanel({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
             onClick={onClose}
-            className="fixed inset-0 z-[998] bg-black/15"
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 998,
+              backgroundColor: "rgba(0,0,0,0.15)",
+            }}
           />
 
           {/* Slide-in panel */}
@@ -258,28 +293,79 @@ export default function NotificationPanel({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ type: "spring", stiffness: 420, damping: 32 }}
-            style={{ "--sidebar-width": `${sidebarWidth}px` } as any}
-            className="fixed top-0 bottom-0 left-[var(--sidebar-width)] w-[340px] bg-white shadow-[6px_0_32px_rgba(0,0,0,0.11)] z-[999] flex flex-col overflow-hidden border-r border-black/5 will-change-[transform,opacity] transform-gpu"
+            style={{
+              position: "fixed",
+              top: 0,
+              bottom: 0,
+              left: sidebarWidth,
+              width: 340,
+              backgroundColor: "white",
+              boxShadow: "6px 0 32px rgba(0,0,0,0.11)",
+              zIndex: 999,
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
+              borderRight: "1px solid rgba(0,0,0,0.05)",
+              willChange: "transform, opacity",
+              transform: "translateZ(0)",
+            }}
           >
             {/* ─ Header ─ */}
-            <Row className="items-center justify-between px-[18px] pt-[20px] pb-[16px] border-b border-black/5 shrink-0">
-              <Row className="items-center gap-[10px]">
-                <Bell size={17} className="text-[#1C1C1E]" />
-                <Heading variant="heading-strong-s" className="text-[#1C1C1E]">
+            <Row
+              vertical="center"
+              horizontal="between"
+              style={{
+                padding: "20px 18px 16px",
+                borderBottom: "1px solid rgba(0,0,0,0.05)",
+                flexShrink: 0,
+              }}
+            >
+              <Row vertical="center" style={{ gap: 10 }}>
+                <Bell size={17} style={{ color: "#1C1C1E" }} />
+                <Heading variant="heading-strong-s" style={{ color: "#1C1C1E" }}>
                   Notifications
                 </Heading>
                 {unreadCount > 0 && (
-                  <div className="px-[8px] py-[2px] rounded-full bg-[#FF3B30] text-white text-[11px] font-extrabold">
+                  <Column
+                    style={{
+                      padding: "2px 8px",
+                      borderRadius: "999px",
+                      backgroundColor: "#FF3B30",
+                      color: "white",
+                      fontSize: 11,
+                      fontWeight: 800,
+                    }}
+                  >
                     {unreadCount}
-                  </div>
+                  </Column>
                 )}
               </Row>
 
-              <Row className="gap-[6px] items-center">
+              <Row vertical="center" style={{ gap: 6 }}>
                 {unreadCount > 0 && (
                   <button
                     onClick={onMarkAllRead}
-                    className="flex items-center gap-[5px] px-[10px] py-[5px] rounded-[8px] border border-black/10 bg-transparent text-black/45 text-[11px] font-semibold cursor-pointer whitespace-nowrap hover:bg-black/5 transition-colors"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 5,
+                      padding: "5px 10px",
+                      borderRadius: 8,
+                      border: "1px solid rgba(0,0,0,0.1)",
+                      backgroundColor: "transparent",
+                      color: "rgba(0,0,0,0.45)",
+                      fontSize: 11,
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                      transition: "background-color 150ms",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "transparent";
+                    }}
                   >
                     <CheckCheck size={11} />
                     All read
@@ -287,7 +373,26 @@ export default function NotificationPanel({
                 )}
                 <button
                   onClick={onClose}
-                  className="flex items-center justify-center w-[28px] h-[28px] rounded-[8px] border-none bg-black/5 cursor-pointer text-black/50 shrink-0 hover:bg-black/10 transition-colors"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 28,
+                    height: 28,
+                    borderRadius: 8,
+                    border: "none",
+                    backgroundColor: "rgba(0,0,0,0.05)",
+                    color: "rgba(0,0,0,0.5)",
+                    cursor: "pointer",
+                    flexShrink: 0,
+                    transition: "background-color 150ms",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)";
+                  }}
                 >
                   <X size={14} />
                 </button>
@@ -295,26 +400,71 @@ export default function NotificationPanel({
             </Row>
 
             {/* ─ List ─ */}
-            <div className="no-scrollbar flex-1 overflow-y-auto">
+            <Column className="no-scrollbar" style={{ flex: 1, overflowY: "auto" }}>
               {loading ? (
-                <Column className="px-[18px] py-[24px] gap-[18px]">
+                <Column style={{ padding: "24px 18px", gap: 18 }}>
                   {[1, 2, 3].map((i) => (
-                    <Row key={i} className="gap-[12px] items-start">
-                      <div className="w-[34px] h-[34px] rounded-full bg-black/5 shrink-0 animate-pulse" />
-                      <Column className="gap-[8px] flex-1">
-                        <div className="h-[12px] bg-black/5 rounded-full w-[72%] animate-pulse" />
-                        <div className="h-[10px] bg-black/5 rounded-full w-[48%] animate-pulse" />
+                    <Row key={i} style={{ gap: 12, alignItems: "flex-start" }}>
+                      <Column
+                        style={{
+                          width: 34,
+                          height: 34,
+                          borderRadius: "50%",
+                          backgroundColor: "rgba(0,0,0,0.05)",
+                          flexShrink: 0,
+                          animation: "tm-pulse 1.4s ease-in-out infinite",
+                        }}
+                      />
+                      <Column style={{ gap: 8, flex: 1 }}>
+                        <Column
+                          style={{
+                            height: 12,
+                            backgroundColor: "rgba(0,0,0,0.05)",
+                            borderRadius: "999px",
+                            width: "72%",
+                            animation: "tm-pulse 1.4s ease-in-out infinite",
+                          }}
+                        />
+                        <Column
+                          style={{
+                            height: 10,
+                            backgroundColor: "rgba(0,0,0,0.05)",
+                            borderRadius: "999px",
+                            width: "48%",
+                            animation: "tm-pulse 1.4s ease-in-out infinite",
+                          }}
+                        />
                       </Column>
                     </Row>
                   ))}
+                  <style>{`
+                    @keyframes tm-pulse {
+                      0%, 100% { opacity: 1; }
+                      50% { opacity: 0.45; }
+                    }
+                  `}</style>
                 </Column>
               ) : notifications.length === 0 ? (
-                <Column className="items-center justify-center px-[24px] py-[72px] gap-[10px]">
-                  <Text className="text-[2.2rem]">🔔</Text>
-                  <Text className="text-[14px] font-bold text-[#1C1C1E]">
+                <Column
+                  horizontal="center"
+                  style={{
+                    justifyContent: "center",
+                    padding: "72px 24px",
+                    gap: 10,
+                  }}
+                >
+                  <Text style={{ fontSize: "2.2rem" }}>🔔</Text>
+                  <Text style={{ fontSize: 14, fontWeight: 700, color: "#1C1C1E" }}>
                     All caught up!
                   </Text>
-                  <Text className="text-[12px] text-black/40 text-center leading-[1.5]">
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: "rgba(0,0,0,0.4)",
+                      textAlign: "center",
+                      lineHeight: 1.5,
+                    }}
+                  >
                     No notifications yet.
                     <br />
                     Activity from your foodies will show up here.
@@ -324,9 +474,23 @@ export default function NotificationPanel({
                 groupByDate(notifications).map(({ label, items }) => (
                   <React.Fragment key={label}>
                     {/* Group header */}
-                    <div className="sticky top-0 z-[1] px-[18px] py-[8px] pt-[8px] pb-[6px] text-[10px] font-extrabold text-black/30 uppercase tracking-[0.9px] bg-black/[0.018] border-b border-black/5">
+                    <Column
+                      style={{
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 1,
+                        padding: "8px 18px 6px",
+                        fontSize: 10,
+                        fontWeight: 800,
+                        color: "rgba(0,0,0,0.3)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.9px",
+                        backgroundColor: "rgba(0,0,0,0.018)",
+                        borderBottom: "1px solid rgba(0,0,0,0.05)",
+                      }}
+                    >
                       {label}
-                    </div>
+                    </Column>
                     {items.map((n) => (
                       <NotifItem
                         key={n.id}
@@ -339,18 +503,45 @@ export default function NotificationPanel({
                   </React.Fragment>
                 ))
               )}
-            </div>
+            </Column>
 
             {/* ─ Footer ─ */}
-            <div className="px-[18px] py-[12px] border-t border-black/5 shrink-0">
+            <Column
+              style={{
+                padding: "12px 18px",
+                borderTop: "1px solid rgba(0,0,0,0.05)",
+                flexShrink: 0,
+              }}
+            >
               <button
                 onClick={onRefresh}
-                className="w-full flex items-center justify-center gap-[6px] p-[9px] rounded-[10px] border border-black/10 bg-transparent text-black/40 text-[12px] font-semibold cursor-pointer hover:bg-black/5 transition-colors"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  padding: 9,
+                  borderRadius: 10,
+                  border: "1px solid rgba(0,0,0,0.1)",
+                  backgroundColor: "transparent",
+                  color: "rgba(0,0,0,0.4)",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "background-color 150ms",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }}
               >
                 <RefreshCw size={11} />
                 Refresh
               </button>
-            </div>
+            </Column>
           </motion.div>
         </>
       )}

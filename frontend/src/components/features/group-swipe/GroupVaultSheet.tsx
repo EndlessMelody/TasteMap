@@ -120,7 +120,7 @@ export function GroupVaultSheet({ open, onClose, vault, loading }: GroupVaultShe
             >
               {loading ? (
                 <Column center style={{ padding: 40 }}>
-                  <div
+                  <Column
                     style={{
                       width: 32,
                       height: 32,

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Avatar } from "@once-ui-system/core";
+import { Avatar, Column } from "@once-ui-system/core";
 
 export function AvatarWithStatus({
   src,
@@ -21,9 +21,9 @@ export function AvatarWithStatus({
             ? "#ED1B24"
             : "#D1D1D6";
   return (
-    <div style={{ position: "relative" }}>
+    <Column style={{ position: "relative" }}>
       <Avatar src={src} size="m" />
-      <div
+      <Column
         style={{
           position: "absolute",
           bottom: 1,
@@ -36,6 +36,6 @@ export function AvatarWithStatus({
           boxShadow: `0 0 6px ${color}60`,
         }}
       />
-    </div>
+    </Column>
   );
 }

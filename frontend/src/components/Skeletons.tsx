@@ -2,10 +2,11 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { Column, Row } from "@once-ui-system/core";
 
 export function SkeletonGroupCard() {
   return (
-    <div
+    <Column
       className="skeleton-shimmer"
       style={{
         minWidth: "240px",
@@ -18,7 +19,7 @@ export function SkeletonGroupCard() {
 
 export function SkeletonReelCard() {
   return (
-    <div
+    <Column
       style={{
         width: "180px",
         minWidth: "180px",
@@ -30,11 +31,11 @@ export function SkeletonReelCard() {
         flexShrink: 0,
       }}
     >
-      <div
+      <Column
         className="skeleton-shimmer"
         style={{ width: "100%", height: "240px", borderRadius: 0 }}
       />
-      <div
+      <Column
         style={{
           paddingTop: "14px",
           paddingBottom: "14px",
@@ -43,7 +44,7 @@ export function SkeletonReelCard() {
           backgroundColor: "#FFFFFF",
         }}
       >
-        <div
+        <Column
           className="skeleton-shimmer"
           style={{
             width: "80%",
@@ -52,18 +53,18 @@ export function SkeletonReelCard() {
             borderRadius: "6px",
           }}
         />
-        <div
+        <Column
           className="skeleton-shimmer"
           style={{ width: "50%", height: "10px", borderRadius: "6px" }}
         />
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }
 
 export function SkeletonVaultCard() {
   return (
-    <div
+    <Column
       style={{
         minWidth: "260px",
         borderRadius: "20px",
@@ -74,11 +75,11 @@ export function SkeletonVaultCard() {
         flexShrink: 0,
       }}
     >
-      <div
+      <Column
         className="skeleton-shimmer"
         style={{ width: "100%", height: "150px", borderRadius: 0 }}
       />
-      <div
+      <Column
         style={{
           paddingTop: "14px",
           paddingBottom: "14px",
@@ -87,7 +88,7 @@ export function SkeletonVaultCard() {
           backgroundColor: "#FFFFFF",
         }}
       >
-        <div
+        <Column
           className="skeleton-shimmer"
           style={{
             width: "70%",
@@ -96,18 +97,18 @@ export function SkeletonVaultCard() {
             borderRadius: "6px",
           }}
         />
-        <div
+        <Column
           className="skeleton-shimmer"
           style={{ width: "45%", height: "10px", borderRadius: "6px" }}
         />
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }
 
 export function SkeletonFeedCard() {
   return (
-    <div
+    <Column
       style={{
         minWidth: "340px",
         maxWidth: "340px",
@@ -119,48 +120,46 @@ export function SkeletonFeedCard() {
         flexShrink: 0,
       }}
     >
-      <div
+      <Column
         className="skeleton-shimmer"
         style={{ width: "100%", height: "200px", borderRadius: 0 }}
       />
-      <div
+      <Column
         style={{
           paddingTop: "16px",
           paddingBottom: "16px",
           paddingLeft: "16px",
           paddingRight: "16px",
           backgroundColor: "#FFFFFF",
-          display: "flex",
-          flexDirection: "column",
           gap: "10px",
         }}
       >
-        <div
+        <Column
           className="skeleton-shimmer"
           style={{ width: "60%", height: "14px", borderRadius: "6px" }}
         />
-        <div
+        <Column
           className="skeleton-shimmer"
           style={{ width: "85%", height: "10px", borderRadius: "6px" }}
         />
-        <div style={{ display: "flex", gap: "8px" }}>
-          <div
+        <Row style={{ gap: "8px" }}>
+          <Column
             className="skeleton-shimmer"
             style={{ width: "60px", height: "24px", borderRadius: "6px" }}
           />
-          <div
+          <Column
             className="skeleton-shimmer"
             style={{ width: "60px", height: "24px", borderRadius: "6px" }}
           />
-        </div>
-      </div>
-    </div>
+        </Row>
+      </Column>
+    </Column>
   );
 }
 
 export function SkeletonAIPicksCard() {
   return (
-    <div
+    <Column
       style={{
         minWidth: "260px",
         borderRadius: "20px",
@@ -172,45 +171,42 @@ export function SkeletonAIPicksCard() {
         flexShrink: 0,
       }}
     >
-      <div
+      <Column
         className="skeleton-shimmer"
         style={{ width: "100%", height: "140px", borderRadius: 0 }}
       />
-      <div
+      <Column
         style={{
           padding: "16px",
-          display: "flex",
-          flexDirection: "column",
           gap: "8px",
         }}
       >
-        <div
+        <Column
           className="skeleton-shimmer"
           style={{ width: "75%", height: "14px", borderRadius: "6px" }}
         />
-        <div
+        <Column
           className="skeleton-shimmer"
           style={{ width: "50%", height: "10px", borderRadius: "6px" }}
         />
-        <div
+        <Row
           style={{
-            display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             marginTop: "4px",
           }}
         >
-          <div
+          <Column
             className="skeleton-shimmer"
             style={{ width: "90px", height: "10px", borderRadius: "6px" }}
           />
-          <div
+          <Column
             className="skeleton-shimmer"
             style={{ width: "24px", height: "24px", borderRadius: "8px" }}
           />
-        </div>
-      </div>
-    </div>
+        </Row>
+      </Column>
+    </Column>
   );
 }
 
@@ -230,7 +226,7 @@ export function SkeletonThumbnailCard() {
         flexShrink: 0,
       }}
     >
-      <div
+      <Column
         style={{
           width: "100%",
           height: "100%",

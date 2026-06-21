@@ -33,6 +33,7 @@ import {
   ChevronUp,
 } from "lucide-react";
 
+import { Column, Row } from "@once-ui-system/core";
 import { BookmarkButton } from "@/components/common/BookmarkButton";
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
@@ -86,7 +87,7 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
         }}
       >
         {/* ── Image banner ── */}
-        <div
+        <Column
           style={{
             position: "relative",
             width: "100%",
@@ -108,13 +109,13 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
           />
 
           {/* User chip — top-left */}
-          <div
+          <Row
+            vertical="center"
             style={{
               position: "absolute",
               top: tokens.space[3],
               left: tokens.space[3],
               display: "inline-flex",
-              alignItems: "center",
               gap: tokens.space[2],
               paddingTop: 4,
               paddingBottom: 4,
@@ -140,10 +141,8 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
                 flexShrink: 0,
               }}
             />
-            <div
+            <Column
               style={{
-                display: "flex",
-                flexDirection: "column",
                 minWidth: 0,
               }}
             >
@@ -171,17 +170,17 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
               >
                 {post.time} · {post.location}
               </span>
-            </div>
-          </div>
+            </Column>
+          </Row>
 
           {/* Rating badge — top-right */}
-          <div
+          <Row
+            vertical="center"
             style={{
               position: "absolute",
               top: tokens.space[3],
               right: tokens.space[3],
               display: "inline-flex",
-              alignItems: "center",
               gap: 3,
               paddingTop: 4,
               paddingBottom: 4,
@@ -203,23 +202,21 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
               color={tokens.color.warning}
             />
             {post.rating.toFixed(1)}
-          </div>
-        </div>
+          </Row>
+        </Column>
 
         {/* ── Content ── */}
-        <div
+        <Column
           style={{
-            display: "flex",
-            flexDirection: "column",
             gap: tokens.space[3],
             padding: tokens.space[4],
           }}
         >
           {/* Spot name */}
-          <div
+          <Row
+            vertical="center"
             style={{
               display: "inline-flex",
-              alignItems: "center",
               gap: tokens.space[2],
             }}
           >
@@ -241,7 +238,7 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
             >
               {post.spotName}
             </span>
-          </div>
+          </Row>
 
           {/* Review */}
           <motion.p
@@ -298,9 +295,8 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div
+            <Row
               style={{
-                display: "flex",
                 flexWrap: "wrap",
                 gap: tokens.space[2],
               }}
@@ -327,24 +323,23 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
                   #{tag}
                 </span>
               ))}
-            </div>
+            </Row>
           )}
 
           {/* Action bar */}
-          <div
+          <Row
+            vertical="center"
             style={{
-              display: "flex",
-              alignItems: "center",
               justifyContent: "space-between",
               gap: tokens.space[3],
               paddingTop: tokens.space[3],
               borderTop: `1px solid ${tokens.color.border}`,
             }}
           >
-            <div
+            <Row
+              vertical="center"
               style={{
                 display: "inline-flex",
-                alignItems: "center",
                 gap: tokens.space[4],
               }}
             >
@@ -387,10 +382,10 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
               </button>
 
               {/* Comment */}
-              <div
+              <Row
+                vertical="center"
                 style={{
                   display: "inline-flex",
-                  alignItems: "center",
                   gap: tokens.space[2],
                   color: tokens.color.textMuted,
                   fontSize: tokens.type.size.caption,
@@ -399,8 +394,8 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
               >
                 <MessageCircle size={16} strokeWidth={2.4} />
                 {post.comments || 0}
-              </div>
-            </div>
+              </Row>
+            </Row>
 
             {/* Save */}
             <BookmarkButton
@@ -410,8 +405,8 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
               size={30}
               iconSize={16}
             />
-          </div>
-        </div>
+          </Row>
+        </Column>
       </GlassCard>
     </motion.div>
   );

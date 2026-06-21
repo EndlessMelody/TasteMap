@@ -17,6 +17,7 @@ import {
   SquarePlus,
   User as UserIcon,
 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { useUiStore } from "@/store/uiStore";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -77,7 +78,7 @@ const Tooltip: React.FC<{ label: string; children: React.ReactNode }> = ({
   const C = useThemeColors();
 
   return (
-    <div
+    <Column
       style={{ position: "relative", width: "100%" }}
       onMouseEnter={() => {
         timerRef.current = setTimeout(() => setVisible(true), 300);
@@ -120,7 +121,7 @@ const Tooltip: React.FC<{ label: string; children: React.ReactNode }> = ({
           </span>
         </motion.div>
       )}
-    </div>
+    </Column>
   );
 };
 
@@ -146,16 +147,14 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   const C = useThemeColors();
 
   const item = (
-    <div
+    <Row
+      vertical="center"
+      horizontal="start"
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       tabIndex={0}
       style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "flex-start",
         padding: "8px 16px",
         borderRadius: "10px",
         backgroundColor: active
@@ -191,11 +190,10 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       )}
 
       {/* Icon */}
-      <div
+      <Row
+        horizontal="center"
+        vertical="center"
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           flexShrink: 0,
           width: "24px",
           color: "inherit",
@@ -203,7 +201,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
         }}
       >
         {icon}
-      </div>
+      </Row>
 
       {/* Smoothly animated text slide + fade */}
       <motion.div
@@ -253,7 +251,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
           </span>
         )}
       </motion.div>
-    </div>
+    </Row>
   );
 
   return collapsed ? <Tooltip label={label}>{item}</Tooltip> : item;
@@ -266,12 +264,11 @@ const SectionLabel: React.FC<{ label: string; visible?: boolean }> = ({
 }) => {
   const C = useThemeColors();
   return (
-    <div
+    <Row
+      vertical="center"
       style={{
         width: "100%",
         height: "20px",
-        display: "flex",
-        alignItems: "center",
         flexShrink: 0,
         overflow: "hidden",
       }}
@@ -298,7 +295,7 @@ const SectionLabel: React.FC<{ label: string; visible?: boolean }> = ({
       >
         {label}
       </motion.span>
-    </div>
+    </Row>
   );
 };
 
@@ -356,18 +353,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       }}
     >
       {/* ─── Header: Logo + Toggle ─── */}
-      <div
+      <Row
+        vertical="center"
+        horizontal="start"
         style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "flex-start",
           minHeight: "36px",
           flexShrink: 0,
           paddingLeft: "20px",
         }}
       >
-        <div
+        <Row
+          vertical="center"
           onClick={() => router.push(user ? "/discover" : "/")}
           style={{
             color: C.logo,
@@ -378,8 +374,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
             fontSize: "18px",
             fontFamily: "var(--font-geist-sans), sans-serif",
             lineHeight: 1,
-            display: "flex",
-            alignItems: "center",
           }}
         >
           <span>T</span>
@@ -400,11 +394,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             asteMap.
           </motion.span>
-        </div>
-      </div>
+        </Row>
+      </Row>
 
       {/* ─── Divider ─── */}
-      <div
+      <Column
         style={{
           height: "1px",
           backgroundColor: C.divider,
@@ -413,7 +407,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       />
 
       {/* ─── Menu Section ─── */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "1px", width: "100%", flexShrink: 0 }}>
+      <Column style={{ gap: "1px", width: "100%", flexShrink: 0 }}>
         <SectionLabel label="Menu" visible={isOpen} />
         <SidebarItem
           icon={<Compass size={17} />}
@@ -460,10 +454,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           badge="New"
           onClick={() => router.push("/culture")}
         />
-      </div>
+      </Column>
 
       {/* ─── Social Section ─── */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "1px", width: "100%", flexShrink: 0 }}>
+      <Column style={{ gap: "1px", width: "100%", flexShrink: 0 }}>
         <SectionLabel label="Social" visible={isOpen} />
         <SidebarItem
           icon={<Users size={17} />}
@@ -486,11 +480,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           collapsed={!isOpen}
           onClick={() => useUiStore.getState().openCreatePost("post")}
         />
-      </div>
+      </Column>
 
       {/* ─── Admin Section ─── */}
       {user?.role === "admin" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1px", width: "100%", flexShrink: 0 }}>
+        <Column style={{ gap: "1px", width: "100%", flexShrink: 0 }}>
           <SectionLabel label="Admin" visible={isOpen} />
           <SidebarItem
             icon={<Shield size={17} />}
@@ -500,11 +494,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             badge="Admin"
             onClick={() => router.push("/admin")}
           />
-        </div>
+        </Column>
       )}
 
       {/* ─── Spacer ─── */}
-      <div style={{ flex: 1 }} />
+      <Column style={{ flex: 1 }} />
 
       {/* ─── Profile Footer ─── */}
       <SidebarProfileFooter isOpen={isOpen} />
@@ -525,7 +519,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
 
   if (!mounted) {
     return (
-      <div
+      <Column
         style={{
           height: "58px",
           flexShrink: 0,
@@ -546,11 +540,9 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
             50% { opacity: 0.45; }
           }
         `}</style>
-        <div
+        <Row
+          vertical="center"
           style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
             gap: "10px",
             padding: isOpen ? "10px 12px" : "10px 0",
             borderRadius: "10px",
@@ -559,7 +551,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
             flexShrink: 0,
           }}
         >
-          <div
+          <Column
             style={{
               width: 28,
               height: 28,
@@ -570,15 +562,13 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
             }}
           />
           {isOpen && (
-            <div
+            <Column
               style={{
-                display: "flex",
-                flexDirection: "column",
                 gap: "6px",
                 flex: 1,
               }}
             >
-              <div
+              <Column
                 style={{
                   height: "10px",
                   width: "70%",
@@ -587,7 +577,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
                   animation: "tm-pulse 1.4s ease-in-out infinite",
                 }}
               />
-              <div
+              <Column
                 style={{
                   height: "8px",
                   width: "40%",
@@ -596,9 +586,9 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
                   animation: "tm-pulse 1.4s ease-in-out infinite 0.2s",
                 }}
               />
-            </div>
+            </Column>
           )}
-        </div>
+        </Row>
       </>
     );
   }
@@ -630,21 +620,20 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
           e.currentTarget.style.borderColor = "rgba(255, 107, 53, 0.18)";
         }}
       >
-        <div
+        <Row
+          horizontal="center"
+          vertical="center"
           style={{
             width: 28,
             height: 28,
             borderRadius: "50%",
             backgroundColor: "rgba(255, 107, 53, 0.1)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             color: tokens.color.warm,
             flexShrink: 0,
           }}
         >
           <UserIcon size={14} strokeWidth={2} />
-        </div>
+        </Row>
         <motion.div
           animate={{
             opacity: isOpen ? 1 : 0,
@@ -681,18 +670,16 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
   }
 
   return (
-    <div
+    <Row
+      vertical="center"
+      horizontal="start"
       onClick={() => router.push("/profile")}
       style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
         gap: "10px",
         padding: "8px 16px",
         borderRadius: "10px",
         backgroundColor: "rgba(255,255,255,0.03)",
         border: `1px solid ${C.border}`,
-        justifyContent: "flex-start",
         flexShrink: 0,
         cursor: "pointer",
         transition: "background-color 0.18s",
@@ -708,7 +695,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
         e.currentTarget.style.backgroundColor = "transparent";
       }}
     >
-      <div style={{ position: "relative", flexShrink: 0 }}>
+      <Column style={{ position: "relative", flexShrink: 0 }}>
         <Avatar
           src={user?.avatar_url || ""}
           size="sm"
@@ -717,7 +704,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
             display: "block",
           }}
         />
-        <div
+        <Column
           style={{
             position: "absolute",
             bottom: 0,
@@ -729,7 +716,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
             border: "2px solid #FFFFFF",
           }}
         />
-      </div>
+      </Column>
 
       <motion.div
         animate={{
@@ -750,8 +737,8 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
           marginLeft: 10,
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: "1px", overflow: "hidden", flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+        <Column style={{ gap: "1px", overflow: "hidden", flex: 1 }}>
+          <Row vertical="center" style={{ gap: "4px" }}>
             <BodySm
               style={{
                 color: C.profileName,
@@ -764,11 +751,11 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
               {user?.display_name || user?.username || ""}
             </BodySm>
             <BadgeCheck size={12} color={tokens.color.warm} />
-          </div>
+          </Row>
           <span style={{ color: C.profileSub, fontSize: "11px" }}>
             Level {user?.level ?? 1}
           </span>
-        </div>
+        </Column>
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -811,6 +798,6 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
           </svg>
         </button>
       </motion.div>
-    </div>
+    </Row>
   );
 }

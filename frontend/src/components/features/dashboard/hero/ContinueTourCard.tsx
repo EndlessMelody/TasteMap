@@ -18,6 +18,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Compass } from "lucide-react";
 
+import { Column, Row } from "@once-ui-system/core";
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
 
@@ -65,28 +66,26 @@ export const ContinueTourCard: React.FC<ContinueTourCardProps> = ({
       }}
     >
       {/* ── Header ── */}
-      <div
+      <Row
+        vertical="center"
         style={{
-          display: "flex",
-          alignItems: "center",
           gap: tokens.space[3],
         }}
       >
-        <div
+        <Row
+          horizontal="center"
+          vertical="center"
           style={{
             width: 36,
             height: 36,
             borderRadius: tokens.radius.md,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             backgroundColor: `${tokens.color.warm}12`,
             border: `1px solid ${tokens.color.warm}22`,
             flexShrink: 0,
           }}
         >
           <Compass size={18} color={tokens.color.warm} strokeWidth={2.2} />
-        </div>
+        </Row>
         <span
           style={{
             fontSize: tokens.type.size.caption,
@@ -98,13 +97,11 @@ export const ContinueTourCard: React.FC<ContinueTourCardProps> = ({
         >
           {hasTour ? "Continue" : "Next up"}
         </span>
-      </div>
+      </Row>
 
       {/* ── Body ── */}
-      <div
+      <Column
         style={{
-          display: "flex",
-          flexDirection: "column",
           gap: tokens.space[2],
           flex: 1,
         }}
@@ -145,11 +142,11 @@ export const ContinueTourCard: React.FC<ContinueTourCardProps> = ({
             Build a personalized food tour in minutes.
           </span>
         )}
-      </div>
+      </Column>
 
       {/* ── Footer: progress bar or CTA row ── */}
       {hasTour ? (
-        <div
+        <Column
           style={{
             width: "100%",
             height: 4,
@@ -158,7 +155,7 @@ export const ContinueTourCard: React.FC<ContinueTourCardProps> = ({
             overflow: "hidden",
           }}
         >
-          <div
+          <Column
             style={{
               width: `${Math.max(2, Math.min(100, tour!.progressPct))}%`,
               height: "100%",
@@ -167,12 +164,12 @@ export const ContinueTourCard: React.FC<ContinueTourCardProps> = ({
               transition: "width 400ms var(--dsc-ease-out)",
             }}
           />
-        </div>
+        </Column>
       ) : (
-        <div
+        <Row
+          vertical="center"
           style={{
             display: "inline-flex",
-            alignItems: "center",
             gap: tokens.space[2],
             color: tokens.color.warm,
             fontSize: tokens.type.size.bodySm,
@@ -182,7 +179,7 @@ export const ContinueTourCard: React.FC<ContinueTourCardProps> = ({
         >
           <span>Start building</span>
           <ArrowRight size={14} strokeWidth={2.4} />
-        </div>
+        </Row>
       )}
     </GlassCard>
   );

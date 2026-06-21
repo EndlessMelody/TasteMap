@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Row, Text } from "@once-ui-system/core";
+import { Column, Row, Text } from "@once-ui-system/core";
 import { 
   Database, 
   BrainCircuit, 
@@ -74,7 +74,7 @@ export const AppStatusBar = () => {
             >
               pgvector: IVFFlat
             </Text>
-            <div
+            <Column
               style={{
                 width: "6px",
                 height: "6px",
@@ -117,7 +117,7 @@ export const AppStatusBar = () => {
               14%
             </Text>
           </Row>
-          <div style={{ width: 1, height: 10, backgroundColor: "rgba(0,0,0,0.1)" }} />
+          <Column style={{ width: 1, height: 10, backgroundColor: "rgba(0,0,0,0.1)" }} />
           <Row gap="8" vertical="center">
             <Activity size={12} style={{ color: "#9333EA" }} />
             <Text
@@ -153,7 +153,7 @@ export const AppStatusBar = () => {
               342 Lobbies
             </Text>
           </Row>
-          <div
+          <Column
             style={{
               width: "1px",
               height: "12px",

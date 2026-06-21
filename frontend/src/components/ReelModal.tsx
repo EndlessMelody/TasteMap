@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Avatar } from "@once-ui-system/core";
+import { Avatar, Column, Row } from "@once-ui-system/core";
 import { Heart, MessageCircle, Play, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -73,15 +73,14 @@ export default function ReelModal({
               flexDirection: "row",
             }}
           >
-            <div
+            <Row
+              horizontal="center"
+              vertical="center"
               style={{
                 width: "56%",
                 height: "100%",
                 backgroundColor: "#000",
                 position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 overflow: "hidden",
               }}
             >
@@ -111,60 +110,55 @@ export default function ReelModal({
                       display: "block",
                     }}
                   />
-                  <div
+                  <Row
+                    horizontal="center"
+                    vertical="center"
                     style={{
                       position: "absolute",
                       inset: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                       pointerEvents: "none",
                     }}
                   >
-                    <div
+                    <Row
+                      horizontal="center"
+                      vertical="center"
                       style={{
                         width: "54px",
                         height: "54px",
                         borderRadius: "50%",
                         backgroundColor: "rgba(255,255,255,0.92)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
                         boxShadow: "0 8px 32px rgba(0,0,0,0.28)",
                       }}
                     >
                       <Play size={22} color="#ff6b35" fill="#ff6b35" style={{ marginLeft: 2 }} />
-                    </div>
-                  </div>
+                    </Row>
+                  </Row>
                 </>
               )}
-            </div>
+            </Row>
 
-            <div
+            <Column
               style={{
                 width: "44%",
                 height: "100%",
                 backgroundColor: "#FFFFFF",
-                display: "flex",
-                flexDirection: "column",
                 minWidth: 0,
               }}
             >
-              <div
+              <Row
+                vertical="center"
                 style={{
                   padding: "18px 20px 14px",
                   borderBottom: "1px solid #F0F0F0",
-                  display: "flex",
-                  alignItems: "center",
                   justifyContent: "space-between",
                   gap: "12px",
                   flexShrink: 0,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
+                <Row vertical="center" style={{ gap: "10px", minWidth: 0 }}>
                   <Avatar src={data.userAvatar} size="m" />
-                  <div style={{ minWidth: 0 }}>
-                    <div
+                  <Column style={{ minWidth: 0 }}>
+                    <Column
                       style={{
                         fontSize: "0.88rem",
                         fontWeight: 700,
@@ -175,12 +169,12 @@ export default function ReelModal({
                       }}
                     >
                       {data.user}
-                    </div>
-                    <div style={{ fontSize: "0.74rem", color: "#8E8E93" }}>
+                    </Column>
+                    <Column style={{ fontSize: "0.74rem", color: "#8E8E93" }}>
                       Discover Reel
-                    </div>
-                  </div>
-                </div>
+                    </Column>
+                  </Column>
+                </Row>
 
                 <button
                   type="button"
@@ -199,13 +193,11 @@ export default function ReelModal({
                 >
                   <X size={15} color="#555" />
                 </button>
-              </div>
+              </Row>
 
-              <div
+              <Column
                 style={{
                   flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
                   minHeight: 0,
                   overflow: "hidden",
                 }}
@@ -220,30 +212,29 @@ export default function ReelModal({
                   rootStyle={{ flex: 1 }}
                   listStyle={{ padding: "16px 20px" }}
                   fixedHeader={
-                    <div style={{ padding: "16px 20px", borderBottom: "1px solid #F0F0F0", backgroundColor: "#FFFFFF" }}>
-                      <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                    <Column style={{ padding: "16px 20px", borderBottom: "1px solid #F0F0F0", backgroundColor: "#FFFFFF" }}>
+                      <Row style={{ gap: "10px", alignItems: "flex-start" }}>
                         <Avatar src={data.userAvatar} size="s" />
                         <p style={{ margin: 0, fontSize: "0.83rem", lineHeight: 1.55, color: "#1C1C1E", flex: 1 }}>
                           <span style={{ fontWeight: 700, marginRight: "5px" }}>{data.user}</span>
                           {data.title}
                         </p>
-                      </div>
-                    </div>
+                      </Row>
+                    </Column>
                   }
                   footer={
-                    <div
+                    <Row
+                      vertical="center"
                       style={{
                         padding: "12px 20px",
                         borderTop: "1px solid #F0F0F0",
-                        display: "flex",
-                        alignItems: "center",
                         justifyContent: "space-between",
                         gap: "12px",
                         backgroundColor: "#FFFFFF",
                         flexShrink: 0,
                       }}
                     >
-                      <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+                      <Row vertical="center" style={{ gap: "4px" }}>
                         <motion.button
                           type="button"
                           whileTap={{ scale: 0.85 }}
@@ -289,13 +280,13 @@ export default function ReelModal({
                           </span>
                         </motion.button>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "6px 10px" }}>
+                        <Row vertical="center" style={{ gap: "6px", padding: "6px 10px" }}>
                           <MessageCircle size={20} color="#C0C0C0" />
                           <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#888" }}>
                             {data.comments || 0}
                           </span>
-                        </div>
-                      </div>
+                        </Row>
+                      </Row>
 
                       <BookmarkButton
                         entityType="reel"
@@ -305,11 +296,11 @@ export default function ReelModal({
                         iconSize={20}
                         inactiveColor="#C0C0C0"
                       />
-                    </div>
+                    </Row>
                   }
                 />
-              </div>
-            </div>
+              </Column>
+            </Column>
           </motion.div>
         </motion.div>
       )}

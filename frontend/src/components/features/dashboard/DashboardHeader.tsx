@@ -123,8 +123,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
   return (
     <motion.div
-      className="sticky z-50 backdrop-blur-xl noise-overlay"
+      className="noise-overlay"
       style={{
+        position: "sticky",
+        zIndex: 50,
+        backdropFilter: "blur(24px)",
         backgroundColor: "rgba(255, 244, 238, 0.88)",
         width: headerWidth,
         borderRadius: headerRadius,

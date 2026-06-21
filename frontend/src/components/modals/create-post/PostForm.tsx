@@ -62,7 +62,7 @@ export function PostForm({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.16 }}
-      className="flex flex-col gap-4 w-full"
+      style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%" }}
     >
       {/* Review */}
       <Column style={{ gap: 6 }}>
@@ -83,7 +83,27 @@ export function PostForm({
               onReviewChange(e.target.value);
             }
           }}
-          className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-zinc-800 placeholder-zinc-300 resize-none outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 transition-shadow leading-relaxed"
+          style={{
+            width: "100%",
+            borderRadius: 12,
+            border: "1px solid #E2E8F0",
+            backgroundColor: "#FFFFFF",
+            padding: "12px 14px",
+            fontSize: 14,
+            color: "#27272A",
+            resize: "none",
+            outline: "none",
+            transition: "box-shadow 0.15s, border-color 0.15s",
+            lineHeight: 1.6,
+          }}
+          onFocus={(e) => {
+            e.currentTarget.style.boxShadow = "0 0 0 2px #FDBA74";
+            e.currentTarget.style.borderColor = "#FB923C";
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.boxShadow = "none";
+            e.currentTarget.style.borderColor = "#E2E8F0";
+          }}
         />
       </Column>
 
@@ -115,20 +135,71 @@ export function PostForm({
           <Column style={{ flex: 1 }}>
             <MapPin
               size={15}
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-              style={{ color: locationName ? tokens.color.warm : tokens.color.textMuted }}
+              style={{
+                position: "absolute",
+                left: 14,
+                top: "50%",
+                transform: "translateY(-50%)",
+                pointerEvents: "none",
+                color: locationName ? tokens.color.warm : tokens.color.textMuted,
+              }}
             />
             <input
               type="text"
               placeholder="Where did you eat?"
               value={locationName}
               onChange={(e) => onLocationNameChange(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 bg-white pl-9 pr-9 py-2.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 transition-shadow"
+              style={{
+                width: "100%",
+                borderRadius: 12,
+                border: "1px solid #E2E8F0",
+                backgroundColor: "#FFFFFF",
+                paddingLeft: 36,
+                paddingRight: 36,
+                paddingTop: 10,
+                paddingBottom: 10,
+                fontSize: 14,
+                color: "#27272A",
+                outline: "none",
+                transition: "box-shadow 0.15s, border-color 0.15s",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.boxShadow = "0 0 0 2px #FDBA74";
+                e.currentTarget.style.borderColor = "#FB923C";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.boxShadow = "none";
+                e.currentTarget.style.borderColor = "#E2E8F0";
+              }}
             />
             {locationName && (
               <button
                 onClick={handleClearLocation}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full flex items-center justify-center text-zinc-400 hover:text-zinc-600 hover:bg-slate-100 transition-colors"
+                style={{
+                  position: "absolute",
+                  right: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  width: 20,
+                  height: 20,
+                  borderRadius: "50%",
+                  border: "none",
+                  background: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#A1A1AA",
+                  cursor: "pointer",
+                  transition: "background-color 0.15s, color 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#52525B";
+                  e.currentTarget.style.backgroundColor = "#F1F5F9";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#A1A1AA";
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }}
               >
                 <X size={12} />
               </button>
@@ -143,14 +214,25 @@ export function PostForm({
             whileHover={!isDetecting ? { scale: 1.06 } : undefined}
             whileTap={!isDetecting ? { scale: 0.94 } : undefined}
             title={isDetecting ? "Đang xác định…" : "Tự động xác định vị trí"}
-            className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-              isDetecting
-                ? "bg-orange-50 text-orange-300 cursor-wait"
-                : "bg-orange-500 text-white shadow-md shadow-orange-200 hover:bg-orange-600"
-            }`}
+            style={{
+              flexShrink: 0,
+              width: 40,
+              height: 40,
+              borderRadius: 12,
+              border: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all 0.2s",
+              ...(isDetecting
+                ? { backgroundColor: "#FFF7ED", color: "#FDBA74", cursor: "wait" }
+                : { backgroundColor: "#F97316", color: "#FFFFFF", boxShadow: "0 4px 6px -1px #FED7AA", cursor: "pointer" }),
+            }}
+            onMouseEnter={(e) => { if (!isDetecting) e.currentTarget.style.backgroundColor = "#EA580C"; }}
+            onMouseLeave={(e) => { if (!isDetecting) e.currentTarget.style.backgroundColor = "#F97316"; }}
           >
             {isDetecting ? (
-              <Loader2 size={17} className="animate-spin" />
+              <Loader2 size={17} style={{ animation: "spin 0.8s linear infinite" }} />
             ) : (
               <LocateFixed size={17} />
             )}
@@ -165,9 +247,9 @@ export function PostForm({
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="flex items-start gap-1.5 px-1"
+              style={{ display: "flex", alignItems: "flex-start", gap: 6, padding: "0 4px" }}
             >
-              <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-emerald-500" />
+              <CheckCircle2 size={13} style={{ marginTop: 2, flexShrink: 0, color: "#10B981" }} />
               <Column style={{ gap: 2 }}>
                 <span style={{ fontSize: "0.6875rem", fontWeight: 600, color: tokens.color.success }}>
                   High-precision fix acquired
@@ -184,10 +266,10 @@ export function PostForm({
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="flex items-start gap-1.5 px-1"
+              style={{ display: "flex", alignItems: "flex-start", gap: 6, padding: "0 4px" }}
             >
-              <AlertCircle size={13} className="mt-0.5 flex-shrink-0 text-red-400" />
-              <span className="text-[11px] text-red-500 leading-snug">{error}</span>
+              <AlertCircle size={13} style={{ marginTop: 2, flexShrink: 0, color: "#F87171" }} />
+              <span style={{ fontSize: 11, color: "#EF4444", lineHeight: 1.4 }}>{error}</span>
             </motion.div>
           )}
           {isDetecting && (
@@ -196,9 +278,9 @@ export function PostForm({
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="flex items-center gap-1.5 px-1"
+              style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 4px" }}
             >
-              <span className="text-[11px] text-orange-500 font-medium">
+              <span style={{ fontSize: 11, color: "#F97316", fontWeight: 500 }}>
                 {status === "acquiring"
                   ? "Đang xác định vị trí…"
                   : "Resolving Vietnamese address…"}
@@ -210,6 +292,7 @@ export function PostForm({
 
       {/* Tags */}
       <TagInput tags={tags} onTagsChange={onTagsChange} />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </motion.div>
   );
 }

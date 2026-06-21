@@ -25,7 +25,7 @@ export const FlavorAura = ({ data, isPulsing, size = 140 }: { data: any[], isPul
   const coreSize = size;
 
   return (
-    <div style={{ position: 'relative', width: `${size}px`, height: `${size}px`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <Row horizontal="center" vertical="center" style={{ position: 'relative', width: `${size}px`, height: `${size}px` }}>
       {/* Background Glow */}
       <motion.div
         animate={{
@@ -95,7 +95,7 @@ export const FlavorAura = ({ data, isPulsing, size = 140 }: { data: any[], isPul
         <circle cx="50%" cy="50%" r={size * 0.5} fill="none" stroke="rgba(0,0,0,0.03)" strokeWidth="0.5" />
         <circle cx="50%" cy="50%" r={size * 0.35} fill="none" stroke="rgba(0,0,0,0.03)" strokeWidth="0.5" />
       </svg>
-    </div>
+    </Row>
   );
 };
 
@@ -125,11 +125,11 @@ export const FloatingInsight: React.FC<FloatingInsightProps> = ({ cardsLeft }) =
           </Text>
         </Row>
 
-        <div style={{ width: "100%", height: "140px" }}>
+        <Column style={{ width: "100%", height: "140px" }}>
           <ClientOnly>
              <FlavorAura data={radarData} isPulsing={isPulsing} />
           </ClientOnly>
-        </div>
+        </Column>
 
         <Column style={{ gap: '2px', textAlign: 'center' }}>
           <Text style={{ color: "rgba(0,0,0,0.45)", fontSize: "0.65rem", fontWeight: 500, lineHeight: 1.4 }}>

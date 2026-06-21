@@ -1,42 +1,41 @@
+import { Column, Row, Grid } from "@once-ui-system/core";
+
 export function PageSkeleton() {
   return (
-    <div
+    <Column
       style={{
         width: "100%",
         height: "100%",
         padding: "32px 40px",
         backgroundColor: "#F2F2F7",
-        display: "flex",
-        flexDirection: "column",
         gap: 20,
       }}
     >
       {/* Header skeleton */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 8 }}>
-        <div style={pulse({ width: 180, height: 32, borderRadius: 10 })} />
-        <div style={pulse({ width: 280, height: 16, borderRadius: 8 })} />
-      </div>
+      <Column style={{ gap: 10, marginBottom: 8 }}>
+        <Column style={pulse({ width: 180, height: 32, borderRadius: 10 })} />
+        <Column style={pulse({ width: 280, height: 16, borderRadius: 8 })} />
+      </Column>
 
       {/* Stat pills row */}
-      <div style={{ display: "flex", gap: 12 }}>
+      <Row style={{ gap: 12 }}>
         {[160, 140, 140, 130].map((w, i) => (
-          <div key={i} style={pulse({ width: w, height: 72, borderRadius: 14 })} />
+          <Column key={i} style={pulse({ width: w, height: 72, borderRadius: 14 })} />
         ))}
-      </div>
+      </Row>
 
       {/* Card grid */}
-      <div
+      <Grid
         style={{
-          display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
           gap: 16,
           marginTop: 8,
         }}
       >
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} style={pulse({ height: 180, borderRadius: 20 })} />
+          <Column key={i} style={pulse({ height: 180, borderRadius: 20 })} />
         ))}
-      </div>
+      </Grid>
 
       <style>{`
         @keyframes shimmer {
@@ -44,7 +43,7 @@ export function PageSkeleton() {
           100% { background-position:  400px 0; }
         }
       `}</style>
-    </div>
+    </Column>
   );
 }
 

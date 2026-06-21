@@ -20,6 +20,53 @@ import {
     MapPin
 } from "lucide-react";
 
+const MODULES = [
+    {
+        icon: MapPin,
+        color: "#FF9500",
+        title: "Location Manager",
+        description: "Review, manage, search, and update places of interest globally.",
+        cta: "Manage Locations",
+        href: "/admin/locations",
+    },
+    {
+        icon: MapPin,
+        color: "#FF9500",
+        title: "Challenge Manager",
+        description: "Manage challenges, create new challenges, and update existing challenges.",
+        cta: "Manage Challenges",
+        href: "/admin/challenges",
+    },
+    {
+        icon: Target,
+        color: "#007AFF",
+        title: "LiveOps & Campaigns",
+        description: "Manage active challenges, push location deals, and configure event filters.",
+        cta: "Manage Events",
+    },
+    {
+        icon: ShieldAlert,
+        color: "#FF3B30",
+        title: "Anti-Cheat System",
+        description: "Review Fake GPS flags, speed hacking alerts, and shadowbanned users.",
+        cta: "Review Logs",
+    },
+    {
+        icon: Database,
+        color: "#34C759",
+        title: "Economy Manager",
+        description: "Track XP inflation, audit transaction history, and adjust level curves.",
+        cta: "Audit Economy",
+    },
+    {
+        icon: BrainCircuit,
+        color: "#AF52DE",
+        title: "AI Vector Monitor",
+        description: "Visualize taste clusters, monitor Group Room match rates, and check LLM API health.",
+        cta: "View Analytics",
+    },
+];
+
 export default function AdminDashboard() {
     const { user, isInitializing } = useAuth();
     const router = useRouter();
@@ -41,11 +88,12 @@ export default function AdminDashboard() {
     // Hiển thị màn hình chờ mượt mà trong lúc check quyền
     if (isInitializing || !isAuthorized) {
         return (
-            <Column horizontal="center" vertical="center" className="flex-1 h-full bg-[#F2F2F7]">
-                <Loader2 className="animate-spin text-[#007AFF] mb-4" size={40} />
-                <Row vertical="center" className="text-[15px] font-bold text-[#8E8E93] gap-2">
+            <Column horizontal="center" vertical="center" style={{ flex: 1, height: "100%", backgroundColor: "#F2F2F7" }}>
+                <Loader2 style={{ color: "#007AFF", marginBottom: 16, animation: "spin 0.8s linear infinite" }} size={40} />
+                <Row vertical="center" style={{ fontSize: 15, fontWeight: 700, color: "#8E8E93", gap: 8 }}>
                     <Lock size={16} /> Verifying Clearance...
                 </Row>
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
             </Column>
         );
     }
@@ -63,8 +111,9 @@ export default function AdminDashboard() {
         >
             {/* ── HERO HEADER (Giao diện Chỉ huy) ── */}
             <Column
-                className="w-full shrink-0"
                 style={{
+                    width: "100%",
+                    flexShrink: 0,
                     background: "linear-gradient(135deg, #1C1C1E 0%, #000000 100%)",
                     padding: "48px 48px 40px",
                     position: "relative",
@@ -85,37 +134,52 @@ export default function AdminDashboard() {
                     }}
                 />
 
-                <Column className="relative max-w-[1400px] mx-auto w-full">
-                    <Row horizontal="between" className="items-start mb-8 w-full">
+                <Column style={{ position: "relative", maxWidth: 1400, margin: "0 auto", width: "100%" }}>
+                    <Row horizontal="between" style={{ alignItems: "flex-start", marginBottom: 32, width: "100%" }}>
                         <Column>
-                            <Row vertical="center" className="gap-4 mb-3">
+                            <Row vertical="center" style={{ gap: 16, marginBottom: 12 }}>
                                 <Row
                                     horizontal="center"
                                     vertical="center"
-                                    className="w-12 h-12 rounded-[18px] shadow-xl"
-                                    style={{ background: "linear-gradient(135deg, #FF3B30, #FF2D55)" }}
+                                    style={{
+                                        width: 48,
+                                        height: 48,
+                                        borderRadius: 18,
+                                        boxShadow: "0 20px 25px -5px rgba(0,0,0,0.3)",
+                                        background: "linear-gradient(135deg, #FF3B30, #FF2D55)",
+                                    }}
                                 >
-                                    <ShieldAlert size={24} className="text-white" />
+                                    <ShieldAlert size={24} color="#fff" />
                                 </Row>
-                                <h1 className="text-[32px] font-black text-white tracking-tight">
+                                <h1 style={{ fontSize: 32, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em", margin: 0 }}>
                                     LiveOps Command Center
                                 </h1>
                             </Row>
-                            <p className="text-[15px] text-[rgba(255,255,255,0.6)] font-medium max-w-md">
+                            <p style={{ fontSize: 15, color: "rgba(255,255,255,0.6)", fontWeight: 500, maxWidth: 448, margin: 0 }}>
                                 System overview, economy balancing, and fraud detection. Restricted access.
                             </p>
                         </Column>
 
                         {/* Admin Badge */}
-                        <Row vertical="center" className="gap-3 px-5 py-3 rounded-[20px] bg-white/10 border border-white/10 backdrop-blur-md">
-                            <Column className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#FF3B30]">
+                        <Row
+                            vertical="center"
+                            style={{
+                                gap: 12,
+                                padding: "12px 20px",
+                                borderRadius: 20,
+                                backgroundColor: "rgba(255,255,255,0.1)",
+                                border: "1px solid rgba(255,255,255,0.1)",
+                                backdropFilter: "blur(12px)",
+                            }}
+                        >
+                            <Column style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", border: "2px solid #FF3B30" }}>
                                 <img src={user?.avatar_url || "https://ui-avatars.com/api/?name=Admin"} alt="Admin" />
                             </Column>
                             <Column>
-                                <p className="text-[16px] font-black text-white leading-none">
+                                <p style={{ fontSize: 16, fontWeight: 900, color: "#fff", lineHeight: 1, margin: 0 }}>
                                     {user?.username || "SuperAdmin"}
                                 </p>
-                                <Row vertical="center" className="text-[11px] uppercase font-bold text-[#FF3B30] tracking-wider mt-1 gap-1">
+                                <Row vertical="center" style={{ fontSize: 11, textTransform: "uppercase", fontWeight: 700, color: "#FF3B30", letterSpacing: "0.05em", marginTop: 4, gap: 4 }}>
                                     <Lock size={10} /> Clearance Level: MAX
                                 </Row>
                             </Column>
@@ -123,7 +187,7 @@ export default function AdminDashboard() {
                     </Row>
 
                     {/* Quick Metrics (Hardcode tĩnh demo) */}
-                    <Grid className="grid-cols-4 gap-4 w-full">
+                    <Grid style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: 16, width: "100%" }}>
                         {[
                             { label: "Active Users (24h)", value: "1,204", icon: <Users size={16} />, color: "#007AFF" },
                             { label: "XP Velocity", value: "+45k/hr", icon: <TrendingUp size={16} />, color: "#34C759" },
@@ -135,13 +199,21 @@ export default function AdminDashboard() {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.1 }}
-                                className="rounded-[20px] px-5 py-4 flex flex-col justify-between bg-white/5 border border-white/10"
+                                style={{
+                                    borderRadius: 20,
+                                    padding: "16px 20px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "space-between",
+                                    backgroundColor: "rgba(255,255,255,0.05)",
+                                    border: "1px solid rgba(255,255,255,0.1)",
+                                }}
                             >
-                                <Row vertical="center" className="gap-2" style={{ color: "rgba(255,255,255,0.5)" }}>
+                                <Row vertical="center" style={{ gap: 8, color: "rgba(255,255,255,0.5)" }}>
                                     {s.icon}
-                                    <span className="text-[11px] font-bold uppercase tracking-widest">{s.label}</span>
+                                    <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.label}</span>
                                 </Row>
-                                <p className="text-[26px] font-black text-white leading-none mt-3">
+                                <p style={{ fontSize: 26, fontWeight: 900, color: "#fff", lineHeight: 1, marginTop: 12, marginBottom: 0 }}>
                                     {s.value}
                                 </p>
                             </motion.div>
@@ -151,94 +223,44 @@ export default function AdminDashboard() {
             </Column>
 
             {/* ── BẢNG ĐIỀU KHIỂN CÁC MODULE ── */}
-            <Column className="max-w-[1400px] mx-auto w-full px-12 py-10 gap-8">
-                <h2 className="text-[20px] font-black text-[#1C1C1E]">System Modules</h2>
+            <Column style={{ maxWidth: 1400, margin: "0 auto", width: "100%", padding: "40px 48px", gap: 32 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 900, color: "#1C1C1E", margin: 0 }}>System Modules</h2>
 
-                <Grid className="grid-cols-2 gap-6">
-                    <Column
-                        className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer"
-                        onClick={() => router.push("/admin/locations")}
-                    >
-                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#FF9500]/10 mb-4">
-                            <MapPin size={24} className="text-[#FF9500]" />
-                        </Row>
-                        <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">Location Manager</h3>
-                        <p className="text-[14px] text-[#8E8E93] mb-6">Review, manage, search, and update places of interest globally.</p>
-                        <Row horizontal="between" className="text-[13px] font-bold text-[#FF9500]">
-                            <span>Manage Locations</span>
-                            <ChevronRight size={16} />
-                        </Row>
-                    </Column>
-
-                    <Column
-                        className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer"
-                        onClick={() => router.push("/admin/challenges")}
-                    >
-                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#FF9500]/10 mb-4">
-                            <MapPin size={24} className="text-[#FF9500]" />
-                        </Row>
-                        <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">Challenge Manager</h3>
-                        <p className="text-[14px] text-[#8E8E93] mb-6">Manage challenges, create new challenges, and update existing challenges.</p>
-                        <Row horizontal="between" className="text-[13px] font-bold text-[#FF9500]">
-                            <span>Manage Challenges</span>
-                            <ChevronRight size={16} />
-                        </Row>
-                    </Column>
-
-                    {/* Module 1: LiveOps & Campaigns */}
-                    <Column className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
-                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#007AFF]/10 mb-4">
-                            <Target size={24} className="text-[#007AFF]" />
-                        </Row>
-                        <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">LiveOps & Campaigns</h3>
-                        <p className="text-[14px] text-[#8E8E93] mb-6">Manage active challenges, push location deals, and configure event filters.</p>
-                        <Row horizontal="between" className="text-[13px] font-bold text-[#007AFF]">
-                            <span>Manage Events</span>
-                            <ChevronRight size={16} />
-                        </Row>
-                    </Column>
-
-                    {/* Module 2: Anti-Cheat & Fraud */}
-                    <Column className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
-                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#FF3B30]/10 mb-4">
-                            <ShieldAlert size={24} className="text-[#FF3B30]" />
-                        </Row>
-                        <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">Anti-Cheat System</h3>
-                        <p className="text-[14px] text-[#8E8E93] mb-6">Review Fake GPS flags, speed hacking alerts, and shadowbanned users.</p>
-                        <Row horizontal="between" className="text-[13px] font-bold text-[#FF3B30]">
-                            <span>Review Logs</span>
-                            <ChevronRight size={16} />
-                        </Row>
-                    </Column>
-
-                    {/* Module 3: Economy & XP */}
-                    <Column className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
-                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#34C759]/10 mb-4">
-                            <Database size={24} className="text-[#34C759]" />
-                        </Row>
-                        <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">Economy Manager</h3>
-                        <p className="text-[14px] text-[#8E8E93] mb-6">Track XP inflation, audit transaction history, and adjust level curves.</p>
-                        <Row horizontal="between" className="text-[13px] font-bold text-[#34C759]">
-                            <span>Audit Economy</span>
-                            <ChevronRight size={16} />
-                        </Row>
-                    </Column>
-
-                    {/* Module 4: AI & Vector Health */}
-                    <Column className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
-                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#AF52DE]/10 mb-4">
-                            <BrainCircuit size={24} className="text-[#AF52DE]" />
-                        </Row>
-                        <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">AI Vector Monitor</h3>
-                        <p className="text-[14px] text-[#8E8E93] mb-6">Visualize taste clusters, monitor Group Room match rates, and check LLM API health.</p>
-                        <Row horizontal="between" className="text-[13px] font-bold text-[#AF52DE]">
-                            <span>View Analytics</span>
-                            <ChevronRight size={16} />
-                        </Row>
-                    </Column>
-
-                    {/* Module 5: Location */}
-
+                <Grid style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
+                    {MODULES.map((mod) => {
+                        const Icon = mod.icon;
+                        return (
+                            <Column
+                                key={mod.title}
+                                style={{
+                                    backgroundColor: "#fff",
+                                    borderRadius: 32,
+                                    padding: 24,
+                                    boxShadow: "0 20px 25px -5px rgba(0,0,0,0.05)",
+                                    border: "1px solid rgba(0,0,0,0.05)",
+                                    transition: "transform 0.2s",
+                                    cursor: "pointer",
+                                }}
+                                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }}
+                                onClick={mod.href ? () => router.push(mod.href) : undefined}
+                            >
+                                <Row
+                                    horizontal="center"
+                                    vertical="center"
+                                    style={{ width: 48, height: 48, borderRadius: 16, backgroundColor: `${mod.color}1A`, marginBottom: 16 }}
+                                >
+                                    <Icon size={24} color={mod.color} />
+                                </Row>
+                                <h3 style={{ fontSize: 18, fontWeight: 900, color: "#1C1C1E", marginTop: 0, marginBottom: 8 }}>{mod.title}</h3>
+                                <p style={{ fontSize: 14, color: "#8E8E93", marginTop: 0, marginBottom: 24 }}>{mod.description}</p>
+                                <Row horizontal="between" style={{ fontSize: 13, fontWeight: 700, color: mod.color }}>
+                                    <span>{mod.cta}</span>
+                                    <ChevronRight size={16} />
+                                </Row>
+                            </Column>
+                        );
+                    })}
                 </Grid>
             </Column>
         </Column>

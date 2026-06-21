@@ -18,6 +18,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Star } from "lucide-react";
 
+import { Column, Row } from "@once-ui-system/core";
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
 
@@ -75,7 +76,7 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
         }}
       >
         {/* ── Image area ── */}
-        <div
+        <Column
           style={{
             position: "relative",
             width: "100%",
@@ -97,7 +98,7 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
           />
 
           {/* Gradient overlay */}
-          <div
+          <Column
             style={{
               position: "absolute",
               top: 0,
@@ -112,13 +113,13 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
 
           {/* Author chip — top-left (like TasteMap Feed) */}
           {authorName && (
-            <div
+            <Row
+              vertical="center"
               style={{
                 position: "absolute",
                 top: tokens.space[3],
                 left: tokens.space[3],
                 display: "inline-flex",
-                alignItems: "center",
                 gap: tokens.space[2],
                 paddingTop: 4,
                 paddingBottom: 4,
@@ -145,7 +146,7 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
                   flexShrink: 0,
                 }}
               />
-              <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+              <Column style={{ minWidth: 0 }}>
                 <span
                   style={{
                     fontSize: 10,
@@ -172,8 +173,8 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
                     {authorSub}
                   </span>
                 )}
-              </div>
-            </div>
+              </Column>
+            </Row>
           )}
 
           {/* XP badge — top-left when rating badge occupies top-right, top-right otherwise */}
@@ -225,14 +226,14 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
 
           {/* Rating badge — only show if rating > 0 */}
           {rating > 0 && !authorName && (
-            <div
+            <Row
+              vertical="center"
               style={{
                 position: "absolute",
                 top: tokens.space[3],
                 right: tokens.space[3],
                 zIndex: 3,
                 display: "inline-flex",
-                alignItems: "center",
                 gap: 3,
                 paddingTop: 4,
                 paddingBottom: 4,
@@ -259,16 +260,14 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
               >
                 {rating.toFixed(1)}
               </span>
-            </div>
+            </Row>
           )}
-        </div>
+        </Column>
 
         {/* ── Text area ── */}
-        <div
+        <Column
           style={{
             padding: tokens.space[4],
-            display: "flex",
-            flexDirection: "column",
             gap: 2,
           }}
         >
@@ -294,7 +293,7 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
           >
             {tags}
           </span>
-        </div>
+        </Column>
       </GlassCard>
     </motion.div>
   );

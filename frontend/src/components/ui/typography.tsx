@@ -25,7 +25,7 @@ interface TextElementProps extends Omit<ComponentPropsWithoutRef<"span">, "color
 }
 
 function withTone(tone: Tone, style?: React.CSSProperties): React.CSSProperties | undefined {
-  return tone === "inverse" ? { color: "var(--dsc-text-inverse)", ...style } : style;
+  return tone === "inverse" ? { color: "var(--neutral-on-solid-strong)", ...style } : style;
 }
 
 function makeHeading(variant: string, defaultAs: ElementType) {

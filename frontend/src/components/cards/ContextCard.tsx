@@ -46,11 +46,12 @@ export function ContextCard({
         }}
       >
         {/* Thumbnail */}
-        <div
-          className="overflow-hidden relative"
+        <Column
           style={{
             width: "100%",
             height: "140px",
+            overflow: "hidden",
+            position: "relative",
           }}
         >
           <img
@@ -121,7 +122,7 @@ export function ContextCard({
               Dĩ An
             </Text>
           </Row>
-        </div>
+        </Column>
         {/* Info */}
         <Column style={{ paddingTop: "14px", paddingBottom: "14px", paddingLeft: "16px", paddingRight: "16px", gap: "4px" }}>
           <Text style={{ color: "#1C1C1E", fontWeight: 700, fontSize: "0.9rem" }}>

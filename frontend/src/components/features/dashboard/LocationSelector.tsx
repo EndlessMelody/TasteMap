@@ -25,6 +25,7 @@ import {
   type VnDistrict,
   type VnWard,
 } from "@/lib/vietnam-api";
+import { Column, Row } from "@once-ui-system/core";
 import { useLocation } from "@/hooks/useLocation";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -252,7 +253,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
   }, [value, isDetecting, status]);
 
   return (
-    <div ref={panelRef} style={{ position: "relative" }}>
+    <Column ref={panelRef} style={{ position: "relative" }}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -355,9 +356,8 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
               shadow="lg"
               style={{ overflow: "hidden" }}
             >
-              <div
+              <Row
                 style={{
-                  display: "flex",
                   borderBottom: `1px solid ${tokens.color.border}`,
                   padding: 4,
                   gap: 4,
@@ -375,25 +375,22 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                   isActive={activeTab === "gps"}
                   onClick={() => setActiveTab("gps")}
                 />
-              </div>
+              </Row>
 
               {activeTab === "manual" ? (
-                <div
+                <Column
                   style={{
                     maxHeight: 460,
-                    display: "flex",
-                    flexDirection: "column",
                   }}
                 >
                   {value && (
-                    <div
+                    <Row
                       style={{
                         margin: `${tokens.space[2]} ${tokens.space[4]} 0`,
                         padding: `${tokens.space[3]} ${tokens.space[3]}`,
                         background: tokens.color.surfaceMuted,
                         border: `1px solid ${tokens.color.border}`,
                         borderRadius: tokens.radius.md,
-                        display: "flex",
                         alignItems: "flex-start",
                         gap: tokens.space[3],
                       }}
@@ -414,7 +411,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                       >
                         <Compass size={12} strokeWidth={1.75} />
                       </span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
+                      <Column style={{ flex: 1, minWidth: 0 }}>
                         <Caption
                           style={{
                             color: tokens.color.warm,
@@ -431,14 +428,13 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                         >
                           {value}
                         </BodySm>
-                      </div>
-                    </div>
+                      </Column>
+                    </Row>
                   )}
 
-                  <div
+                  <Row
+                    vertical="center"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
                       gap: tokens.space[2],
                       padding: `${tokens.space[3]} ${tokens.space[4]} ${tokens.space[1]}`,
                       borderBottom:
@@ -472,7 +468,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                         />
                       </button>
                     )}
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                    <Column style={{ flex: 1, minWidth: 0 }}>
                       <Eyebrow style={{ color: tokens.color.warm }}>
                         {breadcrumb}
                       </Eyebrow>
@@ -488,16 +484,15 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                           {selectedProvince.name}
                         </Caption>
                       )}
-                    </div>
-                    <div
+                    </Column>
+                    <Row
                       style={{
-                        display: "flex",
                         gap: 4,
                       }}
                     >
                       {(["province", "district", "ward"] as DrillLevel[]).map(
                         (level, i) => (
-                          <div
+                          <Column
                             key={level}
                             style={{
                               width: 8,
@@ -514,10 +509,10 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                           />
                         ),
                       )}
-                    </div>
-                  </div>
+                    </Row>
+                  </Row>
 
-                  <div
+                  <Column
                     style={{
                       padding: `${tokens.space[2]} ${tokens.space[4]} ${tokens.space[1]}`,
                       position: "relative",
@@ -559,9 +554,9 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                         (e.currentTarget.style.borderColor = tokens.color.border)
                       }
                     />
-                  </div>
+                  </Column>
 
-                  <div
+                  <Column
                     style={{
                       flex: 1,
                       overflowY: "auto",
@@ -569,11 +564,10 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                     }}
                   >
                     {loadingData ? (
-                      <div
+                      <Row
+                        horizontal="center"
+                        vertical="center"
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
                           padding: tokens.space[8],
                           gap: tokens.space[2],
                         }}
@@ -587,9 +581,9 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                           }}
                         />
                         <BodySm tone="muted">Loading…</BodySm>
-                      </div>
+                      </Row>
                     ) : filteredItems.length === 0 ? (
-                      <div
+                      <Column
                         style={{
                           padding: `${tokens.space[6]} ${tokens.space[4]}`,
                           textAlign: "center",
@@ -598,7 +592,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                         <BodySm tone="muted">
                           No results for &ldquo;{searchQuery}&rdquo;
                         </BodySm>
-                      </div>
+                      </Column>
                     ) : (
                       filteredItems.map((item) => (
                         <ListRow
@@ -616,19 +610,17 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                         />
                       ))
                     )}
-                  </div>
-                </div>
+                  </Column>
+                </Column>
               ) : (
-                <div
+                <Column
+                  horizontal="center"
                   style={{
                     padding: `${tokens.space[6]} ${tokens.space[5]} ${tokens.space[8]}`,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
                     gap: tokens.space[4],
                   }}
                 >
-                  <div
+                  <Column
                     style={{
                       position: "relative",
                       width: 72,
@@ -659,13 +651,13 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                         />
                       </>
                     )}
-                    <div
+                    <Row
+                      horizontal="center"
+                      vertical="center"
                       style={{
                         position: "absolute",
                         inset: 0,
                         display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
                         borderRadius: "50%",
                         background:
                           status === "error"
@@ -688,10 +680,10 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                       ) : (
                         <Navigation size={28} strokeWidth={1.75} />
                       )}
-                    </div>
-                  </div>
+                    </Row>
+                  </Column>
 
-                  <div style={{ textAlign: "center" }}>
+                  <Column style={{ textAlign: "center" }}>
                     <Body
                       style={{
                         fontWeight: tokens.type.weight.semibold,
@@ -718,7 +710,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                           ? error
                           : "TasteMap will automatically detect your ward, district and province."}
                     </BodySm>
-                  </div>
+                  </Column>
 
                   <Button
                     variant="primary"
@@ -734,7 +726,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                         ? "Try again"
                         : "Locate me"}
                   </Button>
-                </div>
+                </Column>
               )}
             </Card>
           </motion.div>
@@ -742,7 +734,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
       </AnimatePresence>
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+    </Column>
   );
 };
 
@@ -830,8 +822,8 @@ function ListRow({
         strokeWidth={1.75}
         style={{ color: tokens.color.textSubtle, flexShrink: 0 }}
       />
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div
+      <Column style={{ flex: 1, minWidth: 0 }}>
+        <Column
           style={{
             overflow: "hidden",
             textOverflow: "ellipsis",
@@ -839,13 +831,13 @@ function ListRow({
           }}
         >
           {name}
-        </div>
+        </Column>
         {subtitle && (
           <Caption tone="subtle" style={{ textTransform: "capitalize" }}>
             {subtitle}
           </Caption>
         )}
-      </div>
+      </Column>
       {hasArrow && (
         <ChevronRight
           size={14}

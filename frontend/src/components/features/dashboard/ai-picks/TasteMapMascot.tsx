@@ -14,6 +14,7 @@
  * - Happy expression that changes contextually
  */
 import React, { useRef, useMemo } from "react";
+import { Column } from "@once-ui-system/core";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   RoundedBox,
@@ -240,7 +241,7 @@ export const TasteMapMascot: React.FC<{
   style?: React.CSSProperties;
 }> = ({ style }) => {
   return (
-    <div
+    <Column
       style={{
         width: "100%",
         height: "100%",
@@ -274,6 +275,6 @@ export const TasteMapMascot: React.FC<{
 
         <Environment preset="city" />
       </Canvas>
-    </div>
+    </Column>
   );
 };

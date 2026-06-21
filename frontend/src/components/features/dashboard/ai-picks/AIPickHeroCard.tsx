@@ -25,6 +25,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Sparkles } from "lucide-react";
 
+import { Column, Row } from "@once-ui-system/core";
 import { GlassCard, MatchRing } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
 import { lift } from "@/lib/motion";
@@ -72,7 +73,7 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
       {...lift}
     >
       {/* ── Image panel ── */}
-      <div
+      <Column
         style={{
           position: "relative",
           width: "100%",
@@ -96,7 +97,7 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
         />
 
         {/* bottom gradient for title legibility if we ever overlay text */}
-        <div
+        <Column
           style={{
             position: "absolute",
             inset: 0,
@@ -107,7 +108,7 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
         />
 
         {/* Match ring */}
-        <div
+        <Column
           style={{
             position: "absolute",
             top: tokens.space[4],
@@ -121,14 +122,12 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
           }}
         >
           <MatchRing value={matchPct} size="lg" label="Match" />
-        </div>
-      </div>
+        </Column>
+      </Column>
 
       {/* ── Body ── */}
-      <div
+      <Column
         style={{
-          display: "flex",
-          flexDirection: "column",
           gap: tokens.space[3],
           padding: tokens.space[5],
           flex: 1,
@@ -136,10 +135,9 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
         }}
       >
         {/* Reasoning eyebrow */}
-        <div
+        <Row
+          vertical="center"
           style={{
-            display: "inline-flex",
-            alignItems: "center",
             gap: tokens.space[2],
           }}
         >
@@ -157,7 +155,7 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
               ? `Because you liked ${reasoningTrait}`
               : "Curated for you"}
           </span>
-        </div>
+        </Row>
 
         {/* Title */}
         <h3
@@ -178,10 +176,9 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
         </h3>
 
         {/* Meta row */}
-        <div
+        <Row
+          vertical="center"
           style={{
-            display: "flex",
-            alignItems: "center",
             justifyContent: "space-between",
             gap: tokens.space[3],
             marginTop: "auto",
@@ -212,8 +209,8 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
             Open
             <ArrowRight size={14} strokeWidth={2.4} />
           </span>
-        </div>
-      </div>
+        </Row>
+      </Column>
     </GlassCard>
   );
 };

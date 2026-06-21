@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { MapPin, Check, ChefHat, Pizza, Heart, UtensilsCrossed, Sparkles } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 
 const PERKS = [
   "AI-matched restaurants, ranked by your palate",
@@ -20,7 +21,7 @@ const AVATARS = [
 
 export function LoginBranding() {
   return (
-    <div
+    <Column
       style={{
         width: "100%",
         height: "100%",
@@ -28,8 +29,6 @@ export function LoginBranding() {
           "linear-gradient(145deg, #1A0D08 0%, #2E1A0E 40%, #1A0D08 100%)",
         position: "relative",
         overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
         justifyContent: "space-between",
         padding: "56px 52px 56px 80px",
       }}
@@ -84,20 +83,19 @@ export function LoginBranding() {
           zIndex: 1,
         }}
       >
-        <div
+        <Row
+          horizontal="center"
+          vertical="center"
           style={{
             width: 34,
             height: 34,
             borderRadius: 10,
             background: "linear-gradient(135deg, #ff6b35, #ff4757)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             boxShadow: "0 0 20px rgba(255,107,53,0.35)",
           }}
         >
           <MapPin size={17} color="white" />
-        </div>
+        </Row>
         <span
           style={{
             fontSize: 18,
@@ -123,7 +121,7 @@ export function LoginBranding() {
           gap: 28,
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <Column style={{ gap: 14 }}>
           <h1
             style={{
               margin: 0,
@@ -158,7 +156,7 @@ export function LoginBranding() {
             Sign in to unlock personalised recommendations, food tours, and a
             community that actually shares your taste.
           </p>
-        </div>
+        </Column>
 
         {/* Perks */}
         <ul
@@ -179,22 +177,21 @@ export function LoginBranding() {
               transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
               style={{ display: "flex", alignItems: "flex-start", gap: 10 }}
             >
-              <div
+              <Row
+                horizontal="center"
+                vertical="center"
                 style={{
                   width: 20,
                   height: 20,
                   borderRadius: "50%",
                   background: "rgba(255,107,53,0.15)",
                   border: "1px solid rgba(255,107,53,0.3)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   flexShrink: 0,
                   marginTop: 1,
                 }}
               >
                 <Check size={11} color="#ff6b35" strokeWidth={2.5} />
-              </div>
+              </Row>
               <span
                 style={{
                   fontSize: 13,
@@ -225,24 +222,22 @@ export function LoginBranding() {
             maxWidth: 340,
           }}
         >
-          <div
+          <Row
+            horizontal="center"
+            vertical="center"
             style={{
               width: 46,
               height: 46,
               borderRadius: 12,
               background: "linear-gradient(135deg, #FF6B35, #FF8C42)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               flexShrink: 0,
             }}
           >
             <UtensilsCrossed size={22} color="white" />
-          </div>
-          <div style={{ flex: 1 }}>
-            <div
+          </Row>
+          <Column style={{ flex: 1 }}>
+            <Row
               style={{
-                display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
                 marginBottom: 4,
@@ -254,11 +249,11 @@ export function LoginBranding() {
               <span style={{ fontSize: 12, fontWeight: 700, color: "#FBBF24" }}>
                 97% match
               </span>
-            </div>
+            </Row>
             <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
               0.8km · Japanese · $$$
             </span>
-          </div>
+          </Column>
         </motion.div>
       </motion.div>
 
@@ -275,30 +270,29 @@ export function LoginBranding() {
           gap: 12,
         }}
       >
-        <div style={{ display: "flex" }}>
+        <Row>
           {AVATARS.map((a, i) => {
             const Icon = a.icon;
             return (
-              <div
+              <Row
                 key={i}
+                horizontal="center"
+                vertical="center"
                 style={{
                   width: 30,
                   height: 30,
                   borderRadius: "50%",
                   backgroundColor: a.bg,
                   border: "2px solid rgba(255,255,255,0.12)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   marginLeft: i === 0 ? 0 : -8,
                   zIndex: AVATARS.length - i,
                 }}
               >
                 <Icon size={14} color="white" />
-              </div>
+              </Row>
             );
           })}
-        </div>
+        </Row>
         <span style={{ fontSize: 13, color: "rgba(255,255,255,0.35)" }}>
           Joined by{" "}
           <strong style={{ color: "rgba(255,255,255,0.6)", fontWeight: 600 }}>
@@ -306,6 +300,6 @@ export function LoginBranding() {
           </strong>
         </span>
       </motion.div>
-    </div>
+    </Column>
   );
 }

@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Page, BodySm } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
+import { Column } from "@once-ui-system/core";
 
 /**
  * /auth/callback — Supabase OAuth redirect handler
@@ -28,11 +29,9 @@ export default function AuthCallbackPage() {
 
   return (
     <Page center>
-      <div
+      <Column
+        horizontal="center"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
           gap: tokens.space[4],
         }}
       >
@@ -46,7 +45,7 @@ export default function AuthCallbackPage() {
         />
         <BodySm tone="muted">Completing sign in…</BodySm>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
+      </Column>
     </Page>
   );
 }

@@ -13,6 +13,7 @@ import {
   Caption,
 } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
+import { Column, Row } from "@once-ui-system/core";
 
 export default function BannedPage() {
   const { logout } = useAuth();
@@ -29,11 +30,9 @@ export default function BannedPage() {
 
   return (
     <Page center>
-      <div
+      <Column
+        horizontal="center"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
           gap: tokens.space[6],
           maxWidth: 480,
           width: "100%",
@@ -67,19 +66,18 @@ export default function BannedPage() {
             <ShieldAlert size={32} strokeWidth={1.75} />
           </span>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: tokens.space[2] }}>
+          <Column style={{ gap: tokens.space[2] }}>
             <H2>Tài khoản bị đình chỉ</H2>
             <Body tone="muted">
               Quyền truy cập của bạn vào TasteMap đã bị khóa do không tuân thủ
               các Tiêu chuẩn Cộng đồng. Chúng tôi xây dựng một môi trường văn
               minh và an toàn cho tất cả mọi người.
             </Body>
-          </div>
+          </Column>
 
-          <div
+          <Row
             style={{
               width: "100%",
-              display: "flex",
               alignItems: "flex-start",
               gap: tokens.space[3],
               padding: tokens.space[4],
@@ -97,13 +95,11 @@ export default function BannedPage() {
               Nếu bạn tin rằng đây là một sự nhầm lẫn của hệ thống, vui lòng gửi
               yêu cầu xem xét lại cho chúng tôi.
             </BodySm>
-          </div>
+          </Row>
 
-          <div
+          <Column
             style={{
               width: "100%",
-              display: "flex",
-              flexDirection: "column",
               gap: tokens.space[2],
             }}
           >
@@ -125,11 +121,11 @@ export default function BannedPage() {
             >
               Đăng xuất
             </Button>
-          </div>
+          </Column>
         </Card>
 
         <Caption tone="subtle">TasteMap Security System</Caption>
-      </div>
+      </Column>
     </Page>
   );
 }

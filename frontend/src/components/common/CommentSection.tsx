@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Avatar } from "@once-ui-system/core";
+import { Avatar, Column, Row } from "@once-ui-system/core";
 import { getInitials } from "@/lib/avatar";
 import { apiGet, apiPost } from "@/lib/api";
 import { MessageCircle, Send, X } from "lucide-react";
@@ -134,10 +134,8 @@ function CommentItem({
   const isReply = depth > 0;
 
   return (
-    <div
+    <Column
       style={{
-        display: "flex",
-        flexDirection: "column",
         gap: "10px",
         marginLeft: isReply ? 18 : 0,
         paddingLeft: isReply ? 12 : 0,
@@ -150,9 +148,9 @@ function CommentItem({
         style={{ display: "flex", gap: "9px", alignItems: "flex-start" }}
       >
         <Avatar src={avatarSrc || DEFAULT_AVATAR} size="s" value={getInitials(name)} />
-        <div style={{ flex: 1 }}>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div
+        <Column style={{ flex: 1 }}>
+          <Column style={{ flex: 1, minWidth: 0 }}>
+            <Column
               style={{
                 backgroundColor: isReply ? "#FFF7F2" : "#F5F5F7",
                 borderRadius: "14px",
@@ -162,10 +160,9 @@ function CommentItem({
                 width: "fit-content"
               }}
             >
-              <div
+              <Row
+                vertical="center"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
                   gap: "5px",
                   flexWrap: "wrap",
                 }}
@@ -194,10 +191,9 @@ function CommentItem({
                   </span>
                 )}
                 {comment.user?.primary_badge && (
-                  <div
+                  <Row
+                    vertical="center"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
                       gap: "3px",
                       fontSize: "10px",
                       fontWeight: 600,
@@ -211,10 +207,10 @@ function CommentItem({
                   >
                     <FaMedal />
                     {comment.user.primary_badge.name}
-                  </div>
+                  </Row>
                 )}
-              </div>
-              <div
+              </Row>
+              <Column
                 style={{
                   fontSize: "13.5px",
                   lineHeight: "1.5",
@@ -225,10 +221,10 @@ function CommentItem({
                 }}
               >
                 {comment.content}
-              </div>
-            </div>
-          </div>
-          <div style={{ display: "flex", gap: "12px", marginTop: "5px", paddingLeft: "4px" }}>
+              </Column>
+            </Column>
+          </Column>
+          <Row style={{ gap: "12px", marginTop: "5px", paddingLeft: "4px" }}>
             <span style={{ color: "#C0C0C0", fontSize: "0.68rem" }}>
               {adaptTime(comment.created_at)}
             </span>
@@ -247,13 +243,13 @@ function CommentItem({
             >
               Trả lời
             </button>
-          </div>
-        </div>
+          </Row>
+        </Column>
 
       </motion.div>
 
       {comment.replies?.length ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <Column style={{ gap: "10px" }}>
           {comment.replies.map((reply) => (
             <CommentItem
               key={reply.id}
@@ -262,9 +258,9 @@ function CommentItem({
               onReply={onReply}
             />
           ))}
-        </div>
+        </Column>
       ) : null}
-    </div>
+    </Column>
   );
 }
 
@@ -354,10 +350,8 @@ export function CommentSection({
   };
 
   return (
-    <div
+    <Column
       style={{
-        display: "flex",
-        flexDirection: "column",
         flex: 1,
         minHeight: 0,
         overflow: "hidden",
@@ -365,20 +359,18 @@ export function CommentSection({
       }}
     >
       {fixedHeader}
-      <div
+      <Column
         className="no-scrollbar"
         style={{
           flex: 1,
           overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
           gap: "16px",
           ...listStyle,
         }}
       >
         {header}
         {loadingComments ? (
-          <div style={{ display: "flex", gap: "8px", alignItems: "center", padding: "0 16px" }}>
+          <Row vertical="center" style={{ gap: "8px", padding: "0 16px" }}>
             {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
@@ -387,35 +379,31 @@ export function CommentSection({
                 style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#D0D0D0" }}
               />
             ))}
-          </div>
+          </Row>
         ) : comments.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "24px 0" }}>
+          <Column style={{ textAlign: "center", padding: "24px 0" }}>
             <MessageCircle size={28} color="#E0E0E0" />
             <p style={{ margin: "8px 0 0", color: "#C0C0C0", fontSize: "0.8rem" }}>{emptyMessage}</p>
-          </div>
+          </Column>
         ) : (
-          <div
+          <Column
             style={{
-              display: "flex",
-              flexDirection: "column",
               gap: "16px",
             }}
           >
             {comments.map((comment) => (
               <CommentItem key={comment.id} comment={comment} onReply={handleReply} />
             ))}
-          </div>
+          </Column>
         )}
-      </div>
+      </Column>
 
       {footer}
 
-      <div
+      <Column
         style={{
           padding: "12px 16px 14px",
           borderTop: "1px solid #F0F0F0",
-          display: "flex",
-          flexDirection: "column",
           gap: "8px",
           backgroundColor: "#FFFFFF",
           flexShrink: 0,
@@ -423,10 +411,9 @@ export function CommentSection({
         }}
       >
         {replyingTo ? (
-          <div
+          <Row
+            vertical="center"
             style={{
-              display: "flex",
-              alignItems: "center",
               justifyContent: "space-between",
               gap: "12px",
               padding: "0 4px",
@@ -454,13 +441,12 @@ export function CommentSection({
               <X size={12} />
               Hủy
             </button>
-          </div>
+          </Row>
         ) : null}
 
-        <div
+        <Row
+          vertical="center"
           style={{
-            display: "flex",
-            alignItems: "center",
             gap: "8px",
             backgroundColor: "#F5F5F7",
             borderRadius: "22px",
@@ -518,8 +504,8 @@ export function CommentSection({
           >
             <Send size={14} color="#fff" />
           </motion.button>
-        </div>
-      </div>
-    </div>
+        </Row>
+      </Column>
+    </Column>
   );
 }

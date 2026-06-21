@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Bike, ArrowRight, ShoppingBag } from "lucide-react";
 
+import { Column, Row } from "@once-ui-system/core";
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
 
@@ -42,7 +43,7 @@ export const TasteSignatureCard: React.FC = () => {
       onMouseLeave={() => setHovered(false)}
     >
       {/* Subtle background tint on hover */}
-      <div
+      <Column
         style={{
           position: "absolute",
           inset: 0,
@@ -54,23 +55,22 @@ export const TasteSignatureCard: React.FC = () => {
       />
 
       {/* ── Brand row ── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, position: "relative" }}>
+      <Row vertical="center" style={{ gap: 8, position: "relative" }}>
         {/* Icon */}
-        <div
+        <Row
+          horizontal="center"
+          vertical="center"
           style={{
             width: 28,
             height: 28,
             borderRadius: 8,
             background: "linear-gradient(135deg, #EE4D2D, #FF8C00)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             flexShrink: 0,
             boxShadow: "0 2px 6px rgba(238,77,45,0.30)",
           }}
         >
           <ShoppingBag size={14} color="white" strokeWidth={2.2} />
-        </div>
+        </Row>
 
         {/* Name */}
         <span
@@ -114,10 +114,10 @@ export const TasteSignatureCard: React.FC = () => {
           />
           Open now
         </span>
-      </div>
+      </Row>
 
       {/* ── Headline ── */}
-      <div style={{ position: "relative", flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 4 }}>
+      <Column style={{ position: "relative", flex: 1, justifyContent: "center", gap: 4 }}>
         <p
           style={{
             margin: 0,
@@ -150,13 +150,12 @@ export const TasteSignatureCard: React.FC = () => {
         >
           Free delivery on your first order
         </p>
-      </div>
+      </Column>
 
       {/* ── Footer row: ETA + CTA ── */}
-      <div
+      <Row
+        vertical="center"
         style={{
-          display: "flex",
-          alignItems: "center",
           justifyContent: "space-between",
           position: "relative",
         }}
@@ -201,7 +200,7 @@ export const TasteSignatureCard: React.FC = () => {
           Order now
           <ArrowRight size={11} color="white" />
         </motion.button>
-      </div>
+      </Row>
     </GlassCard>
   );
 };

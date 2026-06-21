@@ -38,8 +38,22 @@ import { H3, Body, BodySm, Caption } from "@/components/ui";
 const MapWidget = dynamic(() => import("@/components/MapWidget"), {
   ssr: false,
   loading: () => (
-    <Row horizontal="center" vertical="center" className="w-full h-full bg-[#F2F2F7]">
-      <Column className="w-6 h-6 rounded-full border-2 border-[#E5E5EA] border-t-[#ff6b35] animate-spin" />
+    <Row
+      horizontal="center"
+      vertical="center"
+      style={{ width: "100%", height: "100%", backgroundColor: "#F2F2F7" }}
+    >
+      <Column
+        style={{
+          width: 24,
+          height: 24,
+          borderRadius: 9999,
+          border: "2px solid #E5E5EA",
+          borderTopColor: "#ff6b35",
+          animation: "spin 0.8s linear infinite",
+        }}
+      />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </Row>
   ),
 });
@@ -455,8 +469,18 @@ export default function ExploreClient() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
           onClick={handleLocateUser}
-          className="absolute top-4 z-40 flex items-center gap-2 px-3.5 py-2 rounded-full"
           style={{
+            position: "absolute",
+            top: 16,
+            zIndex: 40,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            paddingLeft: 14,
+            paddingRight: 14,
+            paddingTop: 8,
+            paddingBottom: 8,
+            borderRadius: 9999,
             left: "calc(var(--explore-left-sidebar-width, 0px) + 16px)",
             backgroundColor: "rgba(255,255,255,0.9)",
             backdropFilter: "blur(16px)",
@@ -468,7 +492,11 @@ export default function ExploreClient() {
         >
           <LocateFixed
             size={14}
-            className={isLocatingUser ? "animate-spin" : undefined}
+            style={
+              isLocatingUser
+                ? { animation: "spin 0.8s linear infinite" }
+                : undefined
+            }
             color={
               userLocationError
                 ? "#dc2626"
@@ -477,7 +505,7 @@ export default function ExploreClient() {
                   : "#8E8E93"
             }
           />
-          <span className="text-[12px] font-bold text-[#1C1C1E]">
+          <span style={{ fontSize: 12, fontWeight: 700, color: "#1C1C1E" }}>
             {isLocatingUser
               ? "Locating..."
               : userLocationError
@@ -492,8 +520,12 @@ export default function ExploreClient() {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
-          className="absolute z-40 flex flex-col gap-2"
           style={{
+            position: "absolute",
+            zIndex: 40,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
             left: "calc(var(--explore-left-sidebar-width, 0px) + 16px)",
             top: "66px",
           }}
@@ -502,9 +534,17 @@ export default function ExploreClient() {
           <button
             type="button"
             onClick={() => setIsMapSettingsOpen((prev) => !prev)}
-            className="w-10 h-10 rounded-full flex items-center justify-center text-white relative transition-all"
             title="Map Settings"
             style={{
+              width: 40,
+              height: 40,
+              borderRadius: 9999,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#fff",
+              position: "relative",
+              transition: "all 0.2s",
               backgroundColor: isMapSettingsOpen
                 ? "rgba(17,24,39,0.95)"
                 : "rgba(17,24,39,0.78)",
@@ -521,28 +561,60 @@ export default function ExploreClient() {
                 initial={{ opacity: 0, scale: 0.9, x: -10 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.9, x: -10 }}
-                className="absolute left-12 top-0 bg-white rounded-2xl p-4 shadow-2xl border border-gray-100 flex flex-row gap-6"
                 style={{
+                  position: "absolute",
+                  left: 48,
+                  top: 0,
+                  borderRadius: 16,
+                  padding: 16,
+                  boxShadow:
+                    "0 25px 50px -12px rgba(0,0,0,0.25)",
+                  border: "1px solid #F3F4F6",
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 24,
                   width: "340px",
                   backdropFilter: "blur(20px)",
                   backgroundColor: "rgba(255,255,255,0.95)",
                 }}
               >
                 {/* Visual Settings Column */}
-                <Column className="flex-1 gap-4">
+                <Column style={{ flex: 1, gap: 16 }}>
                   <Column>
-                    <p className="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">
+                    <p
+                      style={{
+                        fontSize: 10,
+                        textTransform: "uppercase",
+                        fontWeight: 700,
+                        color: "#6B7280",
+                        marginBottom: 8,
+                        letterSpacing: "0.05em",
+                      }}
+                    >
                       Map Style
                     </p>
-                    <Grid className="grid-cols-2 gap-2">
+                    <Grid style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
                       {(["dark", "light", "streets", "satellite"] as const).map(
                         (style) => (
                           <button
                             key={style}
                             onClick={() => setMapStyleType(style)}
-                            className="px-2 py-1.5 rounded-lg text-xs font-semibold border flex items-center gap-1.5 capitalize transition-all"
-                            style={
-                              mapStyleType === style
+                            style={{
+                              paddingLeft: 8,
+                              paddingRight: 8,
+                              paddingTop: 6,
+                              paddingBottom: 6,
+                              borderRadius: 8,
+                              fontSize: 12,
+                              fontWeight: 600,
+                              borderWidth: 1,
+                              borderStyle: "solid",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                              textTransform: "capitalize",
+                              transition: "all 0.2s",
+                              ...(mapStyleType === style
                                 ? {
                                     backgroundColor: "#111827",
                                     color: "white",
@@ -552,8 +624,8 @@ export default function ExploreClient() {
                                     backgroundColor: "transparent",
                                     color: "#4B5563",
                                     borderColor: "#E5E7EB",
-                                  }
-                            }
+                                  }),
+                            }}
                           >
                             <MapIcon size={12} /> {style}
                           </button>
@@ -563,14 +635,36 @@ export default function ExploreClient() {
                   </Column>
 
                   <Column>
-                    <p className="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">
+                    <p
+                      style={{
+                        fontSize: 10,
+                        textTransform: "uppercase",
+                        fontWeight: 700,
+                        color: "#6B7280",
+                        marginBottom: 8,
+                        letterSpacing: "0.05em",
+                      }}
+                    >
                       Layers
                     </p>
                     <button
                       onClick={() => setShow3D((v) => !v)}
-                      className="w-full px-3 py-2 rounded-xl text-xs font-bold flex items-center justify-between border transition-all"
-                      style={
-                        show3D
+                      style={{
+                        width: "100%",
+                        paddingLeft: 12,
+                        paddingRight: 12,
+                        paddingTop: 8,
+                        paddingBottom: 8,
+                        borderRadius: 12,
+                        fontSize: 12,
+                        fontWeight: 700,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        borderWidth: 1,
+                        borderStyle: "solid",
+                        transition: "all 0.2s",
+                        ...(show3D
                           ? {
                               backgroundColor: "#ff6b35",
                               color: "white",
@@ -581,13 +675,13 @@ export default function ExploreClient() {
                               backgroundColor: "#F9FAFB",
                               color: "#4B5563",
                               borderColor: "#E5E7EB",
-                            }
-                      }
+                            }),
+                      }}
                     >
-                      <span className="flex items-center gap-2">
+                      <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
                         <Building2 size={14} /> 3D Buildings
                       </span>
-                      <span className="text-[10px] uppercase">
+                      <span style={{ fontSize: 10, textTransform: "uppercase" }}>
                         {show3D ? "ON" : "OFF"}
                       </span>
                     </button>
@@ -595,26 +689,83 @@ export default function ExploreClient() {
                 </Column>
 
                 {/* Vertical Divider */}
-                <Column className="w-[1px] bg-gray-200" />
+                <Column style={{ width: 1, backgroundColor: "#E5E7EB" }} />
 
                 {/* Zoom Controls Column */}
-                <Column className="items-center justify-between py-1">
+                <Column
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    paddingTop: 4,
+                    paddingBottom: 4,
+                  }}
+                >
                   <button
                     onClick={() => setZoomLevel(MAX_MAP_ZOOM)}
-                    className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
                     title="Max Zoom"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 9999,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#F3F4F6",
+                      color: "#374151",
+                      transition: "background-color 0.15s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#E5E7EB";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "#F3F4F6";
+                    }}
                   >
                     <Maximize size={12} />
                   </button>
                   <button
                     onClick={() => stepZoom(1)}
-                    className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-800 text-white hover:bg-gray-700 transition"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 9999,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#1F2937",
+                      color: "#fff",
+                      transition: "background-color 0.15s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#374151";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "#1F2937";
+                    }}
                   >
                     <Plus size={14} />
                   </button>
 
-                  <Row className="flex-1 items-center justify-center relative my-2 min-h-[60px]">
-                    <Column className="absolute font-bold text-[10px] text-gray-400 -left-6">
+                  <Row
+                    style={{
+                      flex: 1,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      position: "relative",
+                      marginTop: 8,
+                      marginBottom: 8,
+                      minHeight: 60,
+                    }}
+                  >
+                    <Column
+                      style={{
+                        position: "absolute",
+                        fontWeight: 700,
+                        fontSize: 10,
+                        color: "#9CA3AF",
+                        left: -24,
+                      }}
+                    >
                       z{zoomLabel}
                     </Column>
                     <input
@@ -636,14 +787,46 @@ export default function ExploreClient() {
 
                   <button
                     onClick={() => stepZoom(-1)}
-                    className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-800 text-white hover:bg-gray-700 transition"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 9999,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#1F2937",
+                      color: "#fff",
+                      transition: "background-color 0.15s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#374151";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "#1F2937";
+                    }}
                   >
                     <Minus size={14} />
                   </button>
                   <button
                     onClick={() => setZoomLevel(MIN_MAP_ZOOM)}
-                    className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
                     title="Min Zoom"
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 9999,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#F3F4F6",
+                      color: "#374151",
+                      transition: "background-color 0.15s",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#E5E7EB";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "#F3F4F6";
+                    }}
                   >
                     <Minimize size={12} />
                   </button>
@@ -654,6 +837,11 @@ export default function ExploreClient() {
         </motion.div>
 
         <style jsx>{`
+          @keyframes spin {
+            to {
+              transform: rotate(360deg);
+            }
+          }
           .zoom-slider {
             -webkit-appearance: none;
             background: transparent;
@@ -720,8 +908,8 @@ export default function ExploreClient() {
                 className="no-scrollbar"
               >
                 {/* Header */}
-                <Row horizontal="between" vertical="center" className="mb-5">
-                  <Row vertical="center" className="gap-2.5">
+                <Row horizontal="between" vertical="center" style={{ marginBottom: 20 }}>
+                  <Row vertical="center" style={{ gap: 10 }}>
                     <Row
                       horizontal="center"
                       vertical="center"
@@ -737,27 +925,44 @@ export default function ExploreClient() {
                       <SlidersHorizontal size={15} color="#fff" />
                     </Row>
                     <Column>
-                      <p className="text-[15px] font-bold text-[#111827]">
+                      <p style={{ fontSize: 15, fontWeight: 700, color: "#111827" }}>
                         Filters
                       </p>
-                      <p className="text-[11px] text-[#94A3B8] font-medium">
+                      <p style={{ fontSize: 11, color: "#94A3B8", fontWeight: 500 }}>
                         {filtered.length} spots match
                       </p>
                     </Column>
                   </Row>
-                  <Row vertical="center" className="gap-2">
+                  <Row vertical="center" style={{ gap: 8 }}>
                     {activeFilterCount > 0 && (
                       <button
                         onClick={clearAllFilters}
-                        className="text-[11px] font-semibold text-[#ff6b35] hover:text-[#e55a28] transition-colors px-2 py-1"
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 600,
+                          color: "#ff6b35",
+                          transition: "color 0.15s",
+                          paddingLeft: 8,
+                          paddingRight: 8,
+                          paddingTop: 4,
+                          paddingBottom: 4,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = "#e55a28";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = "#ff6b35";
+                        }}
                       >
                         Reset
                       </button>
                     )}
                     <button
                       onClick={() => setIsFilterPanelOpen(false)}
-                      className="flex items-center justify-center"
                       style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                         width: 28,
                         height: 28,
                         borderRadius: 8,
@@ -772,19 +977,43 @@ export default function ExploreClient() {
                 </Row>
 
                 {/* Categories Grid */}
-                <Column className="mb-5">
-                  <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2.5 px-0.5">
+                <Column style={{ marginBottom: 20 }}>
+                  <p
+                    style={{
+                      fontSize: 10,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.16em",
+                      fontWeight: 600,
+                      color: "#94A3B8",
+                      marginBottom: 10,
+                      paddingLeft: 2,
+                      paddingRight: 2,
+                    }}
+                  >
                     Category
                   </p>
-                  <Grid className="grid-cols-4 gap-2">
+                  <Grid style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
                     {CATEGORIES.map((cat) => (
                       <motion.button
                         key={cat}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setCategory(cat)}
-                        className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl text-[11px] font-semibold border transition-all"
-                        style={
-                          category === cat
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          gap: 6,
+                          paddingTop: 12,
+                          paddingBottom: 12,
+                          paddingLeft: 8,
+                          paddingRight: 8,
+                          borderRadius: 12,
+                          fontSize: 11,
+                          fontWeight: 600,
+                          borderWidth: 1,
+                          borderStyle: "solid",
+                          transition: "all 0.2s",
+                          ...(category === cat
                             ? {
                                 background:
                                   "linear-gradient(180deg, #111827 0%, #1F2937 100%)",
@@ -797,8 +1026,8 @@ export default function ExploreClient() {
                                 borderColor: "rgba(15,23,42,0.08)",
                                 color: "#334155",
                                 boxShadow: "0 2px 6px rgba(15,23,42,0.04)",
-                              }
-                        }
+                              }),
+                        }}
                       >
                         <span style={{ fontSize: 18 }}>
                           {CATEGORY_ICONS[cat]}
@@ -819,16 +1048,39 @@ export default function ExploreClient() {
                 />
 
                 {/* Availability & Price Row */}
-                <Row className="items-start gap-3 mb-4">
+                <Row style={{ alignItems: "flex-start", gap: 12, marginBottom: 16 }}>
                   <Column>
-                    <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2 px-0.5">
+                    <p
+                      style={{
+                        fontSize: 10,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.16em",
+                        fontWeight: 600,
+                        color: "#94A3B8",
+                        marginBottom: 8,
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
                       Hours
                     </p>
                     <button
                       onClick={() => setOpenOnly((v) => !v)}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] font-semibold border transition-all"
-                      style={
-                        openOnly
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        paddingLeft: 16,
+                        paddingRight: 16,
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                        borderRadius: 12,
+                        fontSize: 12,
+                        fontWeight: 600,
+                        borderWidth: 1,
+                        borderStyle: "solid",
+                        transition: "all 0.2s",
+                        ...(openOnly
                           ? {
                               background:
                                 "linear-gradient(180deg, #16A34A 0%, #15803D 100%)",
@@ -841,20 +1093,33 @@ export default function ExploreClient() {
                               borderColor: "rgba(15,23,42,0.08)",
                               color: "#334155",
                               boxShadow: "0 2px 6px rgba(15,23,42,0.04)",
-                            }
-                      }
+                            }),
+                      }}
                     >
                       <Clock size={13} /> Open Now
                     </button>
                   </Column>
 
                   <Column>
-                    <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2 px-0.5">
+                    <p
+                      style={{
+                        fontSize: 10,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.16em",
+                        fontWeight: 600,
+                        color: "#94A3B8",
+                        marginBottom: 8,
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                      }}
+                    >
                       Budget
                     </p>
                     <Row
-                      className="p-1 rounded-xl gap-1"
                       style={{
+                        padding: 4,
+                        borderRadius: 12,
+                        gap: 4,
                         backgroundColor: "rgba(255,255,255,0.8)",
                         border: "1px solid rgba(15,23,42,0.08)",
                         boxShadow: "0 2px 6px rgba(15,23,42,0.04)",
@@ -864,9 +1129,18 @@ export default function ExploreClient() {
                         <button
                           key={price}
                           onClick={() => setPriceMax(price)}
-                          className="px-3.5 py-2 rounded-lg text-[12px] font-bold border transition-all"
-                          style={
-                            priceMax === price
+                          style={{
+                            paddingLeft: 14,
+                            paddingRight: 14,
+                            paddingTop: 8,
+                            paddingBottom: 8,
+                            borderRadius: 8,
+                            fontSize: 12,
+                            fontWeight: 700,
+                            borderWidth: 1,
+                            borderStyle: "solid",
+                            transition: "all 0.2s",
+                            ...(priceMax === price
                               ? {
                                   background:
                                     "linear-gradient(180deg, #111827 0%, #1F2937 100%)",
@@ -877,8 +1151,8 @@ export default function ExploreClient() {
                                   backgroundColor: "transparent",
                                   borderColor: "transparent",
                                   color: "#64748B",
-                                }
-                          }
+                                }),
+                          }}
                         >
                           {PRICE_ICONS[price]}
                         </button>
@@ -897,18 +1171,41 @@ export default function ExploreClient() {
                 />
 
                 {/* Rating Filter */}
-                <Column className="mb-4">
-                  <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2 px-0.5">
+                <Column style={{ marginBottom: 16 }}>
+                  <p
+                    style={{
+                      fontSize: 10,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.16em",
+                      fontWeight: 600,
+                      color: "#94A3B8",
+                      marginBottom: 8,
+                      paddingLeft: 2,
+                      paddingRight: 2,
+                    }}
+                  >
                     Minimum Rating
                   </p>
-                  <Row className="gap-1.5">
+                  <Row style={{ gap: 6 }}>
                     {[0, 3.5, 4.0, 4.5].map((r) => (
                       <button
                         key={r}
                         onClick={() => setMinRating(r)}
-                        className="flex items-center gap-1 px-3 py-2 rounded-xl text-[12px] font-semibold border transition-all"
-                        style={
-                          minRating === r
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                          paddingLeft: 12,
+                          paddingRight: 12,
+                          paddingTop: 8,
+                          paddingBottom: 8,
+                          borderRadius: 12,
+                          fontSize: 12,
+                          fontWeight: 600,
+                          borderWidth: 1,
+                          borderStyle: "solid",
+                          transition: "all 0.2s",
+                          ...(minRating === r
                             ? {
                                 background:
                                   "linear-gradient(180deg, #111827 0%, #1F2937 100%)",
@@ -921,8 +1218,8 @@ export default function ExploreClient() {
                                 borderColor: "rgba(15,23,42,0.08)",
                                 color: "#334155",
                                 boxShadow: "0 2px 6px rgba(15,23,42,0.04)",
-                              }
-                        }
+                              }),
+                        }}
                       >
                         <Star
                           size={11}
@@ -945,24 +1242,44 @@ export default function ExploreClient() {
                 />
 
                 {/* Tag Filtering */}
-                <Column className="mb-5">
-                  <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2.5 px-0.5">
+                <Column style={{ marginBottom: 20 }}>
+                  <p
+                    style={{
+                      fontSize: 10,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.16em",
+                      fontWeight: 600,
+                      color: "#94A3B8",
+                      marginBottom: 10,
+                      paddingLeft: 2,
+                      paddingRight: 2,
+                    }}
+                  >
                     Tags{" "}
                     {selectedTags.size > 0 && (
-                      <span className="text-[#ff6b35] normal-case">
+                      <span style={{ color: "#ff6b35", textTransform: "none" }}>
                         ({selectedTags.size})
                       </span>
                     )}
                   </p>
-                  <Row className="flex-wrap gap-1.5">
+                  <Row style={{ flexWrap: "wrap", gap: 6 }}>
                     {ALL_TAGS.map((tag) => (
                       <motion.button
                         key={tag}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => toggleTag(tag)}
-                        className="px-3 py-1.5 rounded-lg text-[11px] font-semibold border transition-all"
-                        style={
-                          selectedTags.has(tag)
+                        style={{
+                          paddingLeft: 12,
+                          paddingRight: 12,
+                          paddingTop: 6,
+                          paddingBottom: 6,
+                          borderRadius: 8,
+                          fontSize: 11,
+                          fontWeight: 600,
+                          borderWidth: 1,
+                          borderStyle: "solid",
+                          transition: "all 0.2s",
+                          ...(selectedTags.has(tag)
                             ? {
                                 background:
                                   "linear-gradient(180deg, #111827 0%, #1F2937 100%)",
@@ -974,8 +1291,8 @@ export default function ExploreClient() {
                                 backgroundColor: "rgba(255,255,255,0.8)",
                                 borderColor: "rgba(15,23,42,0.08)",
                                 color: "#64748B",
-                              }
-                        }
+                              }),
+                        }}
                       >
                         {tag}
                       </motion.button>
@@ -993,11 +1310,22 @@ export default function ExploreClient() {
                 />
 
                 {/* Sort By section */}
-                <Column className="mb-5">
-                  <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2.5 px-0.5">
+                <Column style={{ marginBottom: 20 }}>
+                  <p
+                    style={{
+                      fontSize: 10,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.16em",
+                      fontWeight: 600,
+                      color: "#94A3B8",
+                      marginBottom: 10,
+                      paddingLeft: 2,
+                      paddingRight: 2,
+                    }}
+                  >
                     Sort By
                   </p>
-                  <Row className="flex-wrap gap-2">
+                  <Row style={{ flexWrap: "wrap", gap: 8 }}>
                     {[
                       { id: "recommended", label: "Recommended" },
                       { id: "rating", label: "Highest Rated" },
@@ -1008,9 +1336,18 @@ export default function ExploreClient() {
                         <button
                           key={opt.id}
                           onClick={() => setSortBy(opt.id as any)}
-                          className="px-3 py-1.5 rounded-lg text-[11px] font-semibold border transition-all"
-                          style={
-                            isActive
+                          style={{
+                            paddingLeft: 12,
+                            paddingRight: 12,
+                            paddingTop: 6,
+                            paddingBottom: 6,
+                            borderRadius: 8,
+                            fontSize: 11,
+                            fontWeight: 600,
+                            borderWidth: 1,
+                            borderStyle: "solid",
+                            transition: "all 0.2s",
+                            ...(isActive
                               ? {
                                   background:
                                     "linear-gradient(180deg, #111827 0%, #1F2937 100%)",
@@ -1022,8 +1359,8 @@ export default function ExploreClient() {
                                   backgroundColor: "rgba(255,255,255,0.8)",
                                   borderColor: "rgba(15,23,42,0.08)",
                                   color: "#64748B",
-                                }
-                          }
+                                }),
+                          }}
                         >
                           {opt.label}
                         </button>
@@ -1036,8 +1373,14 @@ export default function ExploreClient() {
                 <motion.button
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setIsFilterPanelOpen(false)}
-                  className="w-full py-3 rounded-xl text-[13px] font-bold transition-all"
                   style={{
+                    width: "100%",
+                    paddingTop: 12,
+                    paddingBottom: 12,
+                    borderRadius: 12,
+                    fontSize: 13,
+                    fontWeight: 700,
+                    transition: "all 0.2s",
                     background:
                       "linear-gradient(180deg, #111827 0%, #1F2937 100%)",
                     color: "#fff",
@@ -1085,12 +1428,14 @@ export default function ExploreClient() {
                 background: "rgba(255,255,255,0.92)",
               }}
             >
-              <Row horizontal="between" vertical="center" className="mb-2">
+              <Row horizontal="between" vertical="center" style={{ marginBottom: 8 }}>
                 <button
                   type="button"
                   onClick={() => setIsRightPanelOpen(false)}
-                  className="flex items-center justify-center"
                   style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     width: 30,
                     height: 30,
                     borderRadius: 9,
@@ -1113,7 +1458,14 @@ export default function ExploreClient() {
                   <ChevronRight size={14} />
                 </button>
 
-                <Row vertical="center" className="gap-2.5 flex-row-reverse text-right">
+                <Row
+                  vertical="center"
+                  style={{
+                    gap: 10,
+                    flexDirection: "row-reverse",
+                    textAlign: "right",
+                  }}
+                >
                   <Row
                     horizontal="center"
                     vertical="center"
@@ -1128,31 +1480,56 @@ export default function ExploreClient() {
                   >
                     <Search size={14} color="#fff" />
                   </Row>
-                  <Column className="leading-tight">
-                    <h1 className="text-[17px] font-extrabold text-[#111827] tracking-tight">
+                  <Column style={{ lineHeight: 1.25 }}>
+                    <h1
+                      style={{
+                        fontSize: 17,
+                        fontWeight: 800,
+                        color: "#111827",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
                       Explore
                     </h1>
-                    <p className="text-[10px] font-semibold tracking-[0.14em] text-[#94A3B8] uppercase">
+                    <p
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 600,
+                        letterSpacing: "0.14em",
+                        color: "#94A3B8",
+                        textTransform: "uppercase",
+                      }}
+                    >
                       City Discovery
                     </p>
                   </Column>
                 </Row>
               </Row>
 
-              <Column
-                className="relative mt-3"
-                style={{ position: "relative", zIndex: 1 }}
-              >
+              <Column style={{ position: "relative", marginTop: 12, zIndex: 1 }}>
                 <Search
                   size={15}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E8E93]"
+                  style={{
+                    position: "absolute",
+                    left: 14,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#8E8E93",
+                  }}
                 />
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search spots, cuisines..."
-                  className="w-full pl-9 pr-9 py-2.5 text-[14px] outline-none transition-all"
                   style={{
+                    width: "100%",
+                    paddingLeft: 36,
+                    paddingRight: 36,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    fontSize: 14,
+                    outline: "none",
+                    transition: "all 0.2s",
                     backgroundColor: "rgba(255,255,255,0.92)",
                     border: `1.5px solid ${tokens.color.border}`,
                     borderRadius: tokens.radius.md,
@@ -1173,7 +1550,13 @@ export default function ExploreClient() {
                 {search && (
                   <button
                     onClick={() => setSearch("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8E8E93]"
+                    style={{
+                      position: "absolute",
+                      right: 12,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "#8E8E93",
+                    }}
                   >
                     <X size={14} />
                   </button>
@@ -1183,16 +1566,30 @@ export default function ExploreClient() {
 
             {/* Filter Trigger Bar */}
             <Column
-              className="px-3 py-2.5"
               style={{
+                paddingLeft: 12,
+                paddingRight: 12,
+                paddingTop: 10,
+                paddingBottom: 10,
                 borderBottom: "1px solid rgba(15,23,42,0.06)",
                 background: "rgba(255,255,255,0.62)",
               }}
             >
               <button
                 onClick={() => setIsFilterPanelOpen(true)}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all"
                 style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  paddingLeft: 14,
+                  paddingRight: 14,
+                  paddingTop: 10,
+                  paddingBottom: 10,
+                  borderRadius: 12,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  transition: "all 0.2s",
                   backgroundColor: isFilterPanelOpen
                     ? "rgba(255,107,53,0.08)"
                     : "rgba(255,255,255,0.9)",
@@ -1203,31 +1600,37 @@ export default function ExploreClient() {
                   boxShadow: "0 2px 8px rgba(15,23,42,0.06)",
                 }}
               >
-                <Row vertical="center" className="gap-2">
-                  <Filter size={14} className="text-[#94A3B8]" />
-                  <span className="truncate">
+                <Row vertical="center" style={{ gap: 8 }}>
+                  <Filter size={14} style={{ color: "#94A3B8" }} />
+                  <span
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
                     {activeFilterCount > 0 ? (
                       <>
                         {category !== "All" && (
-                          <span className="text-[#111827]">{category}</span>
+                          <span style={{ color: "#111827" }}>{category}</span>
                         )}
                         {openOnly && (
-                          <span className="text-[#16A34A]"> · Open</span>
+                          <span style={{ color: "#16A34A" }}> · Open</span>
                         )}
                         {priceMax !== 3 && (
-                          <span className="text-[#64748B]">
+                          <span style={{ color: "#64748B" }}>
                             {" "}
                             · {PRICE_ICONS[priceMax]}
                           </span>
                         )}
                         {minRating > 0 && (
-                          <span className="text-[#FBBF24]">
+                          <span style={{ color: "#FBBF24" }}>
                             {" "}
                             · ★{minRating}+
                           </span>
                         )}
                         {selectedTags.size > 0 && (
-                          <span className="text-[#8B5CF6]">
+                          <span style={{ color: "#8B5CF6" }}>
                             {" "}
                             · {selectedTags.size} tags
                           </span>
@@ -1238,11 +1641,16 @@ export default function ExploreClient() {
                     )}
                   </span>
                 </Row>
-                <Row vertical="center" className="gap-1.5">
+                <Row vertical="center" style={{ gap: 6 }}>
                   {activeFilterCount > 0 && (
                     <span
-                      className="flex items-center justify-center text-[10px] font-bold text-white"
                       style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 10,
+                        fontWeight: 700,
+                        color: "#fff",
                         width: 18,
                         height: 18,
                         borderRadius: 6,
@@ -1252,26 +1660,28 @@ export default function ExploreClient() {
                       {activeFilterCount}
                     </span>
                   )}
-                  <SlidersHorizontal size={13} className="text-[#94A3B8]" />
+                  <SlidersHorizontal size={13} style={{ color: "#94A3B8" }} />
                 </Row>
               </button>
             </Column>
 
             <Column
-              className="px-3 py-3 gap-2"
               style={{
+                paddingLeft: 12, paddingRight: 12, paddingTop: 12, paddingBottom: 12, gap: 8,
                 background:
                   "linear-gradient(180deg, rgba(250,252,255,0.76) 0%, rgba(248,250,252,0.88) 100%)",
               }}
             >
               {/* Plan spots from AI Planner / Tour Builder / Group results */}
               {effectivePlanSpots.length > 0 && (
-                <Column className="gap-2 mb-1">
-                  <Row horizontal="between" className="px-1">
-                    <Row vertical="center" className="gap-2">
+                <Column style={{ gap: 8, marginBottom: 4 }}>
+                  <Row horizontal="between" style={{ padding: "0 4px" }}>
+                    <Row vertical="center" style={{ gap: 8 }}>
                       <span
-                        className="flex items-center justify-center"
                         style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                           width: 18,
                           height: 18,
                           borderRadius: 6,
@@ -1280,13 +1690,16 @@ export default function ExploreClient() {
                       >
                         <span style={{ fontSize: 10 }}>✨</span>
                       </span>
-                      <p className="text-[11px] uppercase tracking-[0.16em] font-semibold text-[#ff6b35]">
+                      <p style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.16em", fontWeight: 600, color: "#ff6b35", margin: 0 }}>
                         Your Plan
                       </p>
                     </Row>
                     <span
-                      className="text-[11px] font-semibold px-2 py-1 rounded-full"
                       style={{
+                        fontSize: 11,
+                        fontWeight: 600,
+                        padding: "4px 8px",
+                        borderRadius: 9999,
                         color: "#ff6b35",
                         backgroundColor: "rgba(255,107,53,0.08)",
                         border: "1px solid rgba(255,107,53,0.2)",
@@ -1335,13 +1748,16 @@ export default function ExploreClient() {
                 </Column>
               )}
 
-              <Row horizontal="between" className="px-1">
-                <p className="text-[11px] uppercase tracking-[0.16em] font-semibold text-[#64748B]">
+              <Row horizontal="between" style={{ padding: "0 4px" }}>
+                <p style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.16em", fontWeight: 600, color: "#64748B", margin: 0 }}>
                   {effectivePlanSpots.length > 0 ? "All spots" : "Top picks"}
                 </p>
                 <span
-                  className="text-[11px] font-semibold px-2 py-1 rounded-full"
                   style={{
+                    fontSize: 11,
+                    fontWeight: 600,
+                    padding: "4px 8px",
+                    borderRadius: 9999,
                     color: "#334155",
                     backgroundColor: "rgba(255,255,255,0.86)",
                     border: "1px solid rgba(15,23,42,0.08)",
@@ -1382,12 +1798,14 @@ export default function ExploreClient() {
               </AnimatePresence>
 
               {filtered.length === 0 && (
-                <Column horizontal="center" className="py-16 text-center gap-2">
+                <Column horizontal="center" style={{ padding: "64px 0", textAlign: "center", gap: 8 }}>
                   <Row
                     horizontal="center"
                     vertical="center"
-                    className="w-14 h-14 rounded-full"
                     style={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: "50%",
                       backgroundColor: tokens.color.surfaceMuted,
                       color: tokens.color.textMuted,
                     }}
@@ -1419,12 +1837,14 @@ export default function ExploreClient() {
               paddingTop: "18px",
             }}
           >
-            <Column horizontal="center" className="gap-3">
+            <Column horizontal="center" style={{ gap: 12 }}>
               <button
                 type="button"
                 onClick={() => setIsRightPanelOpen(true)}
-                className="flex items-center justify-center"
                 style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   width: "36px",
                   height: "36px",
                   borderRadius: "12px",

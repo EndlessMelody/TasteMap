@@ -28,7 +28,7 @@ export function TourSkeleton() {
           position: 'relative',
         }}
       >
-        <Skeleton className="absolute inset-0 rounded-none" />
+        <Skeleton style={{ position: 'absolute', inset: 0, borderRadius: 0 }} />
         
         {/* Bottom content area */}
         <Column

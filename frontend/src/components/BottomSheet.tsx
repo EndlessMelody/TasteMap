@@ -9,6 +9,7 @@ import {
   PanInfo,
   useAnimation,
 } from 'framer-motion';
+import { Column } from '@once-ui-system/core';
 
 interface BottomSheetProps {
   isOpen: boolean;
@@ -101,17 +102,16 @@ export default function BottomSheet({
             }}
           >
             {/* Drag handle */}
-            <div
+            <Column
+              horizontal="center"
               style={{
-                display: 'flex',
-                justifyContent: 'center',
                 paddingTop: 12,
                 paddingBottom: 4,
                 flexShrink: 0,
                 cursor: 'grab',
               }}
             >
-              <div
+              <Column
                 style={{
                   width: 40,
                   height: 4,
@@ -119,10 +119,10 @@ export default function BottomSheet({
                   backgroundColor: 'rgba(255,255,255,0.18)',
                 }}
               />
-            </div>
+            </Column>
 
             {/* Content */}
-            <div
+            <Column
               style={{
                 flex: 1,
                 overflowY: scrollable ? 'auto' : 'hidden',
@@ -131,7 +131,7 @@ export default function BottomSheet({
               className="no-scrollbar"
             >
               {children}
-            </div>
+            </Column>
           </motion.div>
         </>
       )}

@@ -18,7 +18,7 @@ export const SkeletonCard = () => (
     }}
   >
     {/* Image area shimmer */}
-    <Skeleton className="absolute inset-0 rounded-none" />
+    <Skeleton style={{ position: 'absolute', inset: 0, borderRadius: 0 }} />
 
     {/* Bottom content area */}
     <Column
@@ -32,9 +32,9 @@ export const SkeletonCard = () => (
         gap: '10px',
       }}
     >
-      <Skeleton className="h-7 w-3/4 rounded-l" />
-      <Skeleton className="h-4 w-full rounded-s" />
-      <Skeleton className="h-4 w-2/3 rounded-s" />
+      <Skeleton style={{ height: 28, width: '75%', borderRadius: 16 }} />
+      <Skeleton style={{ height: 16, width: '100%', borderRadius: 8 }} />
+      <Skeleton style={{ height: 16, width: '66.666%', borderRadius: 8 }} />
     </Column>
   </Column>
 );

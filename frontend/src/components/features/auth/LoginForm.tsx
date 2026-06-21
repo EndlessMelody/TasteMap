@@ -16,6 +16,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
 import { apiPost } from "@/lib/api";
 import { toast } from "sonner";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Button,
   IconButton,
@@ -89,17 +90,15 @@ function PasswordStrengthMeter({ password }: { password: string }) {
   const level = LEVELS[Math.max(0, score - 1)];
 
   return (
-    <div
+    <Column
       style={{
         marginTop: tokens.space[2],
-        display: "flex",
-        flexDirection: "column",
         gap: tokens.space[2],
       }}
     >
-      <div style={{ display: "flex", gap: tokens.space[1] }}>
+      <Row style={{ gap: tokens.space[1] }}>
         {[1, 2, 3, 4, 5].map((n) => (
-          <div
+          <Column
             key={n}
             style={{
               flex: 1,
@@ -110,11 +109,11 @@ function PasswordStrengthMeter({ password }: { password: string }) {
             }}
           />
         ))}
-      </div>
+      </Row>
       <BodySm style={{ color: level.color, fontWeight: 600 }}>
         {level.label}
       </BodySm>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px" }}>
+      <Row style={{ flexWrap: "wrap", gap: "4px 14px" }}>
         {criteria.map((c) => (
           <span
             key={c.label}
@@ -136,8 +135,8 @@ function PasswordStrengthMeter({ password }: { password: string }) {
             {c.label}
           </span>
         ))}
-      </div>
-    </div>
+      </Row>
+    </Column>
   );
 }
 
@@ -316,11 +315,9 @@ export function LoginForm() {
       : "Back to home";
 
   return (
-    <div
+    <Column
       style={{
         width: "100%",
-        display: "flex",
-        flexDirection: "column",
         gap: tokens.space[4],
       }}
     >
@@ -348,13 +345,13 @@ export function LoginForm() {
 
       {/* Progress (signup only) */}
       {view === "signup" && (
-        <div style={{ display: "flex", gap: tokens.space[2] }}>
+        <Row style={{ gap: tokens.space[2] }}>
           {(["info", "password"] as SignupStep[]).map((step) => {
             const order = ["info", "password"];
             const active = step === signupStep;
             const done = order.indexOf(step) < order.indexOf(signupStep);
             return (
-              <div
+              <Column
                 key={step}
                 style={{
                   flex: 1,
@@ -369,12 +366,12 @@ export function LoginForm() {
               />
             );
           })}
-        </div>
+        </Row>
       )}
 
       {/* Header */}
-      <div style={{ display: "flex", flexDirection: "column", gap: tokens.space[3] }}>
-        <div
+      <Column style={{ gap: tokens.space[3] }}>
+        <Column
           style={{
             width: 36,
             height: 4,
@@ -395,7 +392,7 @@ export function LoginForm() {
           {title}
         </h2>
         <Body tone="muted" style={{ marginTop: -2 }}>{subtitle}</Body>
-      </div>
+      </Column>
 
       {/* Google + divider (login & signup info only) */}
       {(view === "login" || (view === "signup" && signupStep === "info")) && (
@@ -409,23 +406,22 @@ export function LoginForm() {
           >
             Continue with Google
           </Button>
-          <div
+          <Row
+            vertical="center"
             style={{
-              display: "flex",
-              alignItems: "center",
               gap: tokens.space[3],
             }}
           >
-            <div
+            <Column
               style={{ flex: 1, height: 1, background: tokens.color.border }}
             />
             <Caption tone="subtle">
               or {view === "login" ? "sign in" : "sign up"} with email
             </Caption>
-            <div
+            <Column
               style={{ flex: 1, height: 1, background: tokens.color.border }}
             />
-          </div>
+          </Row>
         </>
       )}
 
@@ -534,7 +530,7 @@ export function LoginForm() {
             gap: tokens.space[4],
           }}
         >
-          <div>
+          <Column>
             <Field
               label="Password"
               type={showPwd ? "text" : "password"}
@@ -560,7 +556,7 @@ export function LoginForm() {
               }
             />
             <PasswordStrengthMeter password={password} />
-          </div>
+          </Column>
           <Field
             label="Confirm password"
             type={showConfirm ? "text" : "password"}
@@ -624,6 +620,6 @@ export function LoginForm() {
         By continuing you agree to TasteMap&apos;s Terms of Service and Privacy
         Policy.
       </Caption>
-    </div>
+    </Column>
   );
 }

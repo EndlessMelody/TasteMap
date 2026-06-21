@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { Column } from "@once-ui-system/core";
 
 function TopProgressBar() {
   const [progress, setProgress] = useState(0);
@@ -26,7 +27,7 @@ function TopProgressBar() {
   if (done) return null;
 
   return (
-    <div
+    <Column
       style={{
         position: "fixed",
         top: 0,
@@ -49,7 +50,7 @@ function TopProgressBar() {
           boxShadow: "0 0 10px rgba(255,107,53,0.45)",
         }}
       />
-    </div>
+    </Column>
   );
 }
 

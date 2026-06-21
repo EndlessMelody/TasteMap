@@ -20,6 +20,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
+import { Column, Row } from "@once-ui-system/core";
 import { GlassCard, MatchRing } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
 import type { Recommendation } from "@/hooks/useRecommendations";
@@ -76,7 +77,7 @@ export const AIPickDeckCard: React.FC<AIPickDeckCardProps> = ({
         }}
       >
         {/* ── Thumbnail ── */}
-        <div
+        <Column
           style={{
             width: 72,
             height: 72,
@@ -97,15 +98,13 @@ export const AIPickDeckCard: React.FC<AIPickDeckCardProps> = ({
               display: "block",
             }}
           />
-        </div>
+        </Column>
 
         {/* ── Body ── */}
-        <div
+        <Column
           style={{
             flex: 1,
             minWidth: 0,
-            display: "flex",
-            flexDirection: "column",
             justifyContent: "center",
             gap: tokens.space[1],
             paddingTop: tokens.space[2],
@@ -136,19 +135,18 @@ export const AIPickDeckCard: React.FC<AIPickDeckCardProps> = ({
           >
             {pick.price_range || "AI recommendation"}
           </span>
-        </div>
+        </Column>
 
         {/* ── Match ring ── */}
-        <div
+        <Row
+          vertical="center"
           style={{
-            display: "flex",
-            alignItems: "center",
             paddingRight: tokens.space[3],
             flexShrink: 0,
           }}
         >
           <MatchRing value={matchPct} size="sm" />
-        </div>
+        </Row>
       </GlassCard>
     </motion.div>
   );

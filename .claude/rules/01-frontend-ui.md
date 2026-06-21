@@ -173,8 +173,7 @@ export { VoiceBar } from './VoiceBar';
 
 ```tsx
 // components/features/lobby/RoomCard.tsx
-import { Column, Row, Heading, Text, Button, IconButton } from '@/once-ui/components';
-import { Icon } from '@/once-ui/components';
+import { Column, Row, Heading, Text, Button, IconButton, Icon } from '@once-ui-system/core';
 
 interface RoomCardProps {
   id: number;
@@ -460,16 +459,10 @@ const {
 ## File References
 
 **Key Once UI Components:**
-- `frontend/src/once-ui/components/Column.tsx`
-- `frontend/src/once-ui/components/Row.tsx`
-- `frontend/src/once-ui/components/Grid.tsx`
-- `frontend/src/once-ui/components/Heading.tsx`
-- `frontend/src/once-ui/components/Text.tsx`
-- `frontend/src/once-ui/components/Button.tsx`
-- `frontend/src/once-ui/components/Icon.tsx`
-- `frontend/src/once-ui/components/IconButton.tsx`
+- All layout/typography primitives (`Column`, `Row`, `Grid`, `Heading`, `Text`, `Button`, `Icon`, `IconButton`, etc.) are imported directly from `@once-ui-system/core` — there is no local clone of the library.
+- TasteMap-specific wrappers built on top of those primitives live in `frontend/src/components/ui/` (Button, Card, Pill, Field, Page, PageHeader, Section, Skeleton, typography) and `frontend/src/components/primitives/` (GlassCard, MatchRing, PulseDot, DiscoverSection).
 
 **TasteMap Examples:**
-- `frontend/src/app/group-rooms/page.tsx` - Lobby list page
-- `frontend/src/app/group-rooms/[id]/page.tsx` - Room interior
+- `frontend/src/app/(app)/group-rooms/page.tsx` - Lobby list page
+- `frontend/src/app/(app)/group-rooms/[id]/page.tsx` - Room interior
 - `frontend/src/context/AuthContext.tsx` - Auth provider

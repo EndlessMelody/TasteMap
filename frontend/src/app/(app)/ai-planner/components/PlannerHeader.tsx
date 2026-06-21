@@ -24,62 +24,78 @@ export function PlannerHeader({ step, ambience, onBack }: PlannerHeaderProps) {
         borderBottom: "1px solid rgba(0,0,0,0.06)",
       }}
     >
-      <Row horizontal="between" vertical="center" className="px-8 py-4">
-        <Row vertical="center" className="gap-4">
+      <Row horizontal="between" vertical="center" style={{ padding: "16px 32px" }}>
+        <Row vertical="center" style={{ gap: 16 }}>
           {step > 1 && step < 3 && (
             <motion.button
               whileTap={{ scale: 0.93 }}
               onClick={onBack}
-              className="flex items-center gap-1 text-[#ff6b35] text-[15px] font-semibold"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                color: "#ff6b35",
+                fontSize: 15,
+                fontWeight: 600,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
             >
               <ChevronLeft size={18} /> Back
             </motion.button>
           )}
-          <Row vertical="center" className="gap-2">
+          <Row vertical="center" style={{ gap: 8 }}>
             <Row
               horizontal="center"
               vertical="center"
-              className="w-8 h-8 rounded-[10px]"
               style={{
+                width: 32,
+                height: 32,
+                borderRadius: 10,
                 background: ambience
                   ? `linear-gradient(135deg, ${ambience.accent}, #A855F7)`
                   : "linear-gradient(135deg, #ff6b35, #A855F7)",
                 transition: "background 0.4s",
               }}
             >
-              <Sparkles size={16} className="text-white" />
+              <Sparkles size={16} color="#fff" />
             </Row>
-            <h1 className="text-[20px] font-extrabold text-[#1C1C1E] tracking-tight">
+            <h1 style={{ fontSize: 20, fontWeight: 800, color: "#1C1C1E", letterSpacing: "-0.02em", margin: 0 }}>
               AI Food Planner
             </h1>
           </Row>
         </Row>
 
         {step < 3 && (
-          <Row vertical="center" className="gap-2">
+          <Row vertical="center" style={{ gap: 8 }}>
             {[1, 2].map((s) => (
-              <Row key={s} vertical="center" className="gap-2">
-                <Row vertical="center" className="gap-1.5">
+              <Row key={s} vertical="center" style={{ gap: 8 }}>
+                <Row vertical="center" style={{ gap: 6 }}>
                   <Row
                     horizontal="center"
                     vertical="center"
-                    className="w-6 h-6 rounded-full text-[11px] font-extrabold transition-all"
-                    style={
-                      step >= s
+                    style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: "50%",
+                      fontSize: 11,
+                      fontWeight: 800,
+                      transition: "all 0.2s",
+                      ...(step >= s
                         ? { backgroundColor: ambience?.accent ?? "#ff6b35", color: "#fff" }
-                        : { backgroundColor: "#E5E5EA", color: "#8E8E93" }
-                    }
+                        : { backgroundColor: "#E5E5EA", color: "#8E8E93" }),
+                    }}
                   >
                     {step > s ? <CheckCircle size={14} /> : s}
                   </Row>
                   <span
-                    className="text-[12px] font-semibold"
-                    style={{ color: step >= s ? "#1C1C1E" : "#8E8E93" }}
+                    style={{ fontSize: 12, fontWeight: 600, color: step >= s ? "#1C1C1E" : "#8E8E93" }}
                   >
                     {STEP_LABELS[s - 1]}
                   </span>
                 </Row>
-                {s < 2 && <ChevronRight size={14} className="text-[#D1D1D6]" />}
+                {s < 2 && <ChevronRight size={14} color="#D1D1D6" />}
               </Row>
             ))}
           </Row>
@@ -87,9 +103,9 @@ export function PlannerHeader({ step, ambience, onBack }: PlannerHeaderProps) {
       </Row>
 
       {step < 3 && (
-        <Column className="h-0.5 bg-[#E5E5EA]">
+        <Column style={{ height: 2, backgroundColor: "#E5E5EA" }}>
           <motion.div
-            className="h-full"
+            style={{ height: "100%" }}
             animate={{
               width: `${(step / 2) * 100}%`,
               backgroundColor: ambience?.accent ?? "#ff6b35",

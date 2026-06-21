@@ -1338,12 +1338,13 @@ export default function AdminLocationsPage() {
     >
       {/* ── HERO HEADER (Giao diện Chỉ huy) ── */}
       <Column
-          className="w-full shrink-0"
+          fillWidth
           style={{
               background: "linear-gradient(135deg, #1C1C1E 0%, #000000 100%)",
               padding: "48px 48px 40px",
               position: "relative",
               overflow: "hidden",
+              flexShrink: 0,
           }}
       >
         {/* Đèn báo động cam cho ngầu */}
@@ -1360,24 +1361,41 @@ export default function AdminLocationsPage() {
             }}
         />
 
-        <Column className="relative max-w-[960px] mx-auto w-full">
-            <Row horizontal="between" className="items-start mb-8 w-full">
+        <Column
+            fillWidth
+            style={{ position: "relative", maxWidth: 960, margin: "0 auto" }}
+        >
+            <Row
+                horizontal="between"
+                fillWidth
+                vertical="start"
+                style={{ marginBottom: 32 }}
+            >
                 <Column>
-                    <Row vertical="center" className="gap-4 mb-3">
+                    <Row vertical="center" gap="16" style={{ marginBottom: 12 }}>
                         <Row
                             horizontal="center"
                             vertical="center"
-                            className="w-12 h-12 rounded-[18px] shadow-xl cursor-pointer hover:opacity-90 transition-opacity"
-                            style={{ background: "linear-gradient(135deg, #FF9500, #FFCC00)" }}
+                            style={{
+                                width: 48,
+                                height: 48,
+                                borderRadius: 18,
+                                boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)",
+                                cursor: "pointer",
+                                background: "linear-gradient(135deg, #FF9500, #FFCC00)",
+                                transition: "opacity 0.2s",
+                            }}
                             onClick={() => router.push("/admin")}
+                            onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.9"; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
                         >
-                            <MapPin size={24} className="text-white" />
+                            <MapPin size={24} style={{ color: "#FFFFFF" }} />
                         </Row>
-                        <h1 className="text-[32px] font-black text-white tracking-tight">
+                        <h1 style={{ fontSize: 32, fontWeight: 900, color: "#FFFFFF", letterSpacing: "-0.02em", margin: 0 }}>
                             Location Manager
                         </h1>
                     </Row>
-                    <p className="text-[15px] text-[rgba(255,255,255,0.6)] font-medium max-w-md">
+                    <p style={{ fontSize: 15, color: "rgba(255,255,255,0.6)", fontWeight: 500, maxWidth: 448, margin: 0 }}>
                         Review, manage, search, and update places of interest globally.
                     </p>
                 </Column>

@@ -352,7 +352,7 @@ export function GroupSwipeView({
       >
         {loadingCards && cards.length === 0 ? (
           <Column center style={{ gap: tokens.space[3] }}>
-            <div
+            <Column
               style={{
                 width: 48,
                 height: 48,

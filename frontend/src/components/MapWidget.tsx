@@ -10,6 +10,7 @@ import React, {
 import Map, { Marker, MapRef, Source, Layer, useMap } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Coffee, Pizza, Utensils, Wine, Croissant, Martini, Map as MapIcon } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 
 import type { Spot } from "@/app/(app)/explore/types";
 
@@ -38,19 +39,17 @@ const SpotMarker = ({
   const Icon = FOOD_ICONS[spot.id % FOOD_ICONS.length] || Utensils;
 
   return (
-    <div style={{
+    <Column style={{
       opacity,
       transform: `scale(${scale})`,
       transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
       cursor: "pointer",
       position: "relative",
-      display: "flex",
-      flexDirection: "column",
       alignItems: "center",
       zIndex: isSelected ? 30 : isHovered ? 20 : 10
     }}>
       {(isHovered || isSelected) && (
-        <div style={{
+        <Column style={{
           position: "absolute",
           bottom: "45px",
           whiteSpace: "nowrap",
@@ -59,8 +58,6 @@ const SpotMarker = ({
           color: "white",
           padding: "6px 12px",
           borderRadius: "12px",
-          display: "flex",
-          flexDirection: "column",
           gap: "2px",
           boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
           border: "1px solid rgba(255,255,255,0.1)",
@@ -72,7 +69,7 @@ const SpotMarker = ({
              <svg width="8" height="8" viewBox="0 0 24 24" fill="#FBBF24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
              {spot.rating} ({spot.reviewCount})
           </span>
-          <div style={{
+          <Column style={{
             position: "absolute",
             bottom: "-4px",
             left: "50%",
@@ -83,53 +80,55 @@ const SpotMarker = ({
             borderBottom: "1px solid rgba(255,255,255,0.1)",
             borderRight: "1px solid rgba(255,255,255,0.1)",
           }} />
-        </div>
+        </Column>
       )}
 
-      <div style={{
-        width: "36px",
-        height: "36px",
-        background: planIndex !== undefined ? "linear-gradient(135deg, #ff6b35, #a855f7)" : spot.accent,
-        borderRadius: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        boxShadow: shadowValue,
-        border: "2px solid white",
-        position: "relative",
-      }}>
+      <Row
+        horizontal="center"
+        vertical="center"
+        style={{
+          width: "36px",
+          height: "36px",
+          background: planIndex !== undefined ? "linear-gradient(135deg, #ff6b35, #a855f7)" : spot.accent,
+          borderRadius: "50%",
+          boxShadow: shadowValue,
+          border: "2px solid white",
+          position: "relative",
+        }}>
         <Icon size={18} color="white" />
         {planIndex !== undefined && (
-          <div style={{
-            position: "absolute",
-            top: -7, right: -7,
-            width: 18, height: 18,
-            borderRadius: "50%",
-            background: "#1C1C1E",
-            color: "white",
-            fontSize: 10, fontWeight: 900,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            border: "2px solid white",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
-            pointerEvents: "none",
-          }}>
+          <Row
+            horizontal="center"
+            vertical="center"
+            style={{
+              position: "absolute",
+              top: -7, right: -7,
+              width: 18, height: 18,
+              borderRadius: "50%",
+              background: "#1C1C1E",
+              color: "white",
+              fontSize: 10, fontWeight: 900,
+              border: "2px solid white",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
+              pointerEvents: "none",
+            }}>
             {planIndex}
-          </div>
+          </Row>
         )}
-      </div>
-    </div>
+      </Row>
+    </Column>
   );
 };
 const PulseMarker = ({ color }: { color: string }) => (
-  <div style={{ position: "relative", width: 20, height: 20, background: color, border: "3px solid white", borderRadius: "50%", boxShadow: `0 0 15px ${color}` }}>
-    <div style={{ position: "absolute", top: -3, left: -3, width: 20, height: 20, borderRadius: "50%", background: color, opacity: 0.6, animation: "marker-pulse 1.5s infinite ease-out" }} />
+  <Column style={{ position: "relative", width: 20, height: 20, background: color, border: "3px solid white", borderRadius: "50%", boxShadow: `0 0 15px ${color}` }}>
+    <Column style={{ position: "absolute", top: -3, left: -3, width: 20, height: 20, borderRadius: "50%", background: color, opacity: 0.6, animation: "marker-pulse 1.5s infinite ease-out" }} />
     <style>{`
       @keyframes marker-pulse {
         0% { transform: scale(1); opacity: 0.6; }
         100% { transform: scale(2.5); opacity: 0; }
       }
     `}</style>
-  </div>
+  </Column>
 );
 
 const ClusterMarker = ({ cluster }: { cluster: Cluster }) => {
@@ -141,21 +140,23 @@ const ClusterMarker = ({ cluster }: { cluster: Cluster }) => {
   ).pop() || "#ff6b35";
 
   return (
-    <div style={{
-      width: size, height: size,
-      background: "linear-gradient(135deg, #111827, #1F2937)",
-      border: `2.5px solid ${dominantAccent}`,
-      borderRadius: "50%",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      boxShadow: `0 4px 14px ${dominantAccent}50`,
-      transition: "transform 0.2s",
-      cursor: "pointer"
-    }}
-    onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.1)"; }}
-    onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+    <Row
+      horizontal="center"
+      vertical="center"
+      style={{
+        width: size, height: size,
+        background: "linear-gradient(135deg, #111827, #1F2937)",
+        border: `2.5px solid ${dominantAccent}`,
+        borderRadius: "50%",
+        boxShadow: `0 4px 14px ${dominantAccent}50`,
+        transition: "transform 0.2s",
+        cursor: "pointer"
+      }}
+      onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.1)"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
     >
       <MapIcon size={size * 0.55} color="white" />
-    </div>
+    </Row>
   );
 };
 
@@ -287,12 +288,12 @@ export default function MapWidget({
 
   if (!isMounted) {
     return (
-      <div style={{ height: "100%", width: "100%", backgroundColor: "#333", borderRadius: "inherit" }} />
+      <Column style={{ height: "100%", width: "100%", backgroundColor: "#333", borderRadius: "inherit" }} />
     );
   }
 
   return (
-    <div style={{ height: "100%", width: "100%", position: "relative", zIndex: 0, borderRadius: "inherit", overflow: "hidden" }}>
+    <Column style={{ height: "100%", width: "100%", position: "relative", zIndex: 0, borderRadius: "inherit", overflow: "hidden" }}>
       <Map
         ref={mapRef}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
@@ -414,7 +415,7 @@ export default function MapWidget({
                 }
               }}
             >
-              <div
+              <Column
                 onMouseEnter={() => onMarkerHover?.(spot)}
                 onMouseLeave={() => onMarkerHover?.(null)}
               >
@@ -425,7 +426,7 @@ export default function MapWidget({
                   isDimmed={isDimmed}
                   planIndex={planIndex}
                 />
-              </div>
+              </Column>
             </Marker>
           );
         })}
@@ -449,27 +450,29 @@ export default function MapWidget({
             anchor="center"
           >
             {/* Custom Pulse fallback */}
-            <div style={{ position: "relative", width: 20, height: 20, background: "#ff6b35", border: "3px solid white", borderRadius: "50%", boxShadow: `0 0 15px #ff6b35` }} />
+            <Column style={{ position: "relative", width: 20, height: 20, background: "#ff6b35", border: "3px solid white", borderRadius: "50%", boxShadow: `0 0 15px #ff6b35` }} />
           </Marker>
         )}
       </Map>
 
       {/* Banner */}
       {showBanner && (
-        <div style={{
-          position: "absolute", top: "16px", left: "16px", zIndex: 1000,
-          padding: "8px 16px", backgroundColor: "rgba(31,41,55,0.85)",
-          backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-          borderRadius: "16px", border: "1px solid rgba(255,255,255,0.1)",
-          display: "flex", alignItems: "center", gap: "10px",
-          boxShadow: "0 12px 32px rgba(0,0,0,0.4)",
-        }}>
-          <div style={{ width: "8px", height: "8px", backgroundColor: "#ff6b35", borderRadius: "50%", boxShadow: "0 0 12px rgba(255,107,53,0.6)" }} />
+        <Row
+          vertical="center"
+          style={{
+            position: "absolute", top: "16px", left: "16px", zIndex: 1000,
+            padding: "8px 16px", backgroundColor: "rgba(31,41,55,0.85)",
+            backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
+            borderRadius: "16px", border: "1px solid rgba(255,255,255,0.1)",
+            gap: "10px",
+            boxShadow: "0 12px 32px rgba(0,0,0,0.4)",
+          }}>
+          <Column style={{ width: "8px", height: "8px", backgroundColor: "#ff6b35", borderRadius: "50%", boxShadow: "0 0 12px rgba(255,107,53,0.6)" }} />
           <span style={{ fontSize: "0.7rem", fontWeight: 800, color: "#FFF", letterSpacing: "0.8px", textTransform: "uppercase" }}>
             Exploring Area
           </span>
-        </div>
+        </Row>
       )}
-    </div>
+    </Column>
   );
 }

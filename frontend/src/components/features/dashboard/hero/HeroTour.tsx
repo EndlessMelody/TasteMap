@@ -30,6 +30,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { Column, Row } from "@once-ui-system/core";
 import { tokens, matchTone } from "@/styles/tokens";
 import { useRecommendations } from "@/hooks/useRecommendations";
 
@@ -123,7 +124,7 @@ export const HeroTour: React.FC = () => {
       />
 
       {/* ── Editorial gradient overlay ── */}
-      <div
+      <Column
         style={{
           position: "absolute",
           inset: 0,
@@ -133,12 +134,11 @@ export const HeroTour: React.FC = () => {
       />
 
       {/* ── Top-right badges ── */}
-      <div
+      <Row
         style={{
           position: "absolute",
           top: tokens.space[5],
           right: tokens.space[5],
-          display: "flex",
           gap: tokens.space[2],
           zIndex: 2,
         }}
@@ -200,18 +200,16 @@ export const HeroTour: React.FC = () => {
             {matchPct}% Match
           </span>
         </span>
-      </div>
+      </Row>
 
       {/* ── Bottom content stack ── */}
-      <div
+      <Column
         style={{
           position: "absolute",
           left: 0,
           right: 0,
           bottom: 0,
           padding: tokens.space[8],
-          display: "flex",
-          flexDirection: "column",
           gap: tokens.space[4],
           zIndex: 2,
           color: tokens.color.textInverse,
@@ -247,10 +245,9 @@ export const HeroTour: React.FC = () => {
         </h1>
 
         {/* Meta row */}
-        <div
+        <Row
+          vertical="center"
           style={{
-            display: "flex",
-            alignItems: "center",
             gap: tokens.space[4],
             flexWrap: "wrap",
           }}
@@ -290,10 +287,10 @@ export const HeroTour: React.FC = () => {
             />
             {tour?.price_range || "3 stops · 1.2km"}
           </span>
-        </div>
+        </Row>
 
         {/* CTA */}
-        <div>
+        <Column>
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -349,8 +346,8 @@ export const HeroTour: React.FC = () => {
               }}
             />
           </motion.button>
-        </div>
-      </div>
+        </Column>
+      </Column>
     </motion.div>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Row, Text } from "@once-ui-system/core";
+import { Column, Row, Text } from "@once-ui-system/core";
 
 export function ProfileMenuItem({
   icon,
@@ -36,15 +36,14 @@ export function ProfileMenuItem({
         (e.currentTarget.style.backgroundColor = "transparent")
       }
     >
-      <div
+      <Column
         style={{
           color: textColor || "#8E8E93",
-          display: "flex",
           flexShrink: 0,
         }}
       >
         {icon}
-      </div>
+      </Column>
       <Text
         style={{
           color: textColor || "#1C1C1E",

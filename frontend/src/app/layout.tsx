@@ -5,7 +5,7 @@ import { Toaster } from "sonner";
 // styles can still override where needed.
 import "@once-ui-system/core/css/styles.css";
 import "@once-ui-system/core/css/tokens.css";
-import "./globals.css";
+import "./globals.scss";
 // TasteMap brand overrides — must load after Once UI tokens + app globals.
 import "@/styles/theme.scss";
 import { Providers } from "@/providers/Providers";
@@ -46,9 +46,13 @@ export default function RootLayout({
       data-surface="filled"
       data-transition="all"
       data-scaling="100"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      style={{ height: "100%", WebkitFontSmoothing: "antialiased", MozOsxFontSmoothing: "grayscale" }}
     >
-      <body suppressHydrationWarning className="min-h-full flex flex-col m-0 p-0 overflow-hidden">
+      <body
+        suppressHydrationWarning
+        style={{ minHeight: "100%", display: "flex", flexDirection: "column", margin: 0, padding: 0, overflow: "hidden" }}
+      >
         <Providers>{children}</Providers>
         <Toaster
           theme="dark"

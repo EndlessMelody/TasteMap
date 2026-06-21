@@ -51,8 +51,7 @@ export function DropZone({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative rounded-xl overflow-hidden"
-        style={{ aspectRatio: previewType === "video" ? "16/9" : "16/10" }}
+        style={{ position: "relative", borderRadius: 12, overflow: "hidden", aspectRatio: previewType === "video" ? "16/9" : "16/10" }}
       >
         {previewType === "image" ? (
           <img src={value} alt="preview" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
@@ -63,7 +62,24 @@ export function DropZone({
         )}
         <button
           onClick={onClear}
-          className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+          style={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            width: 28,
+            height: 28,
+            borderRadius: "50%",
+            border: "none",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            transition: "background-color 0.15s",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.7)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.5)"; }}
         >
           <X size={14} />
         </button>
@@ -79,11 +95,36 @@ export function DropZone({
       onDrop={handleDrop}
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
-      className={`flex flex-col items-center justify-center gap-2 py-8 px-6 rounded-xl border-2 border-dashed cursor-pointer text-center transition-colors ${
-        isDragOver ? "border-orange-400 bg-orange-50/50" : "border-slate-200 bg-white hover:border-orange-300 hover:bg-orange-50/30"
-      }`}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        padding: "32px 24px",
+        borderRadius: 12,
+        borderWidth: 2,
+        borderStyle: "dashed",
+        cursor: "pointer",
+        textAlign: "center",
+        transition: "border-color 0.15s, background-color 0.15s",
+        borderColor: isDragOver ? "#FB923C" : "#E2E8F0",
+        backgroundColor: isDragOver ? "rgba(255,247,237,0.5)" : "#FFFFFF",
+      }}
+      onMouseEnter={(e) => {
+        if (!isDragOver) {
+          e.currentTarget.style.borderColor = "#FDBA74";
+          e.currentTarget.style.backgroundColor = "rgba(255,247,237,0.3)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isDragOver) {
+          e.currentTarget.style.borderColor = "#E2E8F0";
+          e.currentTarget.style.backgroundColor = "#FFFFFF";
+        }
+      }}
     >
-      <input ref={inputRef} type="file" accept={accept} onChange={handleFileChange} className="hidden" />
+      <input ref={inputRef} type="file" accept={accept} onChange={handleFileChange} style={{ display: "none" }} />
 
       <Column
         center
@@ -105,10 +146,10 @@ export function DropZone({
           <ImageIcon size={18} />
         )}
       </Column>
-      <p className="text-sm font-semibold text-zinc-700">
+      <p style={{ fontSize: 14, fontWeight: 600, color: "#3F3F46", margin: 0 }}>
         {isUploading ? "Uploading…" : placeholder}
       </p>
-      <p className="text-xs text-zinc-400">Click or drag files here</p>
+      <p style={{ fontSize: 12, color: "#A1A1AA", margin: 0 }}>Click or drag files here</p>
     </motion.div>
   );
 }

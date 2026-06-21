@@ -11,10 +11,9 @@
  *
  * This file is loaded after Once UI's tokens.css (see app/layout.tsx).
  *
- * MIGRATION NOTE: As Phase 5 replaces the legacy `--*` (globals.css) and
- * `--dsc-*` (styles/tokens.ts) variables, fold any surviving TasteMap semantic
- * tokens into this file so there is a single source of truth. Full per-step
- * palette tuning is intentionally deferred to that visual pass.
+ * Phase 6 migrated styles/tokens.ts color tokens off the legacy `--dsc-*`
+ * namespace onto these Once UI scheme vars (dark-mode aware). Full per-step
+ * palette tuning is intentionally deferred to a future visual pass.
  * ───────────────────────────────────────────────────────────────────────── */
 
 [data-brand="orange"] {

@@ -23,6 +23,7 @@ import {
   Bookmark,
   type LucideIcon,
 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
@@ -80,10 +81,9 @@ export const QuickActionDock: React.FC = () => {
   const router = useRouter();
 
   return (
-    <div
+    <Row
       className="no-scrollbar"
       style={{
-        display: "flex",
         gap: tokens.space[4],
         width: "100%",
         overflowX: "auto",
@@ -110,14 +110,13 @@ export const QuickActionDock: React.FC = () => {
             }}
           >
             {/* ── Icon tile ── */}
-            <div
+            <Row
+              horizontal="center"
+              vertical="center"
               style={{
                 width: 44,
                 height: 44,
                 borderRadius: tokens.radius.md,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 backgroundColor: `${action.tone}12`,
                 border: `1px solid ${action.tone}22`,
                 flexShrink: 0,
@@ -125,13 +124,11 @@ export const QuickActionDock: React.FC = () => {
               }}
             >
               <Icon size={20} color={action.tone} strokeWidth={2.2} />
-            </div>
+            </Row>
 
             {/* ── Label + hint ── */}
-            <div
+            <Column
               style={{
-                display: "flex",
-                flexDirection: "column",
                 gap: 2,
                 minWidth: 0,
               }}
@@ -157,10 +154,10 @@ export const QuickActionDock: React.FC = () => {
               >
                 {action.hint}
               </span>
-            </div>
+            </Column>
           </GlassCard>
         );
       })}
-    </div>
+    </Row>
   );
 };

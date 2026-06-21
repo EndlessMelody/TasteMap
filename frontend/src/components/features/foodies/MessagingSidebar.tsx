@@ -226,7 +226,7 @@ const VoiceMessagePlayer: React.FC<VoiceMessagePlayerProps> = ({
             background: isMe
               ? "rgba(255,255,255,0.2)"
               : "rgba(255,107,53,0.14)",
-            color: isMe ? "#ffffff" : "var(--dsc-accent-warm)",
+            color: isMe ? "#ffffff" : "#ff6b35",
             flexShrink: 0,
           }}
         >
@@ -257,7 +257,7 @@ const VoiceMessagePlayer: React.FC<VoiceMessagePlayerProps> = ({
         <Text
           style={{
             fontSize: 11,
-            color: isMe ? "rgba(255,255,255,0.9)" : "var(--dsc-text-subtle)",
+            color: isMe ? "rgba(255,255,255,0.9)" : "var(--neutral-on-background-weak)",
             fontVariantNumeric: "tabular-nums",
             whiteSpace: "nowrap",
             minWidth: 78,
@@ -295,23 +295,23 @@ function bubbleRadius(
 // ─── Date separator ────────────────────────────────────
 const DateSeparator: React.FC<{ label: string }> = ({ label }) => (
   <Row style={{ alignItems: "center", gap: 12, padding: "4px 0" }}>
-    <Column style={{ flex: 1, height: 1, backgroundColor: "var(--dsc-border)" }} />
+    <Column style={{ flex: 1, height: 1, backgroundColor: "var(--neutral-alpha-weak)" }} />
     <span
       style={{
         fontSize: 11,
         fontWeight: 600,
-        color: "var(--dsc-text-subtle)",
-        backgroundColor: "var(--dsc-surface-muted)",
+        color: "var(--neutral-on-background-weak)",
+        backgroundColor: "var(--neutral-background-weak)",
         padding: "4px 12px",
         borderRadius: 20,
-        border: "1px solid var(--dsc-border)",
+        border: "1px solid var(--neutral-alpha-weak)",
         whiteSpace: "nowrap",
         letterSpacing: "0.3px",
       }}
     >
       {label}
     </span>
-    <Column style={{ flex: 1, height: 1, backgroundColor: "var(--dsc-border)" }} />
+    <Column style={{ flex: 1, height: 1, backgroundColor: "var(--neutral-alpha-weak)" }} />
   </Row>
 );
 
@@ -790,7 +790,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
     return { ...msg, pos, showDate, isLastMe };
   });
 
-  const composerAccent = "var(--dsc-accent-warm)";
+  const composerAccent = "#ff6b35";
   const canCompose = Boolean(activeUser);
   const hasComposerDraft = Boolean(message.trim()) || Boolean(audioBlob);
   const canUseMediaButtons = canCompose && !sending && !mediaUploading;
@@ -900,8 +900,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
         flexBasis: "0%",
         position: "relative",
         overflow: "hidden",
-        backgroundColor: "var(--dsc-surface)",
-        borderLeft: "1px solid var(--dsc-border)",
+        backgroundColor: "var(--surface-background)",
+        borderLeft: "1px solid var(--neutral-alpha-weak)",
         borderTopRightRadius: 32,
         borderBottomRightRadius: 32,
       }}
@@ -912,14 +912,14 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
         vertical="center"
         style={{
           padding: "20px 24px 16px",
-          borderBottom: "1px solid var(--dsc-border)",
+          borderBottom: "1px solid var(--neutral-alpha-weak)",
           backgroundColor: "rgba(255,255,255,0.88)",
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
           justifyContent: "space-between",
           flexShrink: 0,
           zIndex: 10,
-          boxShadow: "0 1px 0 var(--dsc-border)",
+          boxShadow: "0 1px 0 var(--neutral-alpha-weak)",
         }}
       >
         <Row vertical="center" style={{ gap: 12 }}>
@@ -927,11 +927,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             onClick={onToggle}
             style={{
               borderRadius: 10,
-              backgroundColor: "var(--dsc-surface-muted)",
+              backgroundColor: "var(--neutral-background-weak)",
               width: 36,
               height: 36,
-              color: "var(--dsc-text-muted)",
-              border: "1px solid var(--dsc-border)",
+              color: "var(--neutral-on-background-medium)",
+              border: "1px solid var(--neutral-alpha-weak)",
               transition: "background-color 0.15s",
             }}
           >
@@ -961,7 +961,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   src={activeUser.avatar}
                   size="m"
                   style={{
-                    border: "2.5px solid var(--dsc-surface)",
+                    border: "2.5px solid var(--surface-background)",
                     boxShadow: "0 2px 10px rgba(255,107,53,0.10)",
                     display: "block",
                   }}
@@ -975,8 +975,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      backgroundColor: "var(--dsc-accent-success)",
-                      border: "2px solid var(--dsc-surface)",
+                      backgroundColor: "#34c759",
+                      border: "2px solid var(--surface-background)",
                     }}
                   />
                 )}
@@ -987,7 +987,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                     variant="heading-strong-s"
                     style={{
                       letterSpacing: "-0.3px",
-                      color: "var(--dsc-text)",
+                      color: "var(--neutral-on-background-strong)",
                     }}
                   >
                     {activeUser.name}
@@ -1014,8 +1014,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   variant="body-default-xs"
                   style={{
                     color: activeUser.isOnline
-                      ? "var(--dsc-accent-success)"
-                      : "var(--dsc-text-subtle)",
+                      ? "#34c759"
+                      : "var(--neutral-on-background-weak)",
                     fontWeight: 600,
                   }}
                 >
@@ -1026,7 +1026,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
           ) : (
             <Text
               variant="body-default-s"
-              style={{ color: "var(--dsc-text-subtle)" }}
+              style={{ color: "var(--neutral-on-background-weak)" }}
             >
               Select a conversation
             </Text>
@@ -1039,7 +1039,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               borderRadius: "50%",
               width: 36,
               height: 36,
-              color: "var(--dsc-accent-warm)",
+              color: "#ff6b35",
               backgroundColor: "rgba(255,107,53,0.06)",
               transition: "background-color 0.15s",
             }}
@@ -1051,7 +1051,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               borderRadius: "50%",
               width: 36,
               height: 36,
-              color: "var(--dsc-accent-warm)",
+              color: "#ff6b35",
               backgroundColor: "rgba(255,107,53,0.06)",
               transition: "background-color 0.15s",
             }}
@@ -1066,10 +1066,10 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                 borderRadius: "50%",
                 width: 36,
                 height: 36,
-                color: "var(--dsc-text-subtle)",
+                color: "var(--neutral-on-background-weak)",
                 backgroundColor: isHeaderMenuOpen
                   ? "rgba(255,107,53,0.1)"
-                  : "var(--dsc-surface-muted)",
+                  : "var(--neutral-background-weak)",
                 transition: "background-color 0.15s",
               }}
             >
@@ -1090,9 +1090,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                     width: "min(320px, calc(100vw - 32px))",
                     maxHeight: "min(68vh, 560px)",
                     overflowY: "auto",
-                    backgroundColor: "var(--dsc-surface)",
+                    backgroundColor: "var(--surface-background)",
                     borderRadius: 16,
-                    border: "1px solid var(--dsc-border)",
+                    border: "1px solid var(--neutral-alpha-weak)",
                     boxShadow: "0 20px 40px rgba(17,24,39,0.16)",
                     padding: "8px 0",
                     zIndex: 30,
@@ -1103,7 +1103,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                       <Text
                         variant="body-default-xs"
                         style={{
-                          color: "var(--dsc-text-subtle)",
+                          color: "var(--neutral-on-background-weak)",
                           fontWeight: 700,
                           padding: "10px 16px 6px",
                           letterSpacing: "0.2px",
@@ -1126,7 +1126,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.backgroundColor =
-                              "var(--dsc-surface-muted)";
+                              "var(--neutral-background-weak)";
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor =
@@ -1154,7 +1154,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                     : "rgba(255,107,53,0.1)",
                                   color: item.danger
                                     ? "#ef4444"
-                                    : "var(--dsc-accent-warm)",
+                                    : "#ff6b35",
                                   flexShrink: 0,
                                 }}
                               >
@@ -1169,7 +1169,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   style={{
                                     color: item.danger
                                       ? "#dc2626"
-                                      : "var(--dsc-text)",
+                                      : "var(--neutral-on-background-strong)",
                                     fontWeight: 600,
                                   }}
                                 >
@@ -1178,7 +1178,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                 {item.subtitle && (
                                   <Text
                                     variant="body-default-xs"
-                                    style={{ color: "var(--dsc-text-subtle)" }}
+                                    style={{ color: "var(--neutral-on-background-weak)" }}
                                   >
                                     {item.subtitle}
                                   </Text>
@@ -1189,7 +1189,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                             <ChevronRight
                               size={14}
                               strokeWidth={2.3}
-                              color="var(--dsc-text-subtle)"
+                              color="var(--neutral-on-background-weak)"
                             />
                           </Row>
                         </button>
@@ -1200,7 +1200,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                           style={{
                             height: 1,
                             margin: "6px 12px",
-                            backgroundColor: "var(--dsc-border)",
+                            backgroundColor: "var(--neutral-alpha-weak)",
                           }}
                         />
                       )}
@@ -1225,7 +1225,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
           overflowY: "auto",
           padding: "32px 48px",
           gap: 2,
-          backgroundColor: "var(--dsc-bg)",
+          backgroundColor: "var(--page-background)",
         }}
       >
         {!activeUser ? (
@@ -1243,7 +1243,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                 width: 76,
                 height: 76,
                 borderRadius: 26,
-                background: "var(--dsc-gradient-signature-soft)",
+                background: "linear-gradient(135deg, rgba(255, 107, 53, 0.12) 0%, rgba(230, 57, 70, 0.1) 50%, rgba(123, 47, 247, 0.12) 100%)",
                 border: "1.5px solid rgba(255,107,53,0.18)",
                 boxShadow: "0 4px 20px rgba(255,107,53,0.08)",
               }}
@@ -1251,7 +1251,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               <MessageCircle
                 size={32}
                 strokeWidth={2}
-                color="var(--dsc-accent-warm)"
+                color="#ff6b35"
               />
             </Row>
             <Column style={{ alignItems: "center", gap: 6 }}>
@@ -1259,7 +1259,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                 style={{
                   fontWeight: 700,
                   fontSize: 15,
-                  color: "var(--dsc-text)",
+                  color: "var(--neutral-on-background-strong)",
                 }}
               >
                 No conversation selected
@@ -1267,7 +1267,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               <Text
                 variant="body-default-s"
                 style={{
-                  color: "var(--dsc-text-subtle)",
+                  color: "var(--neutral-on-background-weak)",
                   textAlign: "center",
                   maxWidth: 220,
                 }}
@@ -1286,21 +1286,21 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   style={{
                     padding: "6px 16px",
                     borderRadius: 20,
-                    border: "1px solid var(--dsc-border)",
-                    backgroundColor: "var(--dsc-surface-muted)",
-                    color: "var(--dsc-text)",
+                    border: "1px solid var(--neutral-alpha-weak)",
+                    backgroundColor: "var(--neutral-background-weak)",
+                    color: "var(--neutral-on-background-strong)",
                     fontSize: 12,
                     fontWeight: 600,
                     cursor: "pointer",
                     transition: "all 0.15s",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "var(--dsc-surface)";
-                    e.currentTarget.style.borderColor = "var(--dsc-accent-warm)";
+                    e.currentTarget.style.backgroundColor = "var(--surface-background)";
+                    e.currentTarget.style.borderColor = "#ff6b35";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "var(--dsc-surface-muted)";
-                    e.currentTarget.style.borderColor = "var(--dsc-border)";
+                    e.currentTarget.style.backgroundColor = "var(--neutral-background-weak)";
+                    e.currentTarget.style.borderColor = "var(--neutral-alpha-weak)";
                   }}
                 >
                   Load previous messages
@@ -1379,7 +1379,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                             size="s"
                             style={{
                               display: "block",
-                              border: "1.5px solid var(--dsc-surface)",
+                              border: "1.5px solid var(--surface-background)",
                               boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                             }}
                           />
@@ -1395,11 +1395,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                             borderRadius: bubbleRadius(msg.sender, msg.pos),
                             background: isMe
                               ? "linear-gradient(135deg, #ff6b35 0%, #e65721 100%)"
-                              : "var(--dsc-surface)",
-                            color: isMe ? "white" : "var(--dsc-text)",
+                              : "var(--surface-background)",
+                            color: isMe ? "white" : "var(--neutral-on-background-strong)",
                             border: isMe
                               ? "none"
-                              : "1px solid var(--dsc-border)",
+                              : "1px solid var(--neutral-alpha-weak)",
                             boxShadow: isMe
                               ? "0 4px 16px rgba(255,107,53,0.22), 0 1px 4px rgba(255,87,33,0.15)"
                               : "0 1px 6px rgba(0,0,0,0.04)",
@@ -1431,7 +1431,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   <Text
                                     variant="body-default-m"
                                     style={{
-                                      color: isMe ? "white" : "var(--dsc-text)",
+                                      color: isMe ? "white" : "var(--neutral-on-background-strong)",
                                       lineHeight: 1.55,
                                     }}
                                   >
@@ -1463,7 +1463,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   style={{
                                     color: isMe
                                       ? "rgba(255,255,255,0.9)"
-                                      : "var(--dsc-text)",
+                                      : "var(--neutral-on-background-strong)",
                                     lineHeight: 1.45,
                                     padding: "0 2px",
                                   }}
@@ -1514,7 +1514,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   size={16}
                                   strokeWidth={2.25}
                                   color={
-                                    isMe ? "white" : "var(--dsc-accent-warm)"
+                                    isMe ? "white" : "#ff6b35"
                                   }
                                 />
                               </Row>
@@ -1523,7 +1523,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   style={{
                                     fontSize: 13,
                                     fontWeight: 600,
-                                    color: isMe ? "white" : "var(--dsc-text)",
+                                    color: isMe ? "white" : "var(--neutral-on-background-strong)",
                                   }}
                                 >
                                   {msg.text || "File"}
@@ -1533,7 +1533,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                     fontSize: 11,
                                     color: isMe
                                       ? "rgba(255,255,255,0.8)"
-                                      : "var(--dsc-text-subtle)",
+                                      : "var(--neutral-on-background-weak)",
                                   }}
                                 >
                                   {msg.media_meta?.size_bytes
@@ -1549,7 +1549,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                             <Text
                               variant="body-default-m"
                               style={{
-                                color: isMe ? "white" : "var(--dsc-text)",
+                                color: isMe ? "white" : "var(--neutral-on-background-strong)",
                                 lineHeight: 1.55,
                               }}
                             >
@@ -1564,7 +1564,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                               style={{
                                 color: isMe
                                   ? "rgba(255,255,255,0.7)"
-                                  : "var(--dsc-text-subtle)",
+                                  : "var(--neutral-on-background-weak)",
                                 fontSize: 10,
                                 marginTop: 4,
                               }}
@@ -1589,14 +1589,14 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   padding: "2px 8px",
                                   borderRadius: 12,
                                   border: reaction.has_reacted
-                                    ? "1px solid var(--dsc-accent-warm)"
-                                    : "1px solid var(--dsc-border)",
+                                    ? "1px solid #ff6b35"
+                                    : "1px solid var(--neutral-alpha-weak)",
                                   background: reaction.has_reacted
                                     ? "rgba(255,107,53,0.1)"
                                     : isMe
                                       ? "rgba(255,255,255,0.1)"
-                                      : "var(--dsc-surface-muted)",
-                                  color: isMe ? "white" : "var(--dsc-text)",
+                                      : "var(--neutral-background-weak)",
+                                  color: isMe ? "white" : "var(--neutral-on-background-strong)",
                                   fontSize: 12,
                                   cursor: "pointer",
                                   display: "flex",
@@ -1645,7 +1645,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                     height: 24,
                                     color: isMe
                                       ? "white"
-                                      : "var(--dsc-text-subtle)",
+                                      : "var(--neutral-on-background-weak)",
                                   }}
                                 >
                                   <Edit2 size={12} strokeWidth={2.25} />
@@ -1658,7 +1658,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   height: 24,
                                   color: isMe
                                     ? "white"
-                                    : "var(--dsc-text-subtle)",
+                                    : "var(--neutral-on-background-weak)",
                                 }}
                               >
                                 <Trash2 size={12} strokeWidth={2.25} />
@@ -1679,7 +1679,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                             <Text
                               variant="body-default-xs"
                               style={{
-                                color: "var(--dsc-text-subtle)",
+                                color: "var(--neutral-on-background-weak)",
                                 fontSize: 11,
                               }}
                             >
@@ -1690,13 +1690,13 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                 <Clock3
                                   size={14}
                                   strokeWidth={2.4}
-                                  color="var(--dsc-accent-warm)"
+                                  color="#ff6b35"
                                 />
                               ) : (
                                 <CheckCheck
                                   size={14}
                                   strokeWidth={2.5}
-                                  color="var(--dsc-accent-warm)"
+                                  color="#ff6b35"
                                 />
                               ))}
                           </Row>
@@ -1718,8 +1718,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
         vertical="center"
         style={{
           padding: "16px 24px",
-          borderTop: "1px solid var(--dsc-border)",
-          backgroundColor: "var(--dsc-surface)",
+          borderTop: "1px solid var(--neutral-alpha-weak)",
+          backgroundColor: "var(--surface-background)",
           flexShrink: 0,
           zIndex: 10,
           gap: 6,
@@ -1829,8 +1829,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             flex: 1,
             minWidth: 0,
             gap: 6,
-            backgroundColor: "var(--dsc-surface-muted)",
-            border: "1px solid var(--dsc-border)",
+            backgroundColor: "var(--neutral-background-weak)",
+            border: "1px solid var(--neutral-alpha-weak)",
             borderRadius: 999,
             padding: "0 6px 0 14px",
             minHeight: 42,
@@ -1860,7 +1860,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               boxShadow: "none",
               outline: "none",
               fontSize: 14,
-              color: "var(--dsc-text)",
+              color: "var(--neutral-on-background-strong)",
               fontFamily: "inherit",
             }}
           />
@@ -2063,11 +2063,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             bottom: "80px",
             left: "50%",
             transform: "translateX(-50%)",
-            backgroundColor: "var(--dsc-surface)",
+            backgroundColor: "var(--surface-background)",
             padding: "12px 20px",
             borderRadius: 24,
             boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
-            border: "1px solid var(--dsc-border)",
+            border: "1px solid var(--neutral-alpha-weak)",
             display: "flex",
             alignItems: "center",
             gap: 16,
@@ -2092,12 +2092,12 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               style={{
                 fontSize: 14,
                 fontWeight: 600,
-                color: "var(--dsc-text)",
+                color: "var(--neutral-on-background-strong)",
               }}
             >
               Recording... {Math.floor(recordingTime)}s
             </Text>
-            <Text style={{ fontSize: 11, color: "var(--dsc-text-subtle)" }}>
+            <Text style={{ fontSize: 11, color: "var(--neutral-on-background-weak)" }}>
               Tap mic again to stop and send
             </Text>
           </Column>
@@ -2107,8 +2107,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               width: 32,
               height: 32,
               borderRadius: "50%",
-              backgroundColor: "var(--dsc-surface-muted)",
-              color: "var(--dsc-text-subtle)",
+              backgroundColor: "var(--neutral-background-weak)",
+              color: "var(--neutral-on-background-weak)",
             }}
           >
             <X size={16} strokeWidth={2.25} />

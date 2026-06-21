@@ -19,7 +19,7 @@ import {
   Medal, 
   Trophy 
 } from "lucide-react";
-import { Text } from "@once-ui-system/core";
+import { Column, Row, Text } from "@once-ui-system/core";
 import { BadgeSummary } from "@/types/gamification";
 
 interface BadgeCardProps {
@@ -103,7 +103,7 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
     >
       {/* Glow Aura for Epic and Legendary */}
       {(badge.rarity === "Epic" || badge.rarity === "Legendary") && (
-        <div
+        <Column
           style={{
             position: "absolute",
             top: -4,
@@ -119,11 +119,9 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
       )}
 
       {/* Main card body */}
-      <div
+      <Column
+        horizontal="center"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
           justifyContent: "flex-start",
           width: "100%",
           height: "100%",
@@ -143,16 +141,15 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
         }}
       >
         {/* Icon container */}
-        <div
+        <Row
+          horizontal="center"
+          vertical="center"
           style={{
             width: "60px",
             height: "60px",
             minWidth: "60px",
             minHeight: "60px",
             flexShrink: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             borderRadius: "50%",
             background: "#fff",
             boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
@@ -178,13 +175,11 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
             />
           )}
           <IconComponent size={28} />
-        </div>
+        </Row>
 
         {/* Text content */}
-        <div
+        <Column
           style={{
-            display: "flex",
-            flexDirection: "column",
             gap: "4px",
             width: "100%",
           }}
@@ -217,10 +212,10 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
               {badge.description}
             </Text>
           )}
-        </div>
+        </Column>
 
         {/* Rarity Tag */}
-        <div
+        <Column
           style={{
             marginTop: "auto",
             padding: "2px 8px",
@@ -240,7 +235,7 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
           >
             {badge.rarity}
           </Text>
-        </div>
+        </Column>
 
         {badge.earned_at && (
           <Text
@@ -271,7 +266,7 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
             {isPrimary ? "Unequip Badge" : "Set as Primary"}
           </button>
         )}
-      </div>
+      </Column>
     </motion.div>
   );
 };

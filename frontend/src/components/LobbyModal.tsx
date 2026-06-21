@@ -33,7 +33,7 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose}>
       {/* Hero Image */}
-      <div
+      <Column
         style={{
           height: "180px",
           position: "relative",
@@ -51,7 +51,7 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
             display: "block",
           }}
         />
-        <div
+        <Column
           style={{
             position: "absolute",
             inset: 0,
@@ -70,7 +70,7 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
             {data.name}
           </Heading>
         </Column>
-      </div>
+      </Column>
 
       {/* Content */}
       <Column style={{ padding: "24px", gap: "20px" }}>
@@ -105,7 +105,7 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
         </Column>
 
         {/* Divider */}
-        <div
+        <Column
           style={{
             width: "100%",
             height: "1px",
@@ -132,10 +132,12 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
                 key={m.name}
                 style={{ alignItems: "center", gap: "6px", width: "64px" }}
               >
-                <div style={{ position: "relative" }}>
+                <Column style={{ position: "relative" }}>
                   <Avatar src={m.avatar} size="l" />
                   {m.ready && (
-                    <div
+                    <Row
+                      horizontal="center"
+                      vertical="center"
                       style={{
                         position: "absolute",
                         bottom: -2,
@@ -144,15 +146,12 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
                         height: "18px",
                         borderRadius: "50%",
                         backgroundColor: "var(--surface-elevated)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
                       }}
                     >
                       <CheckCircle size={14} color="#00D1B2" fill="#00D1B2" />
-                    </div>
+                    </Row>
                   )}
-                </div>
+                </Column>
                 <Text
                   style={{
                     color: "#48484A",
@@ -171,19 +170,18 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
                 key={`empty-${i}`}
                 style={{ alignItems: "center", gap: "6px", width: "64px" }}
               >
-                <div
+                <Row
+                  horizontal="center"
+                  vertical="center"
                   style={{
                     width: "48px",
                     height: "48px",
                     borderRadius: "50%",
                     border: "2px dashed rgba(255,255,255,0.1)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                   }}
                 >
                   <Users size={18} color="rgba(255,255,255,0.15)" />
-                </div>
+                </Row>
                 <Text
                   style={{
                     color: "#C7C7CC",
@@ -198,7 +196,7 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
         </Column>
 
         {/* Divider */}
-        <div
+        <Column
           style={{
             width: "100%",
             height: "1px",
@@ -209,7 +207,7 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
         {/* Status + CTA */}
         <Row style={{ justifyContent: "space-between", alignItems: "center" }}>
           <Row style={{ alignItems: "center", gap: "8px" }}>
-            <div
+            <Column
               style={{
                 width: "8px",
                 height: "8px",
@@ -242,7 +240,7 @@ export default function LobbyModal({ isOpen, data, onClose }: LobbyModalProps) {
         </Row>
 
         {/* Safe area bottom padding */}
-        <div style={{ height: "8px" }} />
+        <Column style={{ height: "8px" }} />
       </Column>
     </BottomSheet>
   );
