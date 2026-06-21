@@ -249,8 +249,19 @@ Xóa một stop khỏi tour. Tự re-order các stops còn lại.
 
 ### `POST /api/v1/tours/{tour_id}/optimize` 🆕
 
-**Graph Routing** — Tối ưu thứ tự stops bằng modified Dijkstra/A*.  
-`Cost = Traffic_Time + Weather_Penalty − Location_Score`
+**Graph Routing** — Tối ưu thứ tự ghé thăm các stops (bài toán dạng visit-all / TSP).
+
+Thuật toán: **Nearest-Neighbour greedy** (xuất phát từ `start_lat/start_lng`) + cải thiện **2-opt**
+(số stops nhỏ, ~≤10 nên chạy đủ nhanh).
+
+Hàm chi phí mỗi cạnh:
+`Cost = Travel_Time + Weather_Penalty − w · Location_Score`
+- `Travel_Time = haversine_km / SPEED_KMH × 60` (phút)
+- `Location_Score` chuẩn hoá từ `locations.rating` (0–5 → 0–1)
+- `Weather_Penalty` = `0.0` (placeholder — chưa tích hợp weather service)
+- `w` = trọng số ưu tiên địa điểm chất lượng cao
+
+Cross-link DB: [`tours` / `tour_stops`](../database_schema/content.md) · [`locations`](../database_schema/content.md).
 
 **Request:**
 ```json

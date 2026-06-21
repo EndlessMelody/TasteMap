@@ -51,14 +51,6 @@ class UserBase(BaseModel):
     email: EmailStr
 
 
-# ─── Auth & Registration ──────────────────────────────────────────────────
-
-class UserCreate(UserBase):
-    """Đăng ký user mới. device_id để móc vector từ Redis."""
-    password: Optional[str] = None
-    device_id: Optional[str] = None
-
-
 # ─── PATCH Profile ───────────────────────────────────────────────────────
 
 class UserUpdate(BaseModel):

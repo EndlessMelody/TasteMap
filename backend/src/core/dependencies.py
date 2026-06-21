@@ -21,7 +21,24 @@ reusable_oauth2 = HTTPBearer()
 
 # JWKS client — cache public key của Supabase, không gọi API mỗi request
 # URL đúng: /.well-known/jwks.json (không phải /jwks — cái đó trả 401)
-_JWKS_URL = f"https://{settings.SUPABASE_PROJECT_REF}.supabase.co/auth/v1/.well-known/jwks.json"
+def _resolve_project_ref() -> str:
+    ref = settings.SUPABASE_PROJECT_REF
+    if not ref and settings.SUPABASE_URL:
+        # Extract project ref from URL like "https://bjuikfhjrpmrpbvhduey.supabase.co"
+        import re
+        m = re.search(r"https://([^.]+)\.supabase\.co", settings.SUPABASE_URL)
+        if m:
+            ref = m.group(1)
+    if not ref:
+        # Fail loudly at import/startup rather than building a broken
+        # "https://None.supabase.co/..." JWKS URL that 401s every request.
+        raise RuntimeError(
+            "Cannot resolve Supabase project ref: set SUPABASE_PROJECT_REF "
+            "or a valid SUPABASE_URL (https://<ref>.supabase.co)."
+        )
+    return ref
+
+_JWKS_URL = f"https://{_resolve_project_ref()}.supabase.co/auth/v1/.well-known/jwks.json"
 _jwks_client = PyJWKClient(_JWKS_URL, cache_keys=True)
 
 

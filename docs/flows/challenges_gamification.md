@@ -49,6 +49,7 @@ sequenceDiagram
         
         alt progress >= target_count
             Tracker Engine->>Database: Mark status = 'completed'
+            Tracker Engine->>Database: Insert Notification (type='system')
         end
     end
     Tracker Engine->>Database: COMMIT
@@ -59,6 +60,7 @@ sequenceDiagram
 - **Python-Side Filtering (`matches_filter`):** Evaluates complex rules in RAM rather than complex SQL queries (e.g., `time_after`, `require_photo`, `cuisine_type` matching).
 - **Auto-Enrollment (Lazy Creation):** Users do not need to manually "join" a challenge. If they perform a matching action, a `UserChallenge` record is created dynamically.
 - **Deduplication:** Uses `ref_type` and `ref_id` (e.g., `post_id`) to ensure a single entity doesn't trigger progress multiple times for the same challenge.
+- **Completion Notification:** When a challenge reaches `target_count`, the tracker inserts a `Notification` (`type='system'`, `reference_type='challenge'`, `reference_id=challenge.id`) in the same transaction so the user is alerted via `GET /api/v1/notifications`.
 
 ---
 

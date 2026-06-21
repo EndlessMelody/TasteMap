@@ -10,7 +10,7 @@ import redis.asyncio as aioredis
 from typing import Optional, List
 
 from src.users.models import User
-from src.users.schemas import UserCreate, UserUpdate, UserStats, BadgeSummary, UserProfile, UserMe
+from src.users.schemas import UserUpdate, UserStats, BadgeSummary, UserProfile, UserMe
 from src.posts.models import Post
 from src.bookmarks.models import Bookmark
 from src.social.models import Friendship
@@ -229,49 +229,6 @@ class UserService:
         )
         locations = result.scalars().all()
         return [{"id": loc.id, "name": loc.name, "image_url": loc.image_url, "rating": loc.rating} for loc in locations]
-
-    async def create_user(self, user_create: UserCreate) -> User:
-        """
-        Đăng ký người dùng mới.
-        Migrate vector từ Redis (guest) nếu có device_id.
-        """
-        food_vector: List[float] = [0.5] * 15
-        place_vector: List[float] = [0.5] * 15
-
-        if user_create.device_id and self.redis:
-            for domain, is_food in [("food", True), ("place", False)]:
-                redis_key = f"user:{domain}:{user_create.device_id}"
-                raw = await self.redis.get(redis_key)
-                if raw:
-                    data = json.loads(raw)
-                    recovered = data.get("vector")
-                    if recovered and len(recovered) == 15:
-                        if is_food:
-                            food_vector = [float(x) for x in recovered]
-                        else:
-                            place_vector = [float(x) for x in recovered]
-
-        new_user = User(
-            username=user_create.username,
-            email=user_create.email,
-            password_hash=user_create.password,
-            food_vector=food_vector,
-            place_vector=place_vector,
-        )
-        self.db.add(new_user)
-        try:
-            await self.db.commit()
-            await self.db.refresh(new_user)
-        except Exception as e:
-            await self.db.rollback()
-            raise HTTPException(status_code=400, detail=f"Không thể tạo người dùng: {str(e)}")
-
-        if user_create.device_id and self.redis:
-            for domain in ["food", "place"]:
-                try:
-                    await self.redis.delete(f"user:{domain}:{user_create.device_id}")
-                except Exception:
-                    pass
 
     async def get_or_create_supabase_user(self, supabase_uid: str, email: str, display_name: str = None, avatar_url: str = None) -> User:
         """

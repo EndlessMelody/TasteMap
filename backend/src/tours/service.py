@@ -10,6 +10,41 @@ from src.tours.models import Tour, TourStop
 from src.locations.models import Location
 from src.tours.schemas import StopCreate, OptimizeRequest, OptimizeResponse, TourResponse, StopResponse, OptimizedStop
 
+# ── Tour routing tuning constants ──────────────────────────────────────────
+_SPEED_KMH = 20.0            # giả định tốc độ di chuyển nội đô trung bình
+_LOCATION_SCORE_WEIGHT = 2.0  # w: số phút "thưởng" cho mỗi đơn vị rating chuẩn hoá
+
+
+def _haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
+    """Khoảng cách great-circle giữa 2 toạ độ (km)."""
+    R = 6371.0
+    dlat = math.radians(lat2 - lat1)
+    dlng = math.radians(lng2 - lng1)
+    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlng / 2) ** 2
+    return R * 2 * math.asin(math.sqrt(a))
+
+
+def _travel_min(km: float) -> float:
+    """Thời gian di chuyển (phút) cho một quãng đường km."""
+    return (km / _SPEED_KMH) * 60.0
+
+
+def _edge_cost(from_lat: float, from_lng: float, to_loc: Location, weather_penalty: float = 0.0) -> float:
+    """Cost = Travel_Time + Weather_Penalty − w·Location_Score (xem docs/api/discovery.md §8)."""
+    km = _haversine(from_lat, from_lng, to_loc.lat, to_loc.lng)
+    location_score = max(0.0, min((to_loc.rating or 0.0) / 5.0, 1.0))
+    return _travel_min(km) + weather_penalty - _LOCATION_SCORE_WEIGHT * location_score
+
+
+def _path_cost(order: list, start_lat: float, start_lng: float) -> float:
+    """Tổng cost của một thứ tự ghé thăm, bắt đầu từ điểm xuất phát."""
+    total = 0.0
+    cur_lat, cur_lng = start_lat, start_lng
+    for _, loc in order:
+        total += _edge_cost(cur_lat, cur_lng, loc)
+        cur_lat, cur_lng = loc.lat, loc.lng
+    return total
+
 
 async def create_tour(db: AsyncSession, user_id: int) -> Tour:
     tour = Tour(user_id=user_id, status="building")
@@ -84,8 +119,10 @@ async def update_status(db: AsyncSession, tour_id: int, user_id: int, status: st
 
 async def optimize_tour(db: AsyncSession, tour_id: int, user_id: int, body: OptimizeRequest):
     """
-    Graph routing stub — sorts stops by Haversine distance from start point.
-    TODO: Implement full Dijkstra with Cost = Traffic_Time + Weather_Penalty - Location_Score
+    Tối ưu thứ tự ghé thăm stops (visit-all / TSP) — xem docs/api/discovery.md §8.
+
+    Nearest-Neighbour greedy từ điểm xuất phát + cải thiện 2-opt.
+    Cost mỗi cạnh = Travel_Time + Weather_Penalty − w·Location_Score.
     """
     stops_result = await db.execute(
         select(TourStop, Location)
@@ -96,33 +133,51 @@ async def optimize_tour(db: AsyncSession, tour_id: int, user_id: int, body: Opti
     if not rows:
         raise HTTPException(status_code=404, detail="Tour không có stops")
 
-    def haversine(lat1, lng1, lat2, lng2):
-        R = 6371.0
-        dlat = math.radians(lat2 - lat1)
-        dlng = math.radians(lng2 - lng1)
-        a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlng / 2) ** 2
-        return R * 2 * math.asin(math.sqrt(a))
+    # ── 1. Nearest-Neighbour greedy ───────────────────────────────────────
+    remaining = list(rows)
+    order: list = []
+    cur_lat, cur_lng = body.start_lat, body.start_lng
+    while remaining:
+        best_i = min(range(len(remaining)), key=lambda i: _edge_cost(cur_lat, cur_lng, remaining[i][1]))
+        chosen = remaining.pop(best_i)
+        order.append(chosen)
+        cur_lat, cur_lng = chosen[1].lat, chosen[1].lng
 
-    sorted_stops = sorted(rows, key=lambda r: haversine(body.start_lat, body.start_lng, r[1].lat, r[1].lng))
-    total_dist = sum(
-        haversine(sorted_stops[i][1].lat, sorted_stops[i][1].lng,
-                  sorted_stops[i + 1][1].lat, sorted_stops[i + 1][1].lng)
-        for i in range(len(sorted_stops) - 1)
-    ) if len(sorted_stops) > 1 else 0.0
+    # ── 2. 2-opt improvement (n nhỏ → chi phí không đáng kể) ───────────────
+    improved = True
+    while improved:
+        improved = False
+        base_cost = _path_cost(order, body.start_lat, body.start_lng)
+        for i in range(len(order) - 1):
+            for j in range(i + 1, len(order)):
+                candidate = order[:i] + order[i:j + 1][::-1] + order[j + 1:]
+                if _path_cost(candidate, body.start_lat, body.start_lng) + 1e-9 < base_cost:
+                    order = candidate
+                    base_cost = _path_cost(order, body.start_lat, body.start_lng)
+                    improved = True
 
-    optimized = [
-        OptimizedStop(stop_order=i + 1, location_id=r[0].location_id, estimated_travel_min=int(dist * 3))
-        for i, (r, dist) in enumerate(
-            zip(sorted_stops, [0.0] + [haversine(sorted_stops[i][1].lat, sorted_stops[i][1].lng,
-                                               sorted_stops[i + 1][1].lat, sorted_stops[i + 1][1].lng)
-                                       for i in range(len(sorted_stops) - 1)])
-        )
+    # ── 3. Tính khoảng cách/thời gian thực tế giữa các stop liên tiếp ──────
+    #     estimated_travel_min = thời gian từ stop trước → stop hiện tại (stop đầu = 0).
+    consecutive_km = [0.0] + [
+        _haversine(order[k - 1][1].lat, order[k - 1][1].lng, order[k][1].lat, order[k][1].lng)
+        for k in range(1, len(order))
     ]
+    optimized = [
+        OptimizedStop(
+            stop_order=k + 1,
+            location_id=order[k][0].location_id,
+            estimated_travel_min=int(round(_travel_min(km))),
+        )
+        for k, km in enumerate(consecutive_km)
+    ]
+
+    total_dist = sum(consecutive_km)
+    total_duration = sum(o.estimated_travel_min for o in optimized)
 
     return OptimizeResponse(
         optimized_stops=optimized,
         total_distance_km=round(total_dist, 2),
-        total_duration_min=int(total_dist * 3 * len(sorted_stops)),
+        total_duration_min=total_duration,
         estimated_cost_vnd=0,
     )
 

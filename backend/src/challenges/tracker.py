@@ -4,6 +4,7 @@ from sqlalchemy import select, update, func, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.challenges.models import Challenge, UserChallenge, ChallengeProgressLog
+from src.notifications.models import Notification
 
 
 class ChallengeTracker:
@@ -117,7 +118,15 @@ class ChallengeTracker:
             if user_challenge.progress >= challenge.target_count:
                 user_challenge.status = "completed"
                 user_challenge.completed_at = func.now()
-                # TODO: Gửi notification cho user
+                # Thông báo cho user (cùng transaction với progress update)
+                db.add(Notification(
+                    user_id=user_id,
+                    type="system",
+                    title="Challenge Complete! 🏆",
+                    body=f"You finished '{challenge.title}'",
+                    reference_type="challenge",
+                    reference_id=challenge.id,
+                ))
 
         await db.commit()
 
