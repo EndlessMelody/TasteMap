@@ -58,6 +58,8 @@ Danh sách lobby đang active (để hiển thị "Live Group Lobbies").
 
 ### `GET /api/v1/groups/{group_id}` 🆕
 
+🔒 **Auth bắt buộc.** Phòng **riêng tư** chỉ thành viên mới xem được (`403` nếu không phải thành viên). `invite_code` chỉ trả về cho thành viên.
+
 Chi tiết lobby (members, trạng thái ready).
 
 ---
@@ -195,6 +197,8 @@ Loại trừ thẻ đã quẹt, ưu tiên starred cards từ teammates.
 ---
 
 ### `GET /api/v1/groups/{group_id}/vault` 🆕
+
+🔒 **Auth bắt buộc** — chỉ thành viên của phòng (`403` nếu không phải thành viên).
 
 Lấy danh sách Vault (Kho lưu trữ): Trả về toàn bộ các địa điểm đã được ít nhất 1 người LIKED hoặc STARRED.
 

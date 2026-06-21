@@ -116,12 +116,17 @@ async def join_by_code(db: AsyncSession, invite_code: str, user_id: int) -> dict
     return await join_group(db, group.id, user_id)
 
 
-async def get_group(db: AsyncSession, group_id: int) -> dict:
+async def get_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
     result = await db.execute(select(Group).where(Group.id == group_id))
     group = result.scalars().first()
     if not group:
         raise HTTPException(status_code=404, detail="Lobby không tìm thấy")
-    return await _group_to_dict(db, group)
+    is_member = await is_group_member(db, group_id, user_id)
+    # Private rooms are only visible to members; the invite_code is never
+    # exposed to non-members (prevents leaking the join secret via the ID).
+    if not is_member and not group.is_public:
+        raise HTTPException(status_code=403, detail="Bạn không có quyền xem phòng riêng tư này")
+    return await _group_to_dict(db, group, include_invite_code=is_member)
 
 
 async def join_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
@@ -236,6 +241,10 @@ async def group_recommend(db: AsyncSession, group_id: int, body, user_id: int) -
     group = group_q.scalars().first()
     if not group or group.status not in ("active", "in_progress"):
         raise HTTPException(status_code=400, detail="Lobby không hoạt động")
+
+    # Only members may pull the group's recommendation deck
+    if not await is_group_member(db, group_id, user_id):
+        raise HTTPException(status_code=403, detail="Bạn không phải thành viên lobby này")
 
     # Get all members + their SESSION vectors
     members_q = await db.execute(
@@ -361,6 +370,10 @@ async def group_sync(db: AsyncSession, group_id: int, user_id: int, since_ts: Op
     if not group:
         raise HTTPException(status_code=404, detail="Lobby không tìm thấy")
 
+    # Only members may poll the room state
+    if not await is_group_member(db, group_id, user_id):
+        raise HTTPException(status_code=403, detail="Bạn không phải thành viên lobby này")
+
     # Get all members + session vectors
     members_q = await db.execute(
         select(GroupMember, User)
@@ -463,6 +476,7 @@ async def group_sync(db: AsyncSession, group_id: int, user_id: int, since_ts: Op
 async def group_vault(
     db: AsyncSession,
     group_id: int,
+    user_id: int,
     limit: int = 50,
     sort_by: str = "votes",
 ) -> dict:
@@ -470,6 +484,10 @@ async def group_vault(
     Trả về toàn bộ các địa điểm đã được ít nhất 1 người LIKED/STARRED trong phòng này.
     Query dựa trên Interaction.group_id + composite index (group_id, action).
     """
+    # Only members may read the group's vault
+    if not await is_group_member(db, group_id, user_id):
+        raise HTTPException(status_code=403, detail="Bạn không phải thành viên lobby này")
+
     # Get all LIKED/STARRED interactions in this group
     inter_q = await db.execute(
         select(Interaction, Location, User)
@@ -926,7 +944,7 @@ async def create_group_message(
 # ─── Helper ──────────────────────────────────────────────────────────────
 
 
-async def _group_to_dict(db: AsyncSession, group: Group) -> dict:
+async def _group_to_dict(db: AsyncSession, group: Group, include_invite_code: bool = True) -> dict:
     members_q = await db.execute(
         select(GroupMember, User)
         .join(User, User.id == GroupMember.user_id)
@@ -949,7 +967,7 @@ async def _group_to_dict(db: AsyncSession, group: Group) -> dict:
         "scheduled_time": group.scheduled_time, "max_spots": group.max_spots,
         "cover_image_url": group.cover_image_url, "accent_color": group.accent_color,
         "is_public": group.is_public,
-        "invite_code": group.invite_code,
+        "invite_code": group.invite_code if include_invite_code else None,
         "created_at": group.created_at,
         "members": members,
         "spots_remaining": max(0, group.max_spots - len(members)),

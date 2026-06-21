@@ -7,6 +7,7 @@ from src.recommendations.schemas import (
     RescueMeRequest, RescueMeResponse,
 )
 from src.recommendations import service
+from src.core.dependencies import get_current_user_id
 
 router = APIRouter()
 
@@ -17,7 +18,11 @@ router = APIRouter()
     summary="Gợi ý top-N (vector-only)",
     description="Two-Pass: pgvector ANN → numpy scoring."
 )
-async def get_recommendations(request: RecommendationRequest, db: AsyncSession = Depends(get_db)):
+async def get_recommendations(
+    request: RecommendationRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
     top_places = await service.recommend_top_n_places(
         db=db,
         user_vector=request.user_vector,
@@ -33,10 +38,14 @@ async def get_recommendations(request: RecommendationRequest, db: AsyncSession =
     summary="Gợi ý theo ngữ cảnh (thời tiết + khoảng cách + vector)",
     description="Score(S) = W1·Sim(U,P) + W2·C_weather − W3·D"
 )
-async def get_contextual(body: ContextualRequest, db: AsyncSession = Depends(get_db)):
+async def get_contextual(
+    body: ContextualRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
     return await service.recommend_contextual(
         db=db,
-        user_id=body.user_id,
+        user_id=user_id,
         lat=body.lat,
         lng=body.lng,
         category=body.category,
@@ -52,10 +61,14 @@ async def get_contextual(body: ContextualRequest, db: AsyncSession = Depends(get
     summary="Rescue Me — Trả ngay 1 kết quả gần nhất đủ ngon",
     description="Ép W3=90% (distance), bỏ qua Context. Radius<1km, cosine match>60%."
 )
-async def rescue_me(body: RescueMeRequest, db: AsyncSession = Depends(get_db)):
+async def rescue_me(
+    body: RescueMeRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
     return await service.rescue_me(
         db=db,
-        user_id=body.user_id,
+        user_id=user_id,
         lat=body.lat,
         lng=body.lng,
         category=body.category,

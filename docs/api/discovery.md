@@ -28,25 +28,20 @@ Lấy batch thẻ để Frontend render. Trả kèm photos và reviews_preview �
 
 ---
 
-### `GET /api/v1/feed/debug/db-check` 🆕
-
-Endpoint dùng để debug trạng thái database của Feed, kiểm tra dữ liệu thực tế đang có trong DB.
-
----
-
 ## 5. Interactions (Swipe Learning)
 
 > Module: `src/interactions/` — Ghi nhận swipe, cập nhật vector.
 
 ### `POST /api/v1/interactions/swipe-batch` ✅ Đã có
 
+🔒 **Auth bắt buộc** (`Authorization: Bearer <token>`). `user_id` được suy ra từ token — **không** gửi trong body.
+
 Ghi nhận batch swipe. Thuật toán: `U_new = U_old + α·P` với anti-spam decay.
 
 **Request:**
 ```json
 {
-  "user_id": 1,
-  "domain": "food",
+  "category": "food",
   "actions": [
     { "place_id": 42, "direction": "RIGHT", "client_timestamp": 1711612800.0 },
     { "place_id": 43, "direction": "LEFT",  "client_timestamp": 1711612801.5 }
@@ -68,11 +63,10 @@ Ghi nhận batch swipe. Thuật toán: `U_new = U_old + α·P` với anti-spam d
 
 ### `GET /api/v1/interactions/history` 🆕
 
-Lịch sử swipe của user (dùng để hiển thị "đã xem" hoặc analytics).
+🔒 **Auth bắt buộc.** Trả về lịch sử swipe của **chính user** trong token (không thể truy vấn user khác).
 
 | Query Param | Type | Default |
 |---|---|---|
-| `user_id` | int | — |
 | `action` | string | — |
 | `limit` | int | 50 |
 | `offset` | int | 0 |
@@ -98,7 +92,7 @@ Lịch sử swipe của user (dùng để hiển thị "đã xem" hoặc analyti
 
 ### `POST /api/v1/recommendations` ✅ Đã có
 
-Gợi ý top-N dựa trên vector (Two-Pass: pgvector ANN → numpy scoring).
+🔒 **Auth bắt buộc.** Gợi ý top-N dựa trên vector (Two-Pass: pgvector ANN → numpy scoring).
 
 **Request:**
 ```json
@@ -112,16 +106,17 @@ Gợi ý top-N dựa trên vector (Two-Pass: pgvector ANN → numpy scoring).
 
 ### `POST /api/v1/recommendations/contextual` 🆕
 
+🔒 **Auth bắt buộc.** `user_id` suy ra từ token — không gửi trong body.
+
 Gợi ý theo ngữ cảnh (thời tiết, thời gian, khoảng cách).  
 Đây là hàm: `Score(S) = W1·Sim(U,P) + W2·C_weather − W3·D`
 
 **Request:**
 ```json
 {
-  "user_id": 1,
   "lat": 10.89,
   "lng": 106.79,
-  "domain": "food",
+  "category": "food",
   "radius_km": 3.0,
   "top_n": 10,
   "time_context": "dinner"
@@ -153,15 +148,16 @@ Gợi ý theo ngữ cảnh (thời tiết, thời gian, khoảng cách).
 
 ### `POST /api/v1/recommendations/rescue-me` 🆕
 
+🔒 **Auth bắt buộc.** `user_id` suy ra từ token — không gửi trong body.
+
 **Nút "Rescue Me"** — Ép trọng số Distance ($W_3$) lên 90%, bỏ qua Context (Thời tiết/thời gian), trả về duy nhất 1 kết quả có khoảng cách gần nhất (Radius < 1km) mà vector match vẫn tạm ổn (>60%). Tối ưu cho quyết định lười biếng.
 
 **Request:**
 ```json
 {
-  "user_id": 1,
   "lat": 10.89,
   "lng": 106.79,
-  "domain": "food",
+  "category": "food"
 }
 ```
 

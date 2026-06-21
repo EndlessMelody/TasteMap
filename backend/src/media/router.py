@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, UploadFile, File, Query, Request
 from src.media.service import upload_file
+from src.core.dependencies import get_current_user_id
 
 router = APIRouter()
 
@@ -13,6 +14,7 @@ async def upload_media(
     request: Request,
     file: UploadFile = File(...),
     upload_type: str = Query(..., alias="type"),
+    user_id: int = Depends(get_current_user_id),
 ):
     base_url = str(request.base_url).rstrip("/")
     return await upload_file(file, upload_type, base_url)

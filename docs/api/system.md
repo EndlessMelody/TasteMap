@@ -51,9 +51,11 @@ Cập nhật settings. Chỉ gửi fields cần thay đổi.
 
 ### `POST /api/v1/media/upload` 🆕
 
+🔒 **Auth bắt buộc** (`Authorization: Bearer <token>`).
+
 Upload ảnh/video lên server (hoặc S3/Cloudinary/R2). Frontend dùng link trả về để gửi kèm trong các API tạo User/Post/Reel/Group.
 
-**Headers:** `Content-Type: multipart/form-data`
+**Headers:** `Content-Type: multipart/form-data`, `Authorization: Bearer <token>`
 
 | Field | Type | Required | Mô tả |
 |---|---|---|---|

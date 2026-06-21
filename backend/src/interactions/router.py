@@ -7,6 +7,7 @@ from src.interactions.schemas import SwipeBatchRequest, SwipeBatchResponse, Inte
 from src.interactions.service import process_swipe_batch
 from src.interactions.models import Interaction
 from src.locations.models import Location
+from src.core.dependencies import get_current_user_id
 from typing import Optional
 
 router = APIRouter()
@@ -21,6 +22,7 @@ router = APIRouter()
 async def swipe_batch(
     request: Request,
     body: SwipeBatchRequest,
+    user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_db)
 ):
     redis = request.app.state.redis
@@ -28,7 +30,7 @@ async def swipe_batch(
     result = await process_swipe_batch(
         db=db,
         redis=redis,
-        user_id=body.user_id,
+        user_id=user_id,
         domain=body.category,  # renamed field
         actions=actions_data
     )
@@ -41,10 +43,10 @@ async def swipe_batch(
     summary="Lịch sử swipe của user"
 )
 async def get_history(
-    user_id: int = Query(...),
     action: Optional[str] = Query(None),
     limit: int = Query(50, ge=1, le=200),
     offset: int = Query(0, ge=0),
+    user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_db)
 ):
     query = (

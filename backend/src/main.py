@@ -1,7 +1,11 @@
+import logging
+
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 import redis.asyncio as redis
+
+logger = logging.getLogger("tastemap")
 from src.core.config import settings
 from src.api.router import api_router
 from src.db.redis import init_redis
@@ -137,10 +141,22 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    expose_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
+    expose_headers=[],
 )
+
+
+@app.middleware("http")
+async def security_headers_middleware(request, call_next):
+    """Add baseline security headers to every response."""
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
+
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
@@ -150,7 +166,12 @@ from fastapi.responses import JSONResponse
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    """Ensure CORS headers are present even on unhandled 500 errors."""
+    """Ensure CORS headers are present even on unhandled 500 errors.
+
+    The real exception is logged server-side only; clients receive a generic
+    message so internal paths / DB errors are not disclosed.
+    """
+    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
     origin = request.headers.get("origin", "")
     headers = {}
     if origin in ALLOWED_ORIGINS:
@@ -158,7 +179,7 @@ async def global_exception_handler(request: Request, exc: Exception):
         headers["access-control-allow-credentials"] = "true"
     return JSONResponse(
         status_code=500,
-        content={"success": False, "error": "Internal server error", "detail": str(exc)},
+        content={"success": False, "error": "Internal server error"},
         headers=headers,
     )
 

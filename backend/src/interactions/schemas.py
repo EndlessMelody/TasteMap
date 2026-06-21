@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Literal, Union, Optional
+from typing import List, Literal, Optional
 from datetime import datetime
 
 
@@ -18,7 +18,6 @@ class SwipeAction(BaseModel):
 
 
 class SwipeBatchRequest(BaseModel):
-    user_id: Union[int, str]
     category: Literal["food", "place"] = "place"  # Unified: was "domain"
     actions: List[SwipeAction]
     # Nullable — nếu swipe trong group lobby thì gửi group_id

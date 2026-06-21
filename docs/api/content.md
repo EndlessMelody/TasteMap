@@ -369,6 +369,8 @@ Danh sách deals đang active (chưa hết hạn).
 
 ### `POST /api/v1/deals` 🆕 (Admin)
 
+🔒 **Auth bắt buộc + quyền `admin`** (`403` nếu không phải admin).
+
 Tạo deal mới.
 
 ---

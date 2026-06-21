@@ -3,6 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
 from src.deals import service
 from src.deals.schemas import DealCreate
+from src.core.dependencies import get_current_admin
+from src.users.models import User
 from typing import Optional
 
 router = APIRouter()
@@ -24,5 +26,9 @@ async def get_deal(deal_id: int, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/", summary="Tạo deal mới (Admin)", status_code=201)
-async def create_deal(body: DealCreate, db: AsyncSession = Depends(get_db)):
+async def create_deal(
+    body: DealCreate,
+    admin: User = Depends(get_current_admin),
+    db: AsyncSession = Depends(get_db),
+):
     return await service.create_deal(db, body)

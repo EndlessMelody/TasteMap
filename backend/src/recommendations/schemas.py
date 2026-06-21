@@ -29,7 +29,6 @@ class RecommendationResponse(BaseModel):
 # ─── Contextual ──────────────────────────────────────────────────────────
 
 class ContextualRequest(BaseModel):
-    user_id: int
     lat: float
     lng: float
     category: str = "food"  # Unified
@@ -57,7 +56,6 @@ class ContextualResponse(BaseModel):
 # ─── Rescue Me ───────────────────────────────────────────────────────────
 
 class RescueMeRequest(BaseModel):
-    user_id: int
     lat: float
     lng: float
     category: str = "food"

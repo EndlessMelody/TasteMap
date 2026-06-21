@@ -47,8 +47,12 @@ async def join_by_code(
 
 
 @router.get("/{group_id}", summary="Chi tiết lobby")
-async def get_group(group_id: int, db: AsyncSession = Depends(get_db)):
-    return await service.get_group(db, group_id)
+async def get_group(
+    group_id: int,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
+    return await service.get_group(db, group_id, user_id)
 
 
 @router.post("/{group_id}/join", summary="Tham gia lobby")
@@ -125,9 +129,10 @@ async def group_vault(
     group_id: int,
     limit: int = Query(50, ge=1, le=200),
     sort_by: str = Query("votes", pattern="^(votes|recent)$"),
+    user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_db)
 ):
-    return await service.group_vault(db, group_id, limit, sort_by)
+    return await service.group_vault(db, group_id, user_id, limit, sort_by)
 
 
 @router.post(
@@ -336,14 +341,16 @@ async def voice_websocket(
                 }
             )
 
-    except Exception as e:
-        import traceback
-        print(f"Voice WebSocket FATAL CRASH: {e}\n{traceback.format_exc()}")
+    except Exception:
+        import logging
+        logging.getLogger("tastemap").exception(
+            "Voice WebSocket crashed (group_id=%s)", group_id
+        )
         try:
             await websocket.send_json({
                 "type": "voice_error",
-                "payload": {"code": "server_crash", "message": str(e)}
+                "payload": {"code": "server_crash", "message": "Voice service error"}
             })
             await websocket.close(code=4005, reason="Server crash")
-        except:
+        except Exception:
             pass

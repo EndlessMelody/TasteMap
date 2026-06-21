@@ -1,7 +1,6 @@
 
 from fastapi import APIRouter, Depends, Query, Request
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import text
 from src.db.database import get_db
 from src.feed.schemas import FeedResponse
 from src.feed.service import get_feed_cards
@@ -32,25 +31,3 @@ async def get_cards(
         lat=lat, lng=lng, cursor=cursor
     )
     return result
-
-
-@router.get("/debug/db-check", summary="Debug database state")
-async def debug_db_check(db: AsyncSession = Depends(get_db)):
-    """Debug endpoint to check actual database state"""
-    # Total count
-    result = await db.execute(text("SELECT COUNT(*) FROM locations"))
-    total = result.scalar()
-    
-    # Categories
-    result = await db.execute(text("SELECT category, COUNT(*) FROM locations GROUP BY category"))
-    categories = [{"category": row[0] if row[0] else "NULL", "count": row[1]} for row in result.fetchall()]
-    
-    # Sample locations
-    result = await db.execute(text("SELECT id, name, category FROM locations LIMIT 20"))
-    locations = [{"id": row[0], "name": row[1], "category": row[2]} for row in result.fetchall()]
-    
-    return {
-        "total_locations": total,
-        "categories": categories,
-        "sample_locations": locations
-    }
