@@ -2,15 +2,15 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { Row, Column } from "@once-ui-system/core";
 import { LoginForm } from "@/components/features/auth/LoginForm";
 import { LoginBranding } from "@/components/features/auth/LoginBranding";
 import { tokens } from "@/styles/tokens";
 
 export default function LoginPage() {
   return (
-    <div
+    <Row
       style={{
-        display: "flex",
         height: "100vh",
         background: tokens.color.bg,
         overflow: "hidden",
@@ -38,16 +38,15 @@ export default function LoginPage() {
       </motion.div>
 
       {/* Right: form panel */}
-      <div
+      <Row
+        horizontal="end"
+        vertical="center"
         style={{
           flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
           padding: "0 160px 0px 0px",
         }}
       >
-        <div
+        <Column
           style={{
             width: "100%",
             maxWidth: 460,
@@ -62,8 +61,8 @@ export default function LoginPage() {
           }}
         >
           <LoginForm />
-        </div>
-      </div>
-    </div>
+        </Column>
+      </Row>
+    </Row>
   );
 }

@@ -26,6 +26,7 @@ import {
 } from "@/components/modals/CreatePostModal";
 import { apiGet } from "@/lib/api";
 import { useBadges } from "@/hooks/useBadges";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 
 export default function ProfilePage() {
@@ -86,7 +87,7 @@ export default function ProfilePage() {
     toast("Will be updated in the next version.");
 
   return (
-    <div
+    <Column
       ref={scrollRef}
       onScroll={handleScroll}
       className="no-scrollbar"
@@ -113,7 +114,7 @@ export default function ProfilePage() {
         onComingSoon={handleComingSoon}
       />
 
-      <div
+      <Column
         style={{
           width: "100%",
           maxWidth: 1200,
@@ -123,15 +124,13 @@ export default function ProfilePage() {
           marginTop: "-80px",
           zIndex: 10,
           position: "relative",
-          display: "flex",
-          flexDirection: "column",
         }}
       >
-        <div style={{ marginBottom: tokens.space[8] }}>
+        <Column style={{ marginBottom: tokens.space[8] }}>
           <ProfileAvatarGroup user={user} />
-        </div>
+        </Column>
 
-        <div
+        <Column
           style={{
             display: "grid",
             gridTemplateColumns: "2fr 1fr",
@@ -140,13 +139,7 @@ export default function ProfilePage() {
             marginBottom: tokens.space[12],
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[5],
-            }}
-          >
+          <Column style={{ gap: tokens.space[5] }}>
             <ProfileIdentityCard user={user} />
             <FlavorProfileCard />
             <FriendsListCard
@@ -154,34 +147,22 @@ export default function ProfilePage() {
               friendsLoading={friendsLoading}
               onSeeAll={handleComingSoon}
             />
-          </div>
+          </Column>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[5],
-            }}
-          >
+          <Column style={{ gap: tokens.space[5] }}>
             <CreatePostCard onOpenCreatePost={() => setIsCreatePostOpen(true)} />
             <QuickActionsCard
               user={user}
               onSettingsClick={() => toast("Opening settings…")}
             />
             <TasteMapStatsCard user={user} />
-          </div>
-        </div>
+          </Column>
+        </Column>
 
-        <div
-          style={{
-            display: "flex",
-            gap: tokens.space[6],
-            marginBottom: tokens.space[12],
-          }}
-        >
+        <Row style={{ gap: tokens.space[6], marginBottom: tokens.space[12] }}>
           <TasteDNACard radarData={radarData} />
           <TopHighlightsCard radarData={radarData} />
-        </div>
+        </Row>
 
         <ProfileTabs
           postsLoading={postsLoading}
@@ -191,7 +172,7 @@ export default function ProfilePage() {
           badgesLoading={badgesLoading}
           isOwner={true}
         />
-      </div>
+      </Column>
 
       <EditProfileModal
         isOpen={isEditModalOpen}
@@ -213,6 +194,6 @@ export default function ProfilePage() {
           );
         }}
       />
-    </div>
+    </Column>
   );
 }

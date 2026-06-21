@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ChevronsLeft, ChevronsRight, History, Star, Wind, Droplets } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { useWeather } from "@/hooks/useWeather";
 import { MOODS, GROUPS, RECENT_PLANS } from "./constants";
 
@@ -72,10 +73,9 @@ export function PlannerSidebar({
       }}
     >
       {/* Toggle */}
-      <div
+      <Row
+        vertical="center"
         style={{
-          display: "flex",
-          alignItems: "center",
           justifyContent: collapsed ? "center" : "space-between",
           padding: collapsed ? 0 : "0 4px",
           marginBottom: collapsed ? 0 : 4,
@@ -108,7 +108,7 @@ export function PlannerSidebar({
             <ChevronsRight size={15} color="#8E8E93" />
           )}
         </motion.button>
-      </div>
+      </Row>
 
       {/* Collapsed icon rail */}
       {collapsed && (
@@ -188,7 +188,7 @@ export function PlannerSidebar({
         <>
           {/* Weather */}
           {(step === 1 || step === 2) && (
-            <div
+            <Column
               style={{
                 borderRadius: 18,
                 padding: "14px",
@@ -206,7 +206,7 @@ export function PlannerSidebar({
               }}
             >
               {weatherLoading ? (
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Row vertical="center" style={{ gap: 8 }}>
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -219,18 +219,17 @@ export function PlannerSidebar({
                     }}
                   />
                   <span style={{ fontSize: 11, color: "#8E8E93" }}>Getting local weather...</span>
-                </div>
+                </Row>
               ) : weather ? (
                 <>
-                  <div
+                  <Row
                     style={{
-                      display: "flex",
                       alignItems: "flex-start",
                       justifyContent: "space-between",
                       marginBottom: 6,
                     }}
                   >
-                    <div>
+                    <Column>
                       <p style={{ fontSize: 10, fontWeight: 700, color: "#8E8E93", margin: "0 0 1px" }}>
                         Right Now in
                       </p>
@@ -248,11 +247,11 @@ export function PlannerSidebar({
                       >
                         {weather.locationName}
                       </p>
-                    </div>
+                    </Column>
                     <span style={{ fontSize: 24, lineHeight: 1 }}>{weather.emoji}</span>
-                  </div>
-                  <div
-                    style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 4 }}
+                  </Row>
+                  <Row
+                    style={{ alignItems: "baseline", gap: 4, marginBottom: 4 }}
                   >
                     <span style={{ fontSize: 22, fontWeight: 900, color: "#1C1C1E", lineHeight: 1 }}>
                       {weather.temp}°
@@ -260,16 +259,16 @@ export function PlannerSidebar({
                     <span style={{ fontSize: 11, color: "#636366", fontWeight: 600 }}>
                       {weather.label}
                     </span>
-                  </div>
-                  <div style={{ display: "flex", gap: 10, marginBottom: 8 }}>
+                  </Row>
+                  <Row style={{ gap: 10, marginBottom: 8 }}>
                     <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10, color: "#8E8E93" }}>
                       <Wind size={9} /> {weather.windspeed} km/h
                     </span>
                     <span style={{ display: "flex", alignItems: "center", gap: 3, fontSize: 10, color: "#8E8E93" }}>
                       <Droplets size={9} /> {weather.humidity}%
                     </span>
-                  </div>
-                  <div
+                  </Row>
+                  <Column
                     style={{
                       padding: "7px 9px",
                       borderRadius: 10,
@@ -281,16 +280,16 @@ export function PlannerSidebar({
                     }}
                   >
                     {weather.diningTip}
-                  </div>
+                  </Column>
                 </>
               ) : (
                 <p style={{ fontSize: 11, color: "#8E8E93", margin: 0 }}>Weather unavailable</p>
               )}
-            </div>
+            </Column>
           )}
 
           {/* Recent Plans */}
-          <div
+          <Column
             style={{
               borderRadius: 18,
               padding: "14px",
@@ -302,11 +301,9 @@ export function PlannerSidebar({
             <p style={{ fontSize: 12, fontWeight: 800, color: "#1C1C1E", margin: "0 0 10px" }}>
               Recent Plans
             </p>
-            <div
+            <Column
               className="no-scrollbar"
               style={{
-                display: "flex",
-                flexDirection: "column",
                 gap: 6,
                 maxHeight: 180,
                 overflowY: "auto",
@@ -314,11 +311,10 @@ export function PlannerSidebar({
               }}
             >
               {RECENT_PLANS.map((p) => (
-                <div
+                <Row
                   key={p.name}
+                  vertical="center"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
                     gap: 8,
                     padding: "8px 10px",
                     borderRadius: 12,
@@ -336,7 +332,7 @@ export function PlannerSidebar({
                   }
                 >
                   <span style={{ fontSize: 18, flexShrink: 0 }}>{p.emoji}</span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
+                  <Column style={{ flex: 1, minWidth: 0 }}>
                     <p
                       style={{
                         fontSize: 11,
@@ -353,15 +349,15 @@ export function PlannerSidebar({
                     <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>
                       {p.stops} stops · {p.cost}
                     </p>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               ))}
-            </div>
-          </div>
+            </Column>
+          </Column>
 
           {/* Live Plan Preview */}
           {(step === 1 || step === 2) && (
-            <div
+            <Column
               style={{
                 borderRadius: 18,
                 padding: "14px",
@@ -373,10 +369,11 @@ export function PlannerSidebar({
               <p style={{ fontSize: 12, fontWeight: 800, color: "#1C1C1E", margin: "0 0 10px" }}>
                 Your Plan So Far
               </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              <Row style={{ flexWrap: "wrap", gap: 6 }}>
                 {fields.map(({ key, value }) => (
-                  <div
+                  <Row
                     key={key}
+                    vertical="center"
                     style={{
                       padding: "4px 8px",
                       borderRadius: 8,
@@ -387,8 +384,6 @@ export function PlannerSidebar({
                       border: value
                         ? "1px solid rgba(255,107,53,0.2)"
                         : "1px dashed rgba(0,0,0,0.1)",
-                      display: "flex",
-                      alignItems: "center",
                       gap: 4,
                     }}
                   >
@@ -398,11 +393,11 @@ export function PlannerSidebar({
                     ) : (
                       <span>...</span>
                     )}
-                  </div>
+                  </Row>
                 ))}
-              </div>
-              <div style={{ marginTop: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+              </Row>
+              <Column style={{ marginTop: 12 }}>
+                <Row style={{ justifyContent: "space-between", marginBottom: 5 }}>
                   <span style={{ fontSize: 10, color: "#8E8E93", fontWeight: 600 }}>
                     Completeness
                   </span>
@@ -415,8 +410,8 @@ export function PlannerSidebar({
                   >
                     {pct}%
                   </span>
-                </div>
-                <div
+                </Row>
+                <Column
                   style={{
                     height: 5,
                     backgroundColor: "#F2F2F7",
@@ -432,15 +427,15 @@ export function PlannerSidebar({
                     transition={{ duration: 0.5 }}
                     style={{ height: "100%", borderRadius: 4 }}
                   />
-                </div>
+                </Column>
                 <p style={{ fontSize: 11, color: "#8E8E93", margin: "6px 0 0 0", lineHeight: 1.4 }}>
                   {pct === 0 && "Start selecting to see your plan!"}
                   {pct > 0 && pct < 50 && "Looking good — keep going!"}
                   {pct >= 50 && pct < 100 && "Almost there!"}
                   {pct === 100 && "Ready to generate! 🚀"}
                 </p>
-              </div>
-            </div>
+              </Column>
+            </Column>
           )}
         </>
       )}

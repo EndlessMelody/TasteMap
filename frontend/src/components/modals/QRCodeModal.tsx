@@ -3,6 +3,11 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import QRCode from "react-qr-code";
+import { Column } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
+
+// QR code brand foreground — display-only prop to react-qr-code library
+const QR_FG_COLOR = "#ff6b35";
 
 interface QRCodeModalProps {
     user?: any;
@@ -12,7 +17,6 @@ interface QRCodeModalProps {
 }
 
 export default function QRCodeModal({ isOpen, onClose, url: providedUrl, user }: QRCodeModalProps) {
-    // Generate URL if not provided by parent
     const url = providedUrl || (user?.id ? `${window.location.origin}/foodies/${user.id}` : "");
 
     return (
@@ -33,12 +37,11 @@ export default function QRCodeModal({ isOpen, onClose, url: providedUrl, user }:
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        zIndex: 9999, // Phải đảm bảo z-index cao để đè lên mọi thứ
+                        zIndex: 9999,
                         padding: "20px",
                     }}
-                    onClick={onClose} // Bấm ra ngoài nền đen sẽ đóng modal
+                    onClick={onClose}
                 >
-                    {/* Vùng chứa nội dung Modal (ngăn sự kiện click truyền ra ngoài) */}
                     <motion.div
                         initial={{ scale: 0.95, y: 20 }}
                         animate={{ scale: 1, y: 0 }}
@@ -46,7 +49,7 @@ export default function QRCodeModal({ isOpen, onClose, url: providedUrl, user }:
                         transition={{ type: "spring", damping: 25, stiffness: 300 }}
                         onClick={(e) => e.stopPropagation()}
                         style={{
-                            backgroundColor: "#ffffff",
+                            backgroundColor: tokens.color.surface,
                             borderRadius: "24px",
                             padding: "32px",
                             width: "100%",
@@ -55,17 +58,16 @@ export default function QRCodeModal({ isOpen, onClose, url: providedUrl, user }:
                             flexDirection: "column",
                             alignItems: "center",
                             position: "relative",
-                            boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)",
+                            boxShadow: tokens.shadow.lg,
                         }}
                     >
-                        {/* Nút tắt X */}
                         <button
                             onClick={onClose}
                             style={{
                                 position: "absolute",
                                 top: "16px",
                                 right: "16px",
-                                background: "#f2f2f7",
+                                background: tokens.color.surfaceMuted,
                                 border: "none",
                                 borderRadius: "50%",
                                 width: "32px",
@@ -74,40 +76,40 @@ export default function QRCodeModal({ isOpen, onClose, url: providedUrl, user }:
                                 alignItems: "center",
                                 justifyContent: "center",
                                 cursor: "pointer",
-                                color: "#8e8e93",
+                                color: tokens.color.textMuted,
                             }}
                         >
                             <X size={18} />
                         </button>
 
-                        <h3 style={{ margin: "0 0 8px 0", fontSize: "1.2rem", color: "#1c1c1e" }}>
+                        <h3 style={{ margin: "0 0 8px 0", fontSize: "1.2rem", color: tokens.color.text }}>
                             Mã QR TasteMap
                         </h3>
-                        <p style={{ margin: "0 0 24px 0", fontSize: "0.85rem", color: "#8e8e93", textAlign: "center" }}>
+                        <p style={{ margin: "0 0 24px 0", fontSize: "0.85rem", color: tokens.color.textMuted, textAlign: "center" }}>
                             Dùng camera hoặc Zalo quét mã này để kết bạn nhé!
                         </p>
 
-                        {/* Vùng vẽ mã QR */}
-                        <div
+                        <Column
+                            center
                             style={{
-                                background: "#ffffff",
+                                background: tokens.color.surface,
                                 padding: "16px",
                                 borderRadius: "20px",
                                 border: "2px solid rgba(255, 107, 53, 0.1)",
-                                boxShadow: "0 4px 12px rgba(255, 107, 53, 0.05)",
+                                boxShadow: tokens.shadow.sm,
                             }}
                         >
                             {url ? (
                                 <QRCode
                                     value={url}
                                     size={200}
-                                    fgColor="#ff6b35" // Màu cam chủ đạo của app
-                                    level="H" // Quality cao nhất để dễ quét
+                                    fgColor={QR_FG_COLOR}
+                                    level="H"
                                 />
                             ) : (
-                                <div style={{ width: 200, height: 200, backgroundColor: "#f9f9fb" }} />
+                                <Column style={{ width: 200, height: 200, background: tokens.color.surfaceMuted }} />
                             )}
-                        </div>
+                        </Column>
                     </motion.div>
                 </motion.div>
             )}

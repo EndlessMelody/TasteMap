@@ -11,6 +11,7 @@ import ReelModal from "@/components/ReelModal";
 import { PostData, ReelData } from "@/types/dashboard";
 import { BadgeSummary } from "@/types/gamification";
 import { toast } from "sonner";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 
 const TABS = ["Posts", "Reviews", "Achievements", "Taste Vault"] as const;
@@ -104,17 +105,10 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        marginBottom: tokens.space[16],
-      }}
-    >
-      <div
+    <Column style={{ marginBottom: tokens.space[16] }}>
+      <Row
         role="tablist"
         style={{
-          display: "flex",
           gap: tokens.space[8],
           borderBottom: `1px solid ${tokens.color.border}`,
           marginBottom: tokens.space[8],
@@ -161,7 +155,7 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
             </button>
           );
         })}
-      </div>
+      </Row>
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -200,6 +194,7 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
       </AnimatePresence>
 
       {selectedPost && (
+
         <PostModal
           isOpen={isPostModalOpen}
           data={selectedPost}
@@ -213,7 +208,7 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
           onClose={() => setIsReelModalOpen(false)}
         />
       )}
-    </div>
+    </Column>
   );
 };
 

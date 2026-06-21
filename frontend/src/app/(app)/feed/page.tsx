@@ -9,6 +9,7 @@ import { useSocialStore } from "@/store/socialStore";
 import { apiPost } from "@/lib/api";
 import { toast } from "sonner";
 import type { PostData } from "@/types/dashboard";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Avatar,
   Caption,
@@ -72,30 +73,27 @@ function SkeletonCard() {
       }}
     >
       <Skeleton height={220} radius="sm" />
-      <div
+      <Column
         style={{
           padding: tokens.space[4],
-          display: "flex",
-          flexDirection: "column",
           gap: tokens.space[2],
         }}
       >
-        <div
+        <Row
           style={{
-            display: "flex",
             gap: tokens.space[2],
             marginBottom: tokens.space[2],
           }}
         >
           <Skeleton width={38} height={38} radius="pill" />
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
+          <Column flex="1" style={{ gap: 6 }}>
             <Skeleton width="40%" height={13} />
             <Skeleton width="60%" height={11} />
-          </div>
-        </div>
+          </Column>
+        </Row>
         <Skeleton width="100%" height={12} />
         <Skeleton width="80%" height={12} />
-      </div>
+      </Column>
     </Card>
   );
 }
@@ -147,13 +145,11 @@ export default function FeedPage() {
 
   if (error && (!posts || posts.length === 0)) {
     return (
-      <div
+      <Column
+        center
         style={{
           minHeight: "80vh",
           background: tokens.color.bg,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           padding: tokens.space[6],
         }}
       >
@@ -163,7 +159,7 @@ export default function FeedPage() {
             description={error}
           />
         </Card>
-      </div>
+      </Column>
     );
   }
 
@@ -172,27 +168,26 @@ export default function FeedPage() {
   ).slice(0, 8);
 
   return (
-    <div
+    <Column
+      fillWidth
       style={{
         background: tokens.color.bg,
         color: tokens.color.text,
         minHeight: "100%",
-        width: "100%",
       }}
     >
-      <div
+      <Column
+        fillWidth
         style={{
           maxWidth: 520,
           margin: "0 auto",
-          width: "100%",
           padding: `${tokens.space[4]} 0`,
         }}
       >
         {storyAuthors.length > 0 && (
-          <div
+          <Row
             className="no-scrollbar"
             style={{
-              display: "flex",
               gap: tokens.space[3],
               padding: `${tokens.space[2]} ${tokens.space[4]}`,
               overflowX: "auto",
@@ -201,13 +196,12 @@ export default function FeedPage() {
             {storyAuthors.map((p) => (
               <StoryRing key={p.id} avatar={p.avatar} name={p.name} />
             ))}
-          </div>
+          </Row>
         )}
 
-        <div
+        <Row
           className="no-scrollbar"
           style={{
-            display: "flex",
             gap: tokens.space[2],
             padding: `${tokens.space[2]} ${tokens.space[4]} ${tokens.space[3]}`,
             overflowX: "auto",
@@ -245,9 +239,9 @@ export default function FeedPage() {
               </button>
             );
           })}
-        </div>
+        </Row>
 
-        <div style={{ padding: `0 ${tokens.space[3]}` }}>
+        <Column style={{ padding: `0 ${tokens.space[3]}` }}>
           {isLoading && (!posts || posts.length === 0) ? (
             <>
               <SkeletonCard />
@@ -282,7 +276,7 @@ export default function FeedPage() {
 
           {isLoading && posts && posts.length > 0 && <SkeletonCard />}
 
-          <div ref={loadMoreRef} style={{ height: 1 }} />
+          <Column ref={loadMoreRef} style={{ height: 1 }} />
 
           {!isLoading && posts.length > 0 && (
             <BodySm
@@ -295,8 +289,8 @@ export default function FeedPage() {
               You're all caught up.
             </BodySm>
           )}
-        </div>
-      </div>
+        </Column>
+      </Column>
 
       {selectedPost && (
         <PostModal
@@ -305,6 +299,6 @@ export default function FeedPage() {
           onClose={() => setSelectedPost(null)}
         />
       )}
-    </div>
+    </Column>
   );
 }

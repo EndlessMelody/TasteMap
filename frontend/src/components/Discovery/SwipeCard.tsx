@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import { Check, X } from "lucide-react";
 import { Column, Row, Heading, Text } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 
 export interface LocationData {
   id: string;
@@ -104,10 +105,10 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
       onDrag={(_e, info) => dragX.set(info.offset.x)}
     >
       {/* Background image with blur-up progressive load */}
-      <div style={{ position: "absolute", inset: 0 }}>
+      <Column style={{ position: "absolute", inset: 0 }}>
         {/* Low-quality placeholder blur layer */}
         {!imageLoaded && (
-          <div
+          <Column
             style={{
               position: "absolute",
               inset: 0,
@@ -136,7 +137,7 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
             transition: "opacity 0.5s ease",
           }}
         />
-      </div>
+      </Column>
 
       {/* Like overlay — green, appears on right-drag */}
       <motion.div
@@ -179,10 +180,10 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
           padding: "6px 14px",
         }}
       >
-        <Check size={18} color="#22c55e" strokeWidth={3} />
+        <Check size={18} color={tokens.color.success} strokeWidth={3} />
         <span
           style={{
-            color: "#22c55e",
+            color: tokens.color.success,
             fontWeight: 800,
             fontSize: "0.85rem",
             letterSpacing: "0.05em",
@@ -210,10 +211,10 @@ export const SwipeCard: React.FC<SwipeCardProps> = ({
           padding: "6px 14px",
         }}
       >
-        <X size={18} color="#ef4444" strokeWidth={3} />
+        <X size={18} color={tokens.color.danger} strokeWidth={3} />
         <span
           style={{
-            color: "#ef4444",
+            color: tokens.color.danger,
             fontWeight: 800,
             fontSize: "0.85rem",
             letterSpacing: "0.05em",

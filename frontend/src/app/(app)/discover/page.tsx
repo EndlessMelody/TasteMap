@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { Column } from "@once-ui-system/core";
 import { motion, useScroll } from "framer-motion";
 
 // Modular Components
@@ -20,9 +21,6 @@ import PostModal from "@/components/PostModal";
 import ReelModal from "@/components/ReelModal";
 import { SettingsModal } from "@/components/modals/SettingsModal";
 import { CreateRoomModal } from "@/components/modals/CreateRoomModal";
-
-// Design tokens
-import { tokens } from "@/styles/tokens";
 
 // Types & Data
 import { ReelData, PostData } from "@/types/dashboard";
@@ -72,17 +70,7 @@ export default function DiscoverPage() {
 
   return (
     <React.Fragment>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          flex: 1,
-          minWidth: 0,
-          position: "relative",
-          backgroundColor: tokens.color.bg,
-        }}
-      >
+      <Column fillWidth fillHeight flex="1" background="page">
         <DashboardHeader
           scrollY={scrollY}
           onProfileClick={() => {}}
@@ -93,39 +81,26 @@ export default function DiscoverPage() {
           onNotifClick={() => {}}
         />
 
-        <div
+        <Column
           ref={scrollRef}
           className="no-scrollbar"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            flexGrow: 1,
-            flexShrink: 1,
-            flexBasis: "0%",
-            minWidth: 0,
-            minHeight: 0,
-            overflowY: "auto",
-            paddingBottom: "60px",
-            position: "relative",
-          }}
+          fillWidth
+          fillHeight
+          flex="1"
+          overflowY="auto"
+          style={{ paddingBottom: "60px" }}
         >
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="show"
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                gap: "0px",
-                paddingTop: tokens.space[4],
-                paddingBottom: tokens.space[3],
-                paddingLeft: tokens.space[8],
-                paddingRight: tokens.space[8],
-              }}
+            <Column
+              fillWidth
+              gap="0"
+              paddingTop="16"
+              paddingBottom="12"
+              paddingX="32"
             >
               {/* ── Context Ribbon ─────────────────────────────────── */}
               <motion.div variants={itemVariants}>
@@ -172,10 +147,10 @@ export default function DiscoverPage() {
               <motion.div variants={itemVariants} style={{ marginTop: "32px" }}>
                 <TasteMapProBanner />
               </motion.div>
-            </div>
+            </Column>
           </motion.div>
-        </div>
-      </div>
+        </Column>
+      </Column>
 
       {selectedReel && (
         <ReelModal

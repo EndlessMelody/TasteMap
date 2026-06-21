@@ -1,5 +1,6 @@
 "use client";
 
+import { Column } from "@once-ui-system/core";
 import type { ItineraryStop } from "./types";
 import { MAP_POS } from "./constants";
 
@@ -13,7 +14,7 @@ export function RouteMap({ stops, activeStop }: RouteMapProps) {
   const pathD = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p[0]},${p[1]}`).join(" ");
 
   return (
-    <div
+    <Column
       style={{
         position: "relative",
         height: 320,
@@ -82,7 +83,7 @@ export function RouteMap({ stops, activeStop }: RouteMapProps) {
           );
         })}
       </svg>
-      <div
+      <Column
         style={{
           position: "absolute",
           top: 8,
@@ -93,7 +94,7 @@ export function RouteMap({ stops, activeStop }: RouteMapProps) {
         }}
       >
         HCMC Route Map
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }

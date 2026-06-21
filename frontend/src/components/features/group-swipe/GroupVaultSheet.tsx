@@ -3,6 +3,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Archive, Heart } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import type { VaultItem } from "@/hooks/useGroupSwipe";
 import { Card, IconButton, Pill, H3, Body, BodySm, Caption } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
@@ -17,12 +18,7 @@ interface GroupVaultSheetProps {
   loading: boolean;
 }
 
-export function GroupVaultSheet({
-  open,
-  onClose,
-  vault,
-  loading,
-}: GroupVaultSheetProps) {
+export function GroupVaultSheet({ open, onClose, vault, loading }: GroupVaultSheetProps) {
   return (
     <AnimatePresence>
       {open && (
@@ -62,13 +58,8 @@ export function GroupVaultSheet({
               overflow: "hidden",
             }}
           >
-            <div
-              style={{
-                padding: `${tokens.space[3]} ${tokens.space[5]} 0`,
-                flexShrink: 0,
-              }}
-            >
-              <div
+            <Column style={{ padding: `${tokens.space[3]} ${tokens.space[5]} 0`, flexShrink: 0 }}>
+              <Column
                 style={{
                   width: 36,
                   height: 4,
@@ -78,22 +69,15 @@ export function GroupVaultSheet({
                 }}
               />
 
-              <div
+              <Row
+                horizontal="between"
+                vertical="center"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
                   paddingBottom: tokens.space[3],
                   borderBottom: `1px solid ${tokens.color.border}`,
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: tokens.space[2],
-                  }}
-                >
+                <Row vertical="center" style={{ gap: tokens.space[2] }}>
                   <span
                     style={{
                       width: 32,
@@ -108,13 +92,13 @@ export function GroupVaultSheet({
                   >
                     <Archive size={16} strokeWidth={1.75} />
                   </span>
-                  <div>
+                  <Column>
                     <H3>Group vault</H3>
                     <Caption tone="muted">
                       {vault.length} place{vault.length !== 1 ? "s" : ""} saved
                     </Caption>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
 
                 <IconButton
                   variant="ghost"
@@ -123,10 +107,10 @@ export function GroupVaultSheet({
                   icon={<X size={16} strokeWidth={1.75} />}
                   onClick={onClose}
                 />
-              </div>
-            </div>
+              </Row>
+            </Column>
 
-            <div
+            <Column
               className="no-scrollbar"
               style={{
                 flex: 1,
@@ -135,14 +119,7 @@ export function GroupVaultSheet({
               }}
             >
               {loading ? (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: 40,
-                  }}
-                >
+                <Column center style={{ padding: 40 }}>
                   <div
                     style={{
                       width: 32,
@@ -154,9 +131,9 @@ export function GroupVaultSheet({
                     }}
                   />
                   <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-                </div>
+                </Column>
               ) : vault.length === 0 ? (
-                <div
+                <Column
                   style={{
                     textAlign: "center",
                     padding: `${tokens.space[10]} ${tokens.space[5]}`,
@@ -168,26 +145,15 @@ export function GroupVaultSheet({
                     strokeWidth={1.5}
                     style={{ color: tokens.color.textSubtle, marginBottom: tokens.space[3] }}
                   />
-                  <Body
-                    style={{
-                      fontWeight: tokens.type.weight.semibold,
-                      marginBottom: 4,
-                    }}
-                  >
+                  <Body style={{ fontWeight: tokens.type.weight.semibold, marginBottom: 4 }}>
                     Vault is empty
                   </Body>
                   <BodySm tone="muted">
                     Places you and your group like will appear here.
                   </BodySm>
-                </div>
+                </Column>
               ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: tokens.space[2],
-                  }}
-                >
+                <Column style={{ gap: tokens.space[2] }}>
                   {vault.map((item, idx) => (
                     <motion.div
                       key={item.location_id}
@@ -196,13 +162,7 @@ export function GroupVaultSheet({
                       transition={{ delay: idx * 0.04 }}
                     >
                       <Card radius="md" padding="sm" shadow="none" surface="muted">
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: tokens.space[3],
-                          }}
-                        >
+                        <Row vertical="center" style={{ gap: tokens.space[3] }}>
                           <img
                             src={item.image_url || FALLBACK_IMG}
                             alt=""
@@ -214,7 +174,7 @@ export function GroupVaultSheet({
                               flexShrink: 0,
                             }}
                           />
-                          <div style={{ flex: 1, minWidth: 0 }}>
+                          <Column style={{ flex: 1, minWidth: 0 }}>
                             <Body
                               style={{
                                 fontWeight: tokens.type.weight.semibold,
@@ -225,10 +185,9 @@ export function GroupVaultSheet({
                             >
                               {item.name}
                             </Body>
-                            <div
+                            <Row
+                              vertical="center"
                               style={{
-                                display: "flex",
-                                alignItems: "center",
                                 gap: 4,
                                 marginTop: 2,
                                 color: tokens.color.textMuted,
@@ -243,19 +202,19 @@ export function GroupVaultSheet({
                               <Caption tone="muted">
                                 {item.votes} vote{item.votes !== 1 ? "s" : ""}
                               </Caption>
-                            </div>
-                          </div>
+                            </Row>
+                          </Column>
 
                           <Pill tone="success" size="md">
                             {item.votes}
                           </Pill>
-                        </div>
+                        </Row>
                       </Card>
                     </motion.div>
                   ))}
-                </div>
+                </Column>
               )}
-            </div>
+            </Column>
           </motion.div>
         </>
       )}

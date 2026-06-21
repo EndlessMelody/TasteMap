@@ -2,13 +2,15 @@
 
 import React, { useState } from "react";
 import { Share2, Link2, QrCode, Settings } from "lucide-react";
+import { Column } from "@once-ui-system/core";
 import { Card, H3 } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 import { useProfileActions } from "@/hooks/useProfileActions";
 import QRCodeModal from "@/components/modals/QRCodeModal";
+import type { UserMe } from "@/types/dashboard";
 
 interface QuickActionsCardProps {
-  user: { username?: string; avatar_url?: string } & Record<string, unknown>;
+  user: Pick<UserMe, "id" | "username" | "avatar_url"> | null;
   onSettingsClick?: () => void;
 }
 
@@ -66,13 +68,7 @@ export const QuickActionsCard: React.FC<QuickActionsCardProps> = ({
     <>
       <Card radius="xl" padding="md" shadow="sm">
         <H3 style={{ marginBottom: tokens.space[4] }}>Quick actions</H3>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[1],
-          }}
-        >
+        <Column style={{ gap: tokens.space[1] }}>
           <ActionRow
             icon={<Share2 size={18} strokeWidth={1.75} />}
             label="Share profile"
@@ -93,7 +89,7 @@ export const QuickActionsCard: React.FC<QuickActionsCardProps> = ({
             label="Settings"
             onClick={onSettingsClick}
           />
-        </div>
+        </Column>
       </Card>
 
       <QRCodeModal

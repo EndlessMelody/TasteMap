@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { Avatar } from "@once-ui-system/core";
+import { Avatar, Column, Row } from "@once-ui-system/core";
 import { Heart, MapPin, MessageCircle, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { apiPost } from "@/lib/api";
+import { tokens } from "@/styles/tokens";
 import { BookmarkButton } from "@/components/common/BookmarkButton";
 import { CommentSection } from "@/components/common/CommentSection";
 import { useSocialStore } from "@/store/socialStore";
@@ -59,7 +60,7 @@ export default function PostModal({
               width: "100%",
               maxWidth: "1080px",
               height: "88vh",
-              backgroundColor: "#FFFFFF",
+              backgroundColor: tokens.color.surface,
               borderRadius: "28px",
               overflow: "hidden",
               boxShadow: "0 40px 100px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08)",
@@ -67,19 +68,16 @@ export default function PostModal({
               flexDirection: "row",
             }}
           >
-            <div
+            <Column
+              center
               style={{
                 width: "56%",
                 height: "100%",
-                backgroundColor: "#0a0a0a",
-                position: "relative",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                backgroundColor: tokens.color.bg,
                 overflow: "hidden",
               }}
             >
-              <div
+              <Column
                 style={{
                   position: "absolute",
                   inset: 0,
@@ -99,45 +97,40 @@ export default function PostModal({
                   display: "block",
                 }}
               />
-            </div>
+            </Column>
 
-            <div
+            <Column
               style={{
                 width: "44%",
                 height: "100%",
-                backgroundColor: "#FFFFFF",
-                display: "flex",
-                flexDirection: "column",
+                backgroundColor: tokens.color.surface,
                 minWidth: 0,
               }}
             >
-              <div
+              <Column
                 style={{
                   padding: "20px",
-                  borderBottom: "1px solid #F0F0F0",
-                  display: "flex",
-                  flexDirection: "column",
+                  borderBottom: `1px solid ${tokens.color.border}`,
                   gap: "16px",
                   flexShrink: 0,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0 }}>
+                <Row horizontal="between" vertical="center">
+                  <Row vertical="center" style={{ gap: "12px", minWidth: 0 }}>
                     <Avatar src={data.avatar} size="m" />
-                    <div style={{ minWidth: 0 }}>
-                      <div
+                    <Column style={{ minWidth: 0 }}>
+                      <Row
+                        vertical="center"
                         style={{
+                          gap: "8px",
                           fontSize: "1rem",
                           fontWeight: 700,
-                          color: "#1C1C1E",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "8px",
+                          color: tokens.color.text,
                         }}
                       >
                         {data.name}
                         {data.primaryBadge && (
-                          <div
+                          <Column
                             style={{
                               fontSize: "10px",
                               fontWeight: 700,
@@ -149,14 +142,20 @@ export default function PostModal({
                             }}
                           >
                             {data.primaryBadge.name}
-                          </div>
+                          </Column>
                         )}
-                      </div>
-                      <div style={{ fontSize: "0.75rem", color: "#8E8E93", marginTop: "2px" }}>
+                      </Row>
+                      <Column
+                        style={{
+                          fontSize: "0.75rem",
+                          color: tokens.color.textMuted,
+                          marginTop: "2px",
+                        }}
+                      >
                         {data.time} — {data.location}
-                      </div>
-                    </div>
-                  </div>
+                      </Column>
+                    </Column>
+                  </Row>
 
                   <button
                     type="button"
@@ -166,7 +165,7 @@ export default function PostModal({
                       height: "32px",
                       borderRadius: "50%",
                       border: "none",
-                      backgroundColor: "#F5F5F7",
+                      backgroundColor: tokens.color.surfaceMuted,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -174,17 +173,17 @@ export default function PostModal({
                       transition: "all 0.2s",
                     }}
                   >
-                    <X size={16} color="#1d1d1f" />
+                    <X size={16} color={tokens.color.text} />
                   </button>
-                </div>
+                </Row>
 
-                <div style={{ paddingLeft: "2px" }}>
+                <Column style={{ paddingLeft: "2px" }}>
                   <p
                     style={{
                       margin: 0,
                       fontSize: "0.9rem",
                       lineHeight: 1.6,
-                      color: "#1C1C1E",
+                      color: tokens.color.text,
                       whiteSpace: "pre-wrap",
                     }}
                   >
@@ -192,44 +191,29 @@ export default function PostModal({
                   </p>
 
                   {data.tags?.length ? (
-                    <div
-                      style={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: "8px",
-                        marginTop: "14px",
-                      }}
-                    >
+                    <Row style={{ flexWrap: "wrap", gap: "8px", marginTop: "14px" }}>
                       {data.tags.map((tag) => (
                         <span
                           key={tag}
                           style={{
                             padding: "4px 12px",
-                            backgroundColor: "#FFF5F0",
+                            backgroundColor: tokens.color.surfaceMuted,
                             borderRadius: "10px",
                             fontSize: "0.72rem",
                             fontWeight: 600,
-                            color: "#ff6b35",
-                            border: "1px solid rgba(255,107,53,0.1)",
+                            color: tokens.color.warm,
+                            border: `1px solid ${tokens.color.border}`,
                           }}
                         >
                           #{tag}
                         </span>
                       ))}
-                    </div>
+                    </Row>
                   ) : null}
-                </div>
-              </div>
+                </Column>
+              </Column>
 
-              <div
-                style={{
-                  flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  minHeight: 0,
-                  overflow: "hidden",
-                }}
-              >
+              <Column style={{ flex: 1, minHeight: 0, overflow: "hidden" }}>
                 <CommentSection
                   entityType="post"
                   entityId={data.id}
@@ -241,19 +225,18 @@ export default function PostModal({
                   listStyle={{ padding: "16px 20px" }}
                   fixedHeader={null}
                   footer={
-                    <div
+                    <Row
+                      horizontal="between"
+                      vertical="center"
                       style={{
                         padding: "12px 20px",
-                        borderTop: "1px solid #F0F0F0",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        borderTop: `1px solid ${tokens.color.border}`,
                         gap: "12px",
-                        backgroundColor: "#FFFFFF",
+                        backgroundColor: tokens.color.surface,
                         flexShrink: 0,
                       }}
                     >
-                      <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+                      <Row vertical="center" style={{ gap: "20px" }}>
                         <motion.button
                           type="button"
                           whileTap={{ scale: 0.85 }}
@@ -266,7 +249,9 @@ export default function PostModal({
                             gap: "6px",
                             padding: "6px 10px",
                             borderRadius: "20px",
-                            backgroundColor: data.isLiked ? "#FFF0EA" : "transparent",
+                            backgroundColor: data.isLiked
+                              ? "rgba(255,107,53,0.08)"
+                              : "transparent",
                             transition: "background 0.2s",
                           }}
                           onClick={async () => {
@@ -284,28 +269,34 @@ export default function PostModal({
                         >
                           <Heart
                             size={20}
-                            color={data.isLiked ? "#ff6b35" : "#C0C0C0"}
-                            fill={data.isLiked ? "#ff6b35" : "none"}
+                            color={data.isLiked ? tokens.color.warm : tokens.color.textMuted}
+                            fill={data.isLiked ? tokens.color.warm : "none"}
                             strokeWidth={data.isLiked ? 2.5 : 2}
                           />
                           <span
                             style={{
                               fontSize: "0.82rem",
                               fontWeight: 700,
-                              color: data.isLiked ? "#ff6b35" : "#888",
+                              color: data.isLiked ? tokens.color.warm : tokens.color.textMuted,
                             }}
                           >
                             {data.likes || 0}
                           </span>
                         </motion.button>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "6px 10px" }}>
-                          <MessageCircle size={20} color="#C0C0C0" />
-                          <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#888" }}>
+                        <Row vertical="center" style={{ gap: "6px", padding: "6px 10px" }}>
+                          <MessageCircle size={20} color={tokens.color.textMuted} />
+                          <span
+                            style={{
+                              fontSize: "0.82rem",
+                              fontWeight: 700,
+                              color: tokens.color.textMuted,
+                            }}
+                          >
                             {data.comments || 0}
                           </span>
-                        </div>
-                      </div>
+                        </Row>
+                      </Row>
 
                       <BookmarkButton
                         entityType="post"
@@ -313,13 +304,13 @@ export default function PostModal({
                         isBookmarked={data.isSaved ?? false}
                         size={36}
                         iconSize={20}
-                        inactiveColor="#C0C0C0"
+                        inactiveColor={tokens.color.textMuted}
                       />
-                    </div>
+                    </Row>
                   }
                 />
-              </div>
-            </div>
+              </Column>
+            </Column>
           </motion.div>
         </motion.div>
       )}

@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Star, Utensils, MapPin, Heart } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
   Body,
@@ -33,22 +34,9 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({
       : 0;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: tokens.space[3],
-      }}
-    >
+    <Column style={{ gap: tokens.space[3] }}>
       {reviews.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: tokens.space[3],
-            marginBottom: tokens.space[2],
-          }}
-        >
+        <Row vertical="center" style={{ gap: tokens.space[3], marginBottom: tokens.space[2] }}>
           <Pill tone="warm" size="md" solid leftIcon={<Star size={12} fill="currentColor" />}>
             {reviews.length} review{reviews.length === 1 ? "" : "s"}
           </Pill>
@@ -64,23 +52,17 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({
             </span>{" "}
             / 5
           </BodySm>
-        </div>
+        </Row>
       )}
 
       {postsLoading ? (
         [1, 2, 3].map((i) => (
           <Card key={i} radius="lg" padding="md" shadow="sm">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: tokens.space[2],
-              }}
-            >
+            <Column style={{ gap: tokens.space[2] }}>
               <Skeleton width="40%" height={16} />
               <Skeleton width="85%" height={13} />
               <Skeleton width="70%" height={13} />
-            </div>
+            </Column>
           </Card>
         ))
       ) : reviews.length === 0 ? (
@@ -107,13 +89,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({
               onClick={() => onReviewClick?.(review)}
               style={{ cursor: "pointer" }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  gap: tokens.space[4],
-                  alignItems: "flex-start",
-                }}
-              >
+              <Row style={{ gap: tokens.space[4], alignItems: "flex-start" }}>
                 {review.image_url ? (
                   <img
                     src={review.image_url}
@@ -128,71 +104,41 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({
                     }}
                   />
                 ) : (
-                  <div
+                  <Column
+                    center
                     style={{
                       width: 72,
                       height: 72,
                       borderRadius: tokens.radius.md,
                       background: tokens.color.surfaceMuted,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                       flexShrink: 0,
                       color: tokens.color.textSubtle,
                     }}
                   >
                     <Utensils size={24} strokeWidth={1.5} />
-                  </div>
+                  </Column>
                 )}
 
-                <div
-                  style={{
-                    flex: 1,
-                    minWidth: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: tokens.space[2],
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      flexWrap: "wrap",
-                      gap: tokens.space[2],
-                    }}
+                <Column style={{ flex: 1, minWidth: 0, gap: tokens.space[2] }}>
+                  <Row
+                    horizontal="between"
+                    vertical="center"
+                    style={{ flexWrap: "wrap", gap: tokens.space[2] }}
                   >
                     {review.location && (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: tokens.space[1],
-                        }}
-                      >
+                      <Row vertical="center" style={{ gap: tokens.space[1] }}>
                         <MapPin
                           size={14}
                           strokeWidth={1.75}
                           style={{ color: tokens.color.textMuted }}
                         />
-                        <Body
-                          style={{
-                            fontWeight: tokens.type.weight.semibold,
-                          }}
-                        >
+                        <Body style={{ fontWeight: tokens.type.weight.semibold }}>
                           {review.location.name}
                         </Body>
-                      </div>
+                      </Row>
                     )}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: tokens.space[2],
-                      }}
-                    >
-                      <div style={{ display: "flex", gap: 2 }}>
+                    <Row vertical="center" style={{ gap: tokens.space[2] }}>
+                      <Row style={{ gap: 2 }}>
                         {[1, 2, 3, 4, 5].map((s) => (
                           <Star
                             key={s}
@@ -206,7 +152,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({
                             color={tokens.color.warm}
                           />
                         ))}
-                      </div>
+                      </Row>
                       <BodySm
                         style={{
                           color: tokens.color.warm,
@@ -215,8 +161,8 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({
                       >
                         {(review.rating ?? 0).toFixed(1)}
                       </BodySm>
-                    </div>
-                  </div>
+                    </Row>
+                  </Row>
 
                   <BodySm
                     tone="muted"
@@ -230,33 +176,15 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({
                     {review.review}
                   </BodySm>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: tokens.space[1],
-                        flexWrap: "wrap",
-                      }}
-                    >
+                  <Row horizontal="between" vertical="center">
+                    <Row style={{ gap: tokens.space[1], flexWrap: "wrap" }}>
                       {(review.tags ?? []).slice(0, 2).map((tag) => (
                         <Pill key={tag} tone="neutral" size="sm">
                           {tag}
                         </Pill>
                       ))}
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: tokens.space[3],
-                      }}
-                    >
+                    </Row>
+                    <Row vertical="center" style={{ gap: tokens.space[3] }}>
                       <span
                         style={{
                           display: "inline-flex",
@@ -289,15 +217,15 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({
                           )}
                         </BodySm>
                       )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                    </Row>
+                  </Row>
+                </Column>
+              </Row>
             </Card>
           </motion.div>
         ))
       )}
-    </div>
+    </Column>
   );
 };
 

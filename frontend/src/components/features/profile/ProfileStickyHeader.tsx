@@ -3,6 +3,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserPlus, MessageCircle } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { Avatar, Button, Body, BodySm } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 import { UserData } from "./types";
@@ -19,7 +20,7 @@ export const ProfileStickyHeader: React.FC<ProfileStickyHeaderProps> = ({
   onComingSoon,
 }) => {
   return (
-    <div
+    <Column
       style={{
         position: "sticky",
         top: 0,
@@ -47,19 +48,13 @@ export const ProfileStickyHeader: React.FC<ProfileStickyHeaderProps> = ({
               borderBottom: `1px solid ${tokens.color.border}`,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: tokens.space[3],
-              }}
-            >
+            <Row vertical="center" style={{ gap: tokens.space[3] }}>
               <Avatar
                 size="sm"
                 name={user?.display_name || user?.username}
                 src={user?.avatar_url || undefined}
               />
-              <div style={{ display: "flex", flexDirection: "column" }}>
+              <Column>
                 <Body
                   style={{
                     fontWeight: tokens.type.weight.semibold,
@@ -69,9 +64,9 @@ export const ProfileStickyHeader: React.FC<ProfileStickyHeaderProps> = ({
                   {user?.display_name || user?.username || ""}
                 </Body>
                 <BodySm tone="muted">@{user?.username || ""}</BodySm>
-              </div>
-            </div>
-            <div style={{ display: "flex", gap: tokens.space[2] }}>
+              </Column>
+            </Row>
+            <Row style={{ gap: tokens.space[2] }}>
               <Button
                 variant="primary"
                 size="sm"
@@ -88,11 +83,11 @@ export const ProfileStickyHeader: React.FC<ProfileStickyHeaderProps> = ({
               >
                 Message
               </Button>
-            </div>
+            </Row>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Column>
   );
 };
 

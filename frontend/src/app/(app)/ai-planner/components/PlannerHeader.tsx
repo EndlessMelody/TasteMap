@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, ChevronLeft, ChevronRight, CheckCircle } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 
 const STEP_LABELS = ["Preferences", "Settings", "Generating", "Your Plan"];
 
@@ -13,7 +14,7 @@ interface PlannerHeaderProps {
 
 export function PlannerHeader({ step, ambience, onBack }: PlannerHeaderProps) {
   return (
-    <div
+    <Column
       style={{
         position: "sticky",
         top: 0,
@@ -23,8 +24,8 @@ export function PlannerHeader({ step, ambience, onBack }: PlannerHeaderProps) {
         borderBottom: "1px solid rgba(0,0,0,0.06)",
       }}
     >
-      <div className="flex items-center justify-between px-8 py-4">
-        <div className="flex items-center gap-4">
+      <Row horizontal="between" vertical="center" className="px-8 py-4">
+        <Row vertical="center" className="gap-4">
           {step > 1 && step < 3 && (
             <motion.button
               whileTap={{ scale: 0.93 }}
@@ -34,9 +35,11 @@ export function PlannerHeader({ step, ambience, onBack }: PlannerHeaderProps) {
               <ChevronLeft size={18} /> Back
             </motion.button>
           )}
-          <div className="flex items-center gap-2">
-            <div
-              className="w-8 h-8 rounded-[10px] flex items-center justify-center"
+          <Row vertical="center" className="gap-2">
+            <Row
+              horizontal="center"
+              vertical="center"
+              className="w-8 h-8 rounded-[10px]"
               style={{
                 background: ambience
                   ? `linear-gradient(135deg, ${ambience.accent}, #A855F7)`
@@ -45,20 +48,22 @@ export function PlannerHeader({ step, ambience, onBack }: PlannerHeaderProps) {
               }}
             >
               <Sparkles size={16} className="text-white" />
-            </div>
+            </Row>
             <h1 className="text-[20px] font-extrabold text-[#1C1C1E] tracking-tight">
               AI Food Planner
             </h1>
-          </div>
-        </div>
+          </Row>
+        </Row>
 
         {step < 3 && (
-          <div className="flex items-center gap-2">
+          <Row vertical="center" className="gap-2">
             {[1, 2].map((s) => (
-              <div key={s} className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5">
-                  <div
-                    className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-extrabold transition-all"
+              <Row key={s} vertical="center" className="gap-2">
+                <Row vertical="center" className="gap-1.5">
+                  <Row
+                    horizontal="center"
+                    vertical="center"
+                    className="w-6 h-6 rounded-full text-[11px] font-extrabold transition-all"
                     style={
                       step >= s
                         ? { backgroundColor: ambience?.accent ?? "#ff6b35", color: "#fff" }
@@ -66,23 +71,23 @@ export function PlannerHeader({ step, ambience, onBack }: PlannerHeaderProps) {
                     }
                   >
                     {step > s ? <CheckCircle size={14} /> : s}
-                  </div>
+                  </Row>
                   <span
                     className="text-[12px] font-semibold"
                     style={{ color: step >= s ? "#1C1C1E" : "#8E8E93" }}
                   >
                     {STEP_LABELS[s - 1]}
                   </span>
-                </div>
+                </Row>
                 {s < 2 && <ChevronRight size={14} className="text-[#D1D1D6]" />}
-              </div>
+              </Row>
             ))}
-          </div>
+          </Row>
         )}
-      </div>
+      </Row>
 
       {step < 3 && (
-        <div className="h-0.5 bg-[#E5E5EA]">
+        <Column className="h-0.5 bg-[#E5E5EA]">
           <motion.div
             className="h-full"
             animate={{
@@ -91,8 +96,8 @@ export function PlannerHeader({ step, ambience, onBack }: PlannerHeaderProps) {
             }}
             transition={{ duration: 0.4 }}
           />
-        </div>
+        </Column>
       )}
-    </div>
+    </Column>
   );
 }

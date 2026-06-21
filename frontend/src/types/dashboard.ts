@@ -1,4 +1,40 @@
 import React from "react";
+import { BadgeSummary } from "./gamification";
+
+export interface UserMe {
+  id: number;
+  username: string;
+  email: string;
+  display_name?: string;
+  avatar_url?: string;
+  bio?: string;
+  cover_url?: string;
+  location?: string;
+  title?: string;
+  phone?: string;
+  xp: number;
+  level: number;
+  next_level_xp: number;
+  total_xp_earned: number;
+  food_vector?: number[];
+  place_vector?: number[];
+  role: string;
+  settings?: Record<string, unknown>;
+  created_at?: string;
+  stats: {
+    reviews: number;
+    visited: number;
+    followers: number;
+    following: number;
+  };
+  primary_badge?: {
+    id: number;
+    name: string;
+    icon_name: string;
+    accent_color: string;
+  };
+  badges: BadgeSummary[];
+}
 
 export interface ReelData {
   id: number;

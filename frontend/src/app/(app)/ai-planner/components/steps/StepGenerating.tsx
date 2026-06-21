@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Brain } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { THINKING_MSGS } from "../constants";
 
 const FOOD_PARTICLES = ["🍜", "🥖", "🍵", "🍰", "🍣", "🥟", "🧋", "🍤", "🍚", "🔥"];
@@ -27,13 +28,12 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
   const progress = Math.min(((msgIdx + 1) / THINKING_MSGS.length) * 100, 100);
 
   return (
-    <div
+    <Column
+      horizontal="center"
       style={{
         width: "100%",
         height: "100%",
         backgroundColor: "#FAF8F5",
-        display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
@@ -84,7 +84,7 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
       ))}
 
       {/* AI Orb */}
-      <div style={{ position: "relative", width: 120, height: 120, marginBottom: 40 }}>
+      <Column style={{ position: "relative", width: 120, height: 120, marginBottom: 40 }}>
         {/* Outer dashed ring */}
         <motion.div
           animate={{ rotate: 360 }}
@@ -108,7 +108,7 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
             padding: 3,
           }}
         >
-          <div
+          <Column
             style={{
               width: "100%",
               height: "100%",
@@ -118,13 +118,12 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
           />
         </motion.div>
         {/* Center */}
-        <div
+        <Row
+          horizontal="center"
+          vertical="center"
           style={{
             position: "absolute",
             inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
           }}
         >
           <motion.div
@@ -133,7 +132,7 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
           >
             <Brain size={32} color="#FF6B35" />
           </motion.div>
-        </div>
+        </Row>
         {/* Pulse rings */}
         {[0, 1, 2].map((i) => (
           <motion.div
@@ -148,10 +147,10 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
             transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.7, ease: "easeOut" }}
           />
         ))}
-      </div>
+      </Column>
 
       {/* Text */}
-      <div style={{ textAlign: "center", zIndex: 1, marginBottom: 32 }}>
+      <Column style={{ textAlign: "center", zIndex: 1, marginBottom: 32 }}>
         <h3
           style={{
             fontSize: 26,
@@ -174,21 +173,19 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
             {msg}
           </motion.p>
         </AnimatePresence>
-      </div>
+      </Column>
 
       {/* Thinking steps + progress */}
-      <div
+      <Column
+        horizontal="center"
         style={{
           width: "100%",
           maxWidth: 360,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
           gap: 16,
           zIndex: 1,
         }}
       >
-        <div style={{ height: 64, position: "relative", width: "100%" }}>
+        <Column style={{ height: 64, position: "relative", width: "100%" }}>
           <AnimatePresence>
             {THINKING_MSGS.map((m, i) => {
               if (i < msgIdx - 1 || i > msgIdx + 1) return null;
@@ -230,10 +227,10 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
               );
             })}
           </AnimatePresence>
-        </div>
+        </Column>
 
         {/* Progress bar */}
-        <div
+        <Column
           style={{
             width: "75%",
             height: 3,
@@ -251,8 +248,8 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
               borderRadius: 4,
             }}
           />
-        </div>
-      </div>
-    </div>
+        </Column>
+      </Column>
+    </Column>
   );
 }

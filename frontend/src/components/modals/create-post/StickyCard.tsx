@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Column } from "@once-ui-system/core";
 
 interface StickyCardProps {
   children: React.ReactNode;
@@ -9,7 +10,7 @@ interface StickyCardProps {
 
 export function StickyCard({ children, top = "20px" }: StickyCardProps) {
   return (
-    <div
+    <Column
       style={{
         position: "sticky",
         top,
@@ -17,6 +18,6 @@ export function StickyCard({ children, top = "20px" }: StickyCardProps) {
       }}
     >
       {children}
-    </div>
+    </Column>
   );
 }

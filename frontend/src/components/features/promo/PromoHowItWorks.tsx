@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Sliders, Sparkles, Map } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -53,7 +54,7 @@ export function PromoHowItWorks() {
         overflow: "hidden",
       }}
     >
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" }}>
+      <Column style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -101,16 +102,15 @@ export function PromoHowItWorks() {
         </motion.div>
 
         {/* Steps */}
-        <div
+        <Grid
           style={{
-            display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
             gap: 20,
             position: "relative",
           }}
         >
           {/* Connector line */}
-          <div
+          <Column
             style={{
               position: "absolute",
               top: 36,
@@ -149,7 +149,7 @@ export function PromoHowItWorks() {
               }}
             >
               {/* Step number (decorative background) */}
-              <div
+              <Column
                 style={{
                   position: "absolute",
                   top: 16,
@@ -164,45 +164,43 @@ export function PromoHowItWorks() {
                 }}
               >
                 {step.num}
-              </div>
+              </Column>
 
               {/* Step circle */}
-              <div
+              <Row
+                horizontal="center"
+                vertical="center"
                 style={{
                   width: 56,
                   height: 56,
                   borderRadius: 16,
                   backgroundColor: step.bg,
                   border: `1px solid ${step.border}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   color: step.color,
                   flexShrink: 0,
                   boxShadow: step.highlight ? `0 6px 20px ${step.bg}` : "none",
                 }}
               >
                 {step.icon}
-              </div>
+              </Row>
 
               {/* Step number label */}
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <div
+              <Row vertical="center" style={{ display: "inline-flex", gap: 6 }}>
+                <Row
+                  horizontal="center"
+                  vertical="center"
                   style={{
                     width: 22,
                     height: 22,
                     borderRadius: "50%",
                     backgroundColor: step.bg,
                     border: `1px solid ${step.border}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                   }}
                 >
                   <span style={{ fontSize: 10, fontWeight: 800, color: step.color }}>
                     {i + 1}
                   </span>
-                </div>
+                </Row>
                 <span
                   style={{
                     fontSize: 11,
@@ -214,9 +212,9 @@ export function PromoHowItWorks() {
                 >
                   Step {step.num}
                 </span>
-              </div>
+              </Row>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <Column style={{ gap: 10 }}>
                 <h3
                   style={{
                     margin: 0,
@@ -239,10 +237,10 @@ export function PromoHowItWorks() {
                 >
                   {step.desc}
                 </p>
-              </div>
+              </Column>
             </motion.div>
           ))}
-        </div>
+        </Grid>
 
         {/* Bottom proof line */}
         <motion.div
@@ -280,7 +278,7 @@ export function PromoHowItWorks() {
             </React.Fragment>
           ))}
         </motion.div>
-      </div>
+      </Column>
     </section>
   );
 }

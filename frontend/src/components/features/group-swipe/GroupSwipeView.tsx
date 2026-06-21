@@ -10,6 +10,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { X, Heart, Star, Undo2, Sparkles, Archive, Trophy } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { toast } from "sonner";
 import { useGroupSwipe, type GroupCard } from "@/hooks/useGroupSwipe";
 import { TourDNABar } from "./TourDNABar";
@@ -60,9 +61,7 @@ function GroupSwipeCard({
   };
 
   const imgUrl =
-    card.image_url && card.image_url.trim() !== ""
-      ? card.image_url
-      : FALLBACK_IMG;
+    card.image_url && card.image_url.trim() !== "" ? card.image_url : FALLBACK_IMG;
 
   return (
     <motion.div
@@ -94,12 +93,7 @@ function GroupSwipeCard({
       <img
         src={imgUrl}
         alt={card.name}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          display: "block",
-        }}
+        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
       />
 
       <motion.div
@@ -124,12 +118,8 @@ function GroupSwipeCard({
       />
 
       {card.is_starred_by_teammate && (
-        <div
-          style={{
-            position: "absolute",
-            top: tokens.space[4],
-            left: tokens.space[4],
-          }}
+        <Column
+          style={{ position: "absolute", top: tokens.space[4], left: tokens.space[4] }}
         >
           <Pill
             tone="warning"
@@ -139,15 +129,11 @@ function GroupSwipeCard({
           >
             Teammate starred this
           </Pill>
-        </div>
+        </Column>
       )}
 
-      <div
-        style={{
-          position: "absolute",
-          top: tokens.space[4],
-          right: tokens.space[4],
-        }}
+      <Column
+        style={{ position: "absolute", top: tokens.space[4], right: tokens.space[4] }}
       >
         <Pill
           tone="neutral"
@@ -161,16 +147,14 @@ function GroupSwipeCard({
         >
           {Math.round(card.match_score)}% match
         </Pill>
-      </div>
+      </Column>
 
-      <div
+      <Column
         style={{
           position: "absolute",
           inset: 0,
           background:
             "linear-gradient(to top, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0.3) 40%, transparent 100%)",
-          display: "flex",
-          flexDirection: "column",
           justifyContent: "flex-end",
           padding: tokens.space[6],
         }}
@@ -202,7 +186,7 @@ function GroupSwipeCard({
             .filter(Boolean)
             .join(" · ") || "TasteMap place"}
         </BodySm>
-      </div>
+      </Column>
     </motion.div>
   );
 }
@@ -245,7 +229,7 @@ function CircleActionButton({
     warning: {
       bg: "rgba(251, 191, 36, 0.1)",
       border: "rgba(251, 191, 36, 0.4)",
-      color: "#92580d",
+      color: tokens.color.warning,
     },
   };
   const s = toneStyles[tone];
@@ -347,45 +331,27 @@ export function GroupSwipeView({
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        overflow: "hidden",
-        background: tokens.color.bg,
-      }}
-    >
-      <div
+    <Column style={{ height: "100%", overflow: "hidden", background: tokens.color.bg }}>
+      <Column
         style={{
           padding: `${tokens.space[4]} ${tokens.space[5]} ${tokens.space[2]}`,
           flexShrink: 0,
         }}
       >
         <TourDNABar groupVector={groupVector} />
-      </div>
+      </Column>
 
-      <div
+      <Row
         ref={cardStackRef}
+        center
         style={{
           flex: 1,
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           overflow: "hidden",
           padding: `${tokens.space[2]} ${tokens.space[6]}`,
         }}
       >
         {loadingCards && cards.length === 0 ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: tokens.space[3],
-            }}
-          >
+          <Column center style={{ gap: tokens.space[3] }}>
             <div
               style={{
                 width: 48,
@@ -398,7 +364,7 @@ export function GroupSwipeView({
             />
             <BodySm tone="muted">Loading places…</BodySm>
             <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-          </div>
+          </Column>
         ) : cards.length === 0 ? (
           <Card
             radius="xl"
@@ -407,14 +373,7 @@ export function GroupSwipeView({
             surface="muted"
             style={{ maxWidth: 360, textAlign: "center" }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: tokens.space[3],
-              }}
-            >
+            <Column center style={{ gap: tokens.space[3] }}>
               <Sparkles
                 size={32}
                 strokeWidth={1.5}
@@ -425,17 +384,10 @@ export function GroupSwipeView({
                 You&apos;ve swiped through all recommendations. Wait for new
                 cards or ask the host to finish.
               </BodySm>
-            </div>
+            </Column>
           </Card>
         ) : (
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              maxWidth: 360,
-              aspectRatio: "3 / 4",
-            }}
-          >
+          <Column style={{ width: "100%", maxWidth: 360, aspectRatio: "3 / 4" }}>
             <AnimatePresence>
               {cards
                 .slice(0, 3)
@@ -450,15 +402,13 @@ export function GroupSwipeView({
                 ))
                 .reverse()}
             </AnimatePresence>
-          </div>
+          </Column>
         )}
-      </div>
+      </Row>
 
-      <div
+      <Row
+        center
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           gap: tokens.space[3],
           padding: `${tokens.space[3]} 0`,
           flexShrink: 0,
@@ -496,13 +446,12 @@ export function GroupSwipeView({
           onClick={handleStar}
           disabled={swiping || cards.length === 0}
         />
-      </div>
+      </Row>
 
-      <div
+      <Row
+        horizontal="between"
+        vertical="center"
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
           padding: `${tokens.space[2]} ${tokens.space[5]} ${tokens.space[4]}`,
           flexShrink: 0,
         }}
@@ -527,7 +476,7 @@ export function GroupSwipeView({
             {finishing ? "Calculating…" : "Finish & reveal"}
           </Button>
         )}
-      </div>
+      </Row>
 
       <GroupVaultSheet
         open={showVault}
@@ -535,6 +484,6 @@ export function GroupSwipeView({
         vault={vault}
         loading={loadingVault}
       />
-    </div>
+    </Column>
   );
 }

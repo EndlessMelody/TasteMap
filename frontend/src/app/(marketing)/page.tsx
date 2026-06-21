@@ -2,6 +2,7 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
+import { Column } from "@once-ui-system/core";
 import { PromoNav }         from "@/components/features/promo/PromoNav";
 import { PromoHero }        from "@/components/features/promo/PromoHero";
 import { PromoFeatures }    from "@/components/features/promo/PromoFeatures";
@@ -16,7 +17,7 @@ const PromoCTA         = dynamic(() => import("@/components/features/promo/Promo
 
 export default function PromoPage() {
   return (
-    <div
+    <Column
       style={{
         width: "100%",
         overflowX: "hidden",
@@ -50,6 +51,6 @@ export default function PromoPage() {
         <PromoPlans />
         <PromoCTA />
       </main>
-    </div>
+    </Column>
   );
 }

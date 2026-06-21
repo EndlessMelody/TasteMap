@@ -20,8 +20,12 @@ import {
   Monitor,
   Check,
 } from "lucide-react";
+import { tokens } from "@/styles/tokens";
 import { useTheme, type Theme } from "@/context/ThemeContext";
 import { useLanguage, type Lang } from "@/context/LanguageContext";
+
+// Accent color swatches — display-only data, not theme tokens
+const ACCENT_SWATCHES = ["#ED1B24", "#ff6b35", "#A855F7", "#FBBF24", "#34C759", "#F97316"];
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -37,19 +41,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [activeSettingsTab, setActiveSettingsTab] = useState(initialTab);
   const { theme, setTheme } = useTheme();
   const { lang, setLang, t } = useLanguage();
-
-  // Theme-aware colors for the modal itself
-  const isDark =
-    theme === "dark" ||
-    (theme === "system" &&
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches);
-  const modalBg = isDark ? "#2C2C2E" : "#F2F2F7";
-  const sidebarBg = isDark ? "#1C1C1E" : "#FFFFFF";
-  const border = isDark ? "rgba(255,255,255,0.08)" : "#E5E5EA";
-  const textPrimary = isDark ? "#F2F2F7" : "#1C1C1E";
-  const textMuted = isDark ? "#636366" : "#AEAEB2";
-  const cardBg = isDark ? "#3A3A3C" : "#FFFFFF";
 
   return (
     <AnimatePresence>
@@ -82,13 +73,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               maxWidth: "95vw",
               height: "600px",
               maxHeight: "90vh",
-              backgroundColor: modalBg,
-              border: `1px solid ${border}`,
+              backgroundColor: tokens.color.surface,
+              border: `1px solid ${tokens.color.border}`,
               borderRadius: "32px",
               overflow: "hidden",
-              boxShadow: isDark
-                ? "0 32px 80px rgba(0,0,0,0.5)"
-                : "0 32px 80px rgba(0,0,0,0.1)",
+              boxShadow: tokens.shadow.lg,
               display: "flex",
               flexDirection: "row",
             }}
@@ -98,12 +87,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               style={{
                 width: "240px",
                 minWidth: "240px",
-                backgroundColor: sidebarBg,
-                borderRight: `1px solid ${border}`,
+                backgroundColor: tokens.color.bg,
+                borderRight: `1px solid ${tokens.color.border}`,
                 padding: "20px 12px",
                 gap: "4px",
-                display: "flex",
-                flexDirection: "column",
               }}
             >
               <Row
@@ -111,27 +98,27 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   justifyContent: "space-between",
                   alignItems: "center",
                   padding: "0 8px 16px",
-                  borderBottom: `1px solid ${border}`,
+                  borderBottom: `1px solid ${tokens.color.border}`,
                   marginBottom: "8px",
                 }}
               >
                 <Heading
                   variant="heading-strong-s"
-                  style={{ color: textPrimary }}
+                  style={{ color: tokens.color.text }}
                 >
                   {t("settingsTitle")}
                 </Heading>
                 <IconButton
                   onClick={onClose}
                   style={{
-                    backgroundColor: isDark ? "#2C2C2E" : "#F2F2F7",
+                    backgroundColor: tokens.color.surfaceMuted,
                     borderRadius: "8px",
                     width: "32px",
                     height: "32px",
                     cursor: "pointer",
                   }}
                 >
-                  <X size={16} color={textMuted} />
+                  <X size={16} color={tokens.color.textMuted} />
                 </IconButton>
               </Row>
 
@@ -165,13 +152,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       activeSettingsTab === tab.id
                         ? "rgba(255,107,53,0.1)"
                         : "transparent",
-                    color: activeSettingsTab === tab.id ? "#ff6b35" : textMuted,
+                    color: activeSettingsTab === tab.id ? tokens.color.warm : tokens.color.textMuted,
                     transition: "all 0.15s",
                   }}
                 >
-                  <div style={{ display: "flex", color: "inherit" }}>
+                  <Row style={{ display: "flex", color: "inherit" }}>
                     {tab.icon}
-                  </div>
+                  </Row>
                   <Text
                     style={{
                       color: "inherit",
@@ -184,10 +171,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </Row>
               ))}
 
-              <div
+              <Column
                 style={{
                   height: "1px",
-                  backgroundColor: border,
+                  backgroundColor: tokens.color.border,
                   margin: "8px 0",
                 }}
               />
@@ -213,13 +200,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       activeSettingsTab === tab.id
                         ? "rgba(255,107,53,0.1)"
                         : "transparent",
-                    color: activeSettingsTab === tab.id ? "#ff6b35" : textMuted,
+                    color: activeSettingsTab === tab.id ? tokens.color.warm : tokens.color.textMuted,
                     transition: "all 0.15s",
                   }}
                 >
-                  <div style={{ display: "flex", color: "inherit" }}>
+                  <Row style={{ display: "flex", color: "inherit" }}>
                     {tab.icon}
-                  </div>
+                  </Row>
                   <Text
                     style={{
                       color: "inherit",
@@ -232,10 +219,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </Row>
               ))}
 
-              <div style={{ flex: 1 }} />
+              <Column style={{ flex: 1 }} />
               <Text
                 style={{
-                  color: isDark ? "#48484A" : "#D1D1D6",
+                  color: tokens.color.border,
                   fontSize: "0.65rem",
                   padding: "0 8px",
                 }}
@@ -258,11 +245,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <Column style={{ gap: "4px" }}>
                     <Heading
                       variant="heading-strong-m"
-                      style={{ color: textPrimary }}
+                      style={{ color: tokens.color.text }}
                     >
                       {t("appearanceTitle")}
                     </Heading>
-                    <Text style={{ color: textMuted, fontSize: "0.8rem" }}>
+                    <Text style={{ color: tokens.color.textMuted, fontSize: "0.8rem" }}>
                       {t("appearanceSubtitle")}
                     </Text>
                   </Column>
@@ -297,10 +284,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             gap: "12px",
                             backgroundColor: active
                               ? "rgba(255,107,53,0.08)"
-                              : cardBg,
+                              : tokens.color.surface,
                             border: active
-                              ? "2px solid #ff6b35"
-                              : `1px solid ${border}`,
+                              ? `2px solid ${tokens.color.warm}`
+                              : `1px solid ${tokens.color.border}`,
                             borderRadius: "14px",
                             cursor: "pointer",
                             transition: "all 0.2s",
@@ -308,7 +295,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                           }}
                         >
                           {active && (
-                            <div
+                            <Column
+                              center
                               style={{
                                 position: "absolute",
                                 top: 10,
@@ -316,23 +304,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                                 width: 18,
                                 height: 18,
                                 borderRadius: "50%",
-                                backgroundColor: "#ff6b35",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
+                                backgroundColor: tokens.color.warm,
                               }}
                             >
-                              <Check size={11} color="white" strokeWidth={3} />
-                            </div>
+                              <Check size={11} color={tokens.color.textInverse} strokeWidth={3} />
+                            </Column>
                           )}
-                          <div
-                            style={{ color: active ? "#ff6b35" : textMuted }}
-                          >
+                          <Column style={{ color: active ? tokens.color.warm : tokens.color.textMuted }}>
                             {opt.icon}
-                          </div>
+                          </Column>
                           <Text
                             style={{
-                              color: active ? "#ff6b35" : textMuted,
+                              color: active ? tokens.color.warm : tokens.color.textMuted,
                               fontWeight: 600,
                               fontSize: "0.85rem",
                             }}
@@ -347,7 +330,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <Column style={{ gap: "12px", marginTop: "8px" }}>
                     <Text
                       style={{
-                        color: textMuted,
+                        color: tokens.color.textMuted,
                         fontSize: "0.65rem",
                         fontWeight: 700,
                         textTransform: "uppercase",
@@ -357,15 +340,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       {t("accentColor")}
                     </Text>
                     <Row style={{ gap: "10px" }}>
-                      {[
-                        "#ED1B24",
-                        "#ff6b35",
-                        "#A855F7",
-                        "#FBBF24",
-                        "#34C759",
-                        "#F97316",
-                      ].map((c) => (
-                        <div
+                      {ACCENT_SWATCHES.map((c) => (
+                        <Column
                           key={c}
                           style={{
                             width: "36px",
@@ -374,7 +350,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             backgroundColor: c,
                             border:
                               c === "#ff6b35"
-                                ? "3px solid white"
+                                ? `3px solid ${tokens.color.text}`
                                 : "2px solid transparent",
                             cursor: "pointer",
                             transition: "transform 0.15s",
@@ -393,11 +369,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <Column style={{ gap: "4px" }}>
                     <Heading
                       variant="heading-strong-m"
-                      style={{ color: textPrimary }}
+                      style={{ color: tokens.color.text }}
                     >
                       {t("languageTitle")}
                     </Heading>
-                    <Text style={{ color: textMuted, fontSize: "0.8rem" }}>
+                    <Text style={{ color: tokens.color.textMuted, fontSize: "0.8rem" }}>
                       {t("languageSubtitle")}
                     </Text>
                   </Column>
@@ -419,10 +395,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             cursor: "pointer",
                             backgroundColor: active
                               ? "rgba(255,107,53,0.06)"
-                              : cardBg,
+                              : tokens.color.surface,
                             border: active
-                              ? "1.5px solid #ff6b35"
-                              : `1px solid ${border}`,
+                              ? `1.5px solid ${tokens.color.warm}`
+                              : `1px solid ${tokens.color.border}`,
                             transition: "all 0.15s",
                           }}
                         >
@@ -431,7 +407,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                           </span>
                           <Text
                             style={{
-                              color: active ? textPrimary : textMuted,
+                              color: active ? tokens.color.text : tokens.color.textMuted,
                               fontWeight: active ? 600 : 400,
                               fontSize: "0.9rem",
                               flex: 1,
@@ -440,19 +416,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                             {l.label}
                           </Text>
                           {active && (
-                            <div
+                            <Column
+                              center
                               style={{
                                 width: 20,
                                 height: 20,
                                 borderRadius: "50%",
-                                backgroundColor: "#ff6b35",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
+                                backgroundColor: tokens.color.warm,
                               }}
                             >
-                              <Check size={12} color="white" strokeWidth={3} />
-                            </div>
+                              <Check size={12} color={tokens.color.textInverse} strokeWidth={3} />
+                            </Column>
                           )}
                         </Row>
                       );
@@ -465,13 +439,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <Column style={{ gap: "24px" }}>
                   <Heading
                     variant="heading-strong-m"
-                    style={{ color: textPrimary }}
+                    style={{ color: tokens.color.text }}
                   >
                     {t("supportTitle")}
                   </Heading>
                   <Text
                     style={{
-                      color: textMuted,
+                      color: tokens.color.textMuted,
                       fontSize: "0.9rem",
                       lineHeight: 1.6,
                     }}

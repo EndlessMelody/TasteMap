@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { Avatar } from "@once-ui-system/core";
+import { Avatar, Column, Row } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
+
+const WARM_GRADIENT = { light: "#ff8c5a" };
+const ORB_COLORS = { coral: "#ff8c5a", amber: "#ffb347" };
 import { getInitials } from "@/lib/avatar";
 import { X, Utensils, Clapperboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,7 +35,7 @@ export interface CreatePostModalProps {
   initialType?: ComposerType;
 }
 
-const TABS: { value: ComposerType; label: string; icon: React.ElementType }[] =
+const TABS: { value: ComposerType; label: string; icon: React.FC<{ size?: number }> }[] =
   [
     { value: "post", label: "Foodie Feed", icon: Utensils },
     { value: "reel", label: "Discover Reel", icon: Clapperboard },
@@ -229,7 +233,17 @@ export function CreatePostModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-[1000] flex items-center justify-center px-6 pt-20 pb-20 bg-black/70 backdrop-blur-md"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 1000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "80px 24px",
+            background: "rgba(0,0,0,0.7)",
+            backdropFilter: "blur(12px)",
+          }}
         >
           <motion.div
             initial={{ scale: 0.92, y: 24, opacity: 0 }}
@@ -237,89 +251,159 @@ export function CreatePostModal({
             exit={{ scale: 0.92, y: 24, opacity: 0 }}
             transition={{ type: "spring", damping: 26, stiffness: 320 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-4xl max-h-[90vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden"
+            style={{
+              width: "100%",
+              maxWidth: "896px",
+              maxHeight: "90vh",
+              backgroundColor: tokens.color.surface,
+              borderRadius: "24px",
+              boxShadow: "0 25px 50px rgba(0,0,0,0.25)",
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
+            }}
           >
             {/* ── HEADER (Fixed) ── */}
-            <div
-              className="relative flex items-center justify-between px-6 py-5 flex-shrink-0 overflow-hidden"
+            <Row
+              fillWidth
+              horizontal="between"
+              vertical="center"
               style={{
-                background: "linear-gradient(135deg, #fff7f3 0%, #fff1e8 40%, #fde8d8 100%)",
-                borderBottom: "1px solid rgba(255,107,53,0.12)",
+                position: "relative",
+                padding: "20px 24px",
+                flexShrink: 0,
+                overflow: "hidden",
+                background: `linear-gradient(135deg, rgba(255,107,53,0.06) 0%, rgba(255,107,53,0.03) 40%, rgba(255,107,53,0.08) 100%)`,
+                borderBottom: `1px solid ${tokens.color.border}`,
               }}
             >
               {/* Decorative blurred orbs */}
-              <div
-                className="absolute -top-6 -left-6 w-28 h-28 rounded-full opacity-30 pointer-events-none"
-                style={{ background: "radial-gradient(circle, #ff8c5a, transparent 70%)", filter: "blur(18px)" }}
-              />
-              <div
-                className="absolute -bottom-8 left-40 w-36 h-36 rounded-full opacity-20 pointer-events-none"
-                style={{ background: "radial-gradient(circle, #ffb347, transparent 70%)", filter: "blur(24px)" }}
-              />
-              <div
-                className="absolute -top-4 right-20 w-24 h-24 rounded-full opacity-25 pointer-events-none"
-                style={{ background: "radial-gradient(circle, #ff6b35, transparent 70%)", filter: "blur(20px)" }}
-              />
+              <Column style={{ position: "absolute", top: -24, left: -24, width: 112, height: 112, borderRadius: "50%", opacity: 0.3, pointerEvents: "none", background: `radial-gradient(circle, ${ORB_COLORS.coral}, transparent 70%)`, filter: "blur(18px)" }} />
+              <Column style={{ position: "absolute", bottom: -32, left: 160, width: 144, height: 144, borderRadius: "50%", opacity: 0.2, pointerEvents: "none", background: `radial-gradient(circle, ${ORB_COLORS.amber}, transparent 70%)`, filter: "blur(24px)" }} />
+              <Column style={{ position: "absolute", top: -16, right: 80, width: 96, height: 96, borderRadius: "50%", opacity: 0.25, pointerEvents: "none", background: `radial-gradient(circle, ${tokens.color.warm}, transparent 70%)`, filter: "blur(20px)" }} />
 
               {/* Left: avatar + identity */}
-              <div className="relative flex items-center gap-3">
-                <div className="relative">
+              <Row vertical="center" style={{ gap: "12px" }}>
+                <Column style={{ position: "relative" }}>
                   <Avatar
                     src={user?.avatar_url}
                     value={getInitials(user?.display_name || user?.username)}
                     size="m"
                   />
                   <span
-                    className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white"
-                    style={{ backgroundColor: "#22c55e" }}
+                    style={{
+                      position: "absolute",
+                      bottom: -2,
+                      right: -2,
+                      width: 14,
+                      height: 14,
+                      borderRadius: "50%",
+                      border: `2px solid ${tokens.color.surface}`,
+                      backgroundColor: tokens.color.success,
+                    }}
                   />
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-zinc-800 leading-tight">
+                </Column>
+                <Column style={{ gap: 2 }}>
+                  <p style={{ margin: 0, fontSize: "0.875rem", fontWeight: 700, color: tokens.color.text, lineHeight: 1.2 }}>
                     {user?.display_name || user?.username || "You"}
                   </p>
-                  <p className="text-xs font-medium leading-tight" style={{ color: "#ff6b35" }}>
+                  <p style={{ margin: 0, fontSize: "0.75rem", fontWeight: 500, lineHeight: 1.2, color: tokens.color.warm }}>
                     @{user?.username || "creator"}
                   </p>
-                </div>
+                </Column>
 
-                <div className="ml-3 flex items-center gap-2">
-                  <span className="text-slate-300 select-none">·</span>
-                  {/* Branded pill badge */}
+                <Row vertical="center" style={{ marginLeft: "12px", gap: "8px" }}>
+                  <span style={{ color: tokens.color.border, userSelect: "none" }}>·</span>
                   <span
-                    className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-extrabold text-white tracking-wide"
-                    style={{ background: "linear-gradient(135deg, #ff6b35, #ff8c5a)", boxShadow: "0 4px 14px rgba(255,107,53,0.45)" }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "8px 16px",
+                      borderRadius: "9999px",
+                      fontSize: "0.875rem",
+                      fontWeight: 800,
+                      color: "white",
+                      letterSpacing: "0.025em",
+                      background: `linear-gradient(135deg, ${tokens.color.warm}, ${WARM_GRADIENT.light})`,
+                      boxShadow: "0 4px 14px rgba(255,107,53,0.45)",
+                    }}
                   >
-                    <span className="text-lg leading-none">✦</span>
+                    <span style={{ fontSize: "1.125rem", lineHeight: 1 }}>✦</span>
                     Create Post
                   </span>
-                </div>
-              </div>
+                </Row>
+              </Row>
 
               {/* Right: close */}
               <button
                 onClick={onClose}
-                className="relative w-9 h-9 rounded-xl flex items-center justify-center transition-colors"
-                style={{ color: "#ff6b35", backgroundColor: "rgba(255,107,53,0.08)" }}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "12px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "background-color 0.2s",
+                  color: tokens.color.warm,
+                  backgroundColor: "rgba(255,107,53,0.08)",
+                  flexShrink: 0,
+                }}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,107,53,0.16)")}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(255,107,53,0.08)")}
               >
                 <X size={18} />
               </button>
-            </div>
+            </Row>
 
             {/* ── BODY (Scrollable) ── */}
-            <div className="flex-1 overflow-y-auto p-6 min-h-0">
-              <div className="grid grid-cols-[1fr_320px] gap-6 h-full">
-
+            <Column
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                padding: "24px",
+                minHeight: 0,
+              }}
+            >
+              <Column
+                fillWidth
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 320px",
+                  gap: "24px",
+                  height: "100%",
+                }}
+              >
                 {/* Left Bento Card */}
-                <div className="bg-slate-50 rounded-2xl p-5 flex flex-col gap-5">
-
+                <Column
+                  style={{
+                    backgroundColor: tokens.color.surfaceMuted,
+                    borderRadius: "16px",
+                    padding: "20px",
+                    gap: "20px",
+                  }}
+                >
                   {/* Segmented Control */}
-                  <div className="relative flex bg-slate-200/60 rounded-full p-1 gap-1">
+                  <Row
+                    style={{
+                      position: "relative",
+                      backgroundColor: tokens.color.border,
+                      borderRadius: "9999px",
+                      padding: "4px",
+                      gap: "4px",
+                    }}
+                  >
                     <motion.div
-                      className="absolute top-1 bottom-1 rounded-full bg-white shadow-sm"
                       style={{
+                        position: "absolute",
+                        top: "4px",
+                        bottom: "4px",
+                        borderRadius: "9999px",
+                        backgroundColor: tokens.color.surface,
+                        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
                         width: `calc(${100 / TABS.length}% - 4px)`,
                         left: `calc(${(100 / TABS.length) * activeIndex}% + 4px)`,
                       }}
@@ -334,15 +418,31 @@ export function CreatePostModal({
                           key={tab.value}
                           type="button"
                           onClick={() => setPostType(tab.value)}
-                          className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-full text-sm font-semibold transition-colors duration-150 ${isActive ? "text-orange-500" : "text-zinc-400 hover:text-zinc-600"
-                            }`}
+                          style={{
+                            flex: 1,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "8px",
+                            padding: "8px 12px",
+                            borderRadius: "9999px",
+                            border: "none",
+                            background: "transparent",
+                            cursor: "pointer",
+                            fontSize: "0.875rem",
+                            fontWeight: 600,
+                            color: isActive ? tokens.color.warm : tokens.color.textMuted,
+                            position: "relative",
+                            zIndex: 1,
+                            transition: "color 0.15s ease",
+                          }}
                         >
                           <Icon size={15} />
                           {tab.label}
                         </button>
                       );
                     })}
-                  </div>
+                  </Row>
 
                   {/* Form */}
                   <AnimatePresence mode="wait">
@@ -378,17 +478,31 @@ export function CreatePostModal({
                       />
                     )}
                   </AnimatePresence>
-                </div>
+                </Column>
 
                 {/* Right Bento Card — Live Preview */}
-                <div className="bg-orange-50/50 rounded-2xl p-4 flex flex-col gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
-                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+                <Column
+                  style={{
+                    backgroundColor: "rgba(255,107,53,0.04)",
+                    borderRadius: "16px",
+                    padding: "16px",
+                    gap: "12px",
+                  }}
+                >
+                  <Row vertical="center" style={{ gap: "8px" }}>
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: tokens.color.warm, flexShrink: 0 }} />
+                    <p style={{ margin: 0, fontSize: "0.75rem", fontWeight: 600, color: tokens.color.textMuted, textTransform: "uppercase", letterSpacing: "0.1em" }}>
                       Live Preview
                     </p>
-                  </div>
-                  <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                  </Row>
+                  <Column
+                    style={{
+                      backgroundColor: tokens.color.surface,
+                      borderRadius: "16px",
+                      boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+                      overflow: "hidden",
+                    }}
+                  >
                     <ContentPreview
                       type={postType}
                       username={user?.username}
@@ -400,42 +514,67 @@ export function CreatePostModal({
                       tags={tags}
                       videoUrl={reelVideoUrl}
                     />
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </Column>
+                </Column>
+              </Column>
+            </Column>
 
             {/* ── FOOTER (Fixed) ── */}
-            <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-white">
+            <Row
+              fillWidth
+              horizontal="between"
+              vertical="center"
+              style={{
+                padding: "16px 24px",
+                borderTop: `1px solid ${tokens.color.border}`,
+                backgroundColor: tokens.color.surface,
+                flexShrink: 0,
+              }}
+            >
               {/* Completion indicator */}
-              <div className="flex flex-col gap-1.5 w-44">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-zinc-400">
+              <Column style={{ gap: 6, width: 176 }}>
+                <Row horizontal="between" vertical="center">
+                  <span style={{ fontSize: "0.75rem", fontWeight: 500, color: tokens.color.textMuted }}>
                     {isUploadingMedia ? "Uploading…" : "Completion"}
                   </span>
-                  <span className="text-xs font-semibold text-zinc-500">
+                  <span style={{ fontSize: "0.75rem", fontWeight: 600, color: tokens.color.textSubtle }}>
                     {Math.round(completionPercentage)}%
                   </span>
-                </div>
-                <div className="h-1 bg-slate-200 rounded-full overflow-hidden">
+                </Row>
+                <Column style={{ height: 4, backgroundColor: tokens.color.border, borderRadius: 2, overflow: "hidden" }}>
                   <motion.div
-                    className={`h-full rounded-full ${canSubmit ? "bg-orange-500" : "bg-slate-400"}`}
+                    style={{
+                      height: "100%",
+                      background: canSubmit ? tokens.color.warm : tokens.color.textMuted,
+                      borderRadius: 2,
+                    }}
                     initial={{ width: 0 }}
                     animate={{ width: `${completionPercentage}%` }}
                     transition={{ duration: 0.3 }}
                   />
-                </div>
-                <span className="text-[11px] text-zinc-400">
+                </Column>
+                <span style={{ fontSize: "0.6875rem", color: tokens.color.textMuted }}>
                   {isUploadingMedia ? "Wait for upload to finish" : destinationHint}
                 </span>
-              </div>
+              </Column>
 
               {/* Actions */}
-              <div className="flex items-center gap-3">
+              <Row vertical="center" style={{ gap: "12px" }}>
                 <button
                   onClick={onClose}
                   disabled={isSubmitting}
-                  className="px-5 py-2.5 rounded-xl text-sm font-semibold text-zinc-600 bg-slate-100 hover:bg-slate-200 transition-colors disabled:opacity-50"
+                  style={{
+                    padding: "10px 20px",
+                    borderRadius: "12px",
+                    fontSize: "0.875rem",
+                    fontWeight: 600,
+                    color: tokens.color.textMuted,
+                    backgroundColor: tokens.color.surfaceMuted,
+                    border: "none",
+                    cursor: "pointer",
+                    opacity: isSubmitting ? 0.5 : 1,
+                    transition: "background-color 0.2s",
+                  }}
                 >
                   Cancel
                 </button>
@@ -444,15 +583,27 @@ export function CreatePostModal({
                   disabled={isSubmitting || isUploadingMedia || !canSubmit}
                   whileHover={canSubmit ? { scale: 1.03 } : undefined}
                   whileTap={canSubmit ? { scale: 0.97 } : undefined}
-                  className={`px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all ${canSubmit && !isSubmitting && !isUploadingMedia
-                      ? "bg-orange-500 hover:bg-orange-600 shadow-lg shadow-orange-200"
-                      : "bg-slate-300 cursor-not-allowed"
-                    }`}
+                  style={{
+                    padding: "10px 20px",
+                    borderRadius: "12px",
+                    fontSize: "0.875rem",
+                    fontWeight: 600,
+                    color: "white",
+                    background: canSubmit && !isSubmitting && !isUploadingMedia
+                      ? tokens.color.warm
+                      : tokens.color.textMuted,
+                    border: "none",
+                    cursor: canSubmit && !isSubmitting && !isUploadingMedia ? "pointer" : "not-allowed",
+                    transition: "all 0.2s",
+                    boxShadow: canSubmit && !isSubmitting && !isUploadingMedia
+                      ? "0 4px 12px rgba(255,107,53,0.3)"
+                      : "none",
+                  }}
                 >
                   {submitLabel}
                 </motion.button>
-              </div>
-            </div>
+              </Row>
+            </Row>
           </motion.div>
         </motion.div>
       )}

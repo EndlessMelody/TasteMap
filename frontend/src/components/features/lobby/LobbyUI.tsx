@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Plus } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import type { LobbyMember } from "./types";
 import { Pill } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
@@ -14,7 +15,7 @@ export function AvatarStack({
   spotsLeft: number;
 }) {
   return (
-    <div style={{ display: "flex" }}>
+    <Row>
       {members.map((m, i) => (
         <img
           key={i}
@@ -32,7 +33,8 @@ export function AvatarStack({
         />
       ))}
       {spotsLeft > 0 && (
-        <div
+        <Column
+          center
           style={{
             width: 32,
             height: 32,
@@ -40,16 +42,13 @@ export function AvatarStack({
             border: `2px dashed ${tokens.color.border}`,
             background: tokens.color.surfaceMuted,
             color: tokens.color.textMuted,
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
             marginLeft: -8,
           }}
         >
           <Plus size={12} strokeWidth={1.75} />
-        </div>
+        </Column>
       )}
-    </div>
+    </Row>
   );
 }
 

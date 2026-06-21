@@ -6,6 +6,7 @@ import { Camera, X, Save, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { apiUploadMedia, ApiError } from "@/lib/api";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
   Button,
@@ -44,16 +45,10 @@ function SectionLabel({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: tokens.space[2],
-      }}
-    >
+    <Row vertical="center" style={{ gap: tokens.space[2] }}>
       {icon}
       <Eyebrow tone="subtle">{children}</Eyebrow>
-    </div>
+    </Row>
   );
 }
 
@@ -264,28 +259,21 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 overflow: "hidden",
               }}
             >
-              <div
+              <Row
+                horizontal="between"
                 style={{
-                  padding: `${tokens.space[6]} ${tokens.space[8]}`,
-                  display: "flex",
-                  justifyContent: "space-between",
                   alignItems: "flex-start",
+                  padding: `${tokens.space[6]} ${tokens.space[8]}`,
                   borderBottom: `1px solid ${tokens.color.border}`,
                   flexShrink: 0,
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: tokens.space[1],
-                  }}
-                >
+                <Column style={{ gap: tokens.space[1] }}>
                   <H2>Edit profile</H2>
                   <Body tone="muted">
                     Customize your culinary presence on TasteMap.
                   </Body>
-                </div>
+                </Column>
                 <IconButton
                   variant="ghost"
                   size="md"
@@ -293,29 +281,21 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   icon={<X size={20} strokeWidth={1.75} />}
                   onClick={onClose}
                 />
-              </div>
+              </Row>
 
-              <div
+              <Column
                 className="no-scrollbar"
                 style={{
                   padding: tokens.space[8],
                   overflowY: "auto",
                   flexGrow: 1,
-                  display: "flex",
-                  flexDirection: "column",
                   gap: tokens.space[8],
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: tokens.space[5],
-                  }}
-                >
+                <Column style={{ gap: tokens.space[5] }}>
                   <SectionLabel>Profile media</SectionLabel>
 
-                  <div
+                  <Column
                     role="button"
                     tabIndex={0}
                     onClick={() => coverInputRef.current?.click()}
@@ -347,15 +327,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                         objectFit: "cover",
                       }}
                     />
-                    <div
+                    <Column
+                      center
                       style={{
                         position: "absolute",
                         inset: 0,
                         background: "rgba(10, 10, 10, 0.45)",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
                         gap: tokens.space[2],
                         color: tokens.color.textInverse,
                       }}
@@ -369,17 +346,14 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                       >
                         Change cover photo
                       </Body>
-                    </div>
-                  </div>
+                    </Column>
+                  </Column>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: tokens.space[5],
-                    }}
+                  <Row
+                    vertical="center"
+                    style={{ gap: tokens.space[5] }}
                   >
-                    <div
+                    <Column
                       role="button"
                       tabIndex={0}
                       onClick={() => avatarInputRef.current?.click()}
@@ -393,7 +367,8 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                         flexShrink: 0,
                       }}
                     >
-                      <div
+                      <Column
+                        center
                         style={{
                           width: 96,
                           height: 96,
@@ -402,9 +377,6 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                           border: `4px solid ${tokens.color.surface}`,
                           boxShadow: tokens.shadow.sm,
                           overflow: "hidden",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
                         }}
                       >
                         {avatarPreview || user?.avatar_url ? (
@@ -424,7 +396,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                             style={{ color: tokens.color.textMuted }}
                           />
                         )}
-                      </div>
+                      </Column>
                       <span
                         style={{
                           position: "absolute",
@@ -440,18 +412,9 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                       >
                         <Camera size={14} strokeWidth={2} />
                       </span>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: tokens.space[1],
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <Body
-                        style={{ fontWeight: tokens.type.weight.semibold }}
-                      >
+                    </Column>
+                    <Column style={{ gap: tokens.space[1], alignItems: "flex-start" }}>
+                      <Body style={{ fontWeight: tokens.type.weight.semibold }}>
                         Profile picture
                       </Body>
                       <Caption tone="muted">
@@ -465,17 +428,11 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                       >
                         Upload photo
                       </Button>
-                    </div>
-                  </div>
-                </div>
+                    </Column>
+                  </Row>
+                </Column>
 
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: tokens.space[5],
-                  }}
-                >
+                <Column style={{ gap: tokens.space[5] }}>
                   <SectionLabel>Personal details</SectionLabel>
 
                   <Field
@@ -518,22 +475,16 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     value={formLocation}
                     onChange={(e) => setFormLocation(e.target.value)}
                   />
-                </div>
+                </Column>
 
-                <div
+                <Column
                   style={{
                     height: 1,
                     background: tokens.color.border,
                   }}
                 />
 
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: tokens.space[5],
-                  }}
-                >
+                <Column style={{ gap: tokens.space[5] }}>
                   <SectionLabel
                     icon={
                       <Lock
@@ -559,7 +510,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     value={formPhone}
                     onChange={(e) => setFormPhone(e.target.value)}
                   />
-                </div>
+                </Column>
 
                 <input
                   type="file"
@@ -575,13 +526,13 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   onChange={handleCoverChange}
                   accept="image/jpeg, image/png, image/webp"
                 />
-              </div>
+              </Column>
 
-              <div
+              <Row
+                horizontal="end"
+                vertical="center"
                 style={{
                   padding: `${tokens.space[5]} ${tokens.space[8]}`,
-                  display: "flex",
-                  justifyContent: "flex-end",
                   gap: tokens.space[3],
                   borderTop: `1px solid ${tokens.color.border}`,
                   background: tokens.color.surfaceMuted,
@@ -602,7 +553,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 >
                   {saveLoading ? "Saving…" : "Save changes"}
                 </Button>
-              </div>
+              </Row>
             </Card>
           </motion.div>
         </motion.div>

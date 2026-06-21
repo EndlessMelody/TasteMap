@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { Column } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 import { DropZone } from "./DropZone";
 
 interface MediaUploadProps {
@@ -27,10 +29,10 @@ export function MediaUpload({
   hint,
 }: MediaUploadProps) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+    <Column style={{ gap: 6 }}>
+      <label style={{ fontSize: "0.75rem", fontWeight: 600, color: tokens.color.textMuted, textTransform: "uppercase", letterSpacing: "0.05em" }}>
         {label}{" "}
-        {optional && <span className="normal-case font-normal text-zinc-400">(optional)</span>}
+        {optional && <span style={{ textTransform: "none", fontWeight: 400 }}>(optional)</span>}
       </label>
       <DropZone
         accept={accept}
@@ -41,7 +43,7 @@ export function MediaUpload({
         previewType={previewType}
         placeholder={previewType === "image" ? "Upload cover image" : "Upload video file"}
       />
-      {hint && <p className="text-[11px] text-zinc-400">{hint}</p>}
-    </div>
+      {hint && <p style={{ fontSize: "0.6875rem", color: tokens.color.textMuted, margin: 0 }}>{hint}</p>}
+    </Column>
   );
 }

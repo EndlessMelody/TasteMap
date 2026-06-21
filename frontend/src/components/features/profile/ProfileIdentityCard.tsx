@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Flame, MapPin, Calendar } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { Card, H1, Body, BodySm, Caption, Pill } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 interface ProfileIdentityCardLike {
@@ -29,13 +30,7 @@ interface StatTileProps {
 function StatTile({ icon, label, value, accent }: StatTileProps) {
   return (
     <Card radius="lg" padding="md" shadow="sm">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: tokens.space[3],
-        }}
-      >
+      <Row vertical="center" style={{ gap: tokens.space[3] }}>
         <span
           style={{
             display: "inline-flex",
@@ -53,13 +48,13 @@ function StatTile({ icon, label, value, accent }: StatTileProps) {
         >
           {icon}
         </span>
-        <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+        <Column style={{ minWidth: 0 }}>
           <Caption tone="muted">{label}</Caption>
           <Body style={{ fontWeight: tokens.type.weight.semibold }}>
             {value}
           </Body>
-        </div>
-      </div>
+        </Column>
+      </Row>
     </Card>
   );
 }
@@ -73,34 +68,15 @@ export const ProfileIdentityCard: React.FC<ProfileIdentityCardProps> = ({
   const xpProgress = Math.min((xpCurrent / xpForLevel) * 100, 100);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: tokens.space[4],
-      }}
-    >
+    <Column style={{ gap: tokens.space[4] }}>
       <Card radius="xl" padding="lg" shadow="sm">
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[3],
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexWrap: "wrap",
-              gap: tokens.space[3],
-            }}
-          >
+        <Column style={{ gap: tokens.space[3] }}>
+          <Row vertical="center" style={{ flexWrap: "wrap", gap: tokens.space[3] }}>
             <H1>{user?.display_name || user?.username || "Guest"}</H1>
             <Pill tone="warm" size="md">
               {user?.title || "Taste Explorer"}
             </Pill>
-          </div>
+          </Row>
 
           <BodySm
             tone="muted"
@@ -113,10 +89,10 @@ export const ProfileIdentityCard: React.FC<ProfileIdentityCardProps> = ({
             {user?.bio ||
               "Exploring flavors, one bite at a time. Join me on this delicious journey!"}
           </Body>
-        </div>
+        </Column>
       </Card>
 
-      <div
+      <Column
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
@@ -124,20 +100,8 @@ export const ProfileIdentityCard: React.FC<ProfileIdentityCardProps> = ({
         }}
       >
         <Card radius="lg" padding="md" shadow="sm">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[2],
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: tokens.space[2],
-              }}
-            >
+          <Column style={{ gap: tokens.space[2] }}>
+            <Row vertical="center" style={{ gap: tokens.space[2] }}>
               <span
                 style={{
                   display: "inline-flex",
@@ -155,8 +119,8 @@ export const ProfileIdentityCard: React.FC<ProfileIdentityCardProps> = ({
               <Body style={{ fontWeight: tokens.type.weight.semibold }}>
                 Level {level}
               </Body>
-            </div>
-            <div
+            </Row>
+            <Column
               style={{
                 width: "100%",
                 height: 6,
@@ -165,7 +129,7 @@ export const ProfileIdentityCard: React.FC<ProfileIdentityCardProps> = ({
                 overflow: "hidden",
               }}
             >
-              <div
+              <Column
                 style={{
                   width: `${xpProgress}%`,
                   height: "100%",
@@ -173,11 +137,11 @@ export const ProfileIdentityCard: React.FC<ProfileIdentityCardProps> = ({
                   transition: "width 0.6s ease",
                 }}
               />
-            </div>
+            </Column>
             <Caption tone="muted">
               {xpCurrent} / {xpForLevel} XP
             </Caption>
-          </div>
+          </Column>
         </Card>
 
         <StatTile
@@ -199,8 +163,8 @@ export const ProfileIdentityCard: React.FC<ProfileIdentityCardProps> = ({
               : "Mar 2025"
           }
         />
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 };
 

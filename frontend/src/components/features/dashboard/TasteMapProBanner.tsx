@@ -10,6 +10,7 @@
  */
 import React from "react";
 import { motion } from "framer-motion";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 
 // ─── React Icons (react-icons library) ──────────────────────────
@@ -47,6 +48,9 @@ const PARTNER = {
   accentDark: "#D94420",
   accentLight: "#FF6D4A",
   accentGlow: "#FF8C6B",
+  accentPale: "#FFD0C6",
+  bgMid: "#B22D14",
+  bgDark: "#120502",
 };
 
 // ─── Floating food icons (decorative) ───────────────────────────
@@ -58,21 +62,27 @@ const FLOATING_ICONS = [
 ];
 
 // ─── Stats cards ────────────────────────────────────────────────
+const STAT_ACCENTS = {
+  delivery: "#00D4AA",
+  quality: "#7B8CFF",
+  rating: "#FFB547",
+};
+
 const DEAL_STATS = [
   {
     Icon: RiTimerFlashFill,
     label: "25-min delivery",
-    accent: "#00D4AA",
+    accent: STAT_ACCENTS.delivery,
   },
   {
     Icon: RiShieldCheckFill,
     label: "Quality guaranteed",
-    accent: "#7B8CFF",
+    accent: STAT_ACCENTS.quality,
   },
   {
     Icon: RiStarFill,
     label: "4.9 · 120K reviews",
-    accent: "#FFB547",
+    accent: STAT_ACCENTS.rating,
   },
 ];
 
@@ -85,20 +95,19 @@ export const TasteMapProBanner = () => {
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       style={{ width: "100%" }}
     >
-      <div
+      <Column
+        fillWidth
         style={{
-          width: "100%",
           borderRadius: tokens.radius.xl,
           overflow: "hidden",
-          position: "relative",
-          background: `linear-gradient(135deg, #EE4D2D 0%, #B22D14 30%, #120502 80%)`,
+          background: `linear-gradient(135deg, ${PARTNER.accentColor} 0%, ${PARTNER.bgMid} 30%, ${PARTNER.bgDark} 80%)`,
           boxShadow: `0 8px 60px ${PARTNER.accentColor}25, ${tokens.shadow.lg}, 0 1px 0 rgba(255,255,255,0.08) inset`,
           cursor: "pointer",
         }}
         onClick={() => window.open("https://shopeefood.vn", "_blank")}
       >
         {/* ── Decorative Gradient Orbs ── */}
-        <div
+        <Column
           style={{
             position: "absolute",
             top: "-120px",
@@ -106,13 +115,13 @@ export const TasteMapProBanner = () => {
             width: "500px",
             height: "500px",
             borderRadius: "50%",
-            background: `radial-gradient(circle, #FF6D4A 25%, #EE4D2D 10%, transparent 70%)`,
+            background: `radial-gradient(circle, ${PARTNER.accentLight} 25%, ${PARTNER.accentColor} 10%, transparent 70%)`,
             filter: "blur(60px)",
             pointerEvents: "none",
             opacity: 0.4,
           }}
         />
-        <div
+        <Column
           style={{
             position: "absolute",
             bottom: "-80px",
@@ -124,7 +133,7 @@ export const TasteMapProBanner = () => {
             pointerEvents: "none",
           }}
         />
-        <div
+        <Column
           style={{
             position: "absolute",
             top: "30%",
@@ -132,7 +141,7 @@ export const TasteMapProBanner = () => {
             width: "200px",
             height: "200px",
             borderRadius: "50%",
-            background: `radial-gradient(circle, #7B2FF712 0%, transparent 65%)`,
+            background: `radial-gradient(circle, ${tokens.color.magic}12 0%, transparent 65%)`,
             pointerEvents: "none",
           }}
         />
@@ -167,7 +176,7 @@ export const TasteMapProBanner = () => {
         </svg>
 
         {/* ── Diagonal Accent Line ── */}
-        <div
+        <Column
           style={{
             position: "absolute",
             top: 0,
@@ -206,26 +215,18 @@ export const TasteMapProBanner = () => {
         ))}
 
         {/* ── Main Content Layout ── */}
-        <div
+        <Row
           style={{
-            display: "flex",
-            alignItems: "stretch",
-            position: "relative",
             zIndex: 10,
             minHeight: "280px",
           }}
         >
           {/* ═══ LEFT — Text Section ═══ */}
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              gap: "18px",
-              padding: "40px 32px 40px 44px",
-              minWidth: 0,
-            }}
+          <Column
+            flex="1"
+            minWidth="0"
+            vertical="center"
+            style={{ gap: "18px", padding: "40px 32px 40px 44px" }}
           >
             {/* ── Exclusive Badge ── */}
             <motion.div
@@ -236,10 +237,9 @@ export const TasteMapProBanner = () => {
               style={{ display: "flex", alignItems: "center", gap: "10px" }}
             >
               {/* Partner Logo Pill */}
-              <div
+              <Row
+                vertical="center"
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
                   gap: "7px",
                   background: `linear-gradient(135deg, ${PARTNER.accentColor}18, ${PARTNER.accentColor}08)`,
                   border: `1px solid ${PARTNER.accentColor}30`,
@@ -248,20 +248,18 @@ export const TasteMapProBanner = () => {
                   backdropFilter: "blur(12px)",
                 }}
               >
-                <div
+                <Column
+                  center
                   style={{
                     width: "22px",
                     height: "22px",
                     borderRadius: "50%",
                     background: `linear-gradient(135deg, ${PARTNER.accentColor}, ${PARTNER.accentDark})`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     boxShadow: `0 2px 8px ${PARTNER.accentColor}50`,
                   }}
                 >
                   <SiShopee size={12} color="white" />
-                </div>
+                </Column>
                 <span
                   style={{
                     color: PARTNER.accentLight,
@@ -273,13 +271,12 @@ export const TasteMapProBanner = () => {
                 >
                   ShopeeFood
                 </span>
-              </div>
+              </Row>
 
               {/* Exclusive Tag */}
-              <div
+              <Row
+                vertical="center"
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
                   gap: "4px",
                   backgroundColor: "rgba(255,255,255,0.05)",
                   border: "1px solid rgba(255,255,255,0.08)",
@@ -287,7 +284,7 @@ export const TasteMapProBanner = () => {
                   padding: "5px 12px",
                 }}
               >
-                <RiVipCrown2Fill size={12} color="#FFB547" />
+                <RiVipCrown2Fill size={12} color={STAT_ACCENTS.rating} />
                 <span
                   style={{
                     color: "rgba(255,255,255,0.5)",
@@ -299,7 +296,7 @@ export const TasteMapProBanner = () => {
                 >
                   Only on TasteMap
                 </span>
-              </div>
+              </Row>
             </motion.div>
 
             {/* ── Headline ── */}
@@ -325,7 +322,7 @@ export const TasteMapProBanner = () => {
                 <br />
                 <span
                   style={{
-                    background: `linear-gradient(90deg, #FFFFFF, #FFD0C6, #FFFFFF)`,
+                    background: `linear-gradient(90deg, white, ${PARTNER.accentPale}, white)`,
                     backgroundSize: "200% 100%",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
@@ -356,10 +353,9 @@ export const TasteMapProBanner = () => {
               }}
             >
               {/* Discount Chip */}
-              <div
+              <Row
+                vertical="center"
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
                   gap: "6px",
                   background: `linear-gradient(135deg, ${PARTNER.accentColor}25, ${PARTNER.accentColor}10)`,
                   border: `1px solid ${PARTNER.accentColor}35`,
@@ -377,13 +373,12 @@ export const TasteMapProBanner = () => {
                 >
                   30% cashback
                 </span>
-              </div>
+              </Row>
 
               {/* Free Delivery Chip */}
-              <div
+              <Row
+                vertical="center"
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
                   gap: "6px",
                   background: "rgba(0, 212, 170, 0.10)",
                   border: "1px solid rgba(0, 212, 170, 0.25)",
@@ -391,7 +386,7 @@ export const TasteMapProBanner = () => {
                   padding: "8px 14px",
                 }}
               >
-                <TbTruckDelivery size={16} color="#00D4AA" />
+                <TbTruckDelivery size={16} color={STAT_ACCENTS.delivery} />
                 <span
                   style={{
                     color: "white",
@@ -401,13 +396,12 @@ export const TasteMapProBanner = () => {
                 >
                   Free delivery
                 </span>
-              </div>
+              </Row>
 
               {/* Coupon Chip */}
-              <div
+              <Row
+                vertical="center"
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
                   gap: "6px",
                   background: "rgba(123, 140, 255, 0.10)",
                   border: "1px solid rgba(123, 140, 255, 0.25)",
@@ -415,7 +409,7 @@ export const TasteMapProBanner = () => {
                   padding: "8px 14px",
                 }}
               >
-                <RiCoupon3Fill size={16} color="#7B8CFF" />
+                <RiCoupon3Fill size={16} color={STAT_ACCENTS.quality} />
                 <span
                   style={{
                     color: "white",
@@ -425,7 +419,7 @@ export const TasteMapProBanner = () => {
                 >
                   No code needed
                 </span>
-              </div>
+              </Row>
             </motion.div>
 
             {/* ── Subline ── */}
@@ -496,14 +490,12 @@ export const TasteMapProBanner = () => {
                 Auto-applied at checkout
               </span>
             </motion.div>
-          </div>
+          </Column>
 
           {/* ═══ RIGHT — Visual Section ═══ */}
-          <div
+          <Column
+            vertical="center"
             style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
               alignItems: "flex-end",
               gap: "14px",
               padding: "36px 40px 36px 20px",
@@ -534,7 +526,7 @@ export const TasteMapProBanner = () => {
               }}
             >
               {/* Inner glow */}
-              <div
+              <Column
                 style={{
                   position: "absolute",
                   top: "-50%",
@@ -573,21 +565,19 @@ export const TasteMapProBanner = () => {
                   minWidth: "180px",
                 }}
               >
-                <div
+                <Column
+                  center
                   style={{
                     width: "28px",
                     height: "28px",
                     borderRadius: "8px",
                     background: `${accent}15`,
                     border: `1px solid ${accent}25`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     flexShrink: 0,
                   }}
                 >
                   <Icon size={14} color={accent} />
-                </div>
+                </Column>
                 <span
                   style={{
                     color: "rgba(255,255,255,0.6)",
@@ -613,13 +603,13 @@ export const TasteMapProBanner = () => {
                 marginTop: "4px",
               }}
             >
-              <div
+              <Column
                 style={{
                   width: "6px",
                   height: "6px",
                   borderRadius: "50%",
-                  backgroundColor: "#00D4AA",
-                  boxShadow: "0 0 8px #00D4AA80",
+                  backgroundColor: STAT_ACCENTS.delivery,
+                  boxShadow: `0 0 8px ${STAT_ACCENTS.delivery}80`,
                   animation: "pulse 2s infinite",
                 }}
               />
@@ -634,25 +624,23 @@ export const TasteMapProBanner = () => {
               >
                 <RiFlashlightFill
                   size={10}
-                  color="#FFB547"
+                  color={STAT_ACCENTS.rating}
                   style={{ marginRight: "4px", verticalAlign: "middle" }}
                 />
                 2,847 orders today
               </span>
             </motion.div>
-          </div>
-        </div>
+          </Column>
+        </Row>
 
         {/* ── Bottom Disclaimer Bar ── */}
-        <div
+        <Row
+          vertical="center"
+          horizontal="between"
           style={{
-            position: "relative",
             zIndex: 10,
             borderTop: "1px solid rgba(255,255,255,0.04)",
             padding: "10px 44px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
             gap: "12px",
             flexWrap: "wrap",
           }}
@@ -684,8 +672,8 @@ export const TasteMapProBanner = () => {
               TasteMap
             </span>
           </span>
-        </div>
-      </div>
+        </Row>
+      </Column>
 
       {/* ── Pulse animation keyframe ── */}
       <style>{`

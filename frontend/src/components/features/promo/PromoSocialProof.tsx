@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Star, BadgeCheck } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -102,7 +103,7 @@ const ROW_2 = REVIEWS.slice(3);
 
 function ReviewCard({ review }: { review: Review }) {
   return (
-    <div
+    <Column
       style={{
         flexShrink: 0,
         width: 300,
@@ -110,17 +111,15 @@ function ReviewCard({ review }: { review: Review }) {
         borderRadius: 16,
         padding: "20px 22px",
         border: "1px solid rgba(0,0,0,0.07)",
-        display: "flex",
-        flexDirection: "column",
         gap: 12,
         boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
       }}
     >
-      <div style={{ display: "flex", gap: 3 }}>
+      <Row style={{ gap: 3 }}>
         {Array.from({ length: review.stars }).map((_, i) => (
           <Star key={i} size={11} fill="#FFB347" color="#FFB347" />
         ))}
-      </div>
+      </Row>
       <p
         style={{
           margin: 0,
@@ -132,16 +131,15 @@ function ReviewCard({ review }: { review: Review }) {
       >
         &ldquo;{review.text}&rdquo;
       </p>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div
+      <Row vertical="center" style={{ gap: 10 }}>
+        <Row
+          horizontal="center"
+          vertical="center"
           style={{
             width: 36,
             height: 36,
             borderRadius: "50%",
             backgroundColor: review.color,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             flexShrink: 0,
             fontWeight: 800,
             fontSize: 12,
@@ -150,9 +148,9 @@ function ReviewCard({ review }: { review: Review }) {
           }}
         >
           {review.initials}
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+        </Row>
+        <Column style={{ flex: 1, minWidth: 0 }}>
+          <Row vertical="center" style={{ gap: 4 }}>
             <p
               style={{
                 margin: 0,
@@ -169,7 +167,7 @@ function ReviewCard({ review }: { review: Review }) {
             {review.verified && (
               <BadgeCheck size={13} color="#FF5500" style={{ flexShrink: 0 }} />
             )}
-          </div>
+          </Row>
           <p
             style={{
               margin: 0,
@@ -182,9 +180,9 @@ function ReviewCard({ review }: { review: Review }) {
           >
             {review.role}
           </p>
-        </div>
-      </div>
-    </div>
+        </Column>
+      </Row>
+    </Column>
   );
 }
 
@@ -199,14 +197,13 @@ function MarqueeRow({
   const animKey = direction === "left" ? "sp-marquee-left" : "sp-marquee-right";
 
   return (
-    <div
+    <Column
       className={`sp-row-${direction}`}
       style={{ overflow: "hidden", width: "100%", position: "relative" }}
     >
-      <div
+      <Row
         className={`sp-track-${direction}`}
         style={{
-          display: "flex",
           gap: 14,
           width: "max-content",
           animation: `${animKey} ${reviews.length * 6}s linear infinite`,
@@ -215,8 +212,8 @@ function MarqueeRow({
         {doubled.map((r, i) => (
           <ReviewCard key={i} review={r} />
         ))}
-      </div>
-    </div>
+      </Row>
+    </Column>
   );
 }
 
@@ -250,7 +247,7 @@ export function PromoSocialProof() {
       `}</style>
 
       {/* Heading */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px" }}>
+      <Column style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px" }}>
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -315,8 +312,9 @@ export function PromoSocialProof() {
           }}
         >
           {STATS.map((s, i) => (
-            <div
+            <Column
               key={s.label}
+              horizontal="center"
               style={{
                 padding: "20px",
                 backgroundColor: "#FFFFFF",
@@ -324,11 +322,8 @@ export function PromoSocialProof() {
                   i < STATS.length - 1
                     ? "1px solid rgba(0,0,0,0.07)"
                     : "none",
-                display: "flex",
-                flexDirection: "column",
                 gap: 4,
                 textAlign: "center",
-                alignItems: "center",
               }}
             >
               <span
@@ -348,10 +343,10 @@ export function PromoSocialProof() {
               <span style={{ fontSize: 11, color: "rgba(24,22,15,0.35)" }}>
                 {s.sub}
               </span>
-            </div>
+            </Column>
           ))}
         </motion.div>
-      </div>
+      </Column>
 
       {/* Marquee rows */}
       <motion.div
@@ -362,7 +357,7 @@ export function PromoSocialProof() {
         style={{ display: "flex", flexDirection: "column", gap: 14, position: "relative" }}
       >
         {/* Left edge fade */}
-        <div
+        <Column
           style={{
             position: "absolute",
             left: 0,
@@ -375,7 +370,7 @@ export function PromoSocialProof() {
           }}
         />
         {/* Right edge fade */}
-        <div
+        <Column
           style={{
             position: "absolute",
             right: 0,

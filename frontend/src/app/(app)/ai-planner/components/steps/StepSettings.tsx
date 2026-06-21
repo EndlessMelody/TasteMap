@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import { DURATIONS, BUDGETS } from "../constants";
 
 interface StepSettingsProps {
@@ -35,11 +36,11 @@ export function StepSettings({
       style={{ display: "flex", flexDirection: "column", gap: 32 }}
     >
       {/* Duration */}
-      <div>
+      <Column>
         <h3 style={{ fontSize: 15, fontWeight: 800, color: "#1C1C1E", marginBottom: 12 }}>
           How long?
         </h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+        <Grid style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
           {DURATIONS.map((d) => {
             const selected = duration === d.label;
             return (
@@ -90,15 +91,15 @@ export function StepSettings({
               </motion.button>
             );
           })}
-        </div>
-      </div>
+        </Grid>
+      </Column>
 
       {/* Budget */}
-      <div>
+      <Column>
         <h3 style={{ fontSize: 15, fontWeight: 800, color: "#1C1C1E", marginBottom: 12 }}>
           Budget per person
         </h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+        <Grid style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
           {BUDGETS.map((b) => {
             const selected = budget === b.label;
             return (
@@ -149,15 +150,15 @@ export function StepSettings({
               </motion.button>
             );
           })}
-        </div>
-      </div>
+        </Grid>
+      </Column>
 
       {/* Location */}
-      <div>
+      <Column>
         <h3 style={{ fontSize: 15, fontWeight: 800, color: "#1C1C1E", marginBottom: 12 }}>
           Starting point
         </h3>
-        <div style={{ position: "relative" }}>
+        <Column style={{ position: "relative" }}>
           <input
             value={location}
             onChange={(e) => setLocation(e.target.value)}
@@ -185,8 +186,8 @@ export function StepSettings({
               e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.04)";
             }}
           />
-        </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+        </Column>
+        <Row style={{ gap: 8, marginTop: 10 }}>
           {QUICK_LOCATIONS.map((loc) => {
             const selected = location === loc.name;
             return (
@@ -218,8 +219,8 @@ export function StepSettings({
               </motion.button>
             );
           })}
-        </div>
-      </div>
+        </Row>
+      </Column>
     </motion.div>
   );
 }

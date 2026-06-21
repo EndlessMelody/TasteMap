@@ -3,6 +3,8 @@
 import React, { useCallback } from "react";
 import { motion } from "framer-motion";
 import { Upload, X, ImageIcon } from "lucide-react";
+import { Column } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 
 interface DropZoneProps {
   accept: string;
@@ -53,11 +55,11 @@ export function DropZone({
         style={{ aspectRatio: previewType === "video" ? "16/9" : "16/10" }}
       >
         {previewType === "image" ? (
-          <img src={value} alt="preview" className="absolute inset-0 w-full h-full object-cover" />
+          <img src={value} alt="preview" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
         ) : (
-          <div className="absolute inset-0 bg-zinc-900 flex items-center justify-center">
-            <span className="text-sm text-white/70">Video uploaded ✓</span>
-          </div>
+          <Column center style={{ position: "absolute", inset: 0, backgroundColor: tokens.color.bg }}>
+            <span style={{ fontSize: "0.875rem", color: tokens.color.textMuted }}>Video uploaded ✓</span>
+          </Column>
         )}
         <button
           onClick={onClear}
@@ -83,7 +85,18 @@ export function DropZone({
     >
       <input ref={inputRef} type="file" accept={accept} onChange={handleFileChange} className="hidden" />
 
-      <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-400 to-orange-500 flex items-center justify-center text-white shadow-md shadow-orange-200">
+      <Column
+        center
+        style={{
+          width: 44,
+          height: 44,
+          borderRadius: "12px",
+          background: `linear-gradient(135deg, ${tokens.color.warm}, rgba(255,107,53,0.7))`,
+          color: "white",
+          boxShadow: "0 4px 12px rgba(255,107,53,0.3)",
+          flexShrink: 0,
+        }}
+      >
         {isUploading ? (
           <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
             <Upload size={18} />
@@ -91,7 +104,7 @@ export function DropZone({
         ) : (
           <ImageIcon size={18} />
         )}
-      </div>
+      </Column>
       <p className="text-sm font-semibold text-zinc-700">
         {isUploading ? "Uploading…" : placeholder}
       </p>

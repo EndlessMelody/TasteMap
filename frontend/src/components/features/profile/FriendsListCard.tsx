@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Users, UserPlus } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
   H3,
@@ -78,14 +79,7 @@ function FriendRow({
             : `1px solid ${tokens.color.border}`,
         }}
       />
-      <div
-        style={{
-          flex: 1,
-          minWidth: 0,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <Column style={{ flex: 1, minWidth: 0 }}>
         <Body
           style={{
             fontWeight: tokens.type.weight.semibold,
@@ -106,7 +100,7 @@ function FriendRow({
         >
           {friend.title || friend.location || `@${friend.username}`}
         </BodySm>
-      </div>
+      </Column>
       <Pill tone={highMatch ? "warm" : "neutral"} size="sm">
         {friend.match_score}%
       </Pill>
@@ -121,21 +115,8 @@ export const FriendsListCard: React.FC<FriendsListCardProps> = ({
 }) => {
   return (
     <Card radius="xl" padding="md" shadow="sm" style={{ flex: 1 }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: tokens.space[4],
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: tokens.space[2],
-          }}
-        >
+      <Row horizontal="between" vertical="center" style={{ marginBottom: tokens.space[4] }}>
+        <Row vertical="center" style={{ gap: tokens.space[2] }}>
           <Users
             size={18}
             strokeWidth={1.75}
@@ -145,38 +126,24 @@ export const FriendsListCard: React.FC<FriendsListCardProps> = ({
           <Pill tone="neutral" size="sm">
             {friendsList.length}
           </Pill>
-        </div>
+        </Row>
         <Button variant="ghost" size="sm" onClick={onSeeAll}>
           See all
         </Button>
-      </div>
+      </Row>
 
       {friendsLoading ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[2],
-          }}
-        >
+        <Column style={{ gap: tokens.space[2] }}>
           {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: tokens.space[3],
-                padding: tokens.space[3],
-              }}
-            >
+            <Row key={i} vertical="center" style={{ gap: tokens.space[3], padding: tokens.space[3] }}>
               <Skeleton width={40} height={40} radius="pill" />
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6 }}>
+              <Column style={{ flex: 1, gap: 6 }}>
                 <Skeleton width="55%" height={13} />
                 <Skeleton width="75%" height={11} />
-              </div>
-            </div>
+              </Column>
+            </Row>
           ))}
-        </div>
+        </Column>
       ) : friendsList.length === 0 ? (
         <EmptyState
           compact
@@ -190,13 +157,7 @@ export const FriendsListCard: React.FC<FriendsListCardProps> = ({
           }
         />
       ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[1],
-          }}
-        >
+        <Column style={{ gap: tokens.space[1] }}>
           {friendsList.slice(0, 5).map((friend) => (
             <FriendRow key={friend.id} friend={friend} onClick={onSeeAll} />
           ))}
@@ -212,7 +173,7 @@ export const FriendsListCard: React.FC<FriendsListCardProps> = ({
               See all {friendsList.length} friends
             </Button>
           )}
-        </div>
+        </Column>
       )}
     </Card>
   );

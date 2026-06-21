@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import { DiscoverSection, GlassCard } from "@/components/primitives";
+import { Column, Row, Text } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { apiGet } from "@/lib/api";
 
@@ -19,13 +20,7 @@ const ScrollControls: React.FC<{
   onScrollLeft: () => void;
   onScrollRight: () => void;
 }> = ({ onScrollLeft, onScrollRight }) => (
-  <div
-    style={{
-      display: "inline-flex",
-      alignItems: "center",
-      gap: tokens.space[2],
-    }}
-  >
+  <Row vertical="center" gap="8">
     <button
       type="button"
       onClick={onScrollLeft}
@@ -78,12 +73,12 @@ const ScrollControls: React.FC<{
     >
       <ChevronRight size={18} strokeWidth={2.4} />
     </button>
-  </div>
+  </Row>
 );
 
 // ─── Skeletons ───────────────────────────────────────────────────
 const VaultSkeleton: React.FC = () => (
-  <div
+  <Column
     style={{
       flexShrink: 0,
       width: 260,
@@ -119,7 +114,7 @@ const InlineNotice: React.FC<{
         gap: tokens.space[4],
       }}
     >
-      <div
+      <Column
         style={{
           width: 40,
           height: 40,
@@ -134,9 +129,11 @@ const InlineNotice: React.FC<{
         }}
       >
         {icon}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <span
+      </Column>
+      <Column flex="1" minWidth="0">
+        <Text
+          as="span"
+          variant="body-default-s"
           style={{
             display: "block",
             fontSize: tokens.type.size.bodySm,
@@ -146,8 +143,10 @@ const InlineNotice: React.FC<{
           }}
         >
           {title}
-        </span>
-        <span
+        </Text>
+        <Text
+          as="span"
+          variant="body-default-s"
           style={{
             display: "block",
             fontSize: tokens.type.size.caption,
@@ -155,8 +154,8 @@ const InlineNotice: React.FC<{
           }}
         >
           {message}
-        </span>
-      </div>
+        </Text>
+      </Column>
     </GlassCard>
   );
 };
@@ -224,19 +223,11 @@ export const TasteVault: React.FC<TasteVaultProps> = ({ onPostClick, onReelClick
       }
     >
       {loading ? (
-        <div
-          style={{
-            display: "flex",
-            gap: tokens.space[3],
-            overflowX: "auto",
-            paddingBottom: 4,
-          }}
-          className="no-scrollbar"
-        >
+        <Row className="no-scrollbar" gap="12" overflowX="auto" paddingBottom="4">
           {[0, 1, 2, 3, 4, 5].map((i) => (
             <VaultSkeleton key={i} />
           ))}
-        </div>
+        </Row>
       ) : error ? (
         <InlineNotice
           icon={<AlertTriangle size={18} strokeWidth={2.2} />}
@@ -251,15 +242,12 @@ export const TasteVault: React.FC<TasteVaultProps> = ({ onPostClick, onReelClick
           message="Save interesting food spots, posts, or reels to your collection."
         />
       ) : (
-        <div
+        <Row
           ref={vaultRef}
-          style={{
-            display: "flex",
-            gap: tokens.space[3],
-            overflowX: "auto",
-            paddingBottom: 4,
-          }}
           className="no-scrollbar"
+          gap="12"
+          overflowX="auto"
+          paddingBottom="4"
         >
           {bookmarks.map((bm, i) => {
             let cardData: {
@@ -362,7 +350,7 @@ export const TasteVault: React.FC<TasteVaultProps> = ({ onPostClick, onReelClick
               />
             );
           })}
-        </div>
+        </Row>
       )}
     </DiscoverSection>
   );

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Bookmark, MapPin, PlayCircle, FileText, Star } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
   Body,
@@ -76,7 +77,7 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
 
   if (loading) {
     return (
-      <div
+      <Column
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
@@ -86,7 +87,7 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <Skeleton key={i} height={220} radius="lg" />
         ))}
-      </div>
+      </Column>
     );
   }
 
@@ -103,7 +104,7 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
   }
 
   return (
-    <div
+    <Column
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
@@ -155,7 +156,7 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
             onClick={() => onItemClick?.(bm)}
             style={{ cursor: "pointer", overflow: "hidden" }}
           >
-            <div
+            <Column
               style={{
                 position: "relative",
                 width: "100%",
@@ -167,7 +168,7 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
                 alt=""
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
-              <div
+              <Column
                 style={{
                   position: "absolute",
                   inset: 0,
@@ -177,13 +178,12 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
                 }}
               />
               {authorName && (
-                <div
+                <Row
+                  vertical="center"
                   style={{
                     position: "absolute",
                     top: tokens.space[2],
                     left: tokens.space[2],
-                    display: "inline-flex",
-                    alignItems: "center",
                     gap: tokens.space[1],
                     padding: `4px 10px 4px 4px`,
                     borderRadius: tokens.radius.pill,
@@ -205,9 +205,9 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
                     }}
                   />
                   <Caption>{authorName}</Caption>
-                </div>
+                </Row>
               )}
-              <div
+              <Column
                 style={{
                   position: "absolute",
                   top: tokens.space[2],
@@ -226,14 +226,12 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
                 >
                   {typeLabel}
                 </Pill>
-              </div>
-            </div>
+              </Column>
+            </Column>
 
-            <div
+            <Column
               style={{
                 padding: tokens.space[4],
-                display: "flex",
-                flexDirection: "column",
                 gap: tokens.space[1],
               }}
             >
@@ -247,13 +245,10 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
               >
                 {title}
               </Body>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: tokens.space[2],
-                }}
+              <Row
+                horizontal="between"
+                vertical="center"
+                style={{ gap: tokens.space[2] }}
               >
                 <BodySm
                   tone="muted"
@@ -271,12 +266,12 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
                     {rating.toFixed(1)}
                   </Pill>
                 )}
-              </div>
-            </div>
+              </Row>
+            </Column>
           </Card>
         );
       })}
-    </div>
+    </Column>
   );
 };
 

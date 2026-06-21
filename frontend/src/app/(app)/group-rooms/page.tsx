@@ -34,6 +34,7 @@ import {
   SearchX,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import { apiGet, apiPost } from "@/lib/api";
 import { LobbyDetailModal, AvatarStack } from "@/components/features/lobby";
 import type {
@@ -219,7 +220,7 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
         style={{ width: "100%", maxWidth: 400 }}
       >
         <Card radius="xl" padding="none" shadow="lg" style={{ overflow: "hidden" }}>
-          <div
+          <Column
             style={{
               padding: tokens.space[6],
               background: tokens.color.surfaceMuted,
@@ -257,12 +258,10 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
             <BodySm tone="muted" style={{ marginTop: tokens.space[1] }}>
               Enter the invite code from your host.
             </BodySm>
-          </div>
-          <div
+          </Column>
+          <Column
             style={{
               padding: tokens.space[6],
-              display: "flex",
-              flexDirection: "column",
               gap: tokens.space[4],
             }}
           >
@@ -282,7 +281,7 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
                 textTransform: "uppercase",
               }}
             />
-            <div style={{ display: "flex", gap: tokens.space[3] }}>
+            <Row style={{ gap: tokens.space[3] }}>
               <Button variant="ghost" size="md" fullWidth onClick={onClose}>
                 Cancel
               </Button>
@@ -296,8 +295,8 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
               >
                 Join room
               </Button>
-            </div>
-          </div>
+            </Row>
+          </Column>
         </Card>
       </motion.div>
     </motion.div>
@@ -329,7 +328,7 @@ function RoomCard({
       onClick={onClick}
       style={{ overflow: "hidden", cursor: "pointer", userSelect: "none" }}
     >
-      <div
+      <Column
         style={{
           position: "relative",
           height: 156,
@@ -345,7 +344,7 @@ function RoomCard({
             objectFit: "cover",
           }}
         />
-        <div
+        <Column
           style={{
             position: "absolute",
             inset: 0,
@@ -355,7 +354,7 @@ function RoomCard({
         />
 
         {lobby.category && (
-          <div
+          <Column
             style={{
               position: "absolute",
               top: tokens.space[3],
@@ -375,10 +374,10 @@ function RoomCard({
             >
               {lobby.category}
             </Pill>
-          </div>
+          </Column>
         )}
 
-        <div
+        <Column
           style={{
             position: "absolute",
             bottom: tokens.space[3],
@@ -399,9 +398,9 @@ function RoomCard({
           >
             {lobby.is_public === false ? "Private" : "Public"}
           </Pill>
-        </div>
+        </Column>
 
-        <div
+        <Column
           style={{
             position: "absolute",
             top: tokens.space[3],
@@ -423,9 +422,9 @@ function RoomCard({
           >
             {STATUS_LABEL[status]}
           </Pill>
-        </div>
+        </Column>
 
-        <div
+        <Column
           style={{
             position: "absolute",
             bottom: 0,
@@ -444,10 +443,10 @@ function RoomCard({
           >
             {lobby.name}
           </H3>
-        </div>
-      </div>
+        </Column>
+      </Column>
 
-      <div style={{ padding: tokens.space[4] }}>
+      <Column style={{ padding: tokens.space[4] }}>
         {lobby.description && (
           <BodySm
             tone="muted"
@@ -463,9 +462,8 @@ function RoomCard({
           </BodySm>
         )}
 
-        <div
+        <Row
           style={{
-            display: "flex",
             flexWrap: "wrap",
             gap: `${tokens.space[1]} ${tokens.space[4]}`,
             marginBottom: tokens.space[3],
@@ -494,12 +492,11 @@ function RoomCard({
             <Clock size={12} strokeWidth={1.75} />
             {lobby.time}
           </BodySm>
-        </div>
+        </Row>
 
         {lobby.tags && lobby.tags.length > 0 && (
-          <div
+          <Row
             style={{
-              display: "flex",
               flexWrap: "wrap",
               gap: tokens.space[1],
               marginBottom: tokens.space[3],
@@ -510,17 +507,14 @@ function RoomCard({
                 {tag}
               </Pill>
             ))}
-          </div>
+          </Row>
         )}
 
-        <div style={{ marginBottom: tokens.space[3] }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: tokens.space[1],
-            }}
+        <Column style={{ marginBottom: tokens.space[3] }}>
+          <Row
+            horizontal="between"
+            vertical="center"
+            style={{ marginBottom: tokens.space[1] }}
           >
             <Caption tone="muted">
               {lobby.members.length} / {lobby.spots} joined
@@ -544,8 +538,8 @@ function RoomCard({
                 Full
               </Caption>
             )}
-          </div>
-          <div
+          </Row>
+          <Column
             style={{
               height: 6,
               background: tokens.color.surfaceInset,
@@ -562,25 +556,13 @@ function RoomCard({
                 background: tokens.color.warm,
               }}
             />
-          </div>
-        </div>
+          </Column>
+        </Column>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+        <Row horizontal="between" vertical="center">
           {lobby.host && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: tokens.space[1],
-              }}
-            >
-              <div style={{ position: "relative" }}>
+            <Row vertical="center" style={{ gap: tokens.space[1] }}>
+              <Column style={{ position: "relative" }}>
                 <img
                   src={lobby.host.avatar}
                   alt=""
@@ -603,18 +585,12 @@ function RoomCard({
                     color: tokens.color.warning,
                   }}
                 />
-              </div>
+              </Column>
               <Caption tone="muted">{lobby.host.name}</Caption>
-            </div>
+            </Row>
           )}
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: tokens.space[2],
-            }}
-          >
+          <Row vertical="center" style={{ gap: tokens.space[2] }}>
             <AvatarStack members={lobby.members.slice(0, 4)} spotsLeft={0} />
             <Button
               variant={
@@ -643,9 +619,9 @@ function RoomCard({
                     ? "Enter"
                     : "Join"}
             </Button>
-          </div>
-        </div>
-      </div>
+          </Row>
+        </Row>
+      </Column>
     </Card>
   );
 }
@@ -733,21 +709,20 @@ function CreateRoomModal({
           shadow="lg"
           style={{ overflow: "hidden" }}
         >
-          <div
+          <Row
+            horizontal="between"
             style={{
               padding: tokens.space[6],
               background: tokens.color.surfaceMuted,
-              display: "flex",
-              justifyContent: "space-between",
               alignItems: "flex-start",
             }}
           >
-            <div>
+            <Column>
               <H2>Create a room</H2>
               <BodySm tone="muted" style={{ marginTop: tokens.space[1] }}>
                 Host a new group food adventure.
               </BodySm>
-            </div>
+            </Column>
             <IconButton
               variant="ghost"
               size="sm"
@@ -755,14 +730,12 @@ function CreateRoomModal({
               icon={<X size={18} strokeWidth={1.75} />}
               onClick={onClose}
             />
-          </div>
+          </Row>
 
-          <div
+          <Column
             className="no-scrollbar"
             style={{
               padding: tokens.space[6],
-              display: "flex",
-              flexDirection: "column",
               gap: tokens.space[4],
               maxHeight: "60vh",
               overflowY: "auto",
@@ -783,23 +756,11 @@ function CreateRoomModal({
               onChange={(e) => setDescription(e.target.value)}
             />
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: tokens.space[2],
-              }}
-            >
+            <Column style={{ gap: tokens.space[2] }}>
               <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
                 Category
               </BodySm>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: tokens.space[2],
-                }}
-              >
+              <Row style={{ flexWrap: "wrap", gap: tokens.space[2] }}>
                 {(ALL_CATEGORIES.slice(1) as LobbyCategory[]).map((cat) => {
                   const active = category === cat;
                   return (
@@ -830,8 +791,8 @@ function CreateRoomModal({
                     </button>
                   );
                 })}
-              </div>
-            </div>
+              </Row>
+            </Column>
 
             <Field
               label="Route / location"
@@ -841,8 +802,8 @@ function CreateRoomModal({
               leading={<MapPin size={16} strokeWidth={1.75} />}
             />
 
-            <div style={{ display: "flex", gap: tokens.space[3] }}>
-              <div style={{ flex: 1 }}>
+            <Row style={{ gap: tokens.space[3] }}>
+              <Column style={{ flex: 1 }}>
                 <Field
                   label="Time"
                   placeholder="Tonight at 8 PM"
@@ -850,24 +811,12 @@ function CreateRoomModal({
                   onChange={(e) => setTime(e.target.value)}
                   leading={<Clock size={15} strokeWidth={1.75} />}
                 />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: tokens.space[2],
-                }}
-              >
+              </Column>
+              <Column style={{ gap: tokens.space[2] }}>
                 <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
                   Max spots
                 </BodySm>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: tokens.space[2],
-                  }}
-                >
+                <Row vertical="center" style={{ gap: tokens.space[2] }}>
                   <IconButton
                     variant="secondary"
                     size="sm"
@@ -892,23 +841,16 @@ function CreateRoomModal({
                     onClick={() => setSpots(Math.min(12, spots + 1))}
                     icon={<span style={{ fontSize: 18 }}>+</span>}
                   />
-                </div>
-              </div>
-            </div>
+                </Row>
+              </Column>
+            </Row>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: tokens.space[2],
-              }}
-            >
+            <Column style={{ gap: tokens.space[2] }}>
               <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
                 Room visibility
               </BodySm>
-              <div
+              <Grid
                 style={{
-                  display: "grid",
                   gridTemplateColumns: "1fr 1fr",
                   gap: tokens.space[2],
                 }}
@@ -956,7 +898,7 @@ function CreateRoomModal({
                           }}
                         />
                       )}
-                      <div>
+                      <Column>
                         <BodySm
                           style={{
                             fontWeight: tokens.type.weight.semibold,
@@ -968,12 +910,12 @@ function CreateRoomModal({
                         <Caption tone="muted" style={{ marginTop: 2 }}>
                           {pub ? "Anyone can join" : "Invite code only"}
                         </Caption>
-                      </div>
+                      </Column>
                     </button>
                   );
                 })}
-              </div>
-            </div>
+              </Grid>
+            </Column>
 
             {pendingCode && (
               <motion.div
@@ -981,13 +923,7 @@ function CreateRoomModal({
                 animate={{ opacity: 1, y: 0 }}
               >
                 <Card radius="md" padding="sm" shadow="none" surface="muted">
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: tokens.space[2],
-                    }}
-                  >
+                  <Row style={{ alignItems: "flex-start", gap: tokens.space[2] }}>
                     <KeyRound
                       size={15}
                       strokeWidth={1.75}
@@ -1001,16 +937,15 @@ function CreateRoomModal({
                       An invite code will be generated for you automatically.
                       Share it with friends after creation.
                     </BodySm>
-                  </div>
+                  </Row>
                 </Card>
               </motion.div>
             )}
-          </div>
+          </Column>
 
-          <div
+          <Row
             style={{
               padding: `${tokens.space[3]} ${tokens.space[6]} ${tokens.space[6]}`,
-              display: "flex",
               gap: tokens.space[3],
             }}
           >
@@ -1033,7 +968,7 @@ function CreateRoomModal({
             >
               {pendingCode ? "Confirm & create" : "Create room"}
             </Button>
-          </div>
+          </Row>
         </Card>
       </motion.div>
     </motion.div>
@@ -1125,11 +1060,9 @@ export default function GroupRoomsPage() {
   const inProgressCount = rooms.filter((l) => l.status === "in-progress").length;
 
   return (
-    <div
+    <Column
       className="no-scrollbar"
       style={{
-        display: "flex",
-        flexDirection: "column",
         width: "100%",
         height: "100%",
         background: tokens.color.bg,
@@ -1138,7 +1071,7 @@ export default function GroupRoomsPage() {
         overflowX: "hidden",
       }}
     >
-      <div
+      <Column
         style={{
           position: "sticky",
           top: 0,
@@ -1149,23 +1082,16 @@ export default function GroupRoomsPage() {
           borderBottom: `1px solid ${tokens.color.border}`,
         }}
       >
-        <div
+        <Row
+          horizontal="between"
+          vertical="center"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
             padding: `${tokens.space[4]} ${tokens.space[8]}`,
             gap: tokens.space[3],
             flexWrap: "wrap",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: tokens.space[4],
-            }}
-          >
+          <Row vertical="center" style={{ gap: tokens.space[4] }}>
             <Link
               href="/discover"
               style={{
@@ -1181,28 +1107,22 @@ export default function GroupRoomsPage() {
               <ChevronLeft size={20} strokeWidth={1.75} />
               Discover
             </Link>
-            <div
+            <Column
               style={{
                 width: 1,
                 height: 20,
                 background: tokens.color.border,
               }}
             />
-            <div>
+            <Column>
               <H1 style={{ fontSize: 22, lineHeight: 1 }}>Group rooms</H1>
               <Caption tone="muted" style={{ marginTop: 2 }}>
                 {counts.All} active · {totalMembers} explorers online
               </Caption>
-            </div>
-          </div>
+            </Column>
+          </Row>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: tokens.space[2],
-            }}
-          >
+          <Row vertical="center" style={{ gap: tokens.space[2] }}>
             <Button
               variant="secondary"
               size="md"
@@ -1219,11 +1139,11 @@ export default function GroupRoomsPage() {
             >
               Create room
             </Button>
-          </div>
-        </div>
-      </div>
+          </Row>
+        </Row>
+      </Column>
 
-      <div
+      <Column
         style={{ padding: `${tokens.space[6]} ${tokens.space[8]} ${tokens.space[12]}` }}
       >
         <motion.div
@@ -1261,13 +1181,7 @@ export default function GroupRoomsPage() {
               transition={{ delay: i * 0.06 }}
             >
               <Card radius="lg" padding="md" shadow="sm">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: tokens.space[3],
-                  }}
-                >
+                <Row vertical="center" style={{ gap: tokens.space[3] }}>
                   <span
                     style={{
                       width: 40,
@@ -1282,7 +1196,7 @@ export default function GroupRoomsPage() {
                   >
                     {stat.icon}
                   </span>
-                  <div>
+                  <Column>
                     <Body
                       style={{
                         fontSize: 24,
@@ -1293,17 +1207,16 @@ export default function GroupRoomsPage() {
                       {stat.value}
                     </Body>
                     <Caption tone="muted">{stat.label}</Caption>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               </Card>
             </motion.div>
           ))}
         </motion.div>
 
-        <div
+        <Row
+          vertical="center"
           style={{
-            display: "flex",
-            alignItems: "center",
             gap: tokens.space[2],
             marginBottom: tokens.space[4],
             flexWrap: "wrap",
@@ -1355,7 +1268,7 @@ export default function GroupRoomsPage() {
             );
           })}
 
-          <div style={{ marginLeft: "auto", width: 220 }}>
+          <Column style={{ marginLeft: "auto", width: 220 }}>
             <Field
               type="text"
               value={search}
@@ -1374,13 +1287,12 @@ export default function GroupRoomsPage() {
                 ) : undefined
               }
             />
-          </div>
-        </div>
+          </Column>
+        </Row>
 
-        <div
+        <Row
           className="no-scrollbar"
           style={{
-            display: "flex",
             gap: tokens.space[2],
             overflowX: "auto",
             paddingBottom: 4,
@@ -1419,7 +1331,7 @@ export default function GroupRoomsPage() {
               </button>
             );
           })}
-        </div>
+        </Row>
 
         <AnimatePresence mode="wait">
           {loading ? (
@@ -1515,7 +1427,7 @@ export default function GroupRoomsPage() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </Column>
 
       <AnimatePresence>
         {selectedLobby && (
@@ -1534,6 +1446,6 @@ export default function GroupRoomsPage() {
           <JoinByCodeModal onClose={() => setShowJoinByCode(false)} />
         )}
       </AnimatePresence>
-    </div>
+    </Column>
   );
 }

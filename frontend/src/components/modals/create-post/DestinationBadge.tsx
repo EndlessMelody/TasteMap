@@ -2,12 +2,11 @@
 
 import React from "react";
 import { Row, Text } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 
 interface DestinationBadgeProps {
   destination: string;
 }
-
-const BRAND = "#ff6b35";
 
 export function DestinationBadge({ destination }: DestinationBadgeProps) {
   return (
@@ -24,7 +23,7 @@ export function DestinationBadge({ destination }: DestinationBadgeProps) {
       <Text variant="body-default-s" onBackground="neutral-medium">
         Publishing to:
       </Text>
-      <Text variant="body-strong-s" style={{ color: BRAND, marginLeft: "6px" }}>
+      <Text variant="body-strong-s" style={{ color: tokens.color.warm, marginLeft: "6px" }}>
         {destination}
       </Text>
     </Row>

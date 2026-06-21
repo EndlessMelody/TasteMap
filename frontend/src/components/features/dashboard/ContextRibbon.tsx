@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 
 import { GlassCard } from "@/components/primitives";
+import { Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { fadeDown } from "@/lib/motion";
 import { useAuth } from "@/context/AuthContext";
@@ -57,7 +58,7 @@ function useLiveContext(): WeatherState {
   if (h >= 5 && h < 12) {
     return {
       icon: Sun,
-      color: "#FBBF24",
+      color: tokens.color.warning,
       temp: "29°C",
       condition: "Sunny",
       timeOfDay: "Morning",
@@ -114,7 +115,7 @@ function useDevNotes(): DevNote[] {
       {
         id: "dev-perf",
         icon: Zap,
-        tone: "#FBBF24",
+        tone: tokens.color.warning,
         text: "Performance boost: Vector search 3× faster",
       },
       {
@@ -226,24 +227,12 @@ export const ContextRibbon: React.FC = () => {
           paddingRight: tokens.space[4],
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: tokens.space[4],
-            width: "100%",
-            minHeight: 24,
-          }}
-        >
+        <Row fillWidth vertical="center" gap="16" style={{ minHeight: 24 }}>
           {/* ── LEFT: Weather + Location ── */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: tokens.space[2],
-              flexShrink: 0,
-              whiteSpace: "nowrap",
-            }}
+          <Row
+            vertical="center"
+            gap="8"
+            style={{ flexShrink: 0, whiteSpace: "nowrap" }}
           >
             <WeatherIcon
               size={13}
@@ -283,21 +272,16 @@ export const ContextRibbon: React.FC = () => {
               <Wind size={10} strokeWidth={2.4} style={{ opacity: 0.5 }} />
               AQI: 42
             </span>
-          </div>
+          </Row>
 
           <VerticalDivider />
 
           {/* ── CENTER: Dev Notes (rotating) ── */}
-          <div
-            style={{
-              flex: 1,
-              minWidth: 0,
-              position: "relative",
-              height: 20,
-              overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-            }}
+          <Row
+            flex="1"
+            minWidth="0"
+            vertical="center"
+            style={{ height: 20, overflow: "hidden" }}
           >
             <AnimatePresence mode="wait">
               {currentNote && (
@@ -336,17 +320,10 @@ export const ContextRibbon: React.FC = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </Row>
 
           {/* ── Dots indicator ── */}
-          <div
-            style={{
-              display: "inline-flex",
-              gap: 3,
-              flexShrink: 0,
-            }}
-            aria-hidden
-          >
+          <Row gap="4" aria-hidden style={{ flexShrink: 0 }}>
             {devNotes.map((_, i) => (
               <span
                 key={i}
@@ -362,19 +339,15 @@ export const ContextRibbon: React.FC = () => {
                 }}
               />
             ))}
-          </div>
+          </Row>
 
           <VerticalDivider />
 
           {/* ── RIGHT: Quick Stats ── */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: tokens.space[3],
-              flexShrink: 0,
-              whiteSpace: "nowrap",
-            }}
+          <Row
+            vertical="center"
+            gap="12"
+            style={{ flexShrink: 0, whiteSpace: "nowrap" }}
           >
             {/* Foodies online */}
             <span
@@ -416,8 +389,8 @@ export const ContextRibbon: React.FC = () => {
                 </span>
               </span>
             )}
-          </div>
-        </div>
+          </Row>
+        </Row>
       </GlassCard>
     </motion.div>
   );

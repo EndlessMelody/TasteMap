@@ -9,6 +9,7 @@ import {
   PolarAngleAxis,
   ResponsiveContainer,
 } from "recharts";
+import { Column, Row } from "@once-ui-system/core";
 import { Card, H3, BodySm, Button, Eyebrow } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 import ClientOnly from "@/components/common/ClientOnly";
@@ -36,22 +37,8 @@ export const TasteDNACard: React.FC<TasteDNACardProps> = ({ radarData }) => {
         flexDirection: "column",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: tokens.space[3],
-          marginBottom: tokens.space[5],
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: tokens.space[3],
-          }}
-        >
+      <Row horizontal="between" style={{ alignItems: "flex-start", gap: tokens.space[3], marginBottom: tokens.space[5] }}>
+        <Row vertical="center" style={{ gap: tokens.space[3] }}>
           <span
             style={{
               display: "inline-flex",
@@ -67,17 +54,17 @@ export const TasteDNACard: React.FC<TasteDNACardProps> = ({ radarData }) => {
           >
             <Sparkles size={20} strokeWidth={1.75} />
           </span>
-          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <Column style={{ gap: 2 }}>
             <H3>Taste DNA</H3>
             <Eyebrow tone="muted">AI · Your unique flavor profile</Eyebrow>
-          </div>
-        </div>
+          </Column>
+        </Row>
         <Button variant="ghost" size="sm">
           View insights
         </Button>
-      </div>
+      </Row>
 
-      <div style={{ flex: 1, width: "100%", minHeight: 280 }}>
+      <Column style={{ flex: 1, width: "100%", minHeight: 280 }}>
         <ClientOnly>
           <ResponsiveContainer
             width="100%"
@@ -110,7 +97,7 @@ export const TasteDNACard: React.FC<TasteDNACardProps> = ({ radarData }) => {
             </RadarChart>
           </ResponsiveContainer>
         </ClientOnly>
-      </div>
+      </Column>
 
       {/* Silence the unused-import warning if BodySm is dropped later */}
       <BodySm style={{ display: "none" }} aria-hidden />

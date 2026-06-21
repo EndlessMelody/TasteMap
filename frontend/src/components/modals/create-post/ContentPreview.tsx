@@ -3,6 +3,8 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ImageIcon } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 import { ComposerType } from "@/types/contentCreation";
 
 interface ContentPreviewProps {
@@ -16,8 +18,6 @@ interface ContentPreviewProps {
   tags: string[];
   videoUrl: string;
 }
-
-const BRAND = "#ff6b35";
 
 const ratingLabels: Record<number, string> = {
   1: "Poor", 2: "Fair", 3: "Good", 4: "Very Good", 5: "Excellent",
@@ -41,19 +41,38 @@ export function ContentPreview({
   const destination = isPost ? "Foodie Feed" : "Discover Reels";
 
   return (
-    <div className="overflow-hidden">
+    <Column style={{ overflow: "hidden" }}>
       {/* Destination pill */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-100">
-        <span className="text-xs font-medium text-zinc-400">Publishing to</span>
-        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-orange-50 text-orange-500">
+      <Row
+        horizontal="between"
+        vertical="center"
+        style={{
+          padding: "10px 16px",
+          borderBottom: `1px solid ${tokens.color.border}`,
+        }}
+      >
+        <span style={{ fontSize: "0.75rem", fontWeight: 500, color: tokens.color.textMuted }}>Publishing to</span>
+        <span
+          style={{
+            fontSize: "0.75rem",
+            fontWeight: 600,
+            padding: "2px 10px",
+            borderRadius: "9999px",
+            backgroundColor: "rgba(255,107,53,0.08)",
+            color: tokens.color.warm,
+          }}
+        >
           {destination}
         </span>
-      </div>
+      </Row>
 
       {/* Media */}
-      <div
-        className="relative overflow-hidden"
-        style={{ aspectRatio: isPost ? "4/3" : "9/16" }}
+      <Column
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          aspectRatio: isPost ? "4/3" : "9/16",
+        }}
       >
         <AnimatePresence mode="wait">
           {heroImage ? (
@@ -64,7 +83,7 @@ export function ContentPreview({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 w-full h-full object-cover"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
             />
           ) : (
             <motion.div
@@ -72,65 +91,100 @@ export function ContentPreview({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 flex flex-col items-center justify-center gap-3"
-              style={{ background: "linear-gradient(135deg, #FFE8DC 0%, #FFF4ED 50%, #FFE8DC 100%)" }}
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "12px",
+                background: "linear-gradient(135deg, rgba(255,107,53,0.1) 0%, rgba(255,107,53,0.04) 50%, rgba(255,107,53,0.1) 100%)",
+              }}
             >
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-orange-100">
-                <ImageIcon size={20} color={BRAND} />
-              </div>
-              <span className="text-xs font-medium text-orange-400">
+              <Column
+                center
+                style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "16px",
+                  backgroundColor: "rgba(255,107,53,0.12)",
+                }}
+              >
+                <ImageIcon size={20} color={tokens.color.warm} />
+              </Column>
+              <span style={{ fontSize: "0.75rem", fontWeight: 500, color: tokens.color.warm }}>
                 {isPost ? "Post Cover" : "Reel Thumbnail"}
               </span>
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </Column>
 
       {/* Content info */}
-      <div className="px-4 py-3 flex flex-col gap-2">
-        <p className="text-sm font-bold text-zinc-800">@{username || "creator"}</p>
+      <Column style={{ padding: "12px 16px", gap: "8px" }}>
+        <p style={{ fontSize: "0.875rem", fontWeight: 700, color: tokens.color.text, margin: 0 }}>
+          @{username || "creator"}
+        </p>
 
         <p
-          className="text-xs leading-relaxed text-zinc-600 line-clamp-4 min-h-[3rem]"
+          style={{
+            fontSize: "0.75rem",
+            lineHeight: 1.6,
+            color: tokens.color.textSubtle,
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitLineClamp: 4,
+            WebkitBoxOrient: "vertical",
+            minHeight: "3rem",
+            margin: 0,
+          }}
         >
           {textPreview}
         </p>
 
         {isPost && rating > 0 && (
-          <div className="flex items-center gap-2">
-            <div className="flex gap-0.5">
+          <Row vertical="center" style={{ gap: "8px" }}>
+            <Row style={{ gap: "2px" }}>
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
                   size={13}
-                  color={star <= rating ? BRAND : "#D1D1D6"}
-                  fill={star <= rating ? BRAND : "none"}
+                  color={star <= rating ? tokens.color.warm : tokens.color.border}
+                  fill={star <= rating ? tokens.color.warm : "none"}
                   strokeWidth={star <= rating ? 0 : 1.5}
                 />
               ))}
-            </div>
-            <span className="text-xs font-medium" style={{ color: BRAND }}>
+            </Row>
+            <span style={{ fontSize: "0.75rem", fontWeight: 500, color: tokens.color.warm }}>
               {ratingLabels[rating]}
             </span>
-          </div>
+          </Row>
         )}
 
         {isPost && tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
+          <Row style={{ flexWrap: "wrap", gap: "6px" }}>
             {tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-orange-50 text-orange-500"
+                style={{
+                  fontSize: "0.6875rem",
+                  fontWeight: 500,
+                  padding: "2px 8px",
+                  borderRadius: "9999px",
+                  backgroundColor: "rgba(255,107,53,0.08)",
+                  color: tokens.color.warm,
+                }}
               >
                 #{tag}
               </span>
             ))}
             {tags.length > 3 && (
-              <span className="text-[11px] text-zinc-400">+{tags.length - 3}</span>
+              <span style={{ fontSize: "0.6875rem", color: tokens.color.textMuted }}>+{tags.length - 3}</span>
             )}
-          </div>
+          </Row>
         )}
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }

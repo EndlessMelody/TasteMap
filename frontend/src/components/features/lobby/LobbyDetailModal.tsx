@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { apiPost } from "@/lib/api";
 import type { LobbyModalProps } from "./types";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
   Button,
@@ -70,11 +71,10 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
           shadow="lg"
           style={{ overflow: "hidden" }}
         >
-          <div
+          <Column
             style={{
               padding: tokens.space[6],
               background: tokens.color.surfaceMuted,
-              position: "relative",
             }}
           >
             <IconButton
@@ -107,13 +107,7 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
               {spotsLeft > 0 ? `${spotsLeft} left` : "Full"}
             </BodySm>
 
-            <div
-              style={{
-                display: "flex",
-                gap: tokens.space[4],
-                marginTop: tokens.space[3],
-              }}
-            >
+            <Row style={{ gap: tokens.space[4], marginTop: tokens.space[3] }}>
               <BodySm
                 tone="muted"
                 style={{
@@ -136,37 +130,18 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
                 <Clock size={13} strokeWidth={1.75} />
                 {lobby.time}
               </BodySm>
-            </div>
-          </div>
+            </Row>
+          </Column>
 
-          <div style={{ padding: tokens.space[6] }}>
+          <Column style={{ padding: tokens.space[6] }}>
             <Eyebrow tone="muted" style={{ marginBottom: tokens.space[4], display: "block" }}>
               Current explorers
             </Eyebrow>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: tokens.space[3],
-              }}
-            >
+            <Column style={{ gap: tokens.space[3] }}>
               {lobby.members.map((member, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: tokens.space[3],
-                    }}
-                  >
+                <Row key={i} horizontal="between" vertical="center">
+                  <Row vertical="center" style={{ gap: tokens.space[3] }}>
                     <img
                       src={member.avatar}
                       alt=""
@@ -177,22 +152,16 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
                         objectFit: "cover",
                       }}
                     />
-                    <div>
+                    <Column>
                       <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
                         {member.name}
                       </BodySm>
                       <Caption tone="muted">
                         {member.ready ? "Ready" : "Not ready yet"}
                       </Caption>
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: tokens.space[2],
-                    }}
-                  >
+                    </Column>
+                  </Row>
+                  <Row vertical="center" style={{ gap: tokens.space[2] }}>
                     {i === 0 && (
                       <Pill
                         tone="warm"
@@ -212,30 +181,24 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
                         }}
                       />
                     )}
-                  </div>
-                </div>
+                  </Row>
+                </Row>
               ))}
 
               {Array.from({ length: spotsLeft }).map((_, i) => (
-                <div
+                <Row
                   key={`empty-${i}`}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: tokens.space[3],
-                    opacity: 0.5,
-                  }}
+                  vertical="center"
+                  style={{ gap: tokens.space[3], opacity: 0.5 }}
                 >
-                  <div
+                  <Column
+                    center
                     style={{
                       width: 40,
                       height: 40,
                       borderRadius: "50%",
                       border: `2px dashed ${tokens.color.border}`,
                       background: tokens.color.surfaceMuted,
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                     }}
                   >
                     <Plus
@@ -243,14 +206,14 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
                       strokeWidth={1.75}
                       style={{ color: tokens.color.textMuted }}
                     />
-                  </div>
+                  </Column>
                   <BodySm tone="muted">Waiting for explorer…</BodySm>
-                </div>
+                </Row>
               ))}
-            </div>
-          </div>
+            </Column>
+          </Column>
 
-          <div style={{ padding: `${tokens.space[2]} ${tokens.space[6]} ${tokens.space[6]}` }}>
+          <Column style={{ padding: `${tokens.space[2]} ${tokens.space[6]} ${tokens.space[6]}` }}>
             <Button
               variant="primary"
               size="lg"
@@ -261,7 +224,7 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
             >
               {joining ? "Joining…" : "Confirm & join lobby"}
             </Button>
-          </div>
+          </Column>
         </Card>
       </motion.div>
     </motion.div>

@@ -25,6 +25,7 @@ import {
   Building2,
 } from "lucide-react";
 
+import { Column, Row, Grid } from "@once-ui-system/core";
 import { useFeedCards, FeedCard } from "@/hooks/useFeedCards";
 import { CATEGORIES, PRICE_ICONS } from "./data";
 import type { Spot } from "./types";
@@ -37,9 +38,9 @@ import { H3, Body, BodySm, Caption } from "@/components/ui";
 const MapWidget = dynamic(() => import("@/components/MapWidget"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full bg-[#F2F2F7] flex items-center justify-center">
-      <div className="w-6 h-6 rounded-full border-2 border-[#E5E5EA] border-t-[#ff6b35] animate-spin" />
-    </div>
+    <Row horizontal="center" vertical="center" className="w-full h-full bg-[#F2F2F7]">
+      <Column className="w-6 h-6 rounded-full border-2 border-[#E5E5EA] border-t-[#ff6b35] animate-spin" />
+    </Row>
   ),
 });
 
@@ -412,7 +413,7 @@ export default function ExploreClient() {
     : mapZoom.toFixed(2);
 
   return (
-    <div
+    <Column
       style={{
         position: "relative",
         width: "100%",
@@ -421,7 +422,7 @@ export default function ExploreClient() {
           '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
       }}
     >
-      <div style={{ position: "absolute", inset: 0 }}>
+      <Column style={{ position: "absolute", inset: 0 }}>
         <MapWidget
           mapId="explore-main"
           spots={mapSpots}
@@ -528,12 +529,12 @@ export default function ExploreClient() {
                 }}
               >
                 {/* Visual Settings Column */}
-                <div className="flex-1 flex flex-col gap-4">
-                  <div>
+                <Column className="flex-1 gap-4">
+                  <Column>
                     <p className="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">
                       Map Style
                     </p>
-                    <div className="grid grid-cols-2 gap-2">
+                    <Grid className="grid-cols-2 gap-2">
                       {(["dark", "light", "streets", "satellite"] as const).map(
                         (style) => (
                           <button
@@ -558,10 +559,10 @@ export default function ExploreClient() {
                           </button>
                         ),
                       )}
-                    </div>
-                  </div>
+                    </Grid>
+                  </Column>
 
-                  <div>
+                  <Column>
                     <p className="text-[10px] uppercase font-bold text-gray-500 mb-2 tracking-widest">
                       Layers
                     </p>
@@ -590,14 +591,14 @@ export default function ExploreClient() {
                         {show3D ? "ON" : "OFF"}
                       </span>
                     </button>
-                  </div>
-                </div>
+                  </Column>
+                </Column>
 
                 {/* Vertical Divider */}
-                <div className="w-[1px] bg-gray-200" />
+                <Column className="w-[1px] bg-gray-200" />
 
                 {/* Zoom Controls Column */}
-                <div className="flex flex-col items-center justify-between py-1">
+                <Column className="items-center justify-between py-1">
                   <button
                     onClick={() => setZoomLevel(MAX_MAP_ZOOM)}
                     className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
@@ -612,10 +613,10 @@ export default function ExploreClient() {
                     <Plus size={14} />
                   </button>
 
-                  <div className="flex-1 flex items-center justify-center relative my-2 min-h-[60px]">
-                    <div className="absolute font-bold text-[10px] text-gray-400 -left-6">
+                  <Row className="flex-1 items-center justify-center relative my-2 min-h-[60px]">
+                    <Column className="absolute font-bold text-[10px] text-gray-400 -left-6">
                       z{zoomLabel}
-                    </div>
+                    </Column>
                     <input
                       type="range"
                       min={MIN_MAP_ZOOM}
@@ -631,7 +632,7 @@ export default function ExploreClient() {
                         cursor: "pointer",
                       }}
                     />
-                  </div>
+                  </Row>
 
                   <button
                     onClick={() => stepZoom(-1)}
@@ -646,7 +647,7 @@ export default function ExploreClient() {
                   >
                     <Minimize size={12} />
                   </button>
-                </div>
+                </Column>
               </motion.div>
             )}
           </AnimatePresence>
@@ -719,10 +720,11 @@ export default function ExploreClient() {
                 className="no-scrollbar"
               >
                 {/* Header */}
-                <div className="flex items-center justify-between mb-5">
-                  <div className="flex items-center gap-2.5">
-                    <div
-                      className="flex items-center justify-center"
+                <Row horizontal="between" vertical="center" className="mb-5">
+                  <Row vertical="center" className="gap-2.5">
+                    <Row
+                      horizontal="center"
+                      vertical="center"
                       style={{
                         width: 32,
                         height: 32,
@@ -733,17 +735,17 @@ export default function ExploreClient() {
                       }}
                     >
                       <SlidersHorizontal size={15} color="#fff" />
-                    </div>
-                    <div>
+                    </Row>
+                    <Column>
                       <p className="text-[15px] font-bold text-[#111827]">
                         Filters
                       </p>
                       <p className="text-[11px] text-[#94A3B8] font-medium">
                         {filtered.length} spots match
                       </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
+                    </Column>
+                  </Row>
+                  <Row vertical="center" className="gap-2">
                     {activeFilterCount > 0 && (
                       <button
                         onClick={clearAllFilters}
@@ -766,15 +768,15 @@ export default function ExploreClient() {
                     >
                       <X size={14} />
                     </button>
-                  </div>
-                </div>
+                  </Row>
+                </Row>
 
                 {/* Categories Grid */}
-                <div className="mb-5">
+                <Column className="mb-5">
                   <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2.5 px-0.5">
                     Category
                   </p>
-                  <div className="grid grid-cols-4 gap-2">
+                  <Grid className="grid-cols-4 gap-2">
                     {CATEGORIES.map((cat) => (
                       <motion.button
                         key={cat}
@@ -804,11 +806,11 @@ export default function ExploreClient() {
                         {cat}
                       </motion.button>
                     ))}
-                  </div>
-                </div>
+                  </Grid>
+                </Column>
 
                 {/* Divider */}
-                <div
+                <Column
                   style={{
                     height: 1,
                     background: "rgba(15,23,42,0.06)",
@@ -817,8 +819,8 @@ export default function ExploreClient() {
                 />
 
                 {/* Availability & Price Row */}
-                <div className="flex items-start gap-3 mb-4">
-                  <div>
+                <Row className="items-start gap-3 mb-4">
+                  <Column>
                     <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2 px-0.5">
                       Hours
                     </p>
@@ -844,14 +846,14 @@ export default function ExploreClient() {
                     >
                       <Clock size={13} /> Open Now
                     </button>
-                  </div>
+                  </Column>
 
-                  <div>
+                  <Column>
                     <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2 px-0.5">
                       Budget
                     </p>
-                    <div
-                      className="flex gap-1 p-1 rounded-xl"
+                    <Row
+                      className="p-1 rounded-xl gap-1"
                       style={{
                         backgroundColor: "rgba(255,255,255,0.8)",
                         border: "1px solid rgba(15,23,42,0.08)",
@@ -881,12 +883,12 @@ export default function ExploreClient() {
                           {PRICE_ICONS[price]}
                         </button>
                       ))}
-                    </div>
-                  </div>
-                </div>
+                    </Row>
+                  </Column>
+                </Row>
 
                 {/* Divider */}
-                <div
+                <Column
                   style={{
                     height: 1,
                     background: "rgba(15,23,42,0.06)",
@@ -895,11 +897,11 @@ export default function ExploreClient() {
                 />
 
                 {/* Rating Filter */}
-                <div className="mb-4">
+                <Column className="mb-4">
                   <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2 px-0.5">
                     Minimum Rating
                   </p>
-                  <div className="flex gap-1.5">
+                  <Row className="gap-1.5">
                     {[0, 3.5, 4.0, 4.5].map((r) => (
                       <button
                         key={r}
@@ -930,11 +932,11 @@ export default function ExploreClient() {
                         {r === 0 ? "Any" : `${r}+`}
                       </button>
                     ))}
-                  </div>
-                </div>
+                  </Row>
+                </Column>
 
                 {/* Divider */}
-                <div
+                <Column
                   style={{
                     height: 1,
                     background: "rgba(15,23,42,0.06)",
@@ -943,7 +945,7 @@ export default function ExploreClient() {
                 />
 
                 {/* Tag Filtering */}
-                <div className="mb-5">
+                <Column className="mb-5">
                   <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2.5 px-0.5">
                     Tags{" "}
                     {selectedTags.size > 0 && (
@@ -952,7 +954,7 @@ export default function ExploreClient() {
                       </span>
                     )}
                   </p>
-                  <div className="flex flex-wrap gap-1.5">
+                  <Row className="flex-wrap gap-1.5">
                     {ALL_TAGS.map((tag) => (
                       <motion.button
                         key={tag}
@@ -978,11 +980,11 @@ export default function ExploreClient() {
                         {tag}
                       </motion.button>
                     ))}
-                  </div>
-                </div>
+                  </Row>
+                </Column>
 
                 {/* Divider */}
-                <div
+                <Column
                   style={{
                     height: 1,
                     background: "rgba(15,23,42,0.06)",
@@ -991,11 +993,11 @@ export default function ExploreClient() {
                 />
 
                 {/* Sort By section */}
-                <div className="mb-5">
+                <Column className="mb-5">
                   <p className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[#94A3B8] mb-2.5 px-0.5">
                     Sort By
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <Row className="flex-wrap gap-2">
                     {[
                       { id: "recommended", label: "Recommended" },
                       { id: "rating", label: "Highest Rated" },
@@ -1027,8 +1029,8 @@ export default function ExploreClient() {
                         </button>
                       );
                     })}
-                  </div>
-                </div>
+                  </Row>
+                </Column>
 
                 {/* Apply Button */}
                 <motion.button
@@ -1049,9 +1051,9 @@ export default function ExploreClient() {
             </>
           )}
         </AnimatePresence>
-      </div>
+      </Column>
 
-      <div
+      <Column
         className="no-scrollbar"
         style={{
           position: "absolute",
@@ -1065,8 +1067,6 @@ export default function ExploreClient() {
             "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.95) 100%)",
           backdropFilter: "blur(14px)",
           borderLeft: "1px solid rgba(15,23,42,0.08)",
-          display: "flex",
-          flexDirection: "column",
           overflow: "hidden",
           zIndex: 20,
           pointerEvents: "auto",
@@ -1077,15 +1077,15 @@ export default function ExploreClient() {
         }}
       >
         {isRightPanelOpen ? (
-          <div className="no-scrollbar" style={{ flex: 1, overflowY: "auto" }}>
-            <div
+          <Column className="no-scrollbar" style={{ flex: 1, overflowY: "auto" }}>
+            <Column
               style={{
                 padding: "16px 18px 14px",
                 borderBottom: "1px solid rgba(15,23,42,0.06)",
                 background: "rgba(255,255,255,0.92)",
               }}
             >
-              <div className="flex items-center justify-between mb-2">
+              <Row horizontal="between" vertical="center" className="mb-2">
                 <button
                   type="button"
                   onClick={() => setIsRightPanelOpen(false)}
@@ -1113,9 +1113,10 @@ export default function ExploreClient() {
                   <ChevronRight size={14} />
                 </button>
 
-                <div className="flex items-center gap-2.5 flex-row-reverse text-right">
-                  <div
-                    className="flex items-center justify-center"
+                <Row vertical="center" className="gap-2.5 flex-row-reverse text-right">
+                  <Row
+                    horizontal="center"
+                    vertical="center"
                     style={{
                       width: 32,
                       height: 32,
@@ -1126,19 +1127,19 @@ export default function ExploreClient() {
                     }}
                   >
                     <Search size={14} color="#fff" />
-                  </div>
-                  <div className="leading-tight">
+                  </Row>
+                  <Column className="leading-tight">
                     <h1 className="text-[17px] font-extrabold text-[#111827] tracking-tight">
                       Explore
                     </h1>
                     <p className="text-[10px] font-semibold tracking-[0.14em] text-[#94A3B8] uppercase">
                       City Discovery
                     </p>
-                  </div>
-                </div>
-              </div>
+                  </Column>
+                </Row>
+              </Row>
 
-              <div
+              <Column
                 className="relative mt-3"
                 style={{ position: "relative", zIndex: 1 }}
               >
@@ -1177,11 +1178,11 @@ export default function ExploreClient() {
                     <X size={14} />
                   </button>
                 )}
-              </div>
-            </div>
+              </Column>
+            </Column>
 
             {/* Filter Trigger Bar */}
-            <div
+            <Column
               className="px-3 py-2.5"
               style={{
                 borderBottom: "1px solid rgba(15,23,42,0.06)",
@@ -1202,7 +1203,7 @@ export default function ExploreClient() {
                   boxShadow: "0 2px 8px rgba(15,23,42,0.06)",
                 }}
               >
-                <div className="flex items-center gap-2">
+                <Row vertical="center" className="gap-2">
                   <Filter size={14} className="text-[#94A3B8]" />
                   <span className="truncate">
                     {activeFilterCount > 0 ? (
@@ -1236,8 +1237,8 @@ export default function ExploreClient() {
                       "All categories"
                     )}
                   </span>
-                </div>
-                <div className="flex items-center gap-1.5">
+                </Row>
+                <Row vertical="center" className="gap-1.5">
                   {activeFilterCount > 0 && (
                     <span
                       className="flex items-center justify-center text-[10px] font-bold text-white"
@@ -1252,12 +1253,12 @@ export default function ExploreClient() {
                     </span>
                   )}
                   <SlidersHorizontal size={13} className="text-[#94A3B8]" />
-                </div>
+                </Row>
               </button>
-            </div>
+            </Column>
 
-            <div
-              className="flex flex-col px-3 py-3 gap-2"
+            <Column
+              className="px-3 py-3 gap-2"
               style={{
                 background:
                   "linear-gradient(180deg, rgba(250,252,255,0.76) 0%, rgba(248,250,252,0.88) 100%)",
@@ -1265,9 +1266,9 @@ export default function ExploreClient() {
             >
               {/* Plan spots from AI Planner / Tour Builder / Group results */}
               {effectivePlanSpots.length > 0 && (
-                <div className="flex flex-col gap-2 mb-1">
-                  <div className="flex items-center justify-between px-1">
-                    <div className="flex items-center gap-2">
+                <Column className="gap-2 mb-1">
+                  <Row horizontal="between" className="px-1">
+                    <Row vertical="center" className="gap-2">
                       <span
                         className="flex items-center justify-center"
                         style={{
@@ -1282,7 +1283,7 @@ export default function ExploreClient() {
                       <p className="text-[11px] uppercase tracking-[0.16em] font-semibold text-[#ff6b35]">
                         Your Plan
                       </p>
-                    </div>
+                    </Row>
                     <span
                       className="text-[11px] font-semibold px-2 py-1 rounded-full"
                       style={{
@@ -1293,7 +1294,7 @@ export default function ExploreClient() {
                     >
                       {effectivePlanSpots.length}
                     </span>
-                  </div>
+                  </Row>
                   {effectivePlanSpots.map((spot, index) => (
                     <motion.div
                       key={`plan-${spot.id}`}
@@ -1303,7 +1304,9 @@ export default function ExploreClient() {
                       style={{ position: "relative" }}
                     >
                       {/* Stop number badge */}
-                      <div
+                      <Row
+                        horizontal="center"
+                        vertical="center"
                         style={{
                           position: "absolute",
                           top: 8, left: 8, zIndex: 10,
@@ -1312,14 +1315,13 @@ export default function ExploreClient() {
                           background: "linear-gradient(135deg, #ff6b35, #a855f7)",
                           color: "white",
                           fontSize: 11, fontWeight: 900,
-                          display: "flex", alignItems: "center", justifyContent: "center",
                           border: "2px solid white",
                           boxShadow: "0 2px 8px rgba(255,107,53,0.4)",
                           pointerEvents: "none",
                         }}
                       >
                         {index + 1}
-                      </div>
+                      </Row>
                       <SpotCard
                         spot={spot}
                         selected={selected?.id === spot.id}
@@ -1329,11 +1331,11 @@ export default function ExploreClient() {
                       />
                     </motion.div>
                   ))}
-                  <div style={{ height: 1, background: "rgba(255,107,53,0.12)", margin: "4px 4px 0" }} />
-                </div>
+                  <Column style={{ height: 1, background: "rgba(255,107,53,0.12)", margin: "4px 4px 0" }} />
+                </Column>
               )}
 
-              <div className="flex items-center justify-between px-1">
+              <Row horizontal="between" className="px-1">
                 <p className="text-[11px] uppercase tracking-[0.16em] font-semibold text-[#64748B]">
                   {effectivePlanSpots.length > 0 ? "All spots" : "Top picks"}
                 </p>
@@ -1347,7 +1349,7 @@ export default function ExploreClient() {
                 >
                   {filtered.length}
                 </span>
-              </div>
+              </Row>
 
               <AnimatePresence mode="popLayout">
                 {filtered.map((spot, index) => (
@@ -1380,16 +1382,18 @@ export default function ExploreClient() {
               </AnimatePresence>
 
               {filtered.length === 0 && (
-                <div className="flex flex-col items-center py-16 text-center gap-2">
-                  <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center"
+                <Column horizontal="center" className="py-16 text-center gap-2">
+                  <Row
+                    horizontal="center"
+                    vertical="center"
+                    className="w-14 h-14 rounded-full"
                     style={{
                       backgroundColor: tokens.color.surfaceMuted,
                       color: tokens.color.textMuted,
                     }}
                   >
                     <SearchX size={28} />
-                  </div>
+                  </Row>
                   <Body
                     style={{
                       fontSize: 15,
@@ -1402,21 +1406,20 @@ export default function ExploreClient() {
                   <BodySm tone="muted">
                     Try clearing some filters
                   </BodySm>
-                </div>
+                </Column>
               )}
-            </div>
-          </div>
+            </Column>
+          </Column>
         ) : (
-          <div
+          <Row
+            horizontal="center"
             style={{
               flex: 1,
-              display: "flex",
-              justifyContent: "center",
               alignItems: "flex-start",
               paddingTop: "18px",
             }}
           >
-            <div className="flex flex-col items-center gap-3">
+            <Column horizontal="center" className="gap-3">
               <button
                 type="button"
                 onClick={() => setIsRightPanelOpen(true)}
@@ -1444,7 +1447,7 @@ export default function ExploreClient() {
                 <ChevronLeft size={16} />
               </button>
 
-              <div
+              <Column
                 style={{
                   writingMode: "vertical-rl",
                   transform: "rotate(180deg)",
@@ -1456,11 +1459,11 @@ export default function ExploreClient() {
                 }}
               >
                 EXPLORE
-              </div>
-            </div>
-          </div>
+              </Column>
+            </Column>
+          </Row>
         )}
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }

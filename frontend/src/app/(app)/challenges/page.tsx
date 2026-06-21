@@ -26,6 +26,7 @@ import {
   ArrowRight,
   Loader2,
 } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import { useAuth } from "@/context/AuthContext";
 import { apiGet, apiPost } from "@/lib/api";
 import { toast } from "sonner";
@@ -129,17 +130,12 @@ function ChallengeCard({
           opacity: isUpcoming ? 0.75 : 1,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            gap: tokens.space[3],
-          }}
+        <Row
+          horizontal="between"
+          style={{ alignItems: "flex-start", gap: tokens.space[3] }}
         >
-          <div
+          <Row
             style={{
-              display: "flex",
               alignItems: "flex-start",
               gap: tokens.space[3],
               flex: 1,
@@ -161,22 +157,8 @@ function ChallengeCard({
             >
               {icon}
             </span>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: tokens.space[1],
-                minWidth: 0,
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[2],
-                  flexWrap: "wrap",
-                }}
-              >
+            <Column style={{ gap: tokens.space[1], minWidth: 0 }}>
+              <Row vertical="center" style={{ gap: tokens.space[2], flexWrap: "wrap" }}>
                 <H3>{c.challenge.title}</H3>
                 {isClaimed && (
                   <CheckCircle
@@ -192,10 +174,10 @@ function ChallengeCard({
                     style={{ color: tokens.color.textSubtle }}
                   />
                 )}
-              </div>
+              </Row>
               <BodySm tone="muted">{c.challenge.description}</BodySm>
-            </div>
-          </div>
+            </Column>
+          </Row>
           <Pill
             tone="warning"
             size="md"
@@ -203,23 +185,11 @@ function ChallengeCard({
           >
             {c.challenge.xp_reward} XP
           </Pill>
-        </div>
+        </Row>
 
         {!isUpcoming && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[2],
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: tokens.space[3],
-              }}
-            >
+          <Column style={{ gap: tokens.space[2] }}>
+            <Row horizontal="between" style={{ gap: tokens.space[3] }}>
               <BodySm tone="muted">
                 Progress:{" "}
                 <span
@@ -246,8 +216,8 @@ function ChallengeCard({
                     ? "Reward ready"
                     : `${Math.round(c.percentage)}%`}
               </BodySm>
-            </div>
-            <div
+            </Row>
+            <Column
               style={{
                 height: 8,
                 background: tokens.color.surfaceInset,
@@ -271,26 +241,16 @@ function ChallengeCard({
                       : tokens.color.warm,
                 }}
               />
-            </div>
-          </div>
+            </Column>
+          </Column>
         )}
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: tokens.space[3],
-            flexWrap: "wrap",
-          }}
+        <Row
+          horizontal="between"
+          vertical="center"
+          style={{ gap: tokens.space[3], flexWrap: "wrap" }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: tokens.space[2],
-            }}
-          >
+          <Row vertical="center" style={{ gap: tokens.space[2] }}>
             <Pill tone={diff.tone} size="sm">
               {diff.label}
             </Pill>
@@ -307,7 +267,7 @@ function ChallengeCard({
                 {c.deadline_display}
               </BodySm>
             )}
-          </div>
+          </Row>
 
           {isClaimed ? (
             <Pill
@@ -344,7 +304,7 @@ function ChallengeCard({
               Details
             </Button>
           )}
-        </div>
+        </Row>
       </Card>
     </motion.div>
   );
@@ -380,7 +340,7 @@ function LeaderboardRow({
           : "1px solid transparent",
       }}
     >
-      <div style={{ width: 32, textAlign: "center", flexShrink: 0 }}>
+      <Column style={{ width: 32, textAlign: "center", flexShrink: 0 }}>
         {entry.rank === 1 ? (
           <Crown
             size={20}
@@ -405,9 +365,9 @@ function LeaderboardRow({
             #{entry.rank}
           </BodySm>
         )}
-      </div>
+      </Column>
 
-      <div style={{ position: "relative", flexShrink: 0 }}>
+      <Column style={{ position: "relative", flexShrink: 0 }}>
         <img
           src={
             entry.avatar_url ||
@@ -446,17 +406,10 @@ function LeaderboardRow({
             )}
           </span>
         )}
-      </div>
+      </Column>
 
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: tokens.space[2],
-            marginBottom: 6,
-          }}
-        >
+      <Column style={{ flex: 1, minWidth: 0 }}>
+        <Row vertical="center" style={{ gap: tokens.space[2], marginBottom: 6 }}>
           <Body
             style={{
               fontWeight: tokens.type.weight.semibold,
@@ -475,8 +428,8 @@ function LeaderboardRow({
           <Pill tone="neutral" size="sm">
             Lv {entry.level}
           </Pill>
-        </div>
-        <div
+        </Row>
+        <Column
           style={{
             height: 4,
             background: tokens.color.surfaceInset,
@@ -497,10 +450,10 @@ function LeaderboardRow({
                   : tokens.color.textSubtle,
             }}
           />
-        </div>
-      </div>
+        </Column>
+      </Column>
 
-      <div style={{ textAlign: "right", flexShrink: 0 }}>
+      <Column style={{ textAlign: "right", flexShrink: 0 }}>
         <Body
           style={{
             fontWeight: tokens.type.weight.bold,
@@ -510,7 +463,7 @@ function LeaderboardRow({
           {entry.xp.toLocaleString()}
         </Body>
         <Caption tone="muted">XP</Caption>
-      </div>
+      </Column>
     </motion.div>
   );
 }
@@ -524,34 +477,25 @@ function BadgesCard() {
   ];
   return (
     <Card radius="xl" padding="md" shadow="sm">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: tokens.space[2],
-          marginBottom: tokens.space[4],
-        }}
-      >
+      <Row vertical="center" style={{ gap: tokens.space[2], marginBottom: tokens.space[4] }}>
         <Star
           size={18}
           fill="currentColor"
           style={{ color: tokens.color.warning }}
         />
         <H3>My badges</H3>
-      </div>
-      <div
+      </Row>
+      <Grid
         style={{
-          display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
           gap: tokens.space[2],
         }}
       >
         {items.map((b) => (
-          <div
+          <Row
             key={b.label}
+            vertical="center"
             style={{
-              display: "flex",
-              alignItems: "center",
               gap: tokens.space[2],
               padding: tokens.space[3],
               borderRadius: tokens.radius.md,
@@ -562,12 +506,11 @@ function BadgesCard() {
             <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
               {b.label}
             </BodySm>
-          </div>
+          </Row>
         ))}
-        <div
+        <Row
+          vertical="center"
           style={{
-            display: "flex",
-            alignItems: "center",
             gap: tokens.space[2],
             padding: tokens.space[3],
             borderRadius: tokens.radius.md,
@@ -582,8 +525,8 @@ function BadgesCard() {
             style={{ color: tokens.color.textSubtle }}
           />
           <BodySm tone="subtle">Locked</BodySm>
-        </div>
-      </div>
+        </Row>
+      </Grid>
     </Card>
   );
 }
@@ -603,34 +546,16 @@ function CompactLevelCard({
   const remaining = stats ? Math.max(0, stats.next_level_xp - stats.current_xp) : 100;
   return (
     <Card radius="xl" padding="md" shadow="sm">
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: tokens.space[3],
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: tokens.space[2],
-            }}
-          >
+      <Column style={{ gap: tokens.space[3] }}>
+        <Row horizontal="between" vertical="center">
+          <Row vertical="center" style={{ gap: tokens.space[2] }}>
             <Zap
               size={18}
               fill="currentColor"
               style={{ color: tokens.color.warm }}
             />
             <H3>Level {user?.level || 1}</H3>
-          </div>
+          </Row>
           <BodySm
             tone="muted"
             style={{
@@ -640,8 +565,8 @@ function CompactLevelCard({
           >
             {stats?.current_xp ?? 0} / {stats?.next_level_xp ?? 100} XP
           </BodySm>
-        </div>
-        <div
+        </Row>
+        <Column
           style={{
             height: 8,
             background: tokens.color.surfaceInset,
@@ -655,11 +580,11 @@ function CompactLevelCard({
             transition={{ duration: 0.8 }}
             style={{ height: "100%", background: tokens.color.warm }}
           />
-        </div>
+        </Column>
         <BodySm tone="muted">
           {remaining} XP to Level {(user?.level || 1) + 1}
         </BodySm>
-      </div>
+      </Column>
     </Card>
   );
 }
@@ -768,14 +693,7 @@ export default function ChallengesPage() {
   if (isLoading) {
     return (
       <Page center>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: tokens.space[4],
-          }}
-        >
+        <Column horizontal="center" style={{ gap: tokens.space[4] }}>
           <Loader2
             size={32}
             strokeWidth={1.75}
@@ -786,7 +704,7 @@ export default function ChallengesPage() {
           />
           <BodySm tone="muted">Synchronizing Taste Vault…</BodySm>
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
+        </Column>
       </Page>
     );
   }
@@ -816,39 +734,14 @@ export default function ChallengesPage() {
 
   return (
     <Page bleed>
-      <div style={{ maxWidth: 1400, margin: "0 auto", width: "100%" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[6],
-            marginBottom: tokens.space[10],
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              gap: tokens.space[4],
-              flexWrap: "wrap",
-            }}
+      <Column style={{ maxWidth: 1400, margin: "0 auto", width: "100%" }}>
+        <Column style={{ gap: tokens.space[6], marginBottom: tokens.space[10] }}>
+          <Row
+            horizontal="between"
+            style={{ alignItems: "flex-start", gap: tokens.space[4], flexWrap: "wrap" }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: tokens.space[2],
-                maxWidth: 480,
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[3],
-                }}
-              >
+            <Column style={{ gap: tokens.space[2], maxWidth: 480 }}>
+              <Row vertical="center" style={{ gap: tokens.space[3] }}>
                 <span
                   style={{
                     width: 40,
@@ -864,35 +757,23 @@ export default function ChallengesPage() {
                   <Trophy size={20} strokeWidth={1.75} />
                 </span>
                 <H1>Challenges</H1>
-              </div>
+              </Row>
               <Body tone="muted">
                 Refine your palate and climb the ranks. Every adventure brings
                 you closer to becoming an Elite Foodie.
               </Body>
-            </div>
+            </Column>
 
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: tokens.space[3],
-              }}
-            >
+            <Row vertical="center" style={{ gap: tokens.space[3] }}>
               <Card radius="lg" padding="md" shadow="sm">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: tokens.space[3],
-                  }}
-                >
+                <Row vertical="center" style={{ gap: tokens.space[3] }}>
                   <Flame
                     size={22}
                     strokeWidth={1.75}
                     fill="currentColor"
                     style={{ color: tokens.color.warm }}
                   />
-                  <div>
+                  <Column>
                     <Body
                       style={{
                         fontWeight: tokens.type.weight.bold,
@@ -903,15 +784,14 @@ export default function ChallengesPage() {
                       {streakInfo?.current_streak || 0}
                     </Body>
                     <Caption tone="muted">Day streak</Caption>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               </Card>
-            </div>
-          </div>
+            </Row>
+          </Row>
 
-          <div
+          <Grid
             style={{
-              display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
               gap: tokens.space[4],
             }}
@@ -924,24 +804,14 @@ export default function ChallengesPage() {
                 transition={{ delay: i * 0.06 }}
               >
                 <Card radius="lg" padding="md" shadow="sm">
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: tokens.space[2],
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: tokens.space[2],
-                        color: tokens.color.textMuted,
-                      }}
+                  <Column style={{ gap: tokens.space[2] }}>
+                    <Row
+                      vertical="center"
+                      style={{ gap: tokens.space[2], color: tokens.color.textMuted }}
                     >
                       {s.icon}
                       <Eyebrow tone="muted">{s.label}</Eyebrow>
-                    </div>
+                    </Row>
                     <Body
                       style={{
                         fontSize: 24,
@@ -951,31 +821,23 @@ export default function ChallengesPage() {
                     >
                       {s.value}
                     </Body>
-                  </div>
+                  </Column>
                 </Card>
               </motion.div>
             ))}
-          </div>
-        </div>
+          </Grid>
+        </Column>
 
-        <div
+        <Grid
           style={{
-            display: "grid",
             gridTemplateColumns: "minmax(0, 1fr) 360px",
             gap: tokens.space[8],
             alignItems: "start",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[5],
-            }}
-          >
-            <div
+          <Column style={{ gap: tokens.space[5] }}>
+            <Row
               style={{
-                display: "flex",
                 gap: tokens.space[1],
                 padding: tokens.space[1],
                 background: tokens.color.surfaceMuted,
@@ -1046,7 +908,7 @@ export default function ChallengesPage() {
                   </button>
                 );
               })}
-            </div>
+            </Row>
 
             <AnimatePresence mode="wait">
               <motion.div
@@ -1079,49 +941,24 @@ export default function ChallengesPage() {
                 )}
               </motion.div>
             </AnimatePresence>
-          </div>
+          </Column>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[5],
-            }}
-          >
+          <Column style={{ gap: tokens.space[5] }}>
             <Card radius="xl" padding="md" shadow="sm">
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: tokens.space[4],
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: tokens.space[2],
-                    }}
-                  >
+              <Column style={{ gap: tokens.space[4] }}>
+                <Row horizontal="between" vertical="center">
+                  <Row vertical="center" style={{ gap: tokens.space[2] }}>
                     <Award
                       size={18}
                       strokeWidth={1.75}
                       style={{ color: tokens.color.warning }}
                     />
                     <H3>Leaderboard</H3>
-                  </div>
-                </div>
+                  </Row>
+                </Row>
 
-                <div
+                <Row
                   style={{
-                    display: "flex",
                     padding: 4,
                     background: tokens.color.surfaceMuted,
                     borderRadius: tokens.radius.sm,
@@ -1161,15 +998,9 @@ export default function ChallengesPage() {
                       );
                     },
                   )}
-                </div>
+                </Row>
 
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: tokens.space[1],
-                  }}
-                >
+                <Column style={{ gap: tokens.space[1] }}>
                   {leaderboard.map((entry, i) => (
                     <LeaderboardRow
                       key={entry.user_id}
@@ -1189,7 +1020,7 @@ export default function ChallengesPage() {
                       Rankings will appear shortly.
                     </BodySm>
                   )}
-                </div>
+                </Column>
 
                 <Button
                   variant="secondary"
@@ -1199,7 +1030,7 @@ export default function ChallengesPage() {
                 >
                   View global ranks
                 </Button>
-              </div>
+              </Column>
             </Card>
 
             <BadgesCard />
@@ -1207,27 +1038,15 @@ export default function ChallengesPage() {
             <CompactLevelCard user={user} stats={userStats} />
 
             <Card radius="xl" padding="md" shadow="sm">
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: tokens.space[3],
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: tokens.space[2],
-                  }}
-                >
+              <Column style={{ gap: tokens.space[3] }}>
+                <Row vertical="center" style={{ gap: tokens.space[2] }}>
                   <Star
                     size={18}
                     strokeWidth={1.75}
                     style={{ color: tokens.color.warm }}
                   />
                   <H3>Daily streak</H3>
-                </div>
+                </Row>
                 <BodySm tone="muted">
                   Check in every day to keep your streak alive and earn bonus
                   XP. Currently at{" "}
@@ -1277,11 +1096,11 @@ export default function ChallengesPage() {
                     ? "Already checked in"
                     : "Daily check-in"}
                 </Button>
-              </div>
+              </Column>
             </Card>
-          </div>
-        </div>
-      </div>
+          </Column>
+        </Grid>
+      </Column>
     </Page>
   );
 }

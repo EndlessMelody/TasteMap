@@ -13,6 +13,7 @@ import {
   UserPlus,
   Utensils,
 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
   Button,
@@ -89,7 +90,7 @@ function MoreMenu({
   };
 
   return (
-    <div ref={ref} style={{ position: "relative" }}>
+    <Column ref={ref} style={{ position: "relative" }}>
       <IconButton
         variant="ghost"
         size="sm"
@@ -134,7 +135,7 @@ function MoreMenu({
             <Eye size={15} strokeWidth={1.75} />
             View profile
           </button>
-          <div style={{ height: 1, background: tokens.color.border }} />
+          <Column style={{ height: 1, background: tokens.color.border }} />
           <button
             type="button"
             onClick={() => {
@@ -152,7 +153,7 @@ function MoreMenu({
           </button>
         </motion.div>
       )}
-    </div>
+    </Column>
   );
 }
 
@@ -172,7 +173,7 @@ function MatchGauge({ pct }: { pct: number }) {
         : tokens.color.textSubtle;
 
   return (
-    <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
+    <Column style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
       <svg
         width={size}
         height={size}
@@ -198,14 +199,12 @@ function MatchGauge({ pct }: { pct: number }) {
           strokeDasharray={`${filled} ${circ - filled}`}
         />
       </svg>
-      <div
+      <Column
+        horizontal="center"
+        vertical="center"
         style={{
           position: "absolute",
           inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
         <span
@@ -228,8 +227,8 @@ function MatchGauge({ pct }: { pct: number }) {
         >
           %
         </span>
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }
 
@@ -294,7 +293,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
           if (!isActive) e.currentTarget.style.background = "transparent";
         }}
       >
-        <div style={{ position: "relative", flexShrink: 0 }}>
+        <Column style={{ position: "relative", flexShrink: 0 }}>
           <Avatar src={friend.avatar} name={friend.name} size="md" />
           {friend.isOnline && (
             <span
@@ -310,24 +309,15 @@ export const FriendRow: React.FC<FriendRowProps> = ({
               }}
             />
           )}
-        </div>
-        <div
+        </Column>
+        <Column
           style={{
             flex: 1,
             minWidth: 0,
-            display: "flex",
-            flexDirection: "column",
             gap: 4,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: tokens.space[2],
-            }}
-          >
+          <Row horizontal="between" vertical="center" style={{ gap: tokens.space[2] }}>
             <Body
               style={{
                 fontWeight: tokens.type.weight.semibold,
@@ -356,11 +346,11 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                   })
                 : ""}
             </Caption>
-          </div>
+          </Row>
           <Pill tone={isActive ? "warm" : "neutral"} size="sm" solid={isActive}>
             {statusLabel(friend.status)}
           </Pill>
-        </div>
+        </Column>
       </button>
     );
   }
@@ -380,7 +370,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
         onClick={handleViewProfile}
         style={{ cursor: "pointer", overflow: "hidden" }}
       >
-        <div
+        <Column
           style={{
             position: "relative",
             height: 120,
@@ -398,7 +388,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
               display: "block",
             }}
           />
-          <div
+          <Column
             style={{
               position: "absolute",
               inset: 0,
@@ -406,7 +396,7 @@ export const FriendRow: React.FC<FriendRowProps> = ({
             }}
           />
           {friend.isOnline && (
-            <div
+            <Column
               style={{
                 position: "absolute",
                 top: tokens.space[3],
@@ -416,25 +406,21 @@ export const FriendRow: React.FC<FriendRowProps> = ({
               <Pill tone="success" size="sm" dot>
                 Online
               </Pill>
-            </div>
+            </Column>
           )}
-        </div>
+        </Column>
 
-        <div
+        <Column
           style={{
             padding: `0 ${tokens.space[6]} ${tokens.space[5]}`,
             marginTop: -16,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: tokens.space[3],
-              marginBottom: tokens.space[3],
-            }}
+          <Row
+            vertical="center"
+            style={{ gap: tokens.space[3], marginBottom: tokens.space[3] }}
           >
-            <div style={{ position: "relative", flexShrink: 0 }}>
+            <Column style={{ position: "relative", flexShrink: 0 }}>
               <Avatar
                 src={friend.avatar}
                 name={friend.name}
@@ -444,35 +430,30 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                   boxShadow: tokens.shadow.sm,
                 }}
               />
-            </div>
-            <div
+            </Column>
+            <Column
               style={{
                 flex: 1,
                 minWidth: 0,
-                display: "flex",
-                flexDirection: "column",
                 gap: 2,
               }}
             >
               <H3>{friend.name}</H3>
-              <div
+              <Row
+                vertical="center"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
                   gap: 4,
                   color: tokens.color.textMuted,
                 }}
               >
                 <MapPin size={11} strokeWidth={1.75} />
                 <BodySm tone="muted">{friend.note}</BodySm>
-              </div>
-            </div>
+              </Row>
+            </Column>
             {friend.match !== undefined && (
-              <div
+              <Column
+                horizontal="center"
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
                   gap: 2,
                   flexShrink: 0,
                 }}
@@ -481,18 +462,14 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                 <Caption tone="muted" style={{ whiteSpace: "nowrap" }}>
                   Taste match
                 </Caption>
-              </div>
+              </Column>
             )}
-          </div>
+          </Row>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: tokens.space[3],
-              flexWrap: "wrap",
-            }}
+          <Row
+            horizontal="between"
+            vertical="center"
+            style={{ gap: tokens.space[3], flexWrap: "wrap" }}
           >
             <Pill
               tone="neutral"
@@ -502,11 +479,10 @@ export const FriendRow: React.FC<FriendRowProps> = ({
               {statusLabel(friend.status)}
             </Pill>
 
-            <div
+            <Row
+              vertical="center"
               style={{
-                display: "flex",
                 gap: tokens.space[2],
-                alignItems: "center",
                 flexShrink: 0,
               }}
             >
@@ -594,9 +570,9 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                   </Button>
                 </>
               )}
-            </div>
-          </div>
-        </div>
+            </Row>
+          </Row>
+        </Column>
       </Card>
     </motion.div>
   );

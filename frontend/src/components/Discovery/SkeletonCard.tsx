@@ -1,10 +1,11 @@
 "use client";
 
 import React from 'react';
+import { Column } from '@once-ui-system/core';
 import { Skeleton } from '@/components/Skeleton';
 
 export const SkeletonCard = () => (
-  <div
+  <Column
     style={{
       position: 'absolute',
       width: '100%',
@@ -20,7 +21,7 @@ export const SkeletonCard = () => (
     <Skeleton className="absolute inset-0 rounded-none" />
 
     {/* Bottom content area */}
-    <div
+    <Column
       style={{
         position: 'absolute',
         bottom: 0,
@@ -28,22 +29,20 @@ export const SkeletonCard = () => (
         right: 0,
         padding: '32px 28px',
         background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)',
-        display: 'flex',
-        flexDirection: 'column',
         gap: '10px',
       }}
     >
       <Skeleton className="h-7 w-3/4 rounded-l" />
       <Skeleton className="h-4 w-full rounded-s" />
       <Skeleton className="h-4 w-2/3 rounded-s" />
-    </div>
-  </div>
+    </Column>
+  </Column>
 );
 
 export const SkeletonCardStack = () => (
-  <div style={{ position: 'relative', width: '100%', maxWidth: '400px', height: '600px' }}>
+  <Column style={{ position: 'relative', width: '100%', maxWidth: '400px', height: '600px' }}>
     {/* Back card — smaller, offset */}
-    <div
+    <Column
       style={{
         position: 'absolute',
         width: '100%',
@@ -56,7 +55,7 @@ export const SkeletonCardStack = () => (
       }}
     />
     {/* Middle card */}
-    <div
+    <Column
       style={{
         position: 'absolute',
         width: '100%',
@@ -70,5 +69,5 @@ export const SkeletonCardStack = () => (
     />
     {/* Top card with shimmer */}
     <SkeletonCard />
-  </div>
+  </Column>
 );

@@ -23,6 +23,7 @@ import {
   X,
 } from "lucide-react";
 
+import { Column, Row, Grid } from "@once-ui-system/core";
 import {
   ProfileIdentityCard,
   FlavorProfileCard,
@@ -107,7 +108,7 @@ const RADAR_SUBJECTS = [
 
 function ProfileSkeleton() {
   return (
-    <div
+    <Column
       className="no-scrollbar"
       style={{
         width: "100%",
@@ -117,7 +118,7 @@ function ProfileSkeleton() {
       }}
     >
       <Skeleton width="100%" height={220} radius="sm" />
-      <div
+      <Column
         style={{
           maxWidth: 1200,
           width: "100%",
@@ -125,9 +126,8 @@ function ProfileSkeleton() {
           padding: `0 ${tokens.space[6]} ${tokens.space[16]}`,
         }}
       >
-        <div
+        <Row
           style={{
-            display: "flex",
             alignItems: "flex-end",
             gap: tokens.space[5],
             marginTop: -50,
@@ -135,23 +135,20 @@ function ProfileSkeleton() {
           }}
         >
           <Skeleton width={80} height={80} radius="pill" />
-          <div
+          <Column
             style={{
               flex: 1,
-              display: "flex",
-              flexDirection: "column",
               gap: tokens.space[2],
               paddingBottom: 6,
             }}
           >
             <Skeleton width="52%" height={22} radius="sm" />
             <Skeleton width="28%" height={13} radius="sm" />
-          </div>
-        </div>
+          </Column>
+        </Row>
         <Skeleton width="100%" height={88} radius="md" />
-        <div
+        <Grid
           style={{
-            display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: tokens.space[2],
             marginTop: tokens.space[3],
@@ -161,10 +158,10 @@ function ProfileSkeleton() {
           {[0, 1, 2, 3].map((i) => (
             <Skeleton key={i} height={62} radius="md" />
           ))}
-        </div>
+        </Grid>
         <Skeleton width="100%" height={320} radius="lg" />
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }
 
@@ -181,7 +178,7 @@ function MatchGauge({ pct }: { pct: number }) {
       ? tokens.color.warning
       : tokens.color.textSubtle;
   return (
-    <div style={{ position: "relative", width: size, height: size }}>
+    <Column style={{ position: "relative", width: size, height: size }}>
       <svg
         width={size}
         height={size}
@@ -207,14 +204,12 @@ function MatchGauge({ pct }: { pct: number }) {
           strokeDasharray={`${filled} ${circ - filled}`}
         />
       </svg>
-      <div
+      <Column
+        horizontal="center"
+        vertical="center"
         style={{
           position: "absolute",
           inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
         <span
@@ -236,8 +231,8 @@ function MatchGauge({ pct }: { pct: number }) {
         >
           %
         </span>
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }
 
@@ -298,10 +293,10 @@ function SocialActionRow({
       >
         {icon}
       </span>
-      <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+      <Column style={{ minWidth: 0 }}>
         <Body style={{ fontWeight: tokens.type.weight.semibold }}>{label}</Body>
         {subtitle && <Caption tone="muted">{subtitle}</Caption>}
-      </div>
+      </Column>
     </button>
   );
 }
@@ -404,15 +399,14 @@ export default function FoodieProfilePage() {
 
   if (error || !profile) {
     return (
-      <div
+      <Column
         className="no-scrollbar"
+        horizontal="center"
+        vertical="center"
         style={{
           width: "100%",
           minHeight: "100%",
           background: tokens.color.bg,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           padding: tokens.space[6],
         }}
       >
@@ -433,7 +427,7 @@ export default function FoodieProfilePage() {
             }
           />
         </Card>
-      </div>
+      </Column>
     );
   }
 
@@ -460,7 +454,7 @@ export default function FoodieProfilePage() {
   const displayName = profile.display_name || profile.username;
 
   return (
-    <div
+    <Column
       className="no-scrollbar"
       style={{
         width: "100%",
@@ -490,7 +484,7 @@ export default function FoodieProfilePage() {
             display: "block",
           }}
         />
-        <div
+        <Column
           style={{
             position: "absolute",
             inset: 0,
@@ -519,7 +513,7 @@ export default function FoodieProfilePage() {
         </Button>
 
         {matchScore !== null && (
-          <div
+          <Column
             style={{
               position: "absolute",
               top: tokens.space[5],
@@ -527,10 +521,10 @@ export default function FoodieProfilePage() {
             }}
           >
             <MatchGauge pct={matchScore} />
-          </div>
+          </Column>
         )}
 
-        <div
+        <Column
           style={{
             position: "absolute",
             bottom: tokens.space[4],
@@ -540,10 +534,10 @@ export default function FoodieProfilePage() {
           <Caption tone="inverse" style={{ opacity: 0.8 }}>
             Foodie profile
           </Caption>
-        </div>
+        </Column>
       </motion.div>
 
-      <div
+      <Column
         style={{
           maxWidth: 1200,
           width: "100%",
@@ -566,40 +560,26 @@ export default function FoodieProfilePage() {
           <ProfileAvatarGroup user={profile} />
         </motion.div>
 
-        <div
+        <Grid
           style={{
-            display: "grid",
             gridTemplateColumns: "minmax(0, 2fr) minmax(0, 1fr)",
             gap: tokens.space[6],
             alignItems: "start",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[6],
-            }}
-          >
+          <Column style={{ gap: tokens.space[6] }}>
             <ProfileIdentityCard user={profile} />
 
             <Card radius="xl" padding="md" shadow="sm">
-              <div
+              <Row
+                horizontal="between"
+                vertical="center"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
                   gap: tokens.space[3],
                   marginBottom: tokens.space[5],
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: tokens.space[3],
-                  }}
-                >
+                <Row vertical="center" style={{ gap: tokens.space[3] }}>
                   <span
                     style={{
                       display: "inline-flex",
@@ -615,7 +595,7 @@ export default function FoodieProfilePage() {
                     <Dna size={18} strokeWidth={1.75} />
                   </span>
                   <H3>Taste DNA compare</H3>
-                </div>
+                </Row>
                 {matchScore !== null && (
                   <Pill
                     tone={matchScore >= 80 ? "success" : "warning"}
@@ -624,9 +604,9 @@ export default function FoodieProfilePage() {
                     {matchScore}% match
                   </Pill>
                 )}
-              </div>
+              </Row>
 
-              <div style={{ height: 320, width: "100%" }}>
+              <Column style={{ height: 320, width: "100%" }}>
                 <ClientOnly>
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart
@@ -668,7 +648,7 @@ export default function FoodieProfilePage() {
                     </RadarChart>
                   </ResponsiveContainer>
                 </ClientOnly>
-              </div>
+              </Column>
             </Card>
 
             <FlavorProfileCard />
@@ -684,26 +664,14 @@ export default function FoodieProfilePage() {
               friendsLoading={loading}
               onSeeAll={() => {}}
             />
-          </div>
+          </Column>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[6],
-            }}
-          >
+          <Column style={{ gap: tokens.space[6] }}>
             <Card radius="xl" padding="md" shadow="sm">
               <H3 style={{ marginBottom: tokens.space[4] }}>
                 Social connections
               </H3>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: tokens.space[1],
-                }}
-              >
+              <Column style={{ gap: tokens.space[1] }}>
                 <SocialActionRow
                   icon={<MessageCircle size={18} strokeWidth={1.75} />}
                   label="Send message"
@@ -756,7 +724,7 @@ export default function FoodieProfilePage() {
                     disabled={actionBusy}
                   />
                 )}
-              </div>
+              </Column>
             </Card>
 
             <TasteMapStatsCard user={profile} />
@@ -768,10 +736,10 @@ export default function FoodieProfilePage() {
                 fullMark: d.fullMark,
               }))}
             />
-          </div>
-        </div>
+          </Column>
+        </Grid>
 
-        <div style={{ marginTop: tokens.space[12] }}>
+        <Column style={{ marginTop: tokens.space[12] }}>
           <ProfileTabs
             postsLoading={postsLoading}
             userPosts={userPosts}
@@ -780,8 +748,8 @@ export default function FoodieProfilePage() {
             badgesLoading={badgesLoading}
             isOwner={user?.id === profile.id}
           />
-        </div>
-      </div>
-    </div>
+        </Column>
+      </Column>
+    </Column>
   );
 }

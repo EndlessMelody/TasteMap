@@ -17,7 +17,7 @@ export function TourSkeleton() {
       }}
     >
       {/* Card skeleton */}
-      <div
+      <Column
         style={{
           width: 340,
           height: 480,
@@ -50,14 +50,14 @@ export function TourSkeleton() {
             <Skeleton style={{ height: 24, width: 60, borderRadius: radius.s }} />
           </Row>
         </Column>
-      </div>
+      </Column>
 
       {/* Timeline skeleton */}
       <Row style={{ gap: 0, alignItems: 'center' }}>
         {[0, 1, 2, 3].map((i) => (
           <React.Fragment key={i}>
             {i > 0 && (
-              <div
+              <Column
                 style={{
                   width: 40,
                   height: 2,
@@ -91,21 +91,20 @@ export function EmptyState({ filledCount, totalCount }: { filledCount: number; t
         gap: spacing.m,
       }}
     >
-      <div
+      <Row
+        horizontal="center"
+        vertical="center"
         style={{
           width: 80,
           height: 80,
           borderRadius: radius.full,
           backgroundColor: surface.elevated,
           border: `1px solid ${border.weak}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
           fontSize: '2.5rem',
         }}
       >
         ✨
-      </div>
+      </Row>
       <Column style={{ alignItems: 'center', gap: spacing.xs }}>
         <span
           style={{

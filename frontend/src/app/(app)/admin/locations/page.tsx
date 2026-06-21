@@ -1326,11 +1326,9 @@ export default function AdminLocationsPage() {
   //  RENDER
   // ═══════════════════════════════════════════════════════════════
   return (
-    <div
+    <Column
       className="no-scrollbar"
       style={{
-        display: "flex",
-        flexDirection: "column",
         width: "100%",
         minHeight: "100vh",
         backgroundColor: "#F2F2F7",
@@ -1339,7 +1337,7 @@ export default function AdminLocationsPage() {
       }}
     >
       {/* ── HERO HEADER (Giao diện Chỉ huy) ── */}
-      <div
+      <Column
           className="w-full shrink-0"
           style={{
               background: "linear-gradient(135deg, #1C1C1E 0%, #000000 100%)",
@@ -1349,7 +1347,7 @@ export default function AdminLocationsPage() {
           }}
       >
         {/* Đèn báo động cam cho ngầu */}
-        <div
+        <Column
             style={{
                 position: "absolute",
                 top: -60,
@@ -1362,28 +1360,30 @@ export default function AdminLocationsPage() {
             }}
         />
 
-        <div className="relative max-w-[960px] mx-auto w-full flex flex-col">
-            <div className="flex items-start justify-between mb-8 w-full">
-                <div>
-                    <div className="flex items-center gap-4 mb-3">
-                        <div
-                            className="w-12 h-12 rounded-[18px] flex items-center justify-center shadow-xl cursor-pointer hover:opacity-90 transition-opacity"
+        <Column className="relative max-w-[960px] mx-auto w-full">
+            <Row horizontal="between" className="items-start mb-8 w-full">
+                <Column>
+                    <Row vertical="center" className="gap-4 mb-3">
+                        <Row
+                            horizontal="center"
+                            vertical="center"
+                            className="w-12 h-12 rounded-[18px] shadow-xl cursor-pointer hover:opacity-90 transition-opacity"
                             style={{ background: "linear-gradient(135deg, #FF9500, #FFCC00)" }}
                             onClick={() => router.push("/admin")}
                         >
                             <MapPin size={24} className="text-white" />
-                        </div>
+                        </Row>
                         <h1 className="text-[32px] font-black text-white tracking-tight">
                             Location Manager
                         </h1>
-                    </div>
+                    </Row>
                     <p className="text-[15px] text-[rgba(255,255,255,0.6)] font-medium max-w-md">
                         Review, manage, search, and update places of interest globally.
                     </p>
-                </div>
-            </div>
-        </div>
-      </div>
+                </Column>
+            </Row>
+        </Column>
+      </Column>
 
       {/* ─── Content ───────────────────────────────────── */}
       <Column
@@ -1472,7 +1472,7 @@ export default function AdminLocationsPage() {
                   {importProgress.current} / {importProgress.total}
                 </Text>
               </Row>
-              <div
+              <Column
                 style={{
                   width: "100%",
                   height: 6,
@@ -1481,7 +1481,7 @@ export default function AdminLocationsPage() {
                   overflow: "hidden",
                 }}
               >
-                <div
+                <Column
                   style={{
                     height: "100%",
                     width: `${(importProgress.current / (importProgress.total || 1)) * 100}%`,
@@ -1489,7 +1489,7 @@ export default function AdminLocationsPage() {
                     transition: "width 0.2s",
                   }}
                 />
-              </div>
+              </Column>
               <Row gap="16" fillWidth>
                 <Text
                   variant="body-default-xs"
@@ -2049,7 +2049,7 @@ export default function AdminLocationsPage() {
           </Column>
         )}
       </Column>
-    </div>
+    </Column>
   );
 }
 

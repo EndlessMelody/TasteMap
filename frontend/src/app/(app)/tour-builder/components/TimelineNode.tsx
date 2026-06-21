@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Text } from '@once-ui-system/core';
+import { Column, Text } from '@once-ui-system/core';
 import { motion } from 'framer-motion';
 import { surface, accent, text, border, radius, shadow, motion as motionTokens } from '../tokens';
 
@@ -104,7 +104,7 @@ export function TimelineNode({
 // Connector line between nodes
 export function TimelineConnector({ isActive = false }: { isActive?: boolean }) {
   return (
-    <div
+    <Column
       style={{
         width: 32, // More compact connector
         height: 2,

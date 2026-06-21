@@ -3,6 +3,7 @@
 import React from "react";
 import { List } from "react-window";
 import { motion } from "framer-motion";
+import { Column } from "@once-ui-system/core";
 import type { Spot } from "../types";
 import SpotCard from "./SpotCard";
 
@@ -38,7 +39,7 @@ const SpotRow = ({
   if (!spot) return null;
 
   return (
-    <div style={style}>
+    <Column style={style}>
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -55,7 +56,7 @@ const SpotRow = ({
           onClick={() => onSelect(spot)}
         />
       </motion.div>
-    </div>
+    </Column>
   );
 };
 

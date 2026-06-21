@@ -95,7 +95,7 @@ export const DiscoveryView: React.FC = () => {
   if (loading) {
     return (
       <Column horizontal="center" vertical="center" fillHeight fillWidth background="page" gap="16">
-        <div
+        <Column
           style={{
             width: 48,
             height: 48,

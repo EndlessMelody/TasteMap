@@ -4,6 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowRight, Compass } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { PromoFooter } from "./PromoFooter";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
@@ -25,18 +26,17 @@ export function PromoCTA() {
       }}
     >
       {/* CTA content */}
-      <div
+      <Row
+        horizontal="center"
+        vertical="center"
         style={{
           flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           width: "100%",
           position: "relative",
         }}
       >
         {/* Decorative radial glow */}
-        <div
+        <Column
           style={{
             position: "absolute",
             inset: 0,
@@ -46,7 +46,7 @@ export function PromoCTA() {
           }}
         />
 
-        <div
+        <Column
           style={{
             maxWidth: 1200,
             margin: "0 auto",
@@ -77,7 +77,7 @@ export function PromoCTA() {
             }}
           >
             {/* Orange top border glow */}
-            <div
+            <Column
               style={{
                 position: "absolute",
                 top: 0,
@@ -91,7 +91,7 @@ export function PromoCTA() {
             />
 
             {/* Corner decorative circles */}
-            <div
+            <Column
               style={{
                 position: "absolute",
                 top: -60,
@@ -105,7 +105,7 @@ export function PromoCTA() {
                 pointerEvents: "none",
               }}
             />
-            <div
+            <Column
               style={{
                 position: "absolute",
                 bottom: -60,
@@ -121,10 +121,8 @@ export function PromoCTA() {
             />
 
             {/* Text content */}
-            <div
+            <Column
               style={{
-                display: "flex",
-                flexDirection: "column",
                 gap: 16,
                 maxWidth: 680,
                 position: "relative",
@@ -178,17 +176,15 @@ export function PromoCTA() {
                 tours, and discovering restaurants they actually love. It&apos;s
                 free to start — always.
               </p>
-            </div>
+            </Column>
 
             {/* CTAs */}
-            <div
+            <Row
+              horizontal="center"
+              vertical="center"
               style={{
-                display: "flex",
-                flexDirection: "row",
                 gap: 14,
                 flexWrap: "wrap",
-                justifyContent: "center",
-                alignItems: "center",
                 position: "relative",
               }}
             >
@@ -252,16 +248,15 @@ export function PromoCTA() {
               >
                 Learn more →
               </button>
-            </div>
+            </Row>
 
             {/* Trust line */}
-            <div
+            <Row
+              horizontal="center"
+              vertical="center"
               style={{
-                display: "flex",
-                alignItems: "center",
                 gap: 20,
                 flexWrap: "wrap",
-                justifyContent: "center",
               }}
             >
               {["No credit card required", "Free forever plan", "Setup in 2 min"].map(
@@ -282,10 +277,10 @@ export function PromoCTA() {
                   </React.Fragment>
                 )
               )}
-            </div>
+            </Row>
           </motion.div>
-        </div>
-      </div>
+        </Column>
+      </Row>
 
       {/* Footer */}
       <PromoFooter />

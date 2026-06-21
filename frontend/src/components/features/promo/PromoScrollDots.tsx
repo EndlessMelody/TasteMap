@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Column, Row } from "@once-ui-system/core";
 
 const SECTIONS = [
   "Home",
@@ -50,21 +51,19 @@ export function PromoScrollDots() {
   }, []);
 
   return (
-    <div
+    <Column
+      horizontal="center"
       style={{
         position: "fixed",
         right: 22,
         top: "50%",
         transform: "translateY(-50%)",
         zIndex: 40,
-        display: "flex",
-        flexDirection: "column",
         gap: 10,
-        alignItems: "center",
       }}
     >
       {/* Background progress line */}
-      <div
+      <Column
         style={{
           position: "absolute",
           top: 10, bottom: 10,
@@ -76,7 +75,7 @@ export function PromoScrollDots() {
         }}
       />
       {/* Active progress fill */}
-      <div
+      <Column
         style={{
           position: "absolute",
           top: 10,
@@ -91,9 +90,10 @@ export function PromoScrollDots() {
       />
 
       {SECTIONS.map((label, i) => (
-        <div
+        <Row
           key={i}
-          style={{ position: "relative", display: "flex", alignItems: "center", zIndex: 1 }}
+          vertical="center"
+          style={{ position: "relative", zIndex: 1 }}
           onMouseEnter={() => setHovered(i)}
           onMouseLeave={() => setHovered(null)}
         >
@@ -152,8 +152,8 @@ export function PromoScrollDots() {
               style={{ borderRadius: "50%" }}
             />
           </button>
-        </div>
+        </Row>
       ))}
-    </div>
+    </Column>
   );
 }

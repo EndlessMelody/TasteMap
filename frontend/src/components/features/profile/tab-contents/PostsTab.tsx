@@ -10,6 +10,7 @@ import {
   Heart,
   MessageCircle,
 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
   Body,
@@ -69,7 +70,7 @@ export const PostsTab: React.FC<PostsTabProps> = ({
 }) => {
   if (postsLoading) {
     return (
-      <div
+      <Column
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
@@ -79,21 +80,19 @@ export const PostsTab: React.FC<PostsTabProps> = ({
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} radius="lg" padding="none" shadow="sm">
             <Skeleton width="100%" height={160} radius="sm" />
-            <div
+            <Column
               style={{
                 padding: tokens.space[4],
-                display: "flex",
-                flexDirection: "column",
                 gap: tokens.space[2],
               }}
             >
               <Skeleton width="60%" height={14} />
               <Skeleton width="90%" height={12} />
               <Skeleton width="75%" height={12} />
-            </div>
+            </Column>
           </Card>
         ))}
-      </div>
+      </Column>
     );
   }
 
@@ -110,7 +109,7 @@ export const PostsTab: React.FC<PostsTabProps> = ({
   }
 
   return (
-    <div
+    <Column
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
@@ -133,7 +132,7 @@ export const PostsTab: React.FC<PostsTabProps> = ({
             style={{ cursor: "pointer", overflow: "hidden" }}
           >
             {post.image_url ? (
-              <div
+              <Column
                 style={{
                   position: "relative",
                   height: 180,
@@ -150,7 +149,7 @@ export const PostsTab: React.FC<PostsTabProps> = ({
                   }}
                 />
                 {post.rating != null && (
-                  <div
+                  <Column
                     style={{
                       position: "absolute",
                       top: tokens.space[3],
@@ -161,44 +160,39 @@ export const PostsTab: React.FC<PostsTabProps> = ({
                       <Star size={11} fill="currentColor" />
                       {post.rating.toFixed(1)}
                     </Pill>
-                  </div>
+                  </Column>
                 )}
-              </div>
+              </Column>
             ) : (
-              <div
+              <Column
+                center
                 style={{
                   height: 120,
                   background: tokens.color.surfaceMuted,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   color: tokens.color.textSubtle,
                 }}
               >
                 <Utensils size={32} strokeWidth={1.5} />
-              </div>
+              </Column>
             )}
 
-            <div
+            <Column
               style={{
                 padding: tokens.space[4],
-                display: "flex",
-                flexDirection: "column",
                 gap: tokens.space[2],
               }}
             >
               {post.location && (
-                <div
+                <Row
+                  vertical="center"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
                     gap: tokens.space[1],
                     color: tokens.color.textMuted,
                   }}
                 >
                   <MapPin size={12} strokeWidth={1.75} />
                   <Caption tone="muted">{post.location.name}</Caption>
-                </div>
+                </Row>
               )}
 
               <Body
@@ -213,34 +207,26 @@ export const PostsTab: React.FC<PostsTabProps> = ({
               </Body>
 
               {post.tags && post.tags.length > 0 && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: tokens.space[1],
-                  }}
-                >
+                <Row style={{ flexWrap: "wrap", gap: tokens.space[1] }}>
                   {post.tags.slice(0, 3).map((tag) => (
                     <Pill key={tag} tone="neutral" size="sm">
                       {tag}
                     </Pill>
                   ))}
-                </div>
+                </Row>
               )}
 
-              <div
+              <Row
+                horizontal="between"
+                vertical="center"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
                   borderTop: `1px solid ${tokens.color.border}`,
                   paddingTop: tokens.space[2],
                   marginTop: tokens.space[1],
                 }}
               >
-                <div
+                <Row
                   style={{
-                    display: "flex",
                     gap: tokens.space[3],
                     color: tokens.color.textMuted,
                   }}
@@ -274,7 +260,7 @@ export const PostsTab: React.FC<PostsTabProps> = ({
                     <MessageCircle size={13} strokeWidth={1.75} />
                     {post.comments_count}
                   </span>
-                </div>
+                </Row>
                 {post.created_at && (
                   <BodySm tone="subtle">
                     {new Date(post.created_at).toLocaleDateString("vi-VN", {
@@ -283,12 +269,12 @@ export const PostsTab: React.FC<PostsTabProps> = ({
                     })}
                   </BodySm>
                 )}
-              </div>
-            </div>
+              </Row>
+            </Column>
           </Card>
         </motion.div>
       ))}
-    </div>
+    </Column>
   );
 };
 

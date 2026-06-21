@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Star, Video } from "lucide-react";
+import { Column } from "@once-ui-system/core";
 import { ComposerType } from "@/types/contentCreation";
 import { SegmentedControl } from "./SegmentedControl";
 
@@ -17,8 +18,8 @@ const options = [
 
 export function PostTypeSelector({ value, onChange }: PostTypeSelectorProps) {
   return (
-    <div style={{ maxWidth: "360px" }}>
+    <Column style={{ maxWidth: "360px" }}>
       <SegmentedControl options={options} value={value} onChange={onChange} />
-    </div>
+    </Column>
   );
 }

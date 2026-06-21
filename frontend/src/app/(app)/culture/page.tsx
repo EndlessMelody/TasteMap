@@ -25,6 +25,7 @@ import {
   Coffee,
   Utensils,
 } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import {
   Page,
   Card,
@@ -229,7 +230,7 @@ export default function CulturePage() {
 
   return (
     <Page>
-      <div style={{ maxWidth: 860, margin: "0 auto", width: "100%" }}>
+      <Column style={{ maxWidth: 860, margin: "0 auto", width: "100%" }}>
 
         {/* ── Hero banner (gradient + search inside) ── */}
         <motion.div
@@ -247,42 +248,42 @@ export default function CulturePage() {
           }}
         >
           {/* Floating food emojis — decorative, non-interactive */}
-          <div style={{ position: "absolute", top: 22, right: 100, pointerEvents: "none", transform: "rotate(14deg)" }}>
+          <Column style={{ position: "absolute", top: 22, right: 100, pointerEvents: "none", transform: "rotate(14deg)" }}>
             <span style={{ fontSize: 44, opacity: 0.22, display: "block", animation: "floatA 4.2s ease-in-out infinite" }}>🍜</span>
-          </div>
-          <div style={{ position: "absolute", top: 60, right: 38, pointerEvents: "none", transform: "rotate(-9deg)" }}>
+          </Column>
+          <Column style={{ position: "absolute", top: 60, right: 38, pointerEvents: "none", transform: "rotate(-9deg)" }}>
             <span style={{ fontSize: 32, opacity: 0.18, display: "block", animation: "floatB 5.1s ease-in-out infinite 0.6s" }}>🍣</span>
-          </div>
-          <div style={{ position: "absolute", bottom: 48, right: 120, pointerEvents: "none", transform: "rotate(7deg)" }}>
+          </Column>
+          <Column style={{ position: "absolute", bottom: 48, right: 120, pointerEvents: "none", transform: "rotate(7deg)" }}>
             <span style={{ fontSize: 36, opacity: 0.17, display: "block", animation: "floatA 4.8s ease-in-out infinite 1.1s" }}>🫕</span>
-          </div>
-          <div style={{ position: "absolute", top: 32, right: 188, pointerEvents: "none", transform: "rotate(-16deg)" }}>
+          </Column>
+          <Column style={{ position: "absolute", top: 32, right: 188, pointerEvents: "none", transform: "rotate(-16deg)" }}>
             <span style={{ fontSize: 26, opacity: 0.15, display: "block", animation: "floatB 6.3s ease-in-out infinite 0.3s" }}>🌿</span>
-          </div>
-          <div style={{ position: "absolute", bottom: 24, right: 55, pointerEvents: "none", transform: "rotate(22deg)" }}>
+          </Column>
+          <Column style={{ position: "absolute", bottom: 24, right: 55, pointerEvents: "none", transform: "rotate(22deg)" }}>
             <span style={{ fontSize: 30, opacity: 0.19, display: "block", animation: "floatA 5.6s ease-in-out infinite 1.8s" }}>🥢</span>
-          </div>
-          <div style={{ position: "absolute", top: 85, right: 218, pointerEvents: "none", transform: "rotate(-4deg)" }}>
+          </Column>
+          <Column style={{ position: "absolute", top: 85, right: 218, pointerEvents: "none", transform: "rotate(-4deg)" }}>
             <span style={{ fontSize: 22, opacity: 0.14, display: "block", animation: "floatB 7.1s ease-in-out infinite 2.2s" }}>☕</span>
-          </div>
-          <div style={{ position: "absolute", bottom: 70, right: 175, pointerEvents: "none", transform: "rotate(11deg)" }}>
+          </Column>
+          <Column style={{ position: "absolute", bottom: 70, right: 175, pointerEvents: "none", transform: "rotate(11deg)" }}>
             <span style={{ fontSize: 28, opacity: 0.13, display: "block", animation: "floatA 5s ease-in-out infinite 0.9s" }}>🥖</span>
-          </div>
+          </Column>
 
           {/* Content — max-width so emojis have breathing room on the right */}
-          <div style={{ position: "relative", zIndex: 1, maxWidth: 560 }}>
+          <Column style={{ position: "relative", zIndex: 1, maxWidth: 560 }}>
 
             {/* Pills */}
-            <div style={{ display: "flex", alignItems: "center", gap: tokens.space[2], flexWrap: "wrap", marginBottom: tokens.space[3] }}>
+            <Row style={{ alignItems: "center", gap: tokens.space[2], flexWrap: "wrap", marginBottom: tokens.space[3] }}>
               <Pill tone="magic" size="sm" leftIcon={<Sparkles size={12} strokeWidth={1.75} />}>
                 AI · Culture Lens
               </Pill>
               <Pill tone="warm" size="sm">TasteMap signature</Pill>
-            </div>
+            </Row>
 
             {/* Title — white marker highlight for contrast on orange bg */}
-            <div style={{ position: "relative", display: "inline-block", marginBottom: tokens.space[2] }}>
-              <div style={{
+            <Column style={{ position: "relative", display: "inline-block", marginBottom: tokens.space[2] }}>
+              <Column style={{
                 position: "absolute",
                 bottom: 5,
                 left: -5,
@@ -294,15 +295,14 @@ export default function CulturePage() {
                 zIndex: 0,
               }} />
               <H1 style={{ position: "relative", zIndex: 1 }}>Culinary culture guide</H1>
-            </div>
+            </Column>
 
             <Body tone="muted" style={{ marginBottom: tokens.space[5], maxWidth: 480 }}>
               Every dish has roots, rituals, and stories. Type a name or drop a photo — let AI unveil the memory behind what you&apos;re about to taste.
             </Body>
 
             {/* Frosted-glass search row embedded in the banner */}
-            <div style={{
-              display: "flex",
+            <Row style={{
               gap: tokens.space[2],
               alignItems: "center",
               flexWrap: "wrap",
@@ -314,7 +314,7 @@ export default function CulturePage() {
               border: "1.5px solid rgba(255,255,255,0.9)",
               boxShadow: "0 2px 20px rgba(255,140,60,0.1), inset 0 1px 0 rgba(255,255,255,0.7)",
             }}>
-              <div style={{ flex: "1 1 200px", minWidth: 180 }}>
+              <Column style={{ flex: "1 1 200px", minWidth: 180 }}>
                 <Field
                   type="text"
                   placeholder="Type a dish name (e.g. Phở, Bánh Mì)"
@@ -323,7 +323,7 @@ export default function CulturePage() {
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                   leading={<Search size={16} strokeWidth={1.75} />}
                 />
-              </div>
+              </Column>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -369,8 +369,8 @@ export default function CulturePage() {
               >
                 {loading ? "Searching…" : "Generate"}
               </Button>
-            </div>
-          </div>
+            </Row>
+          </Column>
 
           <input
             ref={fileInputRef}
@@ -387,19 +387,18 @@ export default function CulturePage() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
 
             {/* Section header */}
-            <div style={{ display: "flex", alignItems: "center", gap: tokens.space[3], marginBottom: tokens.space[5] }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                <div style={{ width: 22, height: 3, background: tokens.color.warm, borderRadius: 2 }} />
-                <div style={{ width: 8, height: 3, background: tokens.color.warm, borderRadius: 2, opacity: 0.45 }} />
-              </div>
+            <Row style={{ alignItems: "center", gap: tokens.space[3], marginBottom: tokens.space[5] }}>
+              <Row style={{ alignItems: "center", gap: 4 }}>
+                <Column style={{ width: 22, height: 3, background: tokens.color.warm, borderRadius: 2 }} />
+                <Column style={{ width: 8, height: 3, background: tokens.color.warm, borderRadius: 2, opacity: 0.45 }} />
+              </Row>
               <Eyebrow>Popular dishes</Eyebrow>
-              <div style={{ flex: 1, height: 1, background: tokens.color.border }} />
+              <Column style={{ flex: 1, height: 1, background: tokens.color.border }} />
               <BodySm tone="muted">Tap any to explore</BodySm>
-            </div>
+            </Row>
 
             {/* Colored dish cards */}
-            <div style={{
-              display: "grid",
+            <Grid style={{
               gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
               gap: tokens.space[3],
             }}>
@@ -428,7 +427,7 @@ export default function CulturePage() {
                     }}
                   >
                     {/* Decorative corner orb */}
-                    <div style={{
+                    <Column style={{
                       position: "absolute",
                       top: -18,
                       right: -18,
@@ -457,10 +456,10 @@ export default function CulturePage() {
                       {dish.icon}
                     </span>
 
-                    <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    <Column style={{ gap: 3 }}>
                       <Body style={{ fontWeight: tokens.type.weight.bold }}>{dish.name}</Body>
                       <BodySm style={{ color: `${theme.accent}99` }}>{dish.mood}</BodySm>
-                    </div>
+                    </Column>
 
                     {/* Accent tag — solid colored */}
                     <span style={{
@@ -484,7 +483,7 @@ export default function CulturePage() {
                   </motion.div>
                 );
               })}
-            </div>
+            </Grid>
           </motion.div>
         )}
 
@@ -495,19 +494,17 @@ export default function CulturePage() {
             animate={{ opacity: 1 }}
             style={{ textAlign: "center", padding: `${tokens.space[12]} 0 ${tokens.space[2]}` }}
           >
-            <div style={{
+            <Row horizontal="center" vertical="center" style={{
               width: 64,
               height: 64,
               borderRadius: tokens.radius.lg,
               background: "rgba(168,85,247,0.1)",
               color: tokens.color.magic,
               display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
               marginBottom: tokens.space[3],
             }}>
               <Loader2 size={28} strokeWidth={1.75} style={{ animation: "spin 0.8s linear infinite" }} />
-            </div>
+            </Row>
             <Body tone="muted">Uncovering the story behind your dish…</Body>
           </motion.div>
         )}
@@ -538,7 +535,7 @@ export default function CulturePage() {
             >
 
               {/* Hero image */}
-              <div style={{
+              <Column style={{
                 position: "relative",
                 width: "100%",
                 height: 320,
@@ -554,14 +551,14 @@ export default function CulturePage() {
                     style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                   />
                 ) : (
-                  <div style={{
+                  <Column style={{
                     width: "100%",
                     height: "100%",
                     background: "linear-gradient(135deg, rgba(255,107,53,0.18) 0%, rgba(168,85,247,0.14) 100%)",
                   }} />
                 )}
 
-                <div style={{
+                <Column style={{
                   position: "absolute",
                   bottom: 0,
                   left: 0,
@@ -571,13 +568,13 @@ export default function CulturePage() {
                   pointerEvents: "none",
                 }} />
 
-                <div style={{ position: "absolute", bottom: tokens.space[5], left: tokens.space[5], right: tokens.space[14] }}>
+                <Column style={{ position: "absolute", bottom: tokens.space[5], left: tokens.space[5], right: tokens.space[16] }}>
                   {story.identified_from_image && (
-                    <div style={{ marginBottom: tokens.space[2] }}>
+                    <Column style={{ marginBottom: tokens.space[2] }}>
                       <Pill tone="magic" size="sm" leftIcon={<Camera size={11} strokeWidth={1.75} />}>
                         Identified from photo
                       </Pill>
-                    </div>
+                    </Column>
                   )}
                   <H2 style={{ color: "#fff", textShadow: "0 1px 8px rgba(0,0,0,0.4)" }}>
                     {story.food_name}
@@ -592,9 +589,9 @@ export default function CulturePage() {
                       {Math.round(story.confidence * 100)}% confidence
                     </Caption>
                   )}
-                </div>
+                </Column>
 
-                <div style={{ position: "absolute", top: tokens.space[3], right: tokens.space[3] }}>
+                <Column style={{ position: "absolute", top: tokens.space[3], right: tokens.space[3] }}>
                   <IconButton
                     variant="ghost"
                     size="sm"
@@ -608,8 +605,8 @@ export default function CulturePage() {
                       color: "#fff",
                     }}
                   />
-                </div>
-              </div>
+                </Column>
+              </Column>
 
               {/* Taste tag strip */}
               {story.taste_tags.length > 0 && (
@@ -643,50 +640,50 @@ export default function CulturePage() {
                   }}
                 >
                   {story.when_to_eat && (
-                    <div style={{
+                    <Column style={{
                       flex: 1,
                       padding: tokens.space[4],
                       borderRight: (story.pairing_suggestions.length > 0 || story.fun_fact)
                         ? `1px solid rgba(255,207,170,0.45)` : "none",
                     }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: tokens.space[1], marginBottom: tokens.space[2] }}>
+                      <Row style={{ alignItems: "center", gap: tokens.space[1], marginBottom: tokens.space[2] }}>
                         <Clock size={13} strokeWidth={1.75} style={{ color: tokens.color.textMuted }} />
                         <Eyebrow tone="muted">When to eat</Eyebrow>
-                      </div>
+                      </Row>
                       <BodySm tone="muted">{story.when_to_eat}</BodySm>
-                    </div>
+                    </Column>
                   )}
                   {story.pairing_suggestions.length > 0 && (
-                    <div style={{
+                    <Column style={{
                       flex: 1,
                       padding: tokens.space[4],
                       borderRight: story.fun_fact ? `1px solid rgba(255,207,170,0.45)` : "none",
                     }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: tokens.space[1], marginBottom: tokens.space[2] }}>
+                      <Row style={{ alignItems: "center", gap: tokens.space[1], marginBottom: tokens.space[2] }}>
                         <Wine size={13} strokeWidth={1.75} style={{ color: tokens.color.textMuted }} />
                         <Eyebrow tone="muted">Pairs well with</Eyebrow>
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: tokens.space[1] }}>
+                      </Row>
+                      <Column style={{ gap: tokens.space[1] }}>
                         {story.pairing_suggestions.slice(0, 3).map((s) => (
                           <BodySm key={s} tone="muted">· {s}</BodySm>
                         ))}
-                      </div>
-                    </div>
+                      </Column>
+                    </Column>
                   )}
                   {story.fun_fact && (
-                    <div style={{ flex: 1, padding: tokens.space[4] }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: tokens.space[1], marginBottom: tokens.space[2] }}>
+                    <Column style={{ flex: 1, padding: tokens.space[4] }}>
+                      <Row style={{ alignItems: "center", gap: tokens.space[1], marginBottom: tokens.space[2] }}>
                         <Lightbulb size={13} strokeWidth={1.75} style={{ color: tokens.color.warning }} />
                         <Eyebrow tone="muted">Fun fact</Eyebrow>
-                      </div>
+                      </Row>
                       <BodySm tone="muted">{story.fun_fact}</BodySm>
-                    </div>
+                    </Column>
                   )}
                 </motion.div>
               )}
 
               {/* Story accordion sections — with per-section accent */}
-              <div style={{ display: "flex", flexDirection: "column", gap: tokens.space[2] }}>
+              <Column style={{ gap: tokens.space[2] }}>
                 {story.sections.map((section, idx) => {
                   const isActive = activeSection === idx;
                   const accent = SECTION_ACCENT[section.title] || tokens.color.textMuted;
@@ -712,7 +709,7 @@ export default function CulturePage() {
                           borderLeft: `3px solid ${accent}`,
                         }}
                       >
-                        <div style={{ display: "flex", alignItems: "flex-start", gap: tokens.space[3] }}>
+                        <Row style={{ alignItems: "flex-start", gap: tokens.space[3] }}>
                           <span style={{
                             width: 40,
                             height: 40,
@@ -726,14 +723,14 @@ export default function CulturePage() {
                           }}>
                             {SECTION_ICONS[section.title] || <BookOpen size={18} strokeWidth={1.75} />}
                           </span>
-                          <div style={{ flex: 1, minWidth: 0 }}>
+                          <Column style={{ flex: 1, minWidth: 0 }}>
                             <H3>{section.title}</H3>
                             {!isActive && (
                               <BodySm tone="muted" style={{ marginTop: tokens.space[1] }}>
                                 {previewText}
                               </BodySm>
                             )}
-                          </div>
+                          </Column>
                           <motion.div
                             animate={{ rotate: isActive ? 90 : 0 }}
                             transition={{ duration: 0.2 }}
@@ -741,7 +738,7 @@ export default function CulturePage() {
                           >
                             <ChevronRight size={18} strokeWidth={1.75} />
                           </motion.div>
-                        </div>
+                        </Row>
 
                         <AnimatePresence>
                           {isActive && (
@@ -762,7 +759,7 @@ export default function CulturePage() {
                     </motion.div>
                   );
                 })}
-              </div>
+              </Column>
 
               {/* Places to try */}
               <motion.div
@@ -771,16 +768,16 @@ export default function CulturePage() {
                 transition={{ delay: 0.32 }}
               >
                 <Card radius="xl" padding="md" shadow="sm">
-                  <div style={{ display: "flex", alignItems: "center", gap: tokens.space[2], marginBottom: tokens.space[3] }}>
+                  <Row style={{ alignItems: "center", gap: tokens.space[2], marginBottom: tokens.space[3] }}>
                     <MapPin size={16} strokeWidth={1.75} style={{ color: tokens.color.textMuted }} />
                     <Eyebrow tone="muted">
                       {locations.length > 0 ? `${locations.length} places to try` : "Places to try"}
                     </Eyebrow>
-                  </div>
+                  </Row>
 
                   {locations.length > 0 ? (
                     <>
-                      <div style={{
+                      <Column style={{
                         height: 280,
                         borderRadius: tokens.radius.md,
                         overflow: "hidden",
@@ -797,11 +794,11 @@ export default function CulturePage() {
                           enableClustering={locations.length > 5}
                           mapStyleType="light"
                         />
-                      </div>
+                      </Column>
 
-                      <div
+                      <Row
                         className="no-scrollbar"
-                        style={{ display: "flex", gap: tokens.space[3], overflowX: "auto", paddingBottom: 4 }}
+                        style={{ gap: tokens.space[3], overflowX: "auto", paddingBottom: 4 }}
                       >
                         {locations.map((loc) => (
                           <motion.div
@@ -821,7 +818,7 @@ export default function CulturePage() {
                               alt=""
                               style={{ width: "100%", height: 100, objectFit: "cover", display: "block" }}
                             />
-                            <div style={{ padding: tokens.space[2] }}>
+                            <Column style={{ padding: tokens.space[2] }}>
                               <BodySm style={{
                                 fontWeight: tokens.type.weight.semibold,
                                 whiteSpace: "nowrap",
@@ -831,10 +828,10 @@ export default function CulturePage() {
                                 {loc.name}
                               </BodySm>
                               {loc.city && <Caption tone="muted">{loc.city}</Caption>}
-                            </div>
+                            </Column>
                           </motion.div>
                         ))}
-                      </div>
+                      </Row>
                     </>
                   ) : (
                     <BodySm tone="muted" style={{ textAlign: "center", padding: tokens.space[5], fontStyle: "italic" }}>
@@ -859,7 +856,7 @@ export default function CulturePage() {
             50% { transform: translateY(-7px); }
           }
         `}</style>
-      </div>
+      </Column>
     </Page>
   );
 }

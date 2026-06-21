@@ -4,12 +4,16 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Trophy, Star, Users, Map as MapIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Column, Row } from "@once-ui-system/core";
 import type { FinishResult } from "@/hooks/useGroupSwipe";
 import { Card, H2, H3, Body, BodySm, Caption, Pill } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 
 const FALLBACK_IMG =
   "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop";
+
+// Brand gradient for tour CTA — display-only, theme-independent
+const TOUR_GRADIENT = "linear-gradient(135deg, #FF6B35, #A855F7)";
 
 interface GroupResultsViewProps {
   results: FinishResult[];
@@ -20,15 +24,7 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
   if (results.length === 0) return null;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        overflow: "hidden",
-        background: tokens.color.bg,
-      }}
-    >
+    <Column style={{ height: "100%", overflow: "hidden", background: tokens.color.bg }}>
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -62,14 +58,12 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
         </BodySm>
       </motion.div>
 
-      <div
+      <Column
         className="no-scrollbar"
         style={{
           flex: 1,
           overflowY: "auto",
           padding: `0 ${tokens.space[5]} ${tokens.space[6]}`,
-          display: "flex",
-          flexDirection: "column",
           gap: tokens.space[3],
         }}
       >
@@ -95,13 +89,7 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
                   : undefined
               }
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[3],
-                }}
-              >
+              <Row vertical="center" style={{ gap: tokens.space[3] }}>
                 <span
                   style={{
                     width: 32,
@@ -136,7 +124,7 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
                   }}
                 />
 
-                <div style={{ flex: 1, minWidth: 0 }}>
+                <Column style={{ flex: 1, minWidth: 0 }}>
                   <H3
                     style={{
                       marginBottom: tokens.space[1],
@@ -148,14 +136,7 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
                     {place.name}
                   </H3>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: tokens.space[2],
-                      flexWrap: "wrap",
-                    }}
-                  >
+                  <Row vertical="center" style={{ gap: tokens.space[2], flexWrap: "wrap" }}>
                     <Pill
                       tone="warning"
                       size="sm"
@@ -173,17 +154,10 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
                         In vault
                       </Pill>
                     )}
-                  </div>
+                  </Row>
 
                   {place.member_scores && place.member_scores.length > 0 && (
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: tokens.space[1],
-                        marginTop: tokens.space[2],
-                        flexWrap: "wrap",
-                      }}
-                    >
+                    <Row style={{ gap: tokens.space[1], marginTop: tokens.space[2], flexWrap: "wrap" }}>
                       {place.member_scores.map((ms) => (
                         <Caption
                           key={ms.user_id}
@@ -197,16 +171,16 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
                           User {ms.user_id}: {Math.round(ms.score)}%
                         </Caption>
                       ))}
-                    </div>
+                    </Row>
                   )}
-                </div>
-              </div>
+                </Column>
+              </Row>
             </Card>
           </motion.div>
         ))}
-      </div>
+      </Column>
 
-      <div style={{ padding: `0 ${tokens.space[5]} ${tokens.space[6]}`, flexShrink: 0 }}>
+      <Column style={{ padding: `0 ${tokens.space[5]} ${tokens.space[6]}`, flexShrink: 0 }}>
         <button
           onClick={() => {
             const ids = results.map((r) => r.location_id).join(",");
@@ -216,8 +190,8 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
             width: "100%",
             padding: "13px",
             borderRadius: tokens.radius.md,
-            background: "linear-gradient(135deg, #FF6B35, #A855F7)",
-            color: "white",
+            background: TOUR_GRADIENT,
+            color: tokens.color.textInverse,
             fontWeight: 700,
             fontSize: 14,
             border: "none",
@@ -231,7 +205,7 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
         >
           <MapIcon size={16} /> View All on Map
         </button>
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }

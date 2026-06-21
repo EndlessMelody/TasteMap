@@ -14,6 +14,7 @@ import BadgeCard from "@/components/features/gamification/BadgeCard";
 import { useAuth } from "@/context/AuthContext";
 import { apiPut } from "@/lib/api";
 import { toast } from "sonner";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { BadgeSummary } from "@/types/gamification";
 
@@ -43,39 +44,20 @@ export const AchievementsTab: React.FC<AchievementsTabProps> = ({
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: tokens.space[6],
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: tokens.space[4],
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[1],
-          }}
-        >
+    <Column style={{ gap: tokens.space[6] }}>
+      <Row horizontal="between" vertical="center" style={{ gap: tokens.space[4] }}>
+        <Column style={{ gap: tokens.space[1] }}>
           <H2>Badge vault</H2>
           <BodySm tone="muted">
             Collect and show off your culinary journey
           </BodySm>
-        </div>
+        </Column>
         <Pill tone="neutral" size="md">
           {badges.length} / {totalBadges}
         </Pill>
-      </div>
+      </Row>
 
-      <div
+      <Column
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
@@ -113,8 +95,8 @@ export const AchievementsTab: React.FC<AchievementsTabProps> = ({
             />
           </Card>
         )}
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 };
 

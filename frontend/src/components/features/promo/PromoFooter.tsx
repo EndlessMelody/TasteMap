@@ -2,6 +2,7 @@
 
 import React from "react";
 import { MapPin } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 
 const LINKS = {
   Solutions: ["Discover", "Tour Builder", "Foodies Network", "Group Rooms"],
@@ -25,32 +26,30 @@ export function PromoFooter() {
         padding: "24px 0 16px",
       }}
     >
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px" }}>
+      <Column style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px" }}>
         {/* Top: logo + links */}
-        <div
+        <Grid
           style={{
-            display: "grid",
             gridTemplateColumns: "2fr 1fr 1fr 1fr",
             gap: 40,
             marginBottom: 20,
           }}
         >
           {/* Brand */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div
+          <Column style={{ gap: 16 }}>
+            <Row vertical="center" style={{ gap: 8 }}>
+              <Row
+                horizontal="center"
+                vertical="center"
                 style={{
                   width: 28,
                   height: 28,
                   borderRadius: 8,
                   background: "linear-gradient(135deg, #FF5500, #FF3300)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                 }}
               >
                 <MapPin size={13} color="white" />
-              </div>
+              </Row>
               <span
                 style={{
                   fontSize: 16,
@@ -61,7 +60,7 @@ export function PromoFooter() {
               >
                 TasteMap<span style={{ color: "#FF5500" }}>.</span>
               </span>
-            </div>
+            </Row>
             <p
               style={{
                 margin: 0,
@@ -74,7 +73,7 @@ export function PromoFooter() {
               Discover food, connect with foodies, build tours. Your flavour
               DNA, mapped.
             </p>
-            <div style={{ display: "flex", gap: 8 }}>
+            <Row style={{ gap: 8 }}>
               {SOCIAL.map((s) => (
                 <a
                   key={s.label}
@@ -109,14 +108,14 @@ export function PromoFooter() {
                   {s.label}
                 </a>
               ))}
-            </div>
-          </div>
+            </Row>
+          </Column>
 
           {/* Link columns */}
           {Object.entries(LINKS).map(([section, items]) => (
-            <div
+            <Column
               key={section}
-              style={{ display: "flex", flexDirection: "column", gap: 12 }}
+              style={{ gap: 12 }}
             >
               <p
                 style={{
@@ -151,18 +150,17 @@ export function PromoFooter() {
                   {item}
                 </a>
               ))}
-            </div>
+            </Column>
           ))}
-        </div>
+        </Grid>
 
         {/* Bottom bar */}
-        <div
+        <Row
+          vertical="center"
+          horizontal="between"
           style={{
             paddingTop: 12,
             borderTop: "1px solid rgba(0,0,0,0.07)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
             flexWrap: "wrap",
             gap: 12,
           }}
@@ -170,7 +168,7 @@ export function PromoFooter() {
           <p style={{ margin: 0, fontSize: 12, color: "rgba(24,22,15,0.3)" }}>
             © {new Date().getFullYear()} TasteMap. All rights reserved.
           </p>
-          <div style={{ display: "flex", gap: 20 }}>
+          <Row style={{ gap: 20 }}>
             {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((l) => (
               <a
                 key={l}
@@ -193,9 +191,9 @@ export function PromoFooter() {
                 {l}
               </a>
             ))}
-          </div>
-        </div>
-      </div>
+          </Row>
+        </Row>
+      </Column>
     </footer>
   );
 }

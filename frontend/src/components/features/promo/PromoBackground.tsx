@@ -2,10 +2,11 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { Column } from "@once-ui-system/core";
 
 export function PromoBackground() {
   return (
-    <div
+    <Column
       style={{
         position: "fixed",
         inset: 0,
@@ -58,7 +59,7 @@ export function PromoBackground() {
       />
 
       {/* Subtle dot grid */}
-      <div
+      <Column
         style={{
           position: "absolute",
           inset: 0,
@@ -70,7 +71,7 @@ export function PromoBackground() {
       />
 
       {/* Noise texture */}
-      <div
+      <Column
         style={{
           position: "absolute",
           inset: 0,
@@ -79,6 +80,6 @@ export function PromoBackground() {
           backgroundSize: "200px",
         }}
       />
-    </div>
+    </Column>
   );
 }

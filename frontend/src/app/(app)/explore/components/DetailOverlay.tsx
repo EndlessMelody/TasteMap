@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Clock, MapPin, Star, Utensils, X, ChevronRight } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 
 import { CATEGORY_ICON } from "../ui-constants";
 import { PRICE_ICONS } from "../data";
@@ -42,14 +43,13 @@ export default function DetailOverlay({ spot, onClose }: DetailOverlayProps) {
           border: `1px solid ${tokens.color.border}`,
         }}
       >
-        <div
+        <Row
           style={{
-            display: "flex",
             gap: tokens.space[5],
             padding: tokens.space[5],
           }}
         >
-          <div
+          <Column
             style={{
               width: 128,
               height: 128,
@@ -67,16 +67,15 @@ export default function DetailOverlay({ spot, onClose }: DetailOverlayProps) {
               sizes="128px"
               className="object-cover"
             />
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div
+          </Column>
+          <Column style={{ flex: 1, minWidth: 0 }}>
+            <Row
               style={{
-                display: "flex",
                 alignItems: "start",
                 justifyContent: "space-between",
               }}
             >
-              <div>
+              <Column>
                 <H3
                   style={{
                     fontSize: 20,
@@ -99,7 +98,7 @@ export default function DetailOverlay({ spot, onClose }: DetailOverlayProps) {
                   {CATEGORY_ICON[spot.category] ?? <Utensils size={14} />}{" "}
                   {spot.category} · {PRICE_ICONS[spot.priceLevel]}
                 </BodySm>
-              </div>
+              </Column>
               <IconButton
                 icon={<X size={18} />}
                 aria-label="Close details"
@@ -112,7 +111,7 @@ export default function DetailOverlay({ spot, onClose }: DetailOverlayProps) {
                   flexShrink: 0,
                 }}
               />
-            </div>
+            </Row>
             <BodySm
               tone="muted"
               className="line-clamp-2"
@@ -123,10 +122,9 @@ export default function DetailOverlay({ spot, onClose }: DetailOverlayProps) {
             >
               {spot.description}
             </BodySm>
-            <div
+            <Row
+              vertical="center"
               style={{
-                display: "flex",
-                alignItems: "center",
                 gap: tokens.space[4],
                 marginTop: 12,
               }}
@@ -166,21 +164,19 @@ export default function DetailOverlay({ spot, onClose }: DetailOverlayProps) {
                 <Clock size={14} />{" "}
                 {spot.isOpen ? `Open · closes ${spot.closesAt}` : "Closed now"}
               </span>
-            </div>
-          </div>
-        </div>
-        <div
+            </Row>
+          </Column>
+        </Row>
+        <Row
           style={{
-            display: "flex",
             gap: tokens.space[2],
             paddingLeft: tokens.space[4],
             paddingRight: tokens.space[4],
             paddingBottom: tokens.space[4],
           }}
         >
-          <div
+          <Row
             style={{
-              display: "flex",
               gap: tokens.space[2],
               flex: 1,
               flexWrap: "wrap",
@@ -201,7 +197,7 @@ export default function DetailOverlay({ spot, onClose }: DetailOverlayProps) {
                 {tag}
               </span>
             ))}
-          </div>
+          </Row>
           <motion.a
             href="/ai-planner"
             whileHover={{ scale: 1.04 }}
@@ -223,7 +219,7 @@ export default function DetailOverlay({ spot, onClose }: DetailOverlayProps) {
           >
             Plan Visit <ChevronRight size={14} />
           </motion.a>
-        </div>
+        </Row>
       </motion.div>
     </>
   );

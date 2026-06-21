@@ -20,8 +20,8 @@
  */
 import React from "react";
 import { motion } from "framer-motion";
+import { Column, Grid } from "@once-ui-system/core";
 
-import { tokens } from "@/styles/tokens";
 import { HeroTour, TasteSignatureCard, NearbyNowCard } from "./hero";
 
 export const HeroSection: React.FC = () => {
@@ -30,29 +30,20 @@ export const HeroSection: React.FC = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-      style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(0, 2fr) minmax(300px, 1fr)",
-        gap: tokens.space[5],
-        width: "100%",
-        alignItems: "stretch",
-      }}
     >
-      <HeroTour />
-
-      {/* Sidebar: two equal-height cards stacked */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: tokens.space[4],
-          minWidth: 0,
-          minHeight: 0,
-        }}
+      <Grid
+        fillWidth
+        gap="20"
+        style={{ gridTemplateColumns: "minmax(0, 2fr) minmax(300px, 1fr)", alignItems: "stretch" }}
       >
-        <TasteSignatureCard />
-        <NearbyNowCard />
-      </div>
+        <HeroTour />
+
+        {/* Sidebar: two equal-height cards stacked */}
+        <Column fillWidth minHeight="0" gap="16">
+          <TasteSignatureCard />
+          <NearbyNowCard />
+        </Column>
+      </Grid>
     </motion.div>
   );
 };

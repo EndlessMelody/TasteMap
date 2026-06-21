@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ChevronLeft, Edit3, Heart } from "lucide-react";
+import { Row } from "@once-ui-system/core";
 import { Button, IconButton } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 import { UserData } from "./types";
@@ -27,7 +28,7 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
   onComingSoon,
 }) => {
   return (
-    <div
+    <Row
       style={{
         position: "relative",
         width: "100%",
@@ -43,7 +44,7 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
         alt=""
         style={{ width: "100%", height: "100%", objectFit: "cover" }}
       />
-      <div
+      <Row
         style={{
           position: "absolute",
           inset: 0,
@@ -72,13 +73,12 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
         />
       </Link>
 
-      <div
+      <Row
+        vertical="center"
         style={{
           position: "absolute",
           top: tokens.space[5],
           right: tokens.space[5],
-          display: "flex",
-          alignItems: "center",
           gap: tokens.space[2],
         }}
       >
@@ -99,8 +99,8 @@ export const ProfileCover: React.FC<ProfileCoverProps> = ({
           onClick={onComingSoon}
           style={FLOATING_BUTTON_STYLE}
         />
-      </div>
-    </div>
+      </Row>
+    </Row>
   );
 };
 

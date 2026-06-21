@@ -4,6 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Zap, Users, Star } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -210,7 +211,7 @@ function StatBadge({
         <span style={{ fontSize: 20, display: "flex", alignItems: "center" }}>
           {icon}
         </span>
-        <div>
+        <Column>
           <p
             style={{
               margin: 0,
@@ -232,7 +233,7 @@ function StatBadge({
           >
             {label}
           </p>
-        </div>
+        </Column>
       </motion.div>
     </motion.div>
   );
@@ -255,28 +256,27 @@ export function PromoHero() {
       }}
     >
       {/* ── Main content ── */}
-      <div style={{ flex: 1, display: "flex", alignItems: "center", width: "100%" }}>
-        <div
+      <Row vertical="center" style={{ flex: 1, width: "100%" }}>
+        <Grid
           style={{
             maxWidth: 1200,
             margin: "0 auto",
             padding: "0 32px",
             paddingTop: 64,
             width: "100%",
-            display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: 72,
             alignItems: "center",
           }}
         >
           {/* ── Left: copy ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
+          <Column style={{ gap: 26 }}>
             {/* Eyebrow */}
             <motion.div {...stagger(0)}>
-              <div
+              <Row
+                vertical="center"
                 style={{
                   display: "inline-flex",
-                  alignItems: "center",
                   gap: 7,
                   padding: "5px 12px 5px 6px",
                   borderRadius: 20,
@@ -308,7 +308,7 @@ export function PromoHero() {
                 >
                   Your Flavour DNA, Mapped
                 </span>
-              </div>
+              </Row>
             </motion.div>
 
             {/* Headline */}
@@ -423,10 +423,12 @@ export function PromoHero() {
               {...stagger(4)}
               style={{ display: "flex", alignItems: "center", gap: 16 }}
             >
-              <div style={{ display: "flex" }}>
+              <Row>
                 {["#FF5500", "#FFB347", "#4ADE80", "#60A5FA"].map((color, i) => (
-                  <div
+                  <Row
                     key={i}
+                    horizontal="center"
+                    vertical="center"
                     style={{
                       width: 30,
                       height: 30,
@@ -434,22 +436,19 @@ export function PromoHero() {
                       backgroundColor: color,
                       border: "2px solid #FFFCF7",
                       marginLeft: i === 0 ? 0 : -9,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                       zIndex: 4 - i,
                     }}
                   >
                     <Users size={11} color="white" />
-                  </div>
+                  </Row>
                 ))}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ display: "flex", gap: 2 }}>
+              </Row>
+              <Row vertical="center" style={{ gap: 10 }}>
+                <Row style={{ gap: 2 }}>
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star key={i} size={11} fill="#FFB347" color="#FFB347" />
                   ))}
-                </div>
+                </Row>
                 <p
                   style={{
                     margin: 0,
@@ -464,9 +463,9 @@ export function PromoHero() {
                   </strong>{" "}
                   foodies
                 </p>
-              </div>
+              </Row>
             </motion.div>
-          </div>
+          </Column>
 
           {/* ── Right: Taste radar ── */}
           <motion.div
@@ -481,7 +480,7 @@ export function PromoHero() {
             }}
           >
             {/* Glow behind radar */}
-            <div
+            <Column
               style={{
                 position: "absolute",
                 inset: 0,
@@ -492,7 +491,7 @@ export function PromoHero() {
             />
 
             {/* Label pill at top */}
-            <div
+            <Column
               style={{
                 position: "absolute",
                 top: 0,
@@ -516,12 +515,12 @@ export function PromoHero() {
               >
                 Your taste profile
               </span>
-            </div>
+            </Column>
 
             {/* Radar SVG */}
-            <div style={{ position: "relative", zIndex: 1 }}>
+            <Column style={{ position: "relative", zIndex: 1 }}>
               <TasteRadar />
-            </div>
+            </Column>
 
             {/* Floating badges */}
             <StatBadge
@@ -541,11 +540,11 @@ export function PromoHero() {
               delay={1.45}
             />
           </motion.div>
-        </div>
-      </div>
+        </Grid>
+      </Row>
 
       {/* ── Bottom scroll ticker ── */}
-      <div
+      <Column
         style={{
           width: "100%",
           borderTop: "1px solid rgba(0,0,0,0.07)",
@@ -560,15 +559,14 @@ export function PromoHero() {
             to   { transform: translateX(-50%); }
           }
         `}</style>
-        <div
+        <Row
           style={{
-            display: "flex",
             animation: "hero-ticker 24s linear infinite",
             width: "max-content",
           }}
         >
           {[...Array(2)].map((_, ri) => (
-            <div key={ri} style={{ display: "flex", alignItems: "center" }}>
+            <Row key={ri} vertical="center">
               {[
                 "DISCOVER YOUR TASTE",
                 "FIND YOUR TRIBE",
@@ -596,10 +594,10 @@ export function PromoHero() {
                   </span>
                 </React.Fragment>
               ))}
-            </div>
+            </Row>
           ))}
-        </div>
-      </div>
+        </Row>
+      </Column>
     </section>
   );
 }

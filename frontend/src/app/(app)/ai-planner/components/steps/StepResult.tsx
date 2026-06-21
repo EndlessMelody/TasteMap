@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Sparkles, Zap, RotateCcw, Send, Map, ChevronLeft } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import type { ItineraryStop } from "../types";
 import { SWAP_POOL } from "../constants";
 import { RouteMap } from "../RouteMap";
@@ -36,23 +37,20 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
   const handleRemove = (i: number) => setStops((prev) => prev.filter((_, idx) => idx !== i));
 
   return (
-    <div
+    <Column
       style={{
         width: "100%",
         height: "100%",
-        display: "flex",
-        flexDirection: "column",
         backgroundColor: "#FAF8F5",
         fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif',
       }}
     >
       {/* Result header */}
-      <div
+      <Row
+        vertical="center"
         style={{
           flexShrink: 0,
           padding: "14px 24px",
-          display: "flex",
-          alignItems: "center",
           gap: 12,
           borderBottom: "1px solid rgba(0,0,0,0.05)",
           backgroundColor: "rgba(250,248,245,0.92)",
@@ -80,14 +78,14 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
           <ChevronLeft size={15} /> Back
         </motion.button>
 
-        <div style={{ flex: 1 }}>
+        <Column style={{ flex: 1 }}>
           <h1 style={{ fontSize: 17, fontWeight: 900, color: "#1C1C1E", margin: 0, letterSpacing: -0.3 }}>
             Your Plan
           </h1>
           <p style={{ fontSize: 11, color: "#8E8E93", margin: 0 }}>
             {stops.length} stops · Ho Chi Minh City
           </p>
-        </div>
+        </Column>
 
         <span
           style={{
@@ -106,25 +104,25 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
         >
           <Sparkles size={9} /> AI Generated
         </span>
-      </div>
+      </Row>
 
       {/* Scrollable content */}
-      <div className="no-scrollbar" style={{ flex: 1, overflowY: "auto" }}>
-        <div style={{ padding: "20px 24px 40px" }}>
+      <Column className="no-scrollbar" style={{ flex: 1, overflowY: "auto" }}>
+        <Column style={{ padding: "20px 24px 40px" }}>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             style={{ display: "flex", flexDirection: "column", gap: 16 }}
           >
             {/* Hero banner */}
-            <div
+            <Column
               style={{
                 borderRadius: 24,
                 overflow: "hidden",
                 border: "1px solid rgba(255,255,255,0.06)",
               }}
             >
-              <div
+              <Column
                 style={{
                   background: "linear-gradient(135deg, #0F0F12 0%, #1A1A2E 40%, #16213E 70%, #0F3460 100%)",
                   padding: "22px 24px",
@@ -147,7 +145,7 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                     }}
                   />
                 ))}
-                <div style={{ display: "flex", alignItems: "center", gap: 16, position: "relative", zIndex: 1 }}>
+                <Row vertical="center" style={{ gap: 16, position: "relative", zIndex: 1 }}>
                   <motion.div
                     animate={{ rotate: [0, 5, -5, 0] }}
                     transition={{ duration: 4, repeat: Infinity }}
@@ -166,7 +164,7 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                   >
                     <Map size={22} color="#FFC107" />
                   </motion.div>
-                  <div style={{ flex: 1 }}>
+                  <Column style={{ flex: 1 }}>
                     <h3
                       style={{
                         fontSize: 19,
@@ -182,8 +180,8 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                     <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", margin: 0 }}>
                       {stops.length} stops · ~4.5 hours · Ho Chi Minh City
                     </p>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
+                  </Column>
+                  <Column style={{ textAlign: "right" }}>
                     <p style={{ fontSize: 18, fontWeight: 900, color: "white", margin: "0 0 4px" }}>
                       305,000đ
                     </p>
@@ -202,15 +200,15 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                     >
                       <Zap size={10} fill="currentColor" />+{totalXp} XP
                     </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </Column>
+                </Row>
+              </Column>
+            </Column>
 
             {/* Two-column layout */}
-            <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+            <Row style={{ gap: 16, alignItems: "flex-start" }}>
               {/* Left: timeline */}
-              <div style={{ flex: "0 0 460px", display: "flex", flexDirection: "column" }}>
+              <Column style={{ flex: "0 0 460px" }}>
                 {stops.map((stop, i) => (
                   <StopCard
                     key={`${stop.name}-${i}`}
@@ -225,14 +223,12 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                     onRemove={() => handleRemove(i)}
                   />
                 ))}
-              </div>
+              </Column>
 
               {/* Right: map + stats */}
-              <div
+              <Column
                 style={{
                   flex: 1,
-                  display: "flex",
-                  flexDirection: "column",
                   gap: 12,
                   position: "sticky",
                   top: 0,
@@ -241,14 +237,14 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
               >
                 <RouteMap stops={stops} activeStop={activeStop} />
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                <Grid style={{ gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   {[
                     { label: "Total Stops", value: `${stops.length} places`, color: "#ff6b35", emoji: "📍" },
                     { label: "Est. Duration", value: "~4.5 hours", color: "#FF9500", emoji: "⏱️" },
                     { label: "Budget", value: "305,000đ", color: "#34C759", emoji: "💰" },
                     { label: "XP Earned", value: `+${totalXp} XP`, color: "#A855F7", emoji: "⚡" },
                   ].map(({ label, value, color, emoji }) => (
-                    <div
+                    <Column
                       key={label}
                       style={{
                         backgroundColor: "rgba(255,255,255,0.85)",
@@ -258,7 +254,7 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                         border: "1px solid rgba(0,0,0,0.04)",
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                      <Row vertical="center" style={{ gap: 6, marginBottom: 4 }}>
                         <span style={{ fontSize: 13 }}>{emoji}</span>
                         <p
                           style={{
@@ -272,16 +268,16 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                         >
                           {label}
                         </p>
-                      </div>
+                      </Row>
                       <p style={{ fontSize: 16, fontWeight: 900, color, margin: 0 }}>{value}</p>
-                    </div>
+                    </Column>
                   ))}
-                </div>
-              </div>
-            </div>
+                </Grid>
+              </Column>
+            </Row>
 
             {/* Actions */}
-            <div style={{ display: "flex", gap: 10, paddingBottom: 8 }}>
+            <Row style={{ gap: 10, paddingBottom: 8 }}>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
@@ -350,10 +346,10 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
               >
                 <Map size={15} /> View on Map
               </motion.button>
-            </div>
+            </Row>
           </motion.div>
-        </div>
-      </div>
-    </div>
+        </Column>
+      </Column>
+    </Column>
   );
 }

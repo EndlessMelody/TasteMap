@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Column, Row, Heading, Text, Button, IconButton
+    Column, Row, Grid, Heading, Text, Button, IconButton
 } from "@once-ui-system/core";
 import {
     Trophy, Plus, Search, Filter, MoreVertical,
@@ -142,7 +142,7 @@ export default function ChallengeManagementPage() {
     if (isLoading) {
         return (
             <Column fillWidth fillHeight vertical="center" horizontal="center" gap="16" background="page">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#007AFF]"></div>
+                <Column className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#007AFF]" />
                 <Text variant="body-default-m" style={{ color: "#8E8E93" }}>Đang kết nối Command Center...</Text>
             </Column>
         );
@@ -169,7 +169,7 @@ export default function ChallengeManagementPage() {
             }}
         >
             {/* ─── HERO HEADER: Trạm điều khiển trung tâm ─── */}
-            <div
+            <Column
                 className="w-full shrink-0"
                 style={{
                     background: "linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 100%)",
@@ -179,18 +179,18 @@ export default function ChallengeManagementPage() {
                 }}
             >
                 {/* Glow Effects (Cái này làm nên độ hoành tráng) */}
-                <div style={{
+                <Column style={{
                     position: "absolute", top: -100, right: -50, width: 350, height: 350,
                     borderRadius: "50%", background: "rgba(0,122,255,0.15)", filter: "blur(90px)"
                 }} />
 
-                <div className="relative max-w-[1400px] mx-auto w-full flex flex-col">
+                <Column className="relative max-w-[1400px] mx-auto w-full">
                     <Row fillWidth horizontal="between" vertical="end" style={{ marginBottom: 32 }}>
                         <Column gap="8">
                             <Row gap="12" vertical="center">
-                                <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
+                                <Column className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
                                     <Trophy size={28} className="text-[#FBBF24]" />
-                                </div>
+                                </Column>
                                 <Heading variant="heading-strong-l" style={{ color: "#fff" }}>
                                     Challenge Command Center
                                 </Heading>
@@ -216,7 +216,7 @@ export default function ChallengeManagementPage() {
                     </Row>
 
                     {/* Quick Stats Grid */}
-                    <div className="grid grid-cols-4 gap-4 w-full">
+                    <Grid className="grid-cols-4 gap-4 w-full">
                         {[
                             { label: "Active Challenges", value: stats.activeChallenges.toString(), icon: <Zap size={16} />, color: "#34C759" },
                             { label: "Total Participants", value: stats.totalParticipants >= 1000 ? `${(stats.totalParticipants / 1000).toFixed(1)}k` : stats.totalParticipants.toString(), icon: <Users size={16} />, color: "#007AFF" },
@@ -237,7 +237,7 @@ export default function ChallengeManagementPage() {
                                 }}
                             >
                                 <Row gap="8" vertical="center" style={{ marginBottom: 12 }}>
-                                    <div style={{ color: stat.color }}>{stat.icon}</div>
+                                    <Column style={{ color: stat.color }}>{stat.icon}</Column>
                                     <Text variant="body-default-xs" style={{ color: "rgba(255,255,255,0.4)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
                                         {stat.label}
                                     </Text>
@@ -245,12 +245,12 @@ export default function ChallengeManagementPage() {
                                 <Text variant="heading-strong-m" style={{ color: "#fff" }}>{stat.value}</Text>
                             </motion.div>
                         ))}
-                    </div>
-                </div>
-            </div>
+                    </Grid>
+                </Column>
+            </Column>
 
             {/* ─── MAIN CONTENT: Management Area ─── */}
-            <div className="max-w-[1400px] mx-auto w-full px-12 py-10 flex flex-col gap-8">
+            <Column className="max-w-[1400px] mx-auto w-full px-12 py-10 gap-8">
 
                 {/* Toolbar: Search & Tabs */}
                 <Row fillWidth horizontal="between" vertical="center" style={{ flexWrap: "wrap", gap: 20 }}>
@@ -271,7 +271,7 @@ export default function ChallengeManagementPage() {
                     </Row>
 
                     <Row gap="12" style={{ flex: 1, maxWidth: 400 }}>
-                        <div className="relative w-full">
+                        <Column className="relative w-full">
                             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8E8E93]" />
                             <input
                                 type="text"
@@ -280,7 +280,7 @@ export default function ChallengeManagementPage() {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
-                        </div>
+                        </Column>
                         <IconButton variant="tertiary">
                             <Filter size={18} />
                         </IconButton>
@@ -311,17 +311,17 @@ export default function ChallengeManagementPage() {
                                 }}
                             >
                                 <Row gap="20" vertical="center" style={{ flex: 2 }}>
-                                    <div className={`p-4 rounded-2xl ${challenge.difficulty === 'Easy' ? 'bg-green-50 text-green-600' :
+                                    <Column className={`p-4 rounded-2xl ${challenge.difficulty === 'Easy' ? 'bg-green-50 text-green-600' :
                                         challenge.difficulty === 'Medium' ? 'bg-blue-50 text-blue-600' :
                                             'bg-red-50 text-red-600'
                                         }`}>
                                         <Zap size={20} />
-                                    </div>
+                                    </Column>
                                     <Column gap="4">
                                         <Text variant="body-strong-m" style={{ color: "#1C1C1E" }}>{challenge.title}</Text>
                                         <Row gap="12" vertical="center">
                                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>{challenge.category}</Text>
-                                            <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#D1D1D6" }} />
+                                            <Column style={{ width: 4, height: 4, borderRadius: "50%", background: "#D1D1D6" }} />
                                             <Text variant="body-default-xs" style={{
                                                 fontWeight: 700, color:
                                                     challenge.difficulty === 'Easy' ? '#34C759' :
@@ -344,9 +344,9 @@ export default function ChallengeManagementPage() {
                                     </Column>
                                     <Column horizontal="center" style={{ minWidth: 100 }}>
                                         <Text variant="body-default-xs" style={{ color: "#8E8E93", marginBottom: 4 }}>Completion</Text>
-                                        <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                            <div className="h-full bg-[#007AFF]" style={{ width: `${challenge.completion_rate}%` }} />
-                                        </div>
+                                        <Column className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                            <Column className="h-full bg-[#007AFF]" style={{ width: `${challenge.completion_rate}%` }} />
+                                        </Column>
                                         <Text variant="body-default-xs" style={{ fontWeight: 700, marginTop: 4 }}>{challenge.completion_rate}%</Text>
                                     </Column>
                                 </Row>
@@ -389,7 +389,7 @@ export default function ChallengeManagementPage() {
                         ))}
                     </motion.div>
                 </AnimatePresence>
-            </div>
+            </Column>
 
             {/* ─── MODALS ─── */}
             <Toaster position="top-right" expand={false} richColors />
@@ -476,20 +476,20 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+        <Row horizontal="center" vertical="center" className="fixed inset-0 z-[100] p-6 bg-black/60 backdrop-blur-sm">
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 className="bg-white w-[70%] rounded-[32px] overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
             >
-                <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <Row horizontal="between" vertical="center" className="px-8 py-6 border-b border-gray-100 bg-gray-50/50">
                     <Heading variant="heading-strong-m">
                         {mode === "create" ? "Tạo Thử Thách Mới" : "Chỉnh Sửa Thử Thách"}
                     </Heading>
                     <IconButton variant="tertiary" onClick={onClose}>
                         <X size={20} />
                     </IconButton>
-                </div>
+                </Row>
 
                 <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-8">
                     <Column gap="24">
@@ -516,7 +516,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                         <Column gap="12">
                             <Text variant="body-strong-s" style={{ color: "#007AFF", textTransform: "uppercase" }}>Mechanics & Reward</Text>
                             <Row gap="12">
-                                <div className="flex-1">
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Category</Text>
                                     <select
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
@@ -527,8 +527,8 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                             <option key={opt} value={opt}>{opt}</option>
                                         ))}
                                     </select>
-                                </div>
-                                <div className="flex-1">
+                                </Column>
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Difficulty</Text>
                                     <select
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
@@ -539,11 +539,11 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                             <option key={opt} value={opt}>{opt}</option>
                                         ))}
                                     </select>
-                                </div>
+                                </Column>
                             </Row>
 
                             <Row gap="12">
-                                <div className="flex-1">
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>XP Reward</Text>
                                     <input
                                         type="number"
@@ -551,8 +551,8 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                         value={formData.xp_reward}
                                         onChange={e => setFormData({ ...formData, xp_reward: e.target.value })}
                                     />
-                                </div>
-                                <div className="flex-1">
+                                </Column>
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Target Count</Text>
                                     <input
                                         type="number"
@@ -560,8 +560,8 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                         value={formData.target_count}
                                         onChange={e => setFormData({ ...formData, target_count: e.target.value })}
                                     />
-                                </div>
-                                <div className="flex-1">
+                                </Column>
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Badge ID (Optional)</Text>
                                     <input
                                         type="number"
@@ -570,21 +570,21 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                         onChange={e => setFormData({ ...formData, badge_id: e.target.value })}
                                         placeholder="Để trống nếu không có..."
                                     />
-                                </div>
+                                </Column>
                             </Row>
 
                             <Row gap="12">
-                                <div className="flex-1">
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Icon (Lucide name)</Text>
                                     <input
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
                                         value={formData.icon}
                                         onChange={e => setFormData({ ...formData, icon: e.target.value })}
                                     />
-                                </div>
-                                <div className="flex-1">
+                                </Column>
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Accent Color</Text>
-                                    <div className="flex gap-2">
+                                    <Row className="gap-2">
                                         <input
                                             type="color"
                                             className="h-[46px] w-[46px] bg-transparent border-none p-0 cursor-pointer"
@@ -596,8 +596,8 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                             value={formData.accent_color}
                                             onChange={e => setFormData({ ...formData, accent_color: e.target.value })}
                                         />
-                                    </div>
-                                </div>
+                                    </Row>
+                                </Column>
                             </Row>
                         </Column>
 
@@ -605,7 +605,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                         <Column gap="12">
                             <Text variant="body-strong-s" style={{ color: "#007AFF", textTransform: "uppercase" }}>Timing & Validation</Text>
                             <Row gap="12">
-                                <div className="flex-1">
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Action Type</Text>
                                     <select
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none"
@@ -616,8 +616,8 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                             <option key={opt} value={opt}>{opt}</option>
                                         ))}
                                     </select>
-                                </div>
-                                <div className="flex-1">
+                                </Column>
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Duration (Days)</Text>
                                     <input
                                         type="number"
@@ -626,11 +626,11 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                         onChange={e => setFormData({ ...formData, duration_days: e.target.value })}
                                         placeholder="Hết hạn sau X ngày..."
                                     />
-                                </div>
+                                </Column>
                             </Row>
 
                             <Row gap="12">
-                                <div className="flex-1">
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Start Date</Text>
                                     <input
                                         type="datetime-local"
@@ -638,8 +638,8 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                         value={formData.start_date}
                                         onChange={e => setFormData({ ...formData, start_date: e.target.value })}
                                     />
-                                </div>
-                                <div className="flex-1">
+                                </Column>
+                                <Column className="flex-1">
                                     <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>End Date</Text>
                                     <input
                                         type="datetime-local"
@@ -647,17 +647,17 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                         value={formData.end_date}
                                         onChange={e => setFormData({ ...formData, end_date: e.target.value })}
                                     />
-                                </div>
+                                </Column>
                             </Row>
 
-                            <div className="flex-1">
+                            <Column className="flex-1">
                                 <Text variant="body-default-xs" style={{ marginBottom: 4, color: "#8E8E93" }}>Action Filter (JSON)</Text>
                                 <textarea
                                     className="w-full px-4 py-3 bg-gray-800 text-green-400 font-mono text-xs border border-gray-200 rounded-xl outline-none min-h-[80px]"
                                     value={formData.action_filter}
                                     onChange={e => setFormData({ ...formData, action_filter: e.target.value })}
                                 />
-                            </div>
+                            </Column>
                         </Column>
 
                         <Row gap="20">
@@ -673,7 +673,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                     </Column>
                 </form>
 
-                <div className="px-8 py-6 border-t border-gray-100 flex justify-end gap-3 bg-gray-50/50">
+                <Row horizontal="end" className="px-8 py-6 border-t border-gray-100 gap-3 bg-gray-50/50">
                     <Button variant="tertiary" onClick={onClose} disabled={isSubmitting}>Huỷ</Button>
                     <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
                         {isSubmitting ? "Đang lưu..." : (
@@ -683,9 +683,9 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                             </Row>
                         )}
                     </Button>
-                </div>
+                </Row>
             </motion.div>
-        </div>
+        </Row>
     );
 }
 
@@ -699,9 +699,9 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: any) {
         };
         const color = colors[status] || colors.Draft;
         return (
-            <div className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style={{ background: color.bg, color: color.text }}>
+            <Column className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style={{ background: color.bg, color: color.text }}>
                 {status}
-            </div>
+            </Column>
         );
     };
 
@@ -709,53 +709,53 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: any) {
     if (!isOpen || !challenge) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+        <Row horizontal="center" vertical="center" className="fixed inset-0 z-[100] p-6 bg-black/60 backdrop-blur-sm">
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="bg-white w-full rounded-[32px] overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
             >
-                <div className="p-8">
+                <Column className="p-8">
                     <Row horizontal="between" vertical="start">
                         <Column gap="8">
                             <Row gap="8" vertical="center">
                                 <StatusBadge status={challenge.computedStatus} />
-                                <div className="px-3 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold rounded-full uppercase tracking-wider">
+                                <Column className="px-3 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold rounded-full uppercase tracking-wider">
                                     {challenge.category}
-                                </div>
+                                </Column>
                             </Row>
                             <Heading variant="heading-strong-m" style={{ marginTop: 8 }}>{challenge.title}</Heading>
                         </Column>
-                        <div className="flex gap-2">
-                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center border-2" style={{ borderColor: challenge.accent_color, color: challenge.accent_color }}>
+                        <Row className="gap-2">
+                            <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl border-2" style={{ borderColor: challenge.accent_color, color: challenge.accent_color }}>
                                 <IconButton variant="tertiary" onClick={onClose}>
                                     <X size={20} />
                                 </IconButton>
-                            </div>
-                        </div>
+                            </Row>
+                        </Row>
                     </Row>
 
-                    <div className="my-6 p-5 bg-gray-50 rounded-2xl border border-gray-100">
+                    <Column className="my-6 p-5 bg-gray-50 rounded-2xl border border-gray-100">
                         <Text variant="body-default-m" style={{ color: "#48484A" }}>{challenge.description}</Text>
-                    </div>
+                    </Column>
 
-                    <div className="grid grid-cols-3 gap-4">
-                        <div className="p-4 bg-blue-50/30 rounded-2xl border border-blue-100/30 text-center">
+                    <Grid className="grid-cols-3 gap-4">
+                        <Column className="p-4 bg-blue-50/30 rounded-2xl border border-blue-100/30 text-center">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Hoàn thành</Text>
                             <Heading variant="heading-strong-s" style={{ color: "#007AFF" }}>{challenge.completion_rate}%</Heading>
-                        </div>
-                        <div className="p-4 bg-purple-50/30 rounded-2xl border border-purple-100/30 text-center">
+                        </Column>
+                        <Column className="p-4 bg-purple-50/30 rounded-2xl border border-purple-100/30 text-center">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Phần thưởng</Text>
                             <Heading variant="heading-strong-s" style={{ color: "#AF52DE" }}>+{challenge.xp_reward} XP</Heading>
-                        </div>
-                        <div className="p-4 bg-green-50/30 rounded-2xl border border-green-100/30 text-center">
+                        </Column>
+                        <Column className="p-4 bg-green-50/30 rounded-2xl border border-green-100/30 text-center">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Người chơi</Text>
                             <Heading variant="heading-strong-s" style={{ color: "#34C759" }}>{challenge.participants_count}</Heading>
-                        </div>
-                    </div>
+                        </Column>
+                    </Grid>
 
-                    <div className="mt-8 grid grid-cols-2 gap-y-4 gap-x-12">
+                    <Grid className="mt-8 grid-cols-2 gap-y-4 gap-x-12">
                         <Column gap="2">
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Hành động yêu cầu</Text>
                             <Text variant="body-strong-s">{challenge.action_type} ({challenge.target_count} lần)</Text>
@@ -780,20 +780,20 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: any) {
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Ngày kết thúc</Text>
                             <Text variant="body-strong-s">{challenge.end_date ? new Date(challenge.end_date).toLocaleDateString() : "N/A"}</Text>
                         </Column>
-                    </div>
+                    </Grid>
 
-                    <div className="mt-6">
+                    <Column className="mt-6">
                         <Text variant="body-default-xs" style={{ color: "#8E8E93", marginBottom: 4 }}>Action Filter (Raw)</Text>
-                        <div className="p-3 bg-gray-900 rounded-xl font-mono text-[10px] text-green-400 overflow-auto max-h-[100px]">
+                        <Column className="p-3 bg-gray-900 rounded-xl font-mono text-[10px] text-green-400 overflow-auto max-h-[100px]">
                             {JSON.stringify(challenge.action_filter, null, 2)}
-                        </div>
-                    </div>
-                </div>
-                <div className="p-4 bg-gray-50 flex justify-center border-t border-gray-100">
+                        </Column>
+                    </Column>
+                </Column>
+                <Row horizontal="center" className="p-4 bg-gray-50 border-t border-gray-100">
                     <Button variant="tertiary" onClick={onClose} fillWidth>Đóng cửa sổ</Button>
-                </div>
+                </Row>
             </motion.div>
-        </div>
+        </Row>
     );
 }
 
@@ -801,15 +801,15 @@ function DeleteConfirmModal({ isOpen, onClose, onConfirm, challengeTitle, isSubm
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md">
+        <Row horizontal="center" vertical="center" className="fixed inset-0 z-[110] p-6 bg-black/60 backdrop-blur-md">
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="bg-white w-full rounded-[32px] p-8 shadow-2xl text-center"
             >
-                <div className="mx-auto w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mb-6">
+                <Row horizontal="center" vertical="center" className="mx-auto w-16 h-16 bg-red-50 rounded-2xl mb-6">
                     <AlertIcon size={32} className="text-[#FF3B30]" />
-                </div>
+                </Row>
                 <Heading variant="heading-strong-s" style={{ marginBottom: 12 }}>Xoá thử thách?</Heading>
                 <Text variant="body-default-m" style={{ color: "#8E8E93", marginBottom: 32 }}>
                     Bạn có chắc chắn muốn xoá <span className="text-black font-bold">"{challengeTitle}"</span>?
@@ -829,6 +829,6 @@ function DeleteConfirmModal({ isOpen, onClose, onConfirm, challengeTitle, isSubm
                     </Button>
                 </Row>
             </motion.div>
-        </div>
+        </Row>
     );
 }

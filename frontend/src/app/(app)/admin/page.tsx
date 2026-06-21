@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import {
     ShieldAlert,
     TrendingUp,
@@ -40,21 +41,19 @@ export default function AdminDashboard() {
     // Hiển thị màn hình chờ mượt mà trong lúc check quyền
     if (isInitializing || !isAuthorized) {
         return (
-            <div className="flex-1 flex flex-col items-center justify-center h-full bg-[#F2F2F7]">
+            <Column horizontal="center" vertical="center" className="flex-1 h-full bg-[#F2F2F7]">
                 <Loader2 className="animate-spin text-[#007AFF] mb-4" size={40} />
-                <p className="text-[15px] font-bold text-[#8E8E93] flex items-center gap-2">
+                <Row vertical="center" className="text-[15px] font-bold text-[#8E8E93] gap-2">
                     <Lock size={16} /> Verifying Clearance...
-                </p>
-            </div>
+                </Row>
+            </Column>
         );
     }
 
     return (
-        <div
+        <Column
             className="no-scrollbar"
             style={{
-                display: "flex",
-                flexDirection: "column",
                 width: "100%",
                 height: "100%",
                 backgroundColor: "#F2F2F7",
@@ -63,7 +62,7 @@ export default function AdminDashboard() {
             }}
         >
             {/* ── HERO HEADER (Giao diện Chỉ huy) ── */}
-            <div
+            <Column
                 className="w-full shrink-0"
                 style={{
                     background: "linear-gradient(135deg, #1C1C1E 0%, #000000 100%)",
@@ -73,7 +72,7 @@ export default function AdminDashboard() {
                 }}
             >
                 {/* Đèn báo động ngầm đỏ/tím cho ngầu */}
-                <div
+                <Column
                     style={{
                         position: "absolute",
                         top: -60,
@@ -86,43 +85,45 @@ export default function AdminDashboard() {
                     }}
                 />
 
-                <div className="relative max-w-[1400px] mx-auto w-full flex flex-col">
-                    <div className="flex items-start justify-between mb-8 w-full">
-                        <div>
-                            <div className="flex items-center gap-4 mb-3">
-                                <div
-                                    className="w-12 h-12 rounded-[18px] flex items-center justify-center shadow-xl"
+                <Column className="relative max-w-[1400px] mx-auto w-full">
+                    <Row horizontal="between" className="items-start mb-8 w-full">
+                        <Column>
+                            <Row vertical="center" className="gap-4 mb-3">
+                                <Row
+                                    horizontal="center"
+                                    vertical="center"
+                                    className="w-12 h-12 rounded-[18px] shadow-xl"
                                     style={{ background: "linear-gradient(135deg, #FF3B30, #FF2D55)" }}
                                 >
                                     <ShieldAlert size={24} className="text-white" />
-                                </div>
+                                </Row>
                                 <h1 className="text-[32px] font-black text-white tracking-tight">
                                     LiveOps Command Center
                                 </h1>
-                            </div>
+                            </Row>
                             <p className="text-[15px] text-[rgba(255,255,255,0.6)] font-medium max-w-md">
                                 System overview, economy balancing, and fraud detection. Restricted access.
                             </p>
-                        </div>
+                        </Column>
 
                         {/* Admin Badge */}
-                        <div className="flex items-center gap-3 px-5 py-3 rounded-[20px] bg-white/10 border border-white/10 backdrop-blur-md">
-                            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#FF3B30]">
+                        <Row vertical="center" className="gap-3 px-5 py-3 rounded-[20px] bg-white/10 border border-white/10 backdrop-blur-md">
+                            <Column className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#FF3B30]">
                                 <img src={user?.avatar_url || "https://ui-avatars.com/api/?name=Admin"} alt="Admin" />
-                            </div>
-                            <div>
+                            </Column>
+                            <Column>
                                 <p className="text-[16px] font-black text-white leading-none">
                                     {user?.username || "SuperAdmin"}
                                 </p>
-                                <p className="text-[11px] uppercase font-bold text-[#FF3B30] tracking-wider mt-1 flex items-center gap-1">
+                                <Row vertical="center" className="text-[11px] uppercase font-bold text-[#FF3B30] tracking-wider mt-1 gap-1">
                                     <Lock size={10} /> Clearance Level: MAX
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                                </Row>
+                            </Column>
+                        </Row>
+                    </Row>
 
                     {/* Quick Metrics (Hardcode tĩnh demo) */}
-                    <div className="grid grid-cols-4 gap-4 w-full">
+                    <Grid className="grid-cols-4 gap-4 w-full">
                         {[
                             { label: "Active Users (24h)", value: "1,204", icon: <Users size={16} />, color: "#007AFF" },
                             { label: "XP Velocity", value: "+45k/hr", icon: <TrendingUp size={16} />, color: "#34C759" },
@@ -136,110 +137,110 @@ export default function AdminDashboard() {
                                 transition={{ delay: i * 0.1 }}
                                 className="rounded-[20px] px-5 py-4 flex flex-col justify-between bg-white/5 border border-white/10"
                             >
-                                <div className="flex items-center gap-2" style={{ color: "rgba(255,255,255,0.5)" }}>
+                                <Row vertical="center" className="gap-2" style={{ color: "rgba(255,255,255,0.5)" }}>
                                     {s.icon}
                                     <span className="text-[11px] font-bold uppercase tracking-widest">{s.label}</span>
-                                </div>
+                                </Row>
                                 <p className="text-[26px] font-black text-white leading-none mt-3">
                                     {s.value}
                                 </p>
                             </motion.div>
                         ))}
-                    </div>
-                </div>
-            </div>
+                    </Grid>
+                </Column>
+            </Column>
 
             {/* ── BẢNG ĐIỀU KHIỂN CÁC MODULE ── */}
-            <div className="max-w-[1400px] mx-auto w-full px-12 py-10 flex flex-col gap-8">
+            <Column className="max-w-[1400px] mx-auto w-full px-12 py-10 gap-8">
                 <h2 className="text-[20px] font-black text-[#1C1C1E]">System Modules</h2>
 
-                <div className="grid grid-cols-2 gap-6">
-                    <div
+                <Grid className="grid-cols-2 gap-6">
+                    <Column
                         className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer"
                         onClick={() => router.push("/admin/locations")}
                     >
-                        <div className="w-12 h-12 rounded-2xl bg-[#FF9500]/10 flex items-center justify-center mb-4">
+                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#FF9500]/10 mb-4">
                             <MapPin size={24} className="text-[#FF9500]" />
-                        </div>
+                        </Row>
                         <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">Location Manager</h3>
                         <p className="text-[14px] text-[#8E8E93] mb-6">Review, manage, search, and update places of interest globally.</p>
-                        <div className="flex items-center justify-between text-[13px] font-bold text-[#FF9500]">
+                        <Row horizontal="between" className="text-[13px] font-bold text-[#FF9500]">
                             <span>Manage Locations</span>
                             <ChevronRight size={16} />
-                        </div>
-                    </div>
+                        </Row>
+                    </Column>
 
-                    <div
+                    <Column
                         className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer"
                         onClick={() => router.push("/admin/challenges")}
                     >
-                        <div className="w-12 h-12 rounded-2xl bg-[#FF9500]/10 flex items-center justify-center mb-4">
+                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#FF9500]/10 mb-4">
                             <MapPin size={24} className="text-[#FF9500]" />
-                        </div>
+                        </Row>
                         <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">Challenge Manager</h3>
                         <p className="text-[14px] text-[#8E8E93] mb-6">Manage challenges, create new challenges, and update existing challenges.</p>
-                        <div className="flex items-center justify-between text-[13px] font-bold text-[#FF9500]">
+                        <Row horizontal="between" className="text-[13px] font-bold text-[#FF9500]">
                             <span>Manage Challenges</span>
                             <ChevronRight size={16} />
-                        </div>
-                    </div>
+                        </Row>
+                    </Column>
 
                     {/* Module 1: LiveOps & Campaigns */}
-                    <div className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
-                        <div className="w-12 h-12 rounded-2xl bg-[#007AFF]/10 flex items-center justify-center mb-4">
+                    <Column className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
+                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#007AFF]/10 mb-4">
                             <Target size={24} className="text-[#007AFF]" />
-                        </div>
+                        </Row>
                         <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">LiveOps & Campaigns</h3>
                         <p className="text-[14px] text-[#8E8E93] mb-6">Manage active challenges, push location deals, and configure event filters.</p>
-                        <div className="flex items-center justify-between text-[13px] font-bold text-[#007AFF]">
+                        <Row horizontal="between" className="text-[13px] font-bold text-[#007AFF]">
                             <span>Manage Events</span>
                             <ChevronRight size={16} />
-                        </div>
-                    </div>
+                        </Row>
+                    </Column>
 
                     {/* Module 2: Anti-Cheat & Fraud */}
-                    <div className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
-                        <div className="w-12 h-12 rounded-2xl bg-[#FF3B30]/10 flex items-center justify-center mb-4">
+                    <Column className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
+                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#FF3B30]/10 mb-4">
                             <ShieldAlert size={24} className="text-[#FF3B30]" />
-                        </div>
+                        </Row>
                         <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">Anti-Cheat System</h3>
                         <p className="text-[14px] text-[#8E8E93] mb-6">Review Fake GPS flags, speed hacking alerts, and shadowbanned users.</p>
-                        <div className="flex items-center justify-between text-[13px] font-bold text-[#FF3B30]">
+                        <Row horizontal="between" className="text-[13px] font-bold text-[#FF3B30]">
                             <span>Review Logs</span>
                             <ChevronRight size={16} />
-                        </div>
-                    </div>
+                        </Row>
+                    </Column>
 
                     {/* Module 3: Economy & XP */}
-                    <div className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
-                        <div className="w-12 h-12 rounded-2xl bg-[#34C759]/10 flex items-center justify-center mb-4">
+                    <Column className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
+                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#34C759]/10 mb-4">
                             <Database size={24} className="text-[#34C759]" />
-                        </div>
+                        </Row>
                         <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">Economy Manager</h3>
                         <p className="text-[14px] text-[#8E8E93] mb-6">Track XP inflation, audit transaction history, and adjust level curves.</p>
-                        <div className="flex items-center justify-between text-[13px] font-bold text-[#34C759]">
+                        <Row horizontal="between" className="text-[13px] font-bold text-[#34C759]">
                             <span>Audit Economy</span>
                             <ChevronRight size={16} />
-                        </div>
-                    </div>
+                        </Row>
+                    </Column>
 
                     {/* Module 4: AI & Vector Health */}
-                    <div className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
-                        <div className="w-12 h-12 rounded-2xl bg-[#AF52DE]/10 flex items-center justify-center mb-4">
+                    <Column className="bg-white rounded-[32px] p-6 shadow-xl shadow-black/5 border border-black/5 transition-transform hover:-translate-y-1 cursor-pointer">
+                        <Row horizontal="center" vertical="center" className="w-12 h-12 rounded-2xl bg-[#AF52DE]/10 mb-4">
                             <BrainCircuit size={24} className="text-[#AF52DE]" />
-                        </div>
+                        </Row>
                         <h3 className="text-[18px] font-black text-[#1C1C1E] mb-2">AI Vector Monitor</h3>
                         <p className="text-[14px] text-[#8E8E93] mb-6">Visualize taste clusters, monitor Group Room match rates, and check LLM API health.</p>
-                        <div className="flex items-center justify-between text-[13px] font-bold text-[#AF52DE]">
+                        <Row horizontal="between" className="text-[13px] font-bold text-[#AF52DE]">
                             <span>View Analytics</span>
                             <ChevronRight size={16} />
-                        </div>
-                    </div>
+                        </Row>
+                    </Column>
 
                     {/* Module 5: Location */}
 
-                </div>
-            </div>
-        </div>
+                </Grid>
+            </Column>
+        </Column>
     );
 }

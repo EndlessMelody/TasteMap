@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import { MOODS, CUISINES, GROUPS } from "../constants";
 
 interface StepPreferencesProps {
@@ -29,13 +30,13 @@ export function StepPreferences({
       style={{ display: "flex", flexDirection: "column", gap: 32 }}
     >
       {/* Mood */}
-      <div>
+      <Column>
         <h3
           style={{ fontSize: 15, fontWeight: 800, color: "#1C1C1E", marginBottom: 12 }}
         >
           What&apos;s the vibe today?
         </h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+        <Grid style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
           {MOODS.map((m) => {
             const selected = mood === m.id;
             return (
@@ -94,12 +95,12 @@ export function StepPreferences({
                 >
                   {m.icon}
                 </span>
-                <div>
+                <Column>
                   <p style={{ fontSize: 15, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>
                     {m.label}
                   </p>
                   <p style={{ fontSize: 12, color: "#8E8E93", margin: 0 }}>{m.desc}</p>
-                </div>
+                </Column>
                 {selected && (
                   <motion.div
                     initial={{ scale: 0 }}
@@ -112,18 +113,18 @@ export function StepPreferences({
               </motion.button>
             );
           })}
-        </div>
-      </div>
+        </Grid>
+      </Column>
 
       {/* Cuisines */}
-      <div>
+      <Column>
         <h3
           style={{ fontSize: 15, fontWeight: 800, color: "#1C1C1E", marginBottom: 4 }}
         >
           Cuisine preferences{" "}
           <span style={{ color: "#8E8E93", fontWeight: 500, fontSize: 13 }}>(pick any)</span>
         </h3>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 10 }}>
+        <Row style={{ flexWrap: "wrap", gap: 8, marginTop: 10 }}>
           {CUISINES.map((c) => {
             const selected = cuisines.includes(c.label);
             return (
@@ -177,17 +178,17 @@ export function StepPreferences({
               </motion.button>
             );
           })}
-        </div>
-      </div>
+        </Row>
+      </Column>
 
       {/* Group size */}
-      <div>
+      <Column>
         <h3
           style={{ fontSize: 15, fontWeight: 800, color: "#1C1C1E", marginBottom: 12 }}
         >
           Who&apos;s coming?
         </h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+        <Grid style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
           {GROUPS.map((g) => {
             const selected = group === g.id;
             return (
@@ -225,8 +226,8 @@ export function StepPreferences({
               </motion.button>
             );
           })}
-        </div>
-      </div>
+        </Grid>
+      </Column>
     </motion.div>
   );
 }

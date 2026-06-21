@@ -40,6 +40,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Column, Row } from "@once-ui-system/core";
 import { useVoiceRoom, type VoiceRoomState } from "@/hooks/useVoiceRoom";
 import { useMediaUpload } from "@/hooks/useMediaUpload";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
@@ -192,15 +193,11 @@ const EMOJI_LIST = [
 
 function DateSeparator({ label }: { label: string }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: tokens.space[2],
-        padding: `${tokens.space[2]} ${tokens.space[1]}`,
-      }}
+    <Row
+      vertical="center"
+      style={{ gap: tokens.space[2], padding: `${tokens.space[2]} ${tokens.space[1]}` }}
     >
-      <div style={{ flex: 1, height: 1, background: tokens.color.border }} />
+      <Column style={{ flex: 1, height: 1, background: tokens.color.border }} />
       <Caption
         tone="subtle"
         style={{
@@ -213,8 +210,8 @@ function DateSeparator({ label }: { label: string }) {
       >
         {label}
       </Caption>
-      <div style={{ flex: 1, height: 1, background: tokens.color.border }} />
-    </div>
+      <Column style={{ flex: 1, height: 1, background: tokens.color.border }} />
+    </Row>
   );
 }
 
@@ -254,14 +251,7 @@ function VoicePlayer({
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: tokens.space[2],
-        minWidth: 200,
-      }}
-    >
+    <Row vertical="center" style={{ gap: tokens.space[2], minWidth: 200 }}>
       <audio
         ref={audioRef}
         src={src}
@@ -321,7 +311,7 @@ function VoicePlayer({
       >
         {formatVoiceDuration(currentTime)} / {formatVoiceDuration(total)}
       </span>
-    </div>
+    </Row>
   );
 }
 
@@ -332,20 +322,14 @@ function ReadyBar({ members }: { members: RoomMember[] }) {
   const pct = total > 0 ? (readyCount / total) * 100 : 0;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: tokens.space[2] }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+    <Column style={{ gap: tokens.space[2] }}>
+      <Row horizontal="between" vertical="center">
         <Eyebrow tone="muted">Ready status</Eyebrow>
         <Pill tone={allReady ? "success" : "warning"} size="sm">
           {readyCount} / {total}
         </Pill>
-      </div>
-      <div
+      </Row>
+      <Column
         style={{
           height: 6,
           borderRadius: tokens.radius.pill,
@@ -362,7 +346,7 @@ function ReadyBar({ members }: { members: RoomMember[] }) {
             background: allReady ? tokens.color.success : tokens.color.warning,
           }}
         />
-      </div>
+      </Column>
       <AnimatePresence>
         {allReady && (
           <motion.div
@@ -371,13 +355,7 @@ function ReadyBar({ members }: { members: RoomMember[] }) {
             exit={{ opacity: 0, y: -4 }}
           >
             <Card radius="md" padding="sm" shadow="none" surface="muted">
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[2],
-                }}
-              >
+              <Row vertical="center" style={{ gap: tokens.space[2] }}>
                 <Zap
                   size={13}
                   strokeWidth={1.75}
@@ -391,12 +369,12 @@ function ReadyBar({ members }: { members: RoomMember[] }) {
                 >
                   All systems go. Host can launch the tour.
                 </BodySm>
-              </div>
+              </Row>
             </Card>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Column>
   );
 }
 
@@ -665,18 +643,10 @@ function RichChatPanel({
   const canSend = Boolean(input.trim()) || Boolean(audioBlob);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        background: tokens.color.surface,
-      }}
-    >
-      <div
+    <Column style={{ height: "100%", background: tokens.color.surface }}>
+      <Row
+        vertical="center"
         style={{
-          display: "flex",
-          alignItems: "center",
           gap: tokens.space[2],
           padding: `${tokens.space[3]} ${tokens.space[4]}`,
           borderBottom: `1px solid ${tokens.color.border}`,
@@ -701,30 +671,21 @@ function RichChatPanel({
         <Pill tone="neutral" size="sm" style={{ marginLeft: "auto" }}>
           {messages.length} msgs
         </Pill>
-      </div>
+      </Row>
 
-      <div
+      <Column
         className="no-scrollbar"
         style={{
           flex: 1,
           overflowY: "auto",
           padding: `${tokens.space[3]} ${tokens.space[3]} ${tokens.space[1]}`,
-          display: "flex",
-          flexDirection: "column",
           gap: 2,
         }}
       >
         {enriched.length === 0 ? (
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: tokens.space[3],
-              paddingTop: tokens.space[10],
-            }}
+          <Column
+            center
+            style={{ flex: 1, paddingTop: tokens.space[10], gap: tokens.space[3] }}
           >
             <span
               style={{
@@ -740,7 +701,7 @@ function RichChatPanel({
             >
               <MessageSquare size={26} strokeWidth={1.5} />
             </span>
-            <div style={{ textAlign: "center" }}>
+            <Column style={{ textAlign: "center" }}>
               <Body
                 style={{
                   fontWeight: tokens.type.weight.semibold,
@@ -750,8 +711,8 @@ function RichChatPanel({
                 No messages yet
               </Body>
               <BodySm tone="muted">Be the first to say hi to the group.</BodySm>
-            </div>
-          </div>
+            </Column>
+          </Column>
         ) : (
           enriched.map((msg) => {
             const me = isMe(msg);
@@ -771,7 +732,7 @@ function RichChatPanel({
                       msg.pos === "last" || msg.pos === "single" ? tokens.space[1] : 1,
                   }}
                 >
-                  <div style={{ width: 28, flexShrink: 0 }}>
+                  <Column style={{ width: 28, flexShrink: 0 }}>
                     {!me && (msg.pos === "last" || msg.pos === "single") ? (
                       <img
                         src={msg.avatar}
@@ -784,20 +745,17 @@ function RichChatPanel({
                         }}
                       />
                     ) : null}
-                  </div>
+                  </Column>
 
-                  <div
+                  <Column
                     style={{
                       maxWidth: "72%",
-                      display: "flex",
-                      flexDirection: "column",
                       alignItems: me ? "flex-end" : "flex-start",
                     }}
                   >
                     {!me && (msg.pos === "first" || msg.pos === "single") && (
-                      <div
+                      <Row
                         style={{
-                          display: "flex",
                           alignItems: "baseline",
                           gap: tokens.space[1],
                           marginBottom: 3,
@@ -812,7 +770,7 @@ function RichChatPanel({
                           {msg.user}
                         </Caption>
                         <Caption tone="subtle">{msg.ts}</Caption>
-                      </div>
+                      </Row>
                     )}
                     {me && (msg.pos === "last" || msg.pos === "single") && (
                       <Caption tone="subtle" style={{ marginBottom: 2 }}>
@@ -820,7 +778,7 @@ function RichChatPanel({
                       </Caption>
                     )}
 
-                    <div
+                    <Column
                       style={{
                         padding:
                           msg.content_type?.toLowerCase() === "image"
@@ -897,15 +855,15 @@ function RichChatPanel({
                           )}
                         </span>
                       )}
-                    </div>
-                  </div>
+                    </Column>
+                  </Column>
                 </motion.div>
               </React.Fragment>
             );
           })
         )}
-        <div ref={bottomRef} />
-      </div>
+        <Column ref={bottomRef} />
+      </Column>
 
       {isRecording && (
         <motion.div
@@ -1013,7 +971,7 @@ function RichChatPanel({
         )}
       </AnimatePresence>
 
-      <div
+      <Column
         style={{
           position: "relative",
           padding: `${tokens.space[3]} ${tokens.space[3]} ${tokens.space[4]}`,
@@ -1044,10 +1002,9 @@ function RichChatPanel({
           }}
         />
 
-        <div
+        <Row
+          vertical="end"
           style={{
-            display: "flex",
-            alignItems: "flex-end",
             gap: tokens.space[2],
             background: tokens.color.surfaceMuted,
             borderRadius: tokens.radius.xl,
@@ -1055,13 +1012,7 @@ function RichChatPanel({
             border: `1px solid ${tokens.color.border}`,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              gap: 2,
-              paddingBottom: 2,
-            }}
-          >
+          <Row style={{ gap: 2, paddingBottom: 2 }}>
             <IconButton
               variant="ghost"
               size="sm"
@@ -1078,7 +1029,7 @@ function RichChatPanel({
               onClick={() => imageRef.current?.click()}
               icon={<ImageIcon size={16} strokeWidth={1.75} />}
             />
-          </div>
+          </Row>
 
           <textarea
             value={input}
@@ -1124,14 +1075,7 @@ function RichChatPanel({
             }
           />
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-              paddingBottom: 2,
-            }}
-          >
+          <Row vertical="center" style={{ gap: 4, paddingBottom: 2 }}>
             {canSend || isRecording ? (
               <IconButton
                 variant="primary"
@@ -1167,8 +1111,8 @@ function RichChatPanel({
                 />
               </>
             )}
-          </div>
-        </div>
+          </Row>
+        </Row>
 
         {uploading && (
           <Caption
@@ -1182,8 +1126,8 @@ function RichChatPanel({
             Sending file…
           </Caption>
         )}
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }
 
@@ -1217,25 +1161,17 @@ function VoiceChatPanel({
   };
 
   return (
-    <div
-      style={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        background: tokens.color.surface,
-      }}
-    >
-      <div
+    <Column style={{ height: "100%", overflow: "hidden", background: tokens.color.surface }}>
+      <Column
         style={{
           padding: `${tokens.space[3]} ${tokens.space[4]}`,
           borderBottom: `1px solid ${tokens.color.border}`,
         }}
       >
         <Eyebrow tone="muted">Voice participants</Eyebrow>
-      </div>
+      </Column>
 
-      <div
+      <Column
         className="no-scrollbar"
         style={{
           flex: 1,
@@ -1277,9 +1213,8 @@ function VoiceChatPanel({
                   : `1px solid ${tokens.color.border}`,
               }}
             >
-              <div
+              <Column
                 style={{
-                  position: "relative",
                   borderRadius: "50%",
                   overflow: "hidden",
                   width: 72,
@@ -1300,9 +1235,9 @@ function VoiceChatPanel({
                     filter: isOnline ? "none" : "grayscale(0.65) saturate(0.75)",
                   }}
                 />
-              </div>
+              </Column>
 
-              <div style={{ textAlign: "center", minWidth: 0, width: "100%" }}>
+              <Column style={{ textAlign: "center", minWidth: 0, width: "100%" }}>
                 <BodySm
                   style={{
                     fontWeight: tokens.type.weight.semibold,
@@ -1316,17 +1251,9 @@ function VoiceChatPanel({
                 <Caption tone="muted">
                   {!isOnline ? "Offline" : isSpeaking ? "Speaking…" : "Idle"}
                 </Caption>
-              </div>
+              </Column>
 
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: tokens.space[1],
-                  flexWrap: "wrap",
-                }}
-              >
+              <Row center style={{ gap: tokens.space[1], flexWrap: "wrap" }}>
                 <Pill tone={isOnline ? "success" : "neutral"} size="sm">
                   {isOnline ? "Online" : "Offline"}
                 </Pill>
@@ -1336,19 +1263,18 @@ function VoiceChatPanel({
                 <Pill tone={m.is_ready ? "success" : "neutral"} size="sm">
                   {m.is_ready ? "Ready" : "Unready"}
                 </Pill>
-              </div>
+              </Row>
             </Card>
           );
         })}
-      </div>
+      </Column>
 
-      <div
+      <Row
+        horizontal="between"
+        vertical="center"
         style={{
           padding: `${tokens.space[3]} ${tokens.space[4]}`,
           borderTop: `1px solid ${tokens.color.border}`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
           background: tokens.color.surfaceMuted,
         }}
       >
@@ -1369,13 +1295,7 @@ function VoiceChatPanel({
                   : "Connected"
                 : "Not connected"}
         </BodySm>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: tokens.space[2],
-          }}
-        >
+        <Row vertical="center" style={{ gap: tokens.space[2] }}>
           <IconButton
             variant="secondary"
             size="sm"
@@ -1414,7 +1334,7 @@ function VoiceChatPanel({
             }
             style={
               voice.isDeafened
-                ? { background: "rgba(251, 191, 36, 0.15)", color: "#92580d" }
+                ? { background: "rgba(251, 191, 36, 0.15)", color: tokens.color.warning }
                 : undefined
             }
           />
@@ -1449,11 +1369,11 @@ function VoiceChatPanel({
                 : undefined
             }
           />
-        </div>
-      </div>
+        </Row>
+      </Row>
 
       {showVoiceSettings && (
-        <div
+        <Column
           style={{
             padding: `${tokens.space[3]} ${tokens.space[4]}`,
             borderTop: `1px solid ${tokens.color.border}`,
@@ -1464,14 +1384,8 @@ function VoiceChatPanel({
             Voice settings
           </Eyebrow>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[3],
-            }}
-          >
-            <div>
+          <Column style={{ gap: tokens.space[3] }}>
+            <Column>
               <BodySm
                 style={{
                   fontWeight: tokens.type.weight.semibold,
@@ -1500,9 +1414,9 @@ function VoiceChatPanel({
                   </option>
                 ))}
               </select>
-            </div>
+            </Column>
 
-            <div>
+            <Column>
               <BodySm
                 style={{
                   fontWeight: tokens.type.weight.semibold,
@@ -1521,9 +1435,9 @@ function VoiceChatPanel({
                 }
                 style={{ width: "100%", accentColor: tokens.color.warm }}
               />
-            </div>
+            </Column>
 
-            <div>
+            <Column>
               <BodySm
                 style={{
                   fontWeight: tokens.type.weight.semibold,
@@ -1552,9 +1466,9 @@ function VoiceChatPanel({
                   </option>
                 ))}
               </select>
-            </div>
+            </Column>
 
-            <div>
+            <Column>
               <BodySm
                 style={{
                   fontWeight: tokens.type.weight.semibold,
@@ -1573,11 +1487,11 @@ function VoiceChatPanel({
                 }
                 style={{ width: "100%", accentColor: tokens.color.warm }}
               />
-            </div>
-          </div>
-        </div>
+            </Column>
+          </Column>
+        </Column>
       )}
-    </div>
+    </Column>
   );
 }
 
@@ -1767,16 +1681,9 @@ export default function GroupRoomPage() {
 
   if (loadingRoom || !room) {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: tokens.space[4],
-          background: tokens.color.bg,
-        }}
+      <Column
+        center
+        style={{ height: "100%", gap: tokens.space[4], background: tokens.color.bg }}
       >
         {loadingRoom ? (
           <>
@@ -1808,7 +1715,7 @@ export default function GroupRoomPage() {
             </Link>
           </>
         )}
-      </div>
+      </Column>
     );
   }
 
@@ -1828,34 +1735,23 @@ export default function GroupRoomPage() {
     : null;
 
   return (
-    <div
+    <Column
       style={{
-        display: "flex",
-        flexDirection: "column",
         height: "100%",
         overflow: "hidden",
         background: tokens.color.bg,
         color: tokens.color.text,
       }}
     >
-      <div
-        style={{
-          position: "relative",
-          height: 160,
-          flexShrink: 0,
-          overflow: "hidden",
-        }}
+      <Row
+        style={{ position: "relative", height: 160, flexShrink: 0, overflow: "hidden" }}
       >
         <img
           src={coverImage}
           alt=""
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
-        <div
+        <Column
           style={{
             position: "absolute",
             inset: 0,
@@ -1888,7 +1784,7 @@ export default function GroupRoomPage() {
           </Button>
         </Link>
 
-        <div
+        <Column
           style={{
             position: "absolute",
             top: tokens.space[4],
@@ -1909,9 +1805,9 @@ export default function GroupRoomPage() {
           >
             {room.is_public ? "Public" : "Private"}
           </Pill>
-        </div>
+        </Column>
 
-        <div
+        <Column
           style={{
             position: "absolute",
             bottom: 0,
@@ -1935,25 +1831,22 @@ export default function GroupRoomPage() {
           >
             {room.name}
           </H1>
-        </div>
-      </div>
+        </Column>
+      </Row>
 
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        <div
+      <Row style={{ flex: 1, overflow: "hidden" }}>
+        <Column
           style={{
             flex: 1,
-            display: "flex",
-            flexDirection: "column",
             overflow: "hidden",
             borderRight: `1px solid ${tokens.color.border}`,
             background: tokens.color.surface,
             minWidth: 0,
           }}
         >
-          <div
+          <Row
+            vertical="center"
             style={{
-              display: "flex",
-              alignItems: "center",
               gap: tokens.space[3],
               padding: `${tokens.space[3]} ${tokens.space[5]}`,
               borderBottom: `1px solid ${tokens.color.border}`,
@@ -1999,27 +1892,19 @@ export default function GroupRoomPage() {
                 {codeCopied ? "Copied" : room.invite_code}
               </Button>
             )}
-          </div>
+          </Row>
 
           {room.status === "active" && (
-            <div
+            <Column
               style={{
                 padding: `${tokens.space[4]} ${tokens.space[5]}`,
                 borderBottom: `1px solid ${tokens.color.border}`,
-                display: "flex",
-                flexDirection: "column",
                 gap: tokens.space[3],
               }}
             >
               <ReadyBar members={members} />
 
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[2],
-                }}
-              >
+              <Row vertical="center" style={{ gap: tokens.space[2] }}>
                 <Button
                   variant={meReady ? "secondary" : "secondary"}
                   size="md"
@@ -2067,7 +1952,7 @@ export default function GroupRoomPage() {
                     )}
                   </Button>
                 )}
-              </div>
+              </Row>
 
               {isHost && (
                 <Button
@@ -2083,11 +1968,11 @@ export default function GroupRoomPage() {
                   {deletingRoom ? "Deleting room…" : "Delete room"}
                 </Button>
               )}
-            </div>
+            </Column>
           )}
 
           {room.status === "in_progress" || room.status === "completed" ? (
-            <div style={{ flex: 1, overflow: "hidden" }}>
+            <Column style={{ flex: 1, overflow: "hidden" }}>
               <GroupSwipeView
                 groupId={roomId}
                 isHost={isHost}
@@ -2097,46 +1982,31 @@ export default function GroupRoomPage() {
                   );
                 }}
               />
-            </div>
+            </Column>
           ) : (
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: tokens.space[8],
-                textAlign: "center",
-              }}
+            <Column
+              center
+              style={{ flex: 1, padding: tokens.space[8], textAlign: "center" }}
             >
-              <div
+              <Column
+                center
                 style={{
                   width: 96,
                   height: 96,
                   borderRadius: tokens.radius.xl,
                   background: tokens.color.surfaceMuted,
                   color: tokens.color.textMuted,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   marginBottom: tokens.space[5],
                 }}
               >
                 <Zap size={36} strokeWidth={1.5} />
-              </div>
+              </Column>
               <H3 style={{ marginBottom: tokens.space[2] }}>Waiting to launch</H3>
               <BodySm tone="muted" style={{ maxWidth: 400 }}>
                 Once everyone marks ready and the host launches, you&apos;ll all
                 enter the Tour Builder together to swipe and vote on spots.
               </BodySm>
-              <div
-                style={{
-                  display: "flex",
-                  gap: tokens.space[3],
-                  marginTop: tokens.space[6],
-                }}
-              >
+              <Row style={{ gap: tokens.space[3], marginTop: tokens.space[6] }}>
                 <Pill
                   tone="neutral"
                   size="md"
@@ -2151,31 +2021,28 @@ export default function GroupRoomPage() {
                 >
                   {readyCount} ready
                 </Pill>
-              </div>
-            </div>
+              </Row>
+            </Column>
           )}
-        </div>
+        </Column>
 
-        <div
+        <Column
           style={{
-            display: "flex",
-            flexDirection: "column",
             flexShrink: 0,
             overflow: "hidden",
             width: 360,
             background: tokens.color.surfaceMuted,
           }}
         >
-          <div
+          <Column
             style={{
               padding: tokens.space[2],
               borderBottom: `1px solid ${tokens.color.border}`,
               flexShrink: 0,
             }}
           >
-            <div
+            <Row
               style={{
-                display: "flex",
                 padding: 4,
                 background: tokens.color.surface,
                 borderRadius: tokens.radius.pill,
@@ -2216,16 +2083,10 @@ export default function GroupRoomPage() {
                   </button>
                 );
               })}
-            </div>
-          </div>
+            </Row>
+          </Column>
 
-          <div
-            style={{
-              flex: 1,
-              overflow: "hidden",
-              position: "relative",
-            }}
-          >
+          <Column style={{ flex: 1, overflow: "hidden", position: "relative" }}>
             <AnimatePresence mode="wait">
               {activeTab === "text" ? (
                 <motion.div
@@ -2259,9 +2120,9 @@ export default function GroupRoomPage() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
-        </div>
-      </div>
-    </div>
+          </Column>
+        </Column>
+      </Row>
+    </Column>
   );
 }

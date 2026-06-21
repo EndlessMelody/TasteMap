@@ -26,6 +26,7 @@ import Link from "next/link";
 
 
 import { DiscoverSection, GlassCard } from "@/components/primitives";
+import { Column, Row, Grid, Text } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { usePosts } from "@/hooks/usePosts";
 import { useSocialStore } from "@/store/socialStore";
@@ -143,9 +144,9 @@ const SurfingButton: React.FC = () => (
 
 // ─── Skeletons ───────────────────────────────────────────────────
 const PostSkeleton: React.FC = () => (
-  <div
+  <Column
+    fillWidth
     style={{
-      width: "100%",
       height: 320,
       borderRadius: tokens.radius.xl,
       backgroundImage:
@@ -177,7 +178,7 @@ const InlineNotice: React.FC<{
         gap: tokens.space[4],
       }}
     >
-      <div
+      <Column
         style={{
           width: 40,
           height: 40,
@@ -192,9 +193,11 @@ const InlineNotice: React.FC<{
         }}
       >
         {icon}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <span
+      </Column>
+      <Column flex="1" minWidth="0">
+        <Text
+          as="span"
+          variant="body-default-s"
           style={{
             display: "block",
             fontSize: tokens.type.size.bodySm,
@@ -204,8 +207,10 @@ const InlineNotice: React.FC<{
           }}
         >
           {title}
-        </span>
-        <span
+        </Text>
+        <Text
+          as="span"
+          variant="body-default-s"
           style={{
             display: "block",
             fontSize: tokens.type.size.caption,
@@ -213,24 +218,21 @@ const InlineNotice: React.FC<{
           }}
         >
           {message}
-        </span>
-      </div>
+        </Text>
+      </Column>
     </GlassCard>
   );
 };
 
 // ─── Grid wrapper ────────────────────────────────────────────────
 const PostGrid: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-      gap: tokens.space[4],
-      width: "100%",
-    }}
+  <Grid
+    fillWidth
+    gap="16"
+    style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}
   >
     {children}
-  </div>
+  </Grid>
 );
 
 // ─── Main component ──────────────────────────────────────────────
@@ -264,17 +266,11 @@ export const FoodieFeed: React.FC<FoodieFeedProps> = ({ onPostClick }) => {
         : "No posts yet — be the first to share a spot";
 
   const toolbar = (
-    <div
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: tokens.space[2],
-      }}
-    >
+    <Row vertical="center" gap="8">
       <SurfingButton />
       <FilterButton />
       <LocalPill />
-    </div>
+    </Row>
   );
 
   return (

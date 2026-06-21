@@ -3,25 +3,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dna } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { Card, Eyebrow, BodySm, Caption } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 
 const DIMENSION_LABELS = [
-  "Price",
-  "Noise",
-  "Nature",
-  "Cuisine",
-  "Modern",
-  "Spicy",
-  "Sweet",
-  "Portion",
-  "Ambiance",
-  "Service",
-  "Distance",
-  "Rating",
-  "Freshness",
-  "Vibe",
-  "Variety",
+  "Price", "Noise", "Nature", "Cuisine", "Modern", "Spicy", "Sweet",
+  "Portion", "Ambiance", "Service", "Distance", "Rating", "Freshness", "Vibe", "Variety",
 ];
 
 interface TourDNABarProps {
@@ -50,49 +38,24 @@ export function TourDNABar({ groupVector }: TourDNABarProps) {
   if (groupVector.length === 0) return null;
 
   const label =
-    delta < 15
-      ? "Exploring…"
-      : delta < 40
-        ? "Learning preferences"
-        : delta < 70
-          ? "Profile taking shape"
-          : "Strong group identity";
+    delta < 15 ? "Exploring…"
+    : delta < 40 ? "Learning preferences"
+    : delta < 70 ? "Profile taking shape"
+    : "Strong group identity";
 
   return (
     <Card radius="md" padding="sm" shadow="none" surface="muted">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: tokens.space[2],
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: tokens.space[1],
-          }}
-        >
-          <Dna
-            size={13}
-            strokeWidth={1.75}
-            style={{ color: tokens.color.magic }}
-          />
+      <Row horizontal="between" vertical="center" style={{ marginBottom: tokens.space[2] }}>
+        <Row vertical="center" style={{ gap: tokens.space[1] }}>
+          <Dna size={13} strokeWidth={1.75} style={{ color: tokens.color.magic }} />
           <Eyebrow tone="muted">Tour DNA</Eyebrow>
-        </div>
-        <Caption
-          style={{
-            color: tokens.color.magic,
-            fontWeight: tokens.type.weight.semibold,
-          }}
-        >
+        </Row>
+        <Caption style={{ color: tokens.color.magic, fontWeight: tokens.type.weight.semibold }}>
           {Math.round(delta)}% evolved
         </Caption>
-      </div>
+      </Row>
 
-      <div
+      <Column
         style={{
           height: 6,
           borderRadius: tokens.radius.pill,
@@ -104,12 +67,9 @@ export function TourDNABar({ groupVector }: TourDNABarProps) {
           initial={{ width: 0 }}
           animate={{ width: `${delta}%` }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            height: "100%",
-            background: tokens.color.magic,
-          }}
+          style={{ height: "100%", background: tokens.color.magic }}
         />
-      </div>
+      </Column>
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -124,14 +84,7 @@ export function TourDNABar({ groupVector }: TourDNABarProps) {
       </AnimatePresence>
 
       {groupVector.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            gap: tokens.space[1],
-            marginTop: tokens.space[2],
-            flexWrap: "wrap",
-          }}
-        >
+        <Row style={{ gap: tokens.space[1], marginTop: tokens.space[2], flexWrap: "wrap" }}>
           {groupVector
             .map((v, i) => ({
               index: i,
@@ -142,12 +95,10 @@ export function TourDNABar({ groupVector }: TourDNABarProps) {
             .sort((a, b) => b.shift - a.shift)
             .slice(0, 5)
             .map((dim) => (
-              <div
+              <Row
                 key={dim.index}
-                title={`${dim.label}: ${(dim.value * 100).toFixed(0)}%`}
+                vertical="center"
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
                   gap: 3,
                   padding: "2px 6px",
                   borderRadius: tokens.radius.xs,
@@ -158,7 +109,7 @@ export function TourDNABar({ groupVector }: TourDNABarProps) {
                 }}
               >
                 <span>{dim.label}</span>
-                <div
+                <Column
                   style={{
                     width: 24,
                     height: 3,
@@ -171,15 +122,12 @@ export function TourDNABar({ groupVector }: TourDNABarProps) {
                     initial={{ width: 0 }}
                     animate={{ width: `${dim.value * 100}%` }}
                     transition={{ duration: 0.5 }}
-                    style={{
-                      height: "100%",
-                      background: tokens.color.magic,
-                    }}
+                    style={{ height: "100%", background: tokens.color.magic }}
                   />
-                </div>
-              </div>
+                </Column>
+              </Row>
             ))}
-        </div>
+        </Row>
       )}
     </Card>
   );

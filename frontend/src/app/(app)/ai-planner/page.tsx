@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Column } from "@once-ui-system/core";
 import { useAuth } from "@/context/AuthContext";
 
 import { MOCK_ITINERARIES } from "./components/constants";
@@ -48,7 +49,7 @@ export default function AIPlanner() {
   }, [handleGenerate]);
 
   return (
-    <div
+    <Column
       style={{
         position: "relative",
         width: "100%",
@@ -117,6 +118,6 @@ export default function AIPlanner() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Column>
   );
 }

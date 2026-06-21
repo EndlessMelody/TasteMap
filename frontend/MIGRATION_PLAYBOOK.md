@@ -19,9 +19,9 @@ modules**, organized by page, working in **both light and dark**.
 | 3a Dedup dead modal + 4 unused legacy cards | ✅ committed |
 | 3b Lift providers out of `DashboardLayout` (now chrome-only) | ✅ committed |
 | 3c Route groups `(marketing)`/`(app)` + move chrome to `components/layout` | ✅ committed |
-| 4 Swap clone imports app-wide + delete clone | ⬜ in progress (admin started) |
-| 5 Per-page restyle (22 routes) | ⬜ admin analytics + login ✅; rest TODO |
-| 6 Remove Tailwind, delete legacy tokens, `globals.css`→scss, ESLint guardrails | ⬜ TODO |
+| 4 Swap clone imports app-wide + delete clone | ✅ done — `components/OnceUI` removed, 0 clone importers |
+| 5 Per-page restyle (22 routes) | ✅ done — all app routes (discover/feed/profile/group-rooms, foodies, hot-routes, challenges, culture, explore, admin, tour-builder, ai-planner) + marketing landing/promo migrated to `@once-ui-system/core`; tsc errors at **0** (from 52 baseline) |
+| 6 Remove Tailwind, delete legacy tokens, `globals.css`→scss, ESLint guardrails | ⬜ TODO — next phase |
 
 Reference migrations to copy from: `app/admin/analytics/page.tsx` (props-only),
 `app/admin/login/page.tsx` + `page.module.scss` (when SCSS is needed).

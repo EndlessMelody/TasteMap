@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Users, MapPin, Clock } from "lucide-react";
+import { Row } from "@once-ui-system/core";
 import type { LobbyCardProps } from "./types";
 import { AvatarStack, StatusBadge } from "./LobbyUI";
 import { useAuth } from "@/context/AuthContext";
@@ -29,13 +30,10 @@ export default function LobbyCard({ lobby, onClick }: LobbyCardProps) {
         userSelect: "none",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: tokens.space[3],
-        }}
+      <Row
+        horizontal="between"
+        vertical="center"
+        style={{ marginBottom: tokens.space[3] }}
       >
         <StatusBadge spotsLeft={spotsLeft} />
         <Users
@@ -43,7 +41,7 @@ export default function LobbyCard({ lobby, onClick }: LobbyCardProps) {
           strokeWidth={1.75}
           style={{ color: tokens.color.textMuted }}
         />
-      </div>
+      </Row>
 
       <H3>{lobby.name}</H3>
       <BodySm
@@ -71,19 +69,15 @@ export default function LobbyCard({ lobby, onClick }: LobbyCardProps) {
         {lobby.time}
       </BodySm>
 
-      <div
-        style={{
-          marginTop: tokens.space[5],
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-        }}
+      <Row
+        horizontal="between"
+        style={{ marginTop: tokens.space[5], alignItems: "flex-end" }}
       >
         <AvatarStack members={lobby.members} spotsLeft={spotsLeft} />
         <Button variant={isJoined ? "secondary" : "primary"} size="sm">
           {isJoined ? "Enter room" : "Join"}
         </Button>
-      </div>
+      </Row>
     </Card>
   );
 }

@@ -9,6 +9,7 @@ import {
   Feather,
   PartyPopper,
 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { Card, H3, Body, BodySm } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 
@@ -79,13 +80,7 @@ export const TopHighlightsCard: React.FC<TopHighlightsCardProps> = ({
     >
       <H3 style={{ marginBottom: tokens.space[5] }}>Top highlights</H3>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: tokens.space[2],
-        }}
-      >
+      <Column style={{ gap: tokens.space[2] }}>
         {topTraits.length > 0 ? (
           topTraits.map((trait) => {
             const meta = TRAIT_META[trait.subject] ?? {
@@ -97,11 +92,10 @@ export const TopHighlightsCard: React.FC<TopHighlightsCardProps> = ({
               (trait.A / (trait.fullMark ?? 100)) * 100,
             );
             return (
-              <div
+              <Row
                 key={trait.subject}
+                vertical="center"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
                   gap: tokens.space[4],
                   padding: tokens.space[4],
                   borderRadius: tokens.radius.md,
@@ -123,22 +117,15 @@ export const TopHighlightsCard: React.FC<TopHighlightsCardProps> = ({
                 >
                   {meta.icon}
                 </span>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
-                    minWidth: 0,
-                  }}
-                >
+                <Column style={{ gap: 2, minWidth: 0 }}>
                   <Body style={{ fontWeight: tokens.type.weight.semibold }}>
                     {meta.label}
                   </Body>
                   <BodySm tone="muted">
                     {meta.desc} · {pct}%
                   </BodySm>
-                </div>
-              </div>
+                </Column>
+              </Row>
             );
           })
         ) : (
@@ -146,15 +133,14 @@ export const TopHighlightsCard: React.FC<TopHighlightsCardProps> = ({
             Complete the taste quiz to unlock your top traits.
           </BodySm>
         )}
-      </div>
+      </Column>
 
-      <div style={{ flex: 1 }} />
+      <Column style={{ flex: 1 }} />
 
-      <div
+      <Row
+        horizontal="between"
+        vertical="center"
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
           padding: tokens.space[4],
           borderRadius: tokens.radius.md,
           background: tokens.color.surfaceMuted,
@@ -171,7 +157,7 @@ export const TopHighlightsCard: React.FC<TopHighlightsCardProps> = ({
         >
           88%
         </Body>
-      </div>
+      </Row>
     </Card>
   );
 };

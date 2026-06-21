@@ -4,6 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Check, ArrowRight, Zap } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -59,7 +60,7 @@ export function PromoPlans() {
         overflow: "hidden",
       }}
     >
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" }}>
+      <Column style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -117,9 +118,8 @@ export function PromoPlans() {
         </motion.div>
 
         {/* Plan cards */}
-        <div
+        <Grid
           style={{
-            display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: 20,
             maxWidth: 860,
@@ -151,7 +151,7 @@ export function PromoPlans() {
             >
               {/* Orange top bar for Pro */}
               {plan.highlight && (
-                <div
+                <Column
                   style={{
                     position: "absolute",
                     top: 0,
@@ -166,7 +166,7 @@ export function PromoPlans() {
 
               {/* Badge */}
               {plan.badge && (
-                <div
+                <Column
                   style={{
                     position: "absolute",
                     top: -12,
@@ -189,12 +189,12 @@ export function PromoPlans() {
                   >
                     {plan.badge}
                   </span>
-                </div>
+                </Column>
               )}
 
               {/* Name + price */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Column style={{ gap: 8 }}>
+                <Row vertical="center" style={{ gap: 8 }}>
                   {plan.highlight && <Zap size={14} color="#FF5500" />}
                   <span
                     style={{
@@ -207,8 +207,8 @@ export function PromoPlans() {
                   >
                     TasteMap {plan.name}
                   </span>
-                </div>
-                <div style={{ display: "flex", alignItems: "flex-end", gap: 4 }}>
+                </Row>
+                <Row style={{ alignItems: "flex-end", gap: 4 }}>
                   <span
                     style={{
                       fontSize: 48,
@@ -229,7 +229,7 @@ export function PromoPlans() {
                   >
                     {plan.period}
                   </span>
-                </div>
+                </Row>
                 <p
                   style={{
                     margin: 0,
@@ -240,7 +240,7 @@ export function PromoPlans() {
                 >
                   {plan.desc}
                 </p>
-              </div>
+              </Column>
 
               {/* CTA */}
               <button
@@ -283,7 +283,7 @@ export function PromoPlans() {
               </button>
 
               {/* Divider */}
-              <div
+              <Column
                 style={{
                   height: 1,
                   backgroundColor: plan.highlight
@@ -308,7 +308,9 @@ export function PromoPlans() {
                     key={f}
                     style={{ display: "flex", alignItems: "center", gap: 10 }}
                   >
-                    <div
+                    <Row
+                      horizontal="center"
+                      vertical="center"
                       style={{
                         width: 18,
                         height: 18,
@@ -319,9 +321,6 @@ export function PromoPlans() {
                         border: plan.highlight
                           ? "1px solid rgba(255,85,0,0.18)"
                           : "1px solid rgba(0,0,0,0.08)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
                         flexShrink: 0,
                       }}
                     >
@@ -330,7 +329,7 @@ export function PromoPlans() {
                         color={plan.highlight ? "#FF5500" : "rgba(24,22,15,0.45)"}
                         strokeWidth={2.5}
                       />
-                    </div>
+                    </Row>
                     <span
                       style={{
                         fontSize: 13,
@@ -347,8 +346,8 @@ export function PromoPlans() {
               </ul>
             </motion.div>
           ))}
-        </div>
-      </div>
+        </Grid>
+      </Column>
     </section>
   );
 }

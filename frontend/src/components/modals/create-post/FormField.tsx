@@ -40,7 +40,7 @@ export function FormField({
         </Text>
       )}
       {error && (
-        <Text variant="body-default-xs" style={{ color: "#e53935" }}>
+        <Text variant="body-default-xs" style={{ color: "var(--danger-medium)" }}>
           {error}
         </Text>
       )}

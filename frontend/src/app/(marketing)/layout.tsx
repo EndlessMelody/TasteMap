@@ -2,6 +2,7 @@
 
 import React from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { Column } from "@once-ui-system/core";
 import { useAuth } from "@/context/AuthContext";
 import { SplashScreen } from "@/components/layout/SplashScreen";
 
@@ -24,7 +25,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div
+    <Column
       id="promo-scroll-container"
       style={{
         width: "100vw",
@@ -34,6 +35,6 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       }}
     >
       {children}
-    </div>
+    </Column>
   );
 }

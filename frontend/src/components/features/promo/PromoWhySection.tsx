@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, X, Check } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -75,7 +76,7 @@ export function PromoWhySection() {
         overflow: "hidden",
       }}
     >
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" }}>
+      <Column style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -140,7 +141,7 @@ export function PromoWhySection() {
           }}
         >
           {BIG_STATS.map((s, i) => (
-            <div
+            <Column
               key={s.label}
               style={{
                 padding: "24px 20px",
@@ -149,8 +150,6 @@ export function PromoWhySection() {
                   i < BIG_STATS.length - 1
                     ? "1px solid rgba(0,0,0,0.07)"
                     : "none",
-                display: "flex",
-                flexDirection: "column",
                 gap: 4,
               }}
             >
@@ -171,14 +170,13 @@ export function PromoWhySection() {
               <span style={{ fontSize: 11, color: "rgba(24,22,15,0.38)" }}>
                 {s.sub}
               </span>
-            </div>
+            </Column>
           ))}
         </motion.div>
 
         {/* Bottom: comparison + chart */}
-        <div
+        <Grid
           style={{
-            display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: 20,
             alignItems: "stretch",
@@ -201,9 +199,8 @@ export function PromoWhySection() {
             }}
           >
             {/* Table header */}
-            <div
+            <Grid
               style={{
-                display: "grid",
                 gridTemplateColumns: "1fr auto auto",
                 padding: "14px 20px",
                 borderBottom: "1px solid rgba(0,0,0,0.07)",
@@ -235,14 +232,13 @@ export function PromoWhySection() {
               >
                 Others
               </span>
-            </div>
+            </Grid>
 
             {/* Rows */}
             {COMPARISON.map((row, i) => (
-              <div
+              <Grid
                 key={row.label}
                 style={{
-                  display: "grid",
                   gridTemplateColumns: "1fr auto auto",
                   padding: "12px 20px",
                   gap: 16,
@@ -263,37 +259,35 @@ export function PromoWhySection() {
                 >
                   {row.label}
                 </span>
-                <div style={{ display: "flex", justifyContent: "center", minWidth: 80 }}>
-                  <div
+                <Row horizontal="center" style={{ minWidth: 80 }}>
+                  <Row
+                    horizontal="center"
+                    vertical="center"
                     style={{
                       width: 20,
                       height: 20,
                       borderRadius: "50%",
                       backgroundColor: "rgba(22,163,74,0.1)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                     }}
                   >
                     <Check size={11} color="#16A34A" strokeWidth={2.5} />
-                  </div>
-                </div>
-                <div style={{ display: "flex", justifyContent: "center", minWidth: 80 }}>
-                  <div
+                  </Row>
+                </Row>
+                <Row horizontal="center" style={{ minWidth: 80 }}>
+                  <Row
+                    horizontal="center"
+                    vertical="center"
                     style={{
                       width: 20,
                       height: 20,
                       borderRadius: "50%",
                       backgroundColor: "rgba(220,38,38,0.08)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                     }}
                   >
                     <X size={10} color="#DC2626" strokeWidth={2.5} />
-                  </div>
-                </div>
-              </div>
+                  </Row>
+                </Row>
+              </Grid>
             ))}
           </motion.div>
 
@@ -306,7 +300,7 @@ export function PromoWhySection() {
             style={{ display: "flex", flexDirection: "column", gap: 16, height: "100%" }}
           >
             {/* Taste score chart */}
-            <div
+            <Column
               style={{
                 flex: 1,
                 minHeight: 0,
@@ -314,21 +308,18 @@ export function PromoWhySection() {
                 borderRadius: 16,
                 border: "1px solid rgba(0,0,0,0.07)",
                 padding: "22px 22px 18px",
-                display: "flex",
-                flexDirection: "column",
                 justifyContent: "space-between",
                 boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
               }}
             >
-              <div
+              <Row
                 style={{
-                  display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-start",
                   marginBottom: 16,
                 }}
               >
-                <div>
+                <Column>
                   <p
                     style={{
                       margin: "0 0 3px",
@@ -352,11 +343,10 @@ export function PromoWhySection() {
                   >
                     94%
                   </p>
-                </div>
-                <div
+                </Column>
+                <Row
+                  vertical="center"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
                     gap: 4,
                     padding: "4px 10px",
                     borderRadius: 20,
@@ -368,12 +358,11 @@ export function PromoWhySection() {
                   <span style={{ fontSize: 11, fontWeight: 700, color: "#16A34A" }}>
                     +12%
                   </span>
-                </div>
-              </div>
+                </Row>
+              </Row>
               <MiniChart />
-              <div
+              <Row
                 style={{
-                  display: "flex",
                   justifyContent: "space-between",
                   marginTop: 8,
                 }}
@@ -390,11 +379,11 @@ export function PromoWhySection() {
                     {m}
                   </span>
                 ))}
-              </div>
-            </div>
+              </Row>
+            </Column>
 
             {/* Consistency card */}
-            <div
+            <Column
               style={{
                 backgroundColor: "rgba(255,85,0,0.05)",
                 borderRadius: 16,
@@ -424,10 +413,10 @@ export function PromoWhySection() {
                 Every recommendation is anchored to your taste profile and
                 updates in real time as you explore and rate new venues.
               </p>
-            </div>
+            </Column>
           </motion.div>
-        </div>
-      </div>
+        </Grid>
+      </Column>
     </section>
   );
 }

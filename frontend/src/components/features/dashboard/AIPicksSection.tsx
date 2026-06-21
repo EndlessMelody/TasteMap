@@ -41,6 +41,7 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
 import { DiscoverSection, GlassCard, MatchRing } from "@/components/primitives";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import {
   useRecommendations,
@@ -160,7 +161,7 @@ const RecommendationCard: React.FC<{
 
   const RankIcon = rank === 1 ? Award : Medal;
   const rankLabel = rank === 1 ? "Best Match" : "Great Fit";
-  const rankColor = rank === 1 ? "#8b5cf6" : tokens.color.cool;
+  const rankColor = rank === 1 ? tokens.color.magic : tokens.color.cool;
   const ReasonIcon = getReasonIcon(index);
 
   return (
@@ -190,15 +191,7 @@ const RecommendationCard: React.FC<{
         }}
       >
         {/* ── Image side ── */}
-        <div
-          style={{
-            width: 160,
-            minWidth: 160,
-            position: "relative",
-            overflow: "hidden",
-            flexShrink: 0,
-          }}
-        >
+        <Column style={{ width: 160, minWidth: 160, overflow: "hidden", flexShrink: 0 }}>
           <img
             src={img}
             alt={pick.name}
@@ -212,7 +205,7 @@ const RecommendationCard: React.FC<{
             loading="lazy"
           />
           {/* Gradient fade */}
-          <div
+          <Column
             style={{
               position: "absolute",
               inset: 0,
@@ -220,25 +213,15 @@ const RecommendationCard: React.FC<{
                 "linear-gradient(to right, transparent 50%, rgba(255,255,255,0.05) 100%)",
             }}
           />
-        </div>
+        </Column>
 
         {/* ── Content side ── */}
-        <div
-          style={{
-            flex: 1,
-            padding: "14px 16px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-            minWidth: 0,
-          }}
-        >
+        <Column flex="1" minWidth="0" gap="8" style={{ padding: "14px 16px" }}>
           {/* Rank badge */}
-          <div
+          <Row
+            vertical="center"
+            gap="4"
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 5,
               alignSelf: "flex-start",
               paddingTop: 3,
               paddingBottom: 3,
@@ -261,7 +244,7 @@ const RecommendationCard: React.FC<{
             >
               #{rank} {rankLabel} — {matchPct}%
             </span>
-          </div>
+          </Row>
 
           {/* Restaurant name */}
           <span
@@ -280,10 +263,9 @@ const RecommendationCard: React.FC<{
           </span>
 
           {/* Metrics row */}
-          <div
+          <Row
+            vertical="center"
             style={{
-              display: "flex",
-              alignItems: "center",
               flexWrap: "wrap",
               gap: "6px 12px",
               marginTop: 2,
@@ -315,7 +297,7 @@ const RecommendationCard: React.FC<{
                 gap: 3,
               }}
             >
-              <Star size={10} strokeWidth={2.5} color="#eab308" fill="#eab308" />
+              <Star size={10} strokeWidth={2.5} color={tokens.color.warning} fill={tokens.color.warning} />
               {((4.5 + ((pick.place_id * 7) % 5) / 10)).toFixed(1)} <span style={{opacity: 0.5}}>({70 + (pick.place_id % 100)}+)</span>
             </span>
 
@@ -348,19 +330,18 @@ const RecommendationCard: React.FC<{
               <span style={{ fontSize: "10px", lineHeight: 1 }}>🌤️</span>
               26°C Clear
             </span>
-          </div>
+          </Row>
 
           {/* ── Reasoning note ── */}
-          <div
+          <Row
+            gap="8"
             style={{
-              display: "flex",
               alignItems: "flex-start",
-              gap: 6,
               paddingTop: 6,
               borderTop: `1px solid ${tokens.color.border}`,
             }}
           >
-            <div
+            <Column
               style={{
                 width: 20,
                 height: 20,
@@ -374,7 +355,7 @@ const RecommendationCard: React.FC<{
               }}
             >
               <ReasonIcon size={10} color={rankColor} strokeWidth={2.4} />
-            </div>
+            </Column>
             <span
               style={{
                 fontSize: "0.7rem",
@@ -386,7 +367,7 @@ const RecommendationCard: React.FC<{
             >
               &ldquo;{reasoning}&rdquo;
             </span>
-          </div>
+          </Row>
 
           {/* CTA */}
           <button
@@ -426,7 +407,7 @@ const RecommendationCard: React.FC<{
             Add to Tour
             <ArrowRight size={10} strokeWidth={2.4} />
           </button>
-        </div>
+        </Column>
       </GlassCard>
     </motion.div>
   );
@@ -452,7 +433,7 @@ const SpeechBubble: React.FC<{
     }}
   >
     {/* Bubble arrow */}
-    <div
+    <Column
       style={{
         position: "absolute",
         top: -6,
@@ -503,15 +484,7 @@ const SpeechBubble: React.FC<{
 
 // ─── 3D Mascot placeholder (while loading) ──────────────────────
 const MascotFallback: React.FC = () => (
-  <div
-    style={{
-      width: "100%",
-      height: "100%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    }}
-  >
+  <Column fill center>
     <motion.div
       animate={{
         scale: [1, 1.05, 1],
@@ -526,7 +499,7 @@ const MascotFallback: React.FC = () => (
         width: 80,
         height: 80,
         borderRadius: 16,
-        background: "linear-gradient(135deg, #8b5cf6, #a78bfa)",
+        background: tokens.gradient.signature,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -536,23 +509,21 @@ const MascotFallback: React.FC = () => (
     >
       🤖
     </motion.div>
-  </div>
+  </Column>
 );
 
 // ─── Loading skeleton ────────────────────────────────────────────
 const LoadingSkeleton: React.FC = () => (
-  <div
+  <Grid
+    fillWidth
     style={{
-      display: "grid",
       gridTemplateColumns: "280px 1fr",
       gap: tokens.space[5],
-      width: "100%",
-      alignItems: "stretch",
       minHeight: 340,
     }}
   >
     {/* Mascot area skeleton */}
-    <div
+    <Column
       style={{
         borderRadius: tokens.radius.xl,
         backgroundImage:
@@ -562,15 +533,9 @@ const LoadingSkeleton: React.FC = () => (
       }}
     />
     {/* Cards skeleton */}
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: tokens.space[3],
-      }}
-    >
+    <Column style={{ gap: tokens.space[3] }}>
       {[0, 1].map((i) => (
-        <div
+        <Column
           key={i}
           style={{
             height: 155,
@@ -582,8 +547,8 @@ const LoadingSkeleton: React.FC = () => (
           }}
         />
       ))}
-    </div>
-  </div>
+    </Column>
+  </Grid>
 );
 
 // ─── Error / Empty (reused from previous) ────────────────────────
@@ -598,7 +563,7 @@ const ErrorCard: React.FC<{ message: string; onRetry: () => void }> = ({
     fillWidth
     style={{ display: "flex", alignItems: "center", gap: tokens.space[4] }}
   >
-    <div
+    <Column
       style={{
         width: 40,
         height: 40,
@@ -616,8 +581,8 @@ const ErrorCard: React.FC<{ message: string; onRetry: () => void }> = ({
         color={tokens.color.danger}
         strokeWidth={2.2}
       />
-    </div>
-    <div style={{ flex: 1, minWidth: 0 }}>
+    </Column>
+    <Column flex="1" minWidth="0">
       <span
         style={{
           display: "block",
@@ -638,7 +603,7 @@ const ErrorCard: React.FC<{ message: string; onRetry: () => void }> = ({
       >
         {message}
       </span>
-    </div>
+    </Column>
     <button
       type="button"
       onClick={onRetry}
@@ -668,7 +633,7 @@ const EmptyCard: React.FC = () => (
     fillWidth
     style={{ display: "flex", alignItems: "center", gap: tokens.space[4] }}
   >
-    <div
+    <Column
       style={{
         width: 40,
         height: 40,
@@ -682,8 +647,8 @@ const EmptyCard: React.FC = () => (
       }}
     >
       <Sparkles size={18} color={tokens.color.magic} strokeWidth={2.2} />
-    </div>
-    <div style={{ flex: 1, minWidth: 0 }}>
+    </Column>
+    <Column flex="1" minWidth="0">
       <span
         style={{
           display: "block",
@@ -704,7 +669,7 @@ const EmptyCard: React.FC = () => (
       >
         Take a few swipes to unlock personalized recommendations.
       </span>
-    </div>
+    </Column>
   </GlassCard>
 );
 
@@ -773,41 +738,30 @@ export const AIPicksSection: React.FC<AIPicksSectionProps> = () => {
       ) : picks.length === 0 ? (
         <EmptyCard />
       ) : (
-        <div
+        <Grid
+          fillWidth
           style={{
-            display: "grid",
             gridTemplateColumns: "260px 1fr",
             gap: tokens.space[5],
-            width: "100%",
-            alignItems: "stretch",
             minHeight: 340,
           }}
         >
           {/* ── Left: 3D Mascot ── */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "stretch",
-              height: "100%",
-              gap: 0,
-            }}
-          >
+          <Column fillHeight gap="0">
             {/* 3D Canvas */}
-            <div
+            <Column
+              fillWidth
+              flex="1"
               style={{
-                width: "100%",
-                flex: 1,
                 minHeight: 240,
                 borderRadius: tokens.radius.xl,
                 overflow: "hidden",
                 backgroundColor: tokens.color.surfaceMuted,
                 border: `1px solid ${tokens.color.border}`,
-                position: "relative",
               }}
             >
               {/* Subtle gradient background */}
-              <div
+              <Column
                 style={{
                   position: "absolute",
                   inset: 0,
@@ -820,25 +774,19 @@ export const AIPicksSection: React.FC<AIPicksSectionProps> = () => {
               <Suspense fallback={<MascotFallback />}>
                 <TasteMapMascot />
               </Suspense>
-            </div>
+            </Column>
 
             {/* Speech bubble */}
-            <div style={{ marginTop: 12, width: "100%" }}>
+            <Column marginTop="12" fillWidth>
               <SpeechBubble
                 message={mascotMessage}
                 subMessage={mascotSubMessage}
               />
-            </div>
-          </div>
+            </Column>
+          </Column>
 
           {/* ── Right: 2 Recommendation Cards ── */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[3],
-            }}
-          >
+          <Column style={{ gap: tokens.space[3] }}>
             {topPicks.map((pick, i) => (
               <RecommendationCard
                 key={pick.place_id}
@@ -849,8 +797,8 @@ export const AIPicksSection: React.FC<AIPicksSectionProps> = () => {
                 index={i}
               />
             ))}
-          </div>
-        </div>
+          </Column>
+        </Grid>
       )}
     </DiscoverSection>
   );

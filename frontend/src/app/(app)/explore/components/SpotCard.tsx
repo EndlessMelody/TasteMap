@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { MapPin, Star, Utensils } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 
 import { PRICE_ICONS } from "../data";
 import type { Spot } from "../types";
@@ -55,7 +56,7 @@ export default function SpotCard({
           : tokens.shadow.md,
       }}
     >
-      <div
+      <Column
         style={{
           width: 84,
           height: 84,
@@ -73,7 +74,7 @@ export default function SpotCard({
           sizes="84px"
           className="object-cover"
         />
-        <div
+        <Column
           style={{
             position: "absolute",
             inset: "auto 0 0 0",
@@ -98,11 +99,10 @@ export default function SpotCard({
         >
           {spot.emoji}
         </span>
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div
+      </Column>
+      <Column style={{ flex: 1, minWidth: 0 }}>
+        <Row
           style={{
-            display: "flex",
             alignItems: "start",
             justifyContent: "space-between",
             gap: tokens.space[2],
@@ -135,11 +135,10 @@ export default function SpotCard({
           >
             {spot.isOpen ? `Until ${spot.closesAt}` : "Closed"}
           </span>
-        </div>
-        <div
+        </Row>
+        <Row
+          vertical="center"
           style={{
-            display: "flex",
-            alignItems: "center",
             gap: tokens.space[2],
             marginTop: 4,
           }}
@@ -166,11 +165,10 @@ export default function SpotCard({
           >
             {PRICE_ICONS[spot.priceLevel]}
           </BodySm>
-        </div>
-        <div
+        </Row>
+        <Row
+          vertical="center"
           style={{
-            display: "flex",
-            alignItems: "center",
             gap: tokens.space[3],
             marginTop: 6,
           }}
@@ -207,11 +205,10 @@ export default function SpotCard({
           >
             <MapPin size={11} /> {spot.distance}
           </span>
-        </div>
+        </Row>
 
-        <div
+        <Row
           style={{
-            display: "flex",
             gap: tokens.space[2],
             marginTop: 8,
             flexWrap: "wrap",
@@ -233,8 +230,8 @@ export default function SpotCard({
               {tag}
             </span>
           ))}
-        </div>
-      </div>
+        </Row>
+      </Column>
     </motion.button>
   );
 }

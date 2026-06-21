@@ -3,6 +3,8 @@
 import React, { useState, useRef, KeyboardEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Hash } from "lucide-react";
+import { Row } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 
 interface ChipInputProps {
   chips: string[];
@@ -40,11 +42,21 @@ export function ChipInput({
   };
 
   return (
-    <div
+    <Row
       onClick={() => inputRef.current?.focus()}
-      className={`flex flex-wrap gap-2 px-3 py-2 rounded-xl border bg-white cursor-text min-h-[48px] items-center transition-shadow ${
-        isFocused ? "border-orange-400 ring-2 ring-orange-200" : "border-slate-200"
-      }`}
+      style={{
+        flexWrap: "wrap",
+        gap: "8px",
+        padding: "8px 12px",
+        borderRadius: "12px",
+        border: isFocused ? `2px solid ${tokens.color.warm}` : `1px solid ${tokens.color.border}`,
+        backgroundColor: tokens.color.surface,
+        cursor: "text",
+        minHeight: "48px",
+        alignItems: "center",
+        transition: "border 0.15s, box-shadow 0.15s",
+        boxShadow: isFocused ? `0 0 0 2px rgba(255,107,53,0.15)` : "none",
+      }}
     >
       <AnimatePresence mode="popLayout">
         {chips.map((chip, index) => (
@@ -54,13 +66,23 @@ export function ChipInput({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             layout
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-orange-50 text-orange-500 text-xs font-medium"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px",
+              padding: "4px 10px",
+              borderRadius: "8px",
+              backgroundColor: "rgba(255,107,53,0.08)",
+              color: tokens.color.warm,
+              fontSize: "0.75rem",
+              fontWeight: 500,
+            }}
           >
             <Hash size={11} />
             {chip}
             <button
               onClick={(e) => { e.stopPropagation(); removeChip(index); }}
-              className="ml-0.5 flex items-center justify-center text-orange-400 hover:text-orange-600 transition-colors"
+              style={{ marginLeft: "2px", display: "flex", alignItems: "center", justifyContent: "center", background: "none", border: "none", cursor: "pointer", color: tokens.color.warm, padding: 0 }}
             >
               <X size={11} />
             </button>
@@ -76,8 +98,17 @@ export function ChipInput({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder={chips.length === 0 ? placeholder : ""}
-        className="flex-1 min-w-[80px] border-none outline-none text-sm text-zinc-800 placeholder-zinc-300 bg-transparent py-1"
+        style={{
+          flex: 1,
+          minWidth: "80px",
+          border: "none",
+          outline: "none",
+          fontSize: "0.875rem",
+          color: tokens.color.text,
+          background: "transparent",
+          padding: "4px 0",
+        }}
       />
-    </div>
+    </Row>
   );
 }

@@ -2,6 +2,8 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { Column, Row } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 import { MediaUpload } from "./MediaUpload";
 
 interface ReelFormProps {
@@ -40,15 +42,15 @@ export function ReelForm({
       className="flex flex-col gap-4 w-full"
     >
       {/* Caption */}
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+      <Column style={{ gap: 6 }}>
+        <Row horizontal="between" vertical="center">
+          <label style={{ fontSize: "0.75rem", fontWeight: 600, color: tokens.color.textMuted, textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Caption
           </label>
-          <span className="text-[11px] text-zinc-400">
+          <span style={{ fontSize: "0.6875rem", color: tokens.color.textMuted }}>
             {title.length}/{MAX_REEL_TITLE_LENGTH}
           </span>
-        </div>
+        </Row>
         <input
           placeholder="Add a hook for Discover…"
           value={title}
@@ -59,7 +61,7 @@ export function ReelForm({
           }}
           className="w-full h-12 rounded-xl border border-slate-200 bg-white px-3.5 text-sm text-zinc-800 placeholder-zinc-300 outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 transition-shadow"
         />
-      </div>
+      </Column>
 
       {/* Video */}
       <MediaUpload

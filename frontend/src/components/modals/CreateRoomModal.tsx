@@ -11,6 +11,7 @@ import {
   Avatar,
 } from "@once-ui-system/core";
 import { X } from "lucide-react";
+import { tokens } from "@/styles/tokens";
 
 interface CreateRoomModalProps {
   isOpen: boolean;
@@ -48,9 +49,9 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
             style={{
               width: "100%",
               maxWidth: "420px",
-              backgroundColor: "#FFFFFF",
+              backgroundColor: tokens.color.surface,
               borderRadius: "32px",
-              border: "1px solid #E5E5EA",
+              border: `1px solid ${tokens.color.border}`,
               boxShadow: "0 32px 80px rgba(0,0,0,0.1)",
               padding: "32px",
             }}
@@ -63,7 +64,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
                 marginBottom: "24px",
               }}
             >
-              <Heading variant="heading-strong-l" style={{ color: "#1C1C1E" }}>
+              <Heading variant="heading-strong-l" style={{ color: tokens.color.text }}>
                 Start Group Room
               </Heading>
               <IconButton
@@ -71,14 +72,14 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
                 variant="tertiary"
                 style={{ cursor: "pointer" }}
               >
-                <X size={18} color="#636366" />
+                <X size={18} color={tokens.color.textMuted} />
               </IconButton>
             </Row>
             <Column style={{ gap: "24px" }}>
               <Column style={{ gap: "8px" }}>
                 <Text
                   style={{
-                    color: "#8E8E93",
+                    color: tokens.color.textMuted,
                     fontSize: "0.8rem",
                   }}
                 >
@@ -93,7 +94,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
               <Column style={{ gap: "8px" }}>
                 <Text
                   style={{
-                    color: "#8E8E93",
+                    color: tokens.color.textMuted,
                     fontSize: "0.8rem",
                   }}
                 >
@@ -111,7 +112,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
                       src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=64&h=64&fit=crop"
                       size="m"
                     />
-                    <Text style={{ color: "#1C1C1E", fontSize: "0.7rem" }}>
+                    <Text style={{ color: tokens.color.text, fontSize: "0.7rem" }}>
                       Ramona
                     </Text>
                   </Column>
@@ -126,7 +127,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
                       src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=64&h=64&fit=crop"
                       size="m"
                     />
-                    <Text style={{ color: "#1C1C1E", fontSize: "0.7rem" }}>
+                    <Text style={{ color: tokens.color.text, fontSize: "0.7rem" }}>
                       Jane
                     </Text>
                   </Column>
@@ -142,7 +143,7 @@ export const CreateRoomModal: React.FC<CreateRoomModalProps> = ({
                       src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop"
                       size="m"
                     />
-                    <Text style={{ color: "#1C1C1E", fontSize: "0.7rem" }}>
+                    <Text style={{ color: tokens.color.text, fontSize: "0.7rem" }}>
                       Mike
                     </Text>
                   </Column>

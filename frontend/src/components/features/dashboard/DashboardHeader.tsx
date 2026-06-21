@@ -7,6 +7,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { H3, Body, BodySm, Avatar, IconButton } from "@/components/ui";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { Bell, MessageSquare, Search, LogOut, User, Settings, Info } from "lucide-react";
 import { ProfileMenuItem } from "@/components/common/ProfileMenuItem";
@@ -150,7 +151,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         scale: isSearchFocused ? 1.005 : 1,
       }}
     >
-      <div style={{ display: "flex", flexDirection: "row", gap: tokens.space[4], alignItems: "center" }}>
+      <Row gap="16" vertical="center">
         {/* Location Selector */}
         <LocationSelector
           value={selectedLocation}
@@ -194,16 +195,14 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               color: tokens.color.text,
             }}
           />
-          <div
+          <Row
+            gap="4"
+            vertical="center"
             style={{
               position: "absolute",
               right: "12px",
               top: "50%",
               transform: "translateY(-50%)",
-              gap: "3px",
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
               pointerEvents: "none",
             }}
           >
@@ -226,9 +225,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             >
               Ctrl + K
             </span>
-          </div>
+          </Row>
         </motion.div>
-      </div>
+      </Row>
 
       {/* Focus Mask */}
       <AnimatePresence>
@@ -250,9 +249,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         )}
       </AnimatePresence>
 
-      <div style={{ display: "flex", flexDirection: "row", gap: tokens.space[2], alignItems: "center" }}>
+      <Row gap="8" vertical="center">
         {/* Notifications */}
-        <div ref={notifRef} style={{ position: "relative" }}>
+        <Column ref={notifRef} style={{ position: "relative" }}>
           <IconButton
             icon={
               <Bell size={20} color={isNotifOpen ? tokens.color.warning : tokens.color.textMuted} />
@@ -263,7 +262,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             style={{ borderRadius: "10px" }}
           />
           {unreadCount > 0 && (
-            <div
+            <Column
               style={{
                 position: "absolute",
                 top: "4px",
@@ -284,7 +283,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               }}
             >
               {unreadCount > 9 ? "9+" : unreadCount}
-            </div>
+            </Column>
           )}
 
           <AnimatePresence>
@@ -308,13 +307,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 }}
               >
                 {/* Notification Header */}
-                <div
+                <Row
+                  horizontal="between"
+                  vertical="center"
                   style={{
                     padding: "16px 20px 12px",
                     borderBottom: `1px solid ${tokens.color.surfaceMuted}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
                   }}
                 >
                   <H3>Notifications</H3>
@@ -334,53 +332,48 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                       Mark all read
                     </button>
                   )}
-                </div>
+                </Row>
 
                 {/* Notification List */}
-                <div style={{ maxHeight: 380, overflowY: "auto" }}>
+                <Column style={{ maxHeight: 380, overflowY: "auto" }}>
                   {notifsLoading ? (
-                    <div style={{ padding: "24px 20px", textAlign: "center" }}>
+                    <Column style={{ padding: "24px 20px", textAlign: "center" }}>
                       <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
                         Loading…
                       </BodySm>
-                    </div>
+                    </Column>
                   ) : notifications.length === 0 ? (
-                    <div style={{ padding: "32px 20px", textAlign: "center" }}>
-                      <div style={{ fontSize: "2rem", marginBottom: 8 }}>
+                    <Column style={{ padding: "32px 20px", textAlign: "center" }}>
+                      <Column style={{ fontSize: "2rem", marginBottom: 8 }}>
                         🔔
-                      </div>
+                      </Column>
                       <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
                         You&apos;re all caught up!
                       </BodySm>
-                    </div>
+                    </Column>
                   ) : (
                     notifications.map((n) => {
                       const isFriendReq =
                         n.reference_type === "friendship" &&
                         n.title === "New Friend Request";
                       return (
-                        <div
+                        <Column
                           key={n.id}
                           onClick={() => !n.is_read && markRead(n.id)}
+                          gap="8"
                           style={{
                             padding: "12px 20px",
                             borderBottom: `1px solid ${tokens.color.surfaceMuted}`,
                             backgroundColor: n.is_read ? "transparent" : "rgba(0,122,255,0.03)",
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 6,
                             cursor: n.is_read ? "default" : "pointer",
                           }}
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-start",
-                              gap: 10,
-                            }}
+                          <Row
+                            gap="12"
+                            style={{ alignItems: "flex-start" }}
                           >
                             {!n.is_read && (
-                              <div
+                              <Column
                                 style={{
                                   width: 7,
                                   height: 7,
@@ -391,7 +384,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                                 }}
                               />
                             )}
-                            <div style={{ flex: 1 }}>
+                            <Column flex="1">
                               <BodySm
                                 style={{
                                   fontSize: 13,
@@ -414,13 +407,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                                   {n.body}
                                 </BodySm>
                               )}
-                            </div>
-                          </div>
+                            </Column>
+                          </Row>
                           {isFriendReq && n.reference_id && (
-                            <div
+                            <Row
+                              gap="8"
                               style={{
-                                display: "flex",
-                                gap: 8,
                                 marginTop: 4,
                                 marginLeft: n.is_read ? 0 : 17,
                               }}
@@ -461,20 +453,20 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                               >
                                 Decline
                               </button>
-                            </div>
+                            </Row>
                           )}
-                        </div>
+                        </Column>
                       );
                     })
                   )}
-                </div>
+                </Column>
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Column>
 
         {/* Messages */}
-        <div ref={msgRef} style={{ position: "relative" }}>
+        <Column ref={msgRef} style={{ position: "relative" }}>
           <IconButton
             icon={
               <MessageSquare
@@ -488,7 +480,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             style={{ borderRadius: "10px" }}
           />
           {msgUnreadCount > 0 && (
-            <div
+            <Column
               style={{
                 position: "absolute",
                 top: "4px",
@@ -509,7 +501,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               }}
             >
               {msgUnreadCount > 9 ? "9+" : msgUnreadCount}
-            </div>
+            </Column>
           )}
 
           <AnimatePresence>
@@ -533,63 +525,58 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 }}
               >
                 {/* Messages Header */}
-                <div
+                <Row
+                  horizontal="between"
+                  vertical="center"
                   style={{
                     padding: "16px 20px 12px",
                     borderBottom: `1px solid ${tokens.color.surfaceMuted}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
                   }}
                 >
                   <H3>Messages</H3>
-                </div>
+                </Row>
 
                 {/* Conversations List */}
-                <div style={{ maxHeight: 420, overflowY: "auto" }}>
+                <Column style={{ maxHeight: 420, overflowY: "auto" }}>
                   {inboxLoading ? (
-                    <div style={{ padding: "24px 20px", textAlign: "center" }}>
+                    <Column style={{ padding: "24px 20px", textAlign: "center" }}>
                       <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
                         Loading…
                       </BodySm>
-                    </div>
+                    </Column>
                   ) : conversations.length === 0 ? (
-                    <div style={{ padding: "32px 20px", textAlign: "center" }}>
-                      <div style={{ fontSize: "2rem", marginBottom: 8 }}>
+                    <Column style={{ padding: "32px 20px", textAlign: "center" }}>
+                      <Column style={{ fontSize: "2rem", marginBottom: 8 }}>
                         💬
-                      </div>
+                      </Column>
                       <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
                         No messages yet
                       </BodySm>
-                    </div>
+                    </Column>
                   ) : (
                     conversations.map((c) => (
-                      <div
+                      <Row
                         key={c.partner_id}
                         onClick={() => {
                           if (c.unread_count > 0) markMsgRead(c.partner_id);
                           setIsMsgOpen(false);
                           router.push(`/foodies/${c.partner_id}`);
                         }}
+                        gap="12"
+                        vertical="center"
                         style={{
                           padding: "12px 20px",
                           borderBottom: `1px solid ${tokens.color.surfaceMuted}`,
                           backgroundColor: c.unread_count > 0 ? "rgba(0,122,255,0.03)" : "transparent",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
                           cursor: "pointer",
                         }}
                       >
                         <Avatar src={c.partner_avatar || undefined} size="sm" />
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              marginBottom: 2,
-                            }}
+                        <Column flex="1" minWidth="0">
+                          <Row
+                            horizontal="between"
+                            vertical="center"
+                            style={{ marginBottom: 2 }}
                           >
                             <Body
                               style={{
@@ -603,14 +590,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                             <span style={{ fontSize: 11, color: tokens.color.textMuted }}>
                               {c.last_message_time}
                             </span>
-                          </div>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 6,
-                            }}
-                          >
+                          </Row>
+                          <Row gap="8" vertical="center">
                             <BodySm
                               style={{
                                 fontSize: 12,
@@ -628,7 +609,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                               {c.last_message}
                             </BodySm>
                             {c.unread_count > 0 && (
-                              <div
+                              <Column
                                 style={{
                                   minWidth: 18,
                                   height: 18,
@@ -644,21 +625,21 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                                 }}
                               >
                                 {c.unread_count}
-                              </div>
+                              </Column>
                             )}
-                          </div>
-                        </div>
-                      </div>
+                          </Row>
+                        </Column>
+                      </Row>
                     ))
                   )}
-                </div>
+                </Column>
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Column>
 
         {/* Profile */}
-        <div ref={profileMenuRef} style={{ position: "relative" }}>
+        <Column ref={profileMenuRef} style={{ position: "relative" }}>
           {/* Keyframes for skeleton pulse */}
           <style>{`
             @keyframes tm-pulse {
@@ -669,7 +650,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
           {loading ? (
             /* ── Loading: circular skeleton ── */
-            <div
+            <Column
               style={{
                 marginLeft: "12px",
                 width: 32,
@@ -691,7 +672,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                  marginLeft: "12px",
                  padding: "8px 18px",
                  borderRadius: 10,
-                 background: "linear-gradient(135deg, #ff6b35, #ff4757)",
+                 background: `linear-gradient(135deg, ${tokens.color.warm}, ${tokens.color.danger})`,
                  border: "none",
                  cursor: "pointer",
                  color: "white",
@@ -775,14 +756,10 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   padding: "6px",
                 }}
               >
-                <div
+                <Column
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
                     paddingTop: "8px",
                     paddingBottom: "8px",
-                    paddingLeft: "0px",
-                    paddingRight: "0px",
                   }}
                 >
                   <ProfileMenuItem
@@ -809,8 +786,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                       handleComingSoon();
                     }}
                   />
-                </div>
-                <div
+                </Column>
+                <Column
                   style={{
                     height: "1px",
                     backgroundColor: tokens.color.surfaceMuted,
@@ -833,8 +810,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
-      </div>
+        </Column>
+      </Row>
     </motion.div>
   );
 };

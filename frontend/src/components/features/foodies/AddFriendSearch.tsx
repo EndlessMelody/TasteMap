@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, UserPlus, Clock, UserCheck, Loader2 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
   Button,
@@ -121,7 +122,7 @@ export function AddFriendSearch({ onRequestSent }: AddFriendSearchProps) {
   }
 
   return (
-    <div ref={containerRef} style={{ position: "relative", width: "100%" }}>
+    <Column ref={containerRef} style={{ position: "relative", width: "100%" }}>
       <Field
         type="text"
         value={query}
@@ -171,11 +172,10 @@ export function AddFriendSearch({ onRequestSent }: AddFriendSearchProps) {
                 const badge = statusBadge(user);
                 const canAdd = !badge && user.friendship_status !== "blocked";
                 return (
-                  <div
+                  <Row
                     key={user.id}
+                    vertical="center"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
                       gap: tokens.space[3],
                       padding: `${tokens.space[2]} ${tokens.space[4]}`,
                       borderBottom:
@@ -197,12 +197,10 @@ export function AddFriendSearch({ onRequestSent }: AddFriendSearchProps) {
                       name={user.display_name || user.username}
                       size="sm"
                     />
-                    <div
+                    <Column
                       style={{
                         flex: 1,
                         minWidth: 0,
-                        display: "flex",
-                        flexDirection: "column",
                       }}
                     >
                       <Body
@@ -216,7 +214,7 @@ export function AddFriendSearch({ onRequestSent }: AddFriendSearchProps) {
                         {user.display_name || user.username}
                       </Body>
                       <Caption tone="subtle">@{user.username}</Caption>
-                    </div>
+                    </Column>
 
                     {badge}
                     {canAdd && (
@@ -229,7 +227,7 @@ export function AddFriendSearch({ onRequestSent }: AddFriendSearchProps) {
                         Add
                       </Button>
                     )}
-                  </div>
+                  </Row>
                 );
               })}
             </Card>
@@ -262,6 +260,6 @@ export function AddFriendSearch({ onRequestSent }: AddFriendSearchProps) {
       </AnimatePresence>
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+    </Column>
   );
 }

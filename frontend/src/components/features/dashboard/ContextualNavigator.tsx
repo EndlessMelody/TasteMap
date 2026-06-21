@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { useRecommendations } from "@/hooks/useRecommendations";
 import { ContextCard } from "@/components/cards/ContextCard";
 import { getDynamicContext } from "@/utils/dashboard-utils";
@@ -19,48 +20,14 @@ export const ContextualNavigator = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
     >
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          gap: tokens.space[4],
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            gap: tokens.space[4],
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[1],
-              paddingLeft: tokens.space[4],
-            }}
-          >
+      <Column fillWidth gap="16">
+        <Row fillWidth horizontal="between" vertical="end" gap="16">
+          <Column gap="4" paddingLeft="16">
             <Eyebrow style={{ color: ctx.accent }}>Right now</Eyebrow>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: tokens.space[2],
-                flexWrap: "wrap",
-              }}
-            >
+            <Row vertical="center" gap="8" style={{ flexWrap: "wrap" }}>
               {ctx.icon}
               <H2>{ctx.title}</H2>
-              <div
-                style={{
-                  display: "flex",
-                  gap: tokens.space[1],
-                  marginLeft: tokens.space[2],
-                }}
-              >
+              <Row gap="4" marginLeft="8">
                 {ctx.tags.map((tag, tagIdx) => (
                   <motion.div
                     key={tag}
@@ -77,10 +44,10 @@ export const ContextualNavigator = () => {
                     </Pill>
                   </motion.div>
                 ))}
-              </div>
-            </div>
+              </Row>
+            </Row>
             {ctx.subtitle && <BodySm tone="muted">{ctx.subtitle}</BodySm>}
-          </div>
+          </Column>
 
           <button
             type="button"
@@ -106,18 +73,9 @@ export const ContextualNavigator = () => {
               AI picks
             </Body>
           </button>
-        </div>
+        </Row>
 
-        <div
-          className="no-scrollbar"
-          style={{
-            width: "100%",
-            display: "flex",
-            gap: tokens.space[4],
-            overflowX: "auto",
-            paddingBottom: 4,
-          }}
-        >
+        <Row className="no-scrollbar" fillWidth gap="16" overflowX="auto" paddingBottom="4">
           {loading ? (
             <BodySm tone="muted" style={{ padding: tokens.space[5] }}>
               Loading recommendations…
@@ -148,8 +106,8 @@ export const ContextualNavigator = () => {
               No recommendations found.
             </BodySm>
           )}
-        </div>
-      </div>
+        </Row>
+      </Column>
     </motion.div>
   );
 };

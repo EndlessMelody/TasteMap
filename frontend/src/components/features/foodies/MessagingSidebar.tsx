@@ -295,7 +295,7 @@ function bubbleRadius(
 // ─── Date separator ────────────────────────────────────
 const DateSeparator: React.FC<{ label: string }> = ({ label }) => (
   <Row style={{ alignItems: "center", gap: 12, padding: "4px 0" }}>
-    <div style={{ flex: 1, height: 1, backgroundColor: "var(--dsc-border)" }} />
+    <Column style={{ flex: 1, height: 1, backgroundColor: "var(--dsc-border)" }} />
     <span
       style={{
         fontSize: 11,
@@ -311,7 +311,7 @@ const DateSeparator: React.FC<{ label: string }> = ({ label }) => (
     >
       {label}
     </span>
-    <div style={{ flex: 1, height: 1, backgroundColor: "var(--dsc-border)" }} />
+    <Column style={{ flex: 1, height: 1, backgroundColor: "var(--dsc-border)" }} />
   </Row>
 );
 
@@ -956,7 +956,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               }}
               title={`View ${activeUser.name}'s profile`}
             >
-              <div style={{ position: "relative" }}>
+              <Column style={{ position: "relative" }}>
                 <Avatar
                   src={activeUser.avatar}
                   size="m"
@@ -967,7 +967,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   }}
                 />
                 {activeUser.isOnline && (
-                  <div
+                  <Column
                     style={{
                       position: "absolute",
                       bottom: 1,
@@ -980,7 +980,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                     }}
                   />
                 )}
-              </div>
+              </Column>
               <Column style={{ gap: 1 }}>
                 <Row style={{ alignItems: "center", gap: 6 }}>
                   <Heading
@@ -1059,7 +1059,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             <Video size={17} strokeWidth={2.25} />
           </IconButton>
 
-          <div ref={headerMenuRef} style={{ position: "relative" }}>
+          <Column ref={headerMenuRef} style={{ position: "relative" }}>
             <IconButton
               onClick={handleToggleHeaderMenu}
               style={{
@@ -1099,7 +1099,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   }}
                 >
                   {headerMenuSections.map((section, sectionIdx) => (
-                    <div key={section.title}>
+                    <Column key={section.title}>
                       <Text
                         variant="body-default-xs"
                         style={{
@@ -1142,7 +1142,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                             }}
                           >
                             <Row vertical="center" style={{ gap: 10 }}>
-                              <div
+                              <Row
+                                horizontal="center"
+                                vertical="center"
                                 style={{
                                   width: 28,
                                   height: 28,
@@ -1153,14 +1155,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   color: item.danger
                                     ? "#ef4444"
                                     : "var(--dsc-accent-warm)",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
                                   flexShrink: 0,
                                 }}
                               >
                                 {item.icon}
-                              </div>
+                              </Row>
 
                               <Column
                                 style={{ gap: 1, alignItems: "flex-start" }}
@@ -1197,7 +1196,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                       ))}
 
                       {sectionIdx < headerMenuSections.length - 1 && (
-                        <div
+                        <Column
                           style={{
                             height: 1,
                             margin: "6px 12px",
@@ -1205,12 +1204,12 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                           }}
                         />
                       )}
-                    </div>
+                    </Column>
                   ))}
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </Column>
         </Row>
       </Row>
 
@@ -1237,15 +1236,14 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             fillHeight
             style={{ gap: 16 }}
           >
-            <div
+            <Row
+              horizontal="center"
+              vertical="center"
               style={{
                 width: 76,
                 height: 76,
                 borderRadius: 26,
                 background: "var(--dsc-gradient-signature-soft)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 border: "1.5px solid rgba(255,107,53,0.18)",
                 boxShadow: "0 4px 20px rgba(255,107,53,0.08)",
               }}
@@ -1255,7 +1253,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                 strokeWidth={2}
                 color="var(--dsc-accent-warm)"
               />
-            </div>
+            </Row>
             <Column style={{ alignItems: "center", gap: 6 }}>
               <Text
                 style={{
@@ -1342,9 +1340,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   <React.Fragment key={messageKey}>
                     {/* Date separator */}
                     {msg.showDate && (
-                      <div style={{ margin: "12px 0 8px" }}>
+                      <Column style={{ margin: "12px 0 8px" }}>
                         <DateSeparator label={msg.showDate} />
-                      </div>
+                      </Column>
                     )}
 
                     {/* Message row */}
@@ -1374,7 +1372,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                       }}
                     >
                       {/* Avatar placeholder (keeps alignment for grouped messages) */}
-                      <div style={{ width: 28, flexShrink: 0 }}>
+                      <Column style={{ width: 28, flexShrink: 0 }}>
                         {showAvatar && (
                           <Avatar
                             src={activeUser.avatar}
@@ -1386,11 +1384,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                             }}
                           />
                         )}
-                      </div>
+                      </Column>
 
                       {/* Bubble */}
-                      <div style={{ maxWidth: "75%" }}>
-                        <div
+                      <Column style={{ maxWidth: "75%" }}>
+                        <Column
                           style={{
                             padding:
                               msg.content_type === "text" ? "11px 16px" : "8px",
@@ -1411,7 +1409,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                         >
                           {/* Image message */}
                           {msg.content_type === "image" && msg.media_url && (
-                            <div
+                            <Column
                               style={{
                                 position: "relative",
                                 borderRadius: 12,
@@ -1429,7 +1427,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                 }}
                               />
                               {msg.text && (
-                                <div style={{ padding: "8px 12px 0" }}>
+                                <Column style={{ padding: "8px 12px 0" }}>
                                   <Text
                                     variant="body-default-m"
                                     style={{
@@ -1439,9 +1437,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   >
                                     {msg.text}
                                   </Text>
-                                </div>
+                                </Column>
                               )}
-                            </div>
+                            </Column>
                           )}
 
                           {/* Voice message */}
@@ -1478,7 +1476,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
 
                           {/* Video message */}
                           {msg.content_type === "video" && msg.media_url && (
-                            <div
+                            <Column
                               style={{ borderRadius: 12, overflow: "hidden" }}
                             >
                               <video
@@ -1491,7 +1489,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   display: "block",
                                 }}
                               />
-                            </div>
+                            </Column>
                           )}
 
                           {/* File message */}
@@ -1500,7 +1498,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                               vertical="center"
                               style={{ gap: 12, padding: "8px 12px" }}
                             >
-                              <div
+                              <Row
+                                horizontal="center"
+                                vertical="center"
                                 style={{
                                   width: 36,
                                   height: 36,
@@ -1508,9 +1508,6 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   background: isMe
                                     ? "rgba(255,255,255,0.2)"
                                     : "rgba(255,107,53,0.1)",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
                                 }}
                               >
                                 <ImageIcon
@@ -1520,7 +1517,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                     isMe ? "white" : "var(--dsc-accent-warm)"
                                   }
                                 />
-                              </div>
+                              </Row>
                               <Column style={{ gap: 2 }}>
                                 <Text
                                   style={{
@@ -1575,7 +1572,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                               edited
                             </Text>
                           )}
-                        </div>
+                        </Column>
 
                         {/* Reactions */}
                         {msg.reactions && msg.reactions.length > 0 && (
@@ -1704,13 +1701,13 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                               ))}
                           </Row>
                         )}
-                      </div>
+                      </Column>
                     </motion.div>
                   </React.Fragment>
                 );
               })}
             </AnimatePresence>
-            <div ref={bottomRef} />
+            <Column ref={bottomRef} />
           </>
         )}
       </Column>
@@ -1826,12 +1823,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
         </IconButton>
 
         {/* Input field with smile trigger */}
-        <div
+        <Row
+          vertical="center"
           style={{
             flex: 1,
             minWidth: 0,
-            display: "flex",
-            alignItems: "center",
             gap: 6,
             backgroundColor: "var(--dsc-surface-muted)",
             border: "1px solid var(--dsc-border)",
@@ -1891,7 +1887,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
           >
             <Smile size={13} strokeWidth={2.5} color={composerAccent} />
           </button>
-        </div>
+        </Row>
 
         {/* Emoji or Send button */}
         <motion.div
@@ -1930,7 +1926,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
       </Row>
 
       {recordingError && !isRecording && (
-        <div
+        <Column
           style={{
             padding: "4px 14px 8px",
             color: "#dc2626",
@@ -1941,7 +1937,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
           }}
         >
           Microphone error: {recordingError}
-        </div>
+        </Column>
       )}
 
       <AnimatePresence>
@@ -1965,8 +1961,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               overflow: "hidden",
             }}
           >
-            <div style={{ padding: 12 }}>
-              <div style={{ position: "relative", marginBottom: 10 }}>
+            <Column style={{ padding: 12 }}>
+              <Column style={{ position: "relative", marginBottom: 10 }}>
                 <Search
                   size={14}
                   strokeWidth={2.3}
@@ -1996,7 +1992,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                     outline: "none",
                   }}
                 />
-              </div>
+              </Column>
 
               <Text
                 variant="body-default-s"
@@ -2009,7 +2005,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                 Smileys & People
               </Text>
 
-              <div
+              <Column
                 style={{
                   maxHeight: 240,
                   overflowY: "auto",
@@ -2050,8 +2046,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                     {item.emoji}
                   </button>
                 ))}
-              </div>
-            </div>
+              </Column>
+            </Column>
           </motion.div>
         )}
       </AnimatePresence>
@@ -2078,21 +2074,20 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             zIndex: 20,
           }}
         >
-          <div
+          <Row
+            horizontal="center"
+            vertical="center"
             style={{
               width: 40,
               height: 40,
               borderRadius: "50%",
               background: "linear-gradient(135deg, #ef4444, #dc2626)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               animation: "pulse 1.5s infinite",
             }}
           >
             <Mic size={18} color="white" strokeWidth={2.25} />
-          </div>
-          <div>
+          </Row>
+          <Column>
             <Text
               style={{
                 fontSize: 14,
@@ -2105,7 +2100,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
             <Text style={{ fontSize: 11, color: "var(--dsc-text-subtle)" }}>
               Tap mic again to stop and send
             </Text>
-          </div>
+          </Column>
           <IconButton
             onClick={handleCancelRecording}
             style={{

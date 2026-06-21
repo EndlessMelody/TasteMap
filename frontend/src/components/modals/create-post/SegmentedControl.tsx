@@ -3,6 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
+import { Column } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 
 interface Option<T> {
   value: T;
@@ -16,8 +18,6 @@ interface SegmentedControlProps<T extends string> {
   onChange: (value: T) => void;
 }
 
-const BRAND = "#ff6b35";
-
 export function SegmentedControl<T extends string>({
   options,
   value,
@@ -26,11 +26,12 @@ export function SegmentedControl<T extends string>({
   const activeIndex = options.findIndex((opt) => opt.value === value);
 
   return (
-    <div
+    <Column
       style={{
         display: "flex",
+        flexDirection: "row",
         position: "relative",
-        background: "#F5F5F7",
+        background: tokens.color.surfaceMuted,
         borderRadius: "12px",
         padding: "4px",
         gap: "4px",
@@ -75,7 +76,7 @@ export function SegmentedControl<T extends string>({
               cursor: "pointer",
               fontSize: "0.9rem",
               fontWeight: 600,
-              color: isActive ? BRAND : "#8E8E93",
+              color: isActive ? tokens.color.warm : tokens.color.textMuted,
               position: "relative",
               zIndex: 1,
               transition: "color 0.15s ease",
@@ -86,6 +87,6 @@ export function SegmentedControl<T extends string>({
           </button>
         );
       })}
-    </div>
+    </Column>
   );
 }

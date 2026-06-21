@@ -9,6 +9,7 @@ import {
   CheckCircle,
   ChevronRight,
 } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import { MOODS, CUISINES, GROUPS, DURATIONS, BUDGETS, parsePrompt } from "./constants";
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -56,7 +57,7 @@ function AIGreeting({ username, mood }: { username: string; mood: string | null 
       >
         <Brain size={20} color="white" />
       </motion.div>
-      <div style={{ flex: 1 }}>
+      <Column style={{ flex: 1 }}>
         <p style={{ fontSize: 10, fontWeight: 800, color: "#A855F7", letterSpacing: "0.08em", textTransform: "uppercase", margin: "0 0 3px" }}>
           TasteMap AI
         </p>
@@ -72,7 +73,7 @@ function AIGreeting({ username, mood }: { username: string; mood: string | null 
             Hey <strong>{username}</strong>! {message}
           </motion.p>
         </AnimatePresence>
-      </div>
+      </Column>
     </motion.div>
   );
 }
@@ -132,8 +133,8 @@ function PromptInput({
   accentColor: string;
 }) {
   return (
-    <div style={{ marginBottom: 32 }}>
-      <div style={{ position: "relative" }}>
+    <Column style={{ marginBottom: 32 }}>
+      <Column style={{ position: "relative" }}>
         <input
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
@@ -185,7 +186,7 @@ function PromptInput({
         >
           <Send size={15} color={prompt ? "white" : "#8E8E93"} />
         </motion.button>
-      </div>
+      </Column>
       <AnimatePresence>
         {Object.keys(parsedHints).length > 0 && (
           <motion.div
@@ -213,15 +214,15 @@ function PromptInput({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Column>
   );
 }
 
 function MoodSection({ mood, setMood }: { mood: string | null; setMood: (v: string) => void }) {
   return (
-    <div style={{ marginBottom: 28 }}>
+    <Column style={{ marginBottom: 28 }}>
       <SectionLabel text="What's the vibe today?" />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
+      <Grid style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
         {MOODS.map((m) => {
           const selected = mood === m.id;
           return (
@@ -269,10 +270,10 @@ function MoodSection({ mood, setMood }: { mood: string | null; setMood: (v: stri
               <span style={{ color: selected ? m.accentColor : "#C7C7CC", transition: "color 0.25s", position: "relative", zIndex: 1 }}>
                 {m.icon}
               </span>
-              <div style={{ position: "relative", zIndex: 1 }}>
+              <Column style={{ position: "relative", zIndex: 1 }}>
                 <p style={{ fontSize: 14, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{m.label}</p>
                 <p style={{ fontSize: 11, color: "#8E8E93", margin: 0 }}>{m.desc}</p>
-              </div>
+              </Column>
               {selected && (
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ marginLeft: "auto", zIndex: 1 }}>
                   <CheckCircle size={16} color={m.accentColor} />
@@ -281,8 +282,8 @@ function MoodSection({ mood, setMood }: { mood: string | null; setMood: (v: stri
             </motion.button>
           );
         })}
-      </div>
-    </div>
+      </Grid>
+    </Column>
   );
 }
 
@@ -296,9 +297,9 @@ function CuisineSection({
   accentColor: string;
 }) {
   return (
-    <div style={{ marginBottom: 28 }}>
+    <Column style={{ marginBottom: 28 }}>
       <SectionLabel text="Any cuisine preferences? (optional)" />
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <Row style={{ flexWrap: "wrap", gap: 8 }}>
         {CUISINES.map((c) => {
           const selected = cuisines.includes(c.label);
           return (
@@ -336,8 +337,8 @@ function CuisineSection({
             </motion.button>
           );
         })}
-      </div>
-    </div>
+      </Row>
+    </Column>
   );
 }
 
@@ -351,9 +352,9 @@ function GroupSection({
   accentColor: string;
 }) {
   return (
-    <div style={{ marginBottom: 28 }}>
+    <Column style={{ marginBottom: 28 }}>
       <SectionLabel text="Who's coming?" />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
+      <Grid style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
         {GROUPS.map((g) => {
           const selected = group === g.id;
           return (
@@ -381,8 +382,8 @@ function GroupSection({
             </motion.button>
           );
         })}
-      </div>
-    </div>
+      </Grid>
+    </Column>
   );
 }
 
@@ -411,12 +412,12 @@ function SettingsSection({
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+    <Column style={{ gap: 28 }}>
       {/* Duration + Budget side by side */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-        <div>
+      <Grid style={{ gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+        <Column>
           <SectionLabel text="How long?" />
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <Column style={{ gap: 8 }}>
             {DURATIONS.map((d) => {
               const selected = duration === d.label;
               return (
@@ -438,20 +439,20 @@ function SettingsSection({
                   }}
                 >
                   <span style={{ fontSize: 18 }}>{d.icon}</span>
-                  <div>
+                  <Column>
                     <p style={{ fontSize: 13, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{d.label}</p>
                     <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>{d.desc}</p>
-                  </div>
+                  </Column>
                   {selected && <CheckCircle size={14} color={accentColor} style={{ marginLeft: "auto" }} />}
                 </motion.button>
               );
             })}
-          </div>
-        </div>
+          </Column>
+        </Column>
 
-        <div>
+        <Column>
           <SectionLabel text="Budget / person" />
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <Column style={{ gap: 8 }}>
             {BUDGETS.map((b) => {
               const selected = budget === b.label;
               return (
@@ -473,20 +474,20 @@ function SettingsSection({
                   }}
                 >
                   <span style={{ fontSize: 18 }}>{b.icon}</span>
-                  <div>
+                  <Column>
                     <p style={{ fontSize: 13, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{b.label}</p>
                     <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>{b.desc}</p>
-                  </div>
+                  </Column>
                   {selected && <CheckCircle size={14} color="#34C759" style={{ marginLeft: "auto" }} />}
                 </motion.button>
               );
             })}
-          </div>
-        </div>
-      </div>
+          </Column>
+        </Column>
+      </Grid>
 
       {/* Location */}
-      <div>
+      <Column>
         <SectionLabel text="Starting point" />
         <input
           value={location}
@@ -514,7 +515,7 @@ function SettingsSection({
             e.currentTarget.style.boxShadow = "none";
           }}
         />
-        <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+        <Row style={{ gap: 8, marginTop: 10, flexWrap: "wrap" }}>
           {QUICK_LOCS.map((loc) => {
             const selected = location === loc.name;
             return (
@@ -541,9 +542,9 @@ function SettingsSection({
               </motion.button>
             );
           })}
-        </div>
-      </div>
-    </div>
+        </Row>
+      </Column>
+    </Column>
   );
 }
 
@@ -566,19 +567,18 @@ function StickyBar({
   const selectedGroup = GROUPS.find((g) => g.id === group);
 
   return (
-    <div
+    <Row
+      vertical="center"
       style={{
         flexShrink: 0,
         padding: "12px 24px",
         backgroundColor: "rgba(250,248,245,0.92)",
         backdropFilter: "blur(24px)",
         borderTop: "1px solid rgba(0,0,0,0.05)",
-        display: "flex",
-        alignItems: "center",
         gap: 12,
       }}
     >
-      <div style={{ flex: 1, display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+      <Row vertical="center" style={{ flex: 1, gap: 6, flexWrap: "wrap" }}>
         {selectedMood && (
           <span
             style={{
@@ -626,7 +626,7 @@ function StickyBar({
             Pick a vibe + group to continue
           </span>
         )}
-      </div>
+      </Row>
 
       <motion.button
         whileHover={canGenerate ? { scale: 1.03 } : {}}
@@ -655,7 +655,7 @@ function StickyBar({
         Generate
         {canGenerate && <ChevronRight size={15} />}
       </motion.button>
-    </div>
+    </Row>
   );
 }
 
@@ -713,7 +713,7 @@ export function PlannerForm({
   };
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", backgroundColor: "#FAF8F5", position: "relative" }}>
+    <Column style={{ width: "100%", height: "100%", backgroundColor: "#FAF8F5", position: "relative" }}>
       {/* Ambient gradient */}
       <motion.div
         animate={{ opacity: mood ? 1 : 0 }}
@@ -728,12 +728,11 @@ export function PlannerForm({
       />
 
       {/* Header */}
-      <div
+      <Row
+        vertical="center"
         style={{
           flexShrink: 0,
           padding: "16px 24px",
-          display: "flex",
-          alignItems: "center",
           gap: 10,
           borderBottom: "1px solid rgba(0,0,0,0.05)",
           backgroundColor: "rgba(250,248,245,0.85)",
@@ -742,31 +741,30 @@ export function PlannerForm({
           zIndex: 10,
         }}
       >
-        <div
+        <Row
+          horizontal="center"
+          vertical="center"
           style={{
             width: 30,
             height: 30,
             borderRadius: 10,
             background: `linear-gradient(135deg, ${accentColor}, #A855F7)`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             transition: "background 0.4s",
           }}
         >
           <Sparkles size={15} color="white" />
-        </div>
+        </Row>
         <span style={{ fontSize: 17, fontWeight: 800, color: "#1C1C1E", letterSpacing: -0.3 }}>
           AI Food Planner
         </span>
-      </div>
+      </Row>
 
       {/* Scrollable form */}
-      <div
+      <Column
         className="no-scrollbar"
         style={{ flex: 1, overflowY: "auto", position: "relative", zIndex: 1 }}
       >
-        <div style={{ maxWidth: 640, margin: "0 auto", padding: "24px 24px 32px" }}>
+        <Column style={{ maxWidth: 640, margin: "0 auto", padding: "24px 24px 32px" }}>
           <AIGreeting username={username} mood={mood} />
 
           <PromptInput
@@ -778,20 +776,19 @@ export function PlannerForm({
           />
 
           {/* Divider */}
-          <div
+          <Row
+            vertical="center"
             style={{
-              display: "flex",
-              alignItems: "center",
               gap: 12,
               marginBottom: 24,
             }}
           >
-            <div style={{ flex: 1, height: 1, backgroundColor: "rgba(0,0,0,0.06)" }} />
+            <Column style={{ flex: 1, height: 1, backgroundColor: "rgba(0,0,0,0.06)" }} />
             <span style={{ fontSize: 11, fontWeight: 700, color: "#C7C7CC", letterSpacing: "0.08em", textTransform: "uppercase" }}>
               Or select below
             </span>
-            <div style={{ flex: 1, height: 1, backgroundColor: "rgba(0,0,0,0.06)" }} />
-          </div>
+            <Column style={{ flex: 1, height: 1, backgroundColor: "rgba(0,0,0,0.06)" }} />
+          </Row>
 
           {/* Phase 1 — Mood (always visible) */}
           <MoodSection mood={mood} setMood={setMood} />
@@ -836,8 +833,8 @@ export function PlannerForm({
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
-      </div>
+        </Column>
+      </Column>
 
       {/* Sticky bottom bar */}
       <StickyBar
@@ -848,6 +845,6 @@ export function PlannerForm({
         accentColor={accentColor}
         onGenerate={onGenerate}
       />
-    </div>
+    </Column>
   );
 }

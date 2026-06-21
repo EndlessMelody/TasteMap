@@ -12,6 +12,7 @@ import {
   Utensils,
   Navigation,
 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import type { ItineraryStop } from "./types";
 import { STOP_CATEGORY_ICON } from "./constants";
 
@@ -48,34 +49,31 @@ export function StopCard({
       onMouseLeave={onLeave}
     >
       {/* Timeline dot */}
-      <div
+      <Column
+        horizontal="center"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
           width: 36,
           flexShrink: 0,
         }}
       >
-        <div
+        <Row
+          horizontal="center"
+          vertical="center"
           style={{
             width: 36,
             height: 36,
             borderRadius: "50%",
             backgroundColor: stop.accent,
             boxShadow: active ? `0 4px 16px ${stop.accent}55` : `0 2px 8px ${stop.accent}33`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             color: "white",
             transition: "box-shadow 0.2s",
             flexShrink: 0,
           }}
         >
           {STOP_CATEGORY_ICON[stop.category] ?? <Utensils size={16} />}
-        </div>
+        </Row>
         {index < total - 1 && (
-          <div
+          <Column
             style={{
               width: 2,
               flex: 1,
@@ -88,10 +86,10 @@ export function StopCard({
             }}
           />
         )}
-      </div>
+      </Column>
 
       {/* Card */}
-      <div style={{ flex: 1, paddingBottom: 12, minWidth: 0 }}>
+      <Column style={{ flex: 1, paddingBottom: 12, minWidth: 0 }}>
         <AnimatePresence mode="wait">
           {swapping ? (
             <motion.div
@@ -141,25 +139,25 @@ export function StopCard({
               }}
             >
               {/* Image */}
-              <div style={{ height: 110, position: "relative", overflow: "hidden" }}>
+              <Column style={{ height: 110, position: "relative", overflow: "hidden" }}>
                 <img
                   src={stop.img}
                   alt={stop.name}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
-                <div
+                <Column
                   style={{
                     position: "absolute",
                     inset: 0,
                     background: "linear-gradient(to top, rgba(0,0,0,0.55), transparent 55%)",
                   }}
                 />
-                <div style={{ position: "absolute", bottom: 10, left: 12 }}>
+                <Column style={{ position: "absolute", bottom: 10, left: 12 }}>
                   <p style={{ color: "white", fontWeight: 800, fontSize: 15, lineHeight: 1.2 }}>
                     {stop.name}
                   </p>
                   <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 11 }}>{stop.category}</p>
-                </div>
+                </Column>
                 <span
                   style={{
                     position: "absolute",
@@ -176,10 +174,10 @@ export function StopCard({
                 >
                   {stop.time}
                 </span>
-              </div>
+              </Column>
 
               {/* Body */}
-              <div style={{ padding: "10px 14px 12px" }}>
+              <Column style={{ padding: "10px 14px 12px" }}>
                 <p
                   style={{
                     fontSize: 12,
@@ -190,18 +188,16 @@ export function StopCard({
                 >
                   &ldquo;{stop.reason}&rdquo;
                 </p>
-                <div
+                <Row
+                  horizontal="between"
+                  vertical="center"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
                     marginTop: 10,
                   }}
                 >
-                  <div
+                  <Row
+                    vertical="center"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
                       gap: 10,
                       fontSize: 12,
                       color: "#8E8E93",
@@ -230,7 +226,7 @@ export function StopCard({
                         <Navigation size={10} /> Maps
                       </a>
                     )}
-                  </div>
+                  </Row>
                   <span
                     style={{
                       display: "flex",
@@ -246,7 +242,7 @@ export function StopCard({
                   >
                     <Zap size={10} fill="currentColor" />+{stop.xp} XP
                   </span>
-                </div>
+                </Row>
 
                 <AnimatePresence>
                   {active && (
@@ -256,9 +252,8 @@ export function StopCard({
                       exit={{ opacity: 0, height: 0 }}
                       style={{ overflow: "hidden" }}
                     >
-                      <div
+                      <Row
                         style={{
-                          display: "flex",
                           gap: 6,
                           marginTop: 10,
                           paddingTop: 10,
@@ -336,8 +331,8 @@ export function StopCard({
                         >
                           <CheckCircle size={13} /> Keep
                         </span>
-                      </div>
-                      <div
+                      </Row>
+                      <Column
                         style={{
                           marginTop: 8,
                           padding: "8px 12px",
@@ -346,10 +341,9 @@ export function StopCard({
                           border: "1px solid rgba(0,122,255,0.12)",
                         }}
                       >
-                        <div
+                        <Row
+                          vertical="center"
                           style={{
-                            display: "flex",
-                            alignItems: "center",
                             gap: 5,
                             marginBottom: 4,
                           }}
@@ -358,7 +352,7 @@ export function StopCard({
                           <span style={{ fontSize: 10, color: "#ff6b35", fontWeight: 700 }}>
                             Why this stop
                           </span>
-                        </div>
+                        </Row>
                         <p style={{ fontSize: 11, color: "#636366", lineHeight: 1.6 }}>
                           Matched: <b style={{ color: "#3C3C43" }}>{stop.category}</b> preference ·
                           budget fits at <b style={{ color: "#3C3C43" }}>{stop.cost}</b>
@@ -366,16 +360,15 @@ export function StopCard({
                             ? ` · ${stop.travelToNext} to next stop`
                             : " · final stop of route"}
                         </p>
-                      </div>
+                      </Column>
                     </motion.div>
                   )}
                 </AnimatePresence>
 
                 {stop.travelToNext && !active && (
-                  <div
+                  <Row
+                    vertical="center"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
                       gap: 6,
                       marginTop: 8,
                       paddingTop: 8,
@@ -386,13 +379,13 @@ export function StopCard({
                     <span style={{ fontSize: 11, color: "#8E8E93" }}>
                       {stop.travelToNext} to next stop
                     </span>
-                  </div>
+                  </Row>
                 )}
-              </div>
+              </Column>
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </Column>
     </motion.div>
   );
 }

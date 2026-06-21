@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Column, Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 interface ProfileAvatarGroupUser {
   display_name?: string;
@@ -29,8 +30,9 @@ export const ProfileAvatarGroup: React.FC<ProfileAvatarGroupProps> = ({
     .toUpperCase();
 
   return (
-    <div style={{ position: "relative", width: 160, height: 160 }}>
-      <div
+    <Row style={{ position: "relative", width: 160, height: 160 }}>
+      <Column
+        center
         style={{
           width: 160,
           height: 160,
@@ -39,9 +41,6 @@ export const ProfileAvatarGroup: React.FC<ProfileAvatarGroupProps> = ({
           background: tokens.color.surfaceMuted,
           boxShadow: tokens.shadow.md,
           overflow: "hidden",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
         {user?.avatar_url ? (
@@ -68,9 +67,9 @@ export const ProfileAvatarGroup: React.FC<ProfileAvatarGroupProps> = ({
             {initials}
           </span>
         )}
-      </div>
+      </Column>
 
-      <div
+      <Row
         style={{
           position: "absolute",
           bottom: 4,
@@ -87,8 +86,8 @@ export const ProfileAvatarGroup: React.FC<ProfileAvatarGroupProps> = ({
         }}
       >
         Lv {user?.level || 1}
-      </div>
-    </div>
+      </Row>
+    </Row>
   );
 };
 

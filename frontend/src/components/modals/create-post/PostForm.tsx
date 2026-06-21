@@ -3,6 +3,8 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, LocateFixed, Loader2, AlertCircle, X, CheckCircle2 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 import { RatingInput } from "./RatingInput";
 import { TagInput } from "./TagInput";
 import { MediaUpload } from "./MediaUpload";
@@ -63,15 +65,15 @@ export function PostForm({
       className="flex flex-col gap-4 w-full"
     >
       {/* Review */}
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+      <Column style={{ gap: 6 }}>
+        <Row horizontal="between" vertical="center">
+          <label style={{ fontSize: "0.75rem", fontWeight: 600, color: tokens.color.textMuted, textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Your Review
           </label>
-          <span className="text-[11px] text-zinc-400">
+          <span style={{ fontSize: "0.6875rem", color: tokens.color.textMuted }}>
             {review.length}/{MAX_REVIEW_LENGTH}
           </span>
-        </div>
+        </Row>
         <textarea
           rows={4}
           placeholder="What's your food story?"
@@ -83,7 +85,7 @@ export function PostForm({
           }}
           className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-zinc-800 placeholder-zinc-300 resize-none outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 transition-shadow leading-relaxed"
         />
-      </div>
+      </Column>
 
       {/* Rating */}
       <RatingInput value={rating} onChange={onRatingChange} />
@@ -102,19 +104,19 @@ export function PostForm({
       />
 
       {/* Location — GPS-powered */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+      <Column style={{ gap: 6 }}>
+        <label style={{ fontSize: "0.75rem", fontWeight: 600, color: tokens.color.textMuted, textTransform: "uppercase", letterSpacing: "0.05em" }}>
           Location{" "}
-          <span className="normal-case font-normal text-zinc-400">(optional)</span>
+          <span style={{ textTransform: "none", fontWeight: 400 }}>(optional)</span>
         </label>
 
-        <div className="relative flex items-center gap-2">
+        <Row vertical="center" style={{ gap: "8px" }}>
           {/* Text input */}
-          <div className="relative flex-1">
+          <Column style={{ flex: 1 }}>
             <MapPin
               size={15}
               className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"
-              style={{ color: locationName ? "#ff6b35" : "#a1a1aa" }}
+              style={{ color: locationName ? tokens.color.warm : tokens.color.textMuted }}
             />
             <input
               type="text"
@@ -131,7 +133,7 @@ export function PostForm({
                 <X size={12} />
               </button>
             )}
-          </div>
+          </Column>
 
           {/* GPS detect button */}
           <motion.button
@@ -153,7 +155,7 @@ export function PostForm({
               <LocateFixed size={17} />
             )}
           </motion.button>
-        </div>
+        </Row>
 
         {/* Status feedback */}
         <AnimatePresence mode="wait">
@@ -166,14 +168,14 @@ export function PostForm({
               className="flex items-start gap-1.5 px-1"
             >
               <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-emerald-500" />
-              <div className="flex flex-col gap-0.5">
-                <span className="text-[11px] font-semibold text-emerald-600">
+              <Column style={{ gap: 2 }}>
+                <span style={{ fontSize: "0.6875rem", fontWeight: 600, color: tokens.color.success }}>
                   High-precision fix acquired
                 </span>
-                <span className="text-[10px] text-zinc-400 leading-snug">
+                <span style={{ fontSize: "0.625rem", color: tokens.color.textMuted, lineHeight: 1.4 }}>
                   {locationName}
                 </span>
-              </div>
+              </Column>
             </motion.div>
           )}
           {status === "error" && error && (
@@ -204,7 +206,7 @@ export function PostForm({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </Column>
 
       {/* Tags */}
       <TagInput tags={tags} onTagsChange={onTagsChange} />

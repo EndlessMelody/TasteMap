@@ -28,6 +28,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import Link from "next/link";
+import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
   Button,
@@ -175,7 +176,7 @@ function TrafficBar({ level }: { level: TrafficLevel }) {
     heavy: "95%",
   };
   return (
-    <div
+    <Column
       style={{
         height: 4,
         width: "100%",
@@ -193,7 +194,7 @@ function TrafficBar({ level }: { level: TrafficLevel }) {
           background: TRAFFIC_TOKEN[level],
         }}
       />
-    </div>
+    </Column>
   );
 }
 
@@ -216,13 +217,7 @@ function PlaceCard({ place, index }: { place: NearbyPlace; index: number }) {
         interactive
         style={{ cursor: "pointer" }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[2],
-          }}
-        >
+        <Column style={{ gap: tokens.space[2] }}>
           <span
             style={{
               width: 36,
@@ -237,7 +232,7 @@ function PlaceCard({ place, index }: { place: NearbyPlace; index: number }) {
           >
             {amenityIcon(place.type)}
           </span>
-          <div>
+          <Column>
             <Body
               style={{
                 fontWeight: tokens.type.weight.semibold,
@@ -252,7 +247,7 @@ function PlaceCard({ place, index }: { place: NearbyPlace; index: number }) {
             <Caption tone="muted" style={{ textTransform: "capitalize" }}>
               {place.type.replace("_", " ")}
             </Caption>
-          </div>
+          </Column>
           {place.distance != null && (
             <Pill
               tone="neutral"
@@ -262,7 +257,7 @@ function PlaceCard({ place, index }: { place: NearbyPlace; index: number }) {
               {formatDistance(place.distance)}
             </Pill>
           )}
-        </div>
+        </Column>
       </Card>
     </motion.div>
   );
@@ -417,22 +412,19 @@ export default function HotRoutesPage() {
   ];
 
   return (
-    <div
+    <Column
       style={{
         height: "100%",
-        display: "flex",
-        flexDirection: "column",
         overflow: "hidden",
         background: tokens.color.bg,
         color: tokens.color.text,
         position: "relative",
       }}
     >
-      <div
+      <Row
+        horizontal="between"
+        vertical="center"
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
           padding: `${tokens.space[4]} ${tokens.space[6]}`,
           borderBottom: `1px solid ${tokens.color.border}`,
           background: tokens.color.surface,
@@ -440,13 +432,7 @@ export default function HotRoutesPage() {
           zIndex: 20,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: tokens.space[3],
-          }}
-        >
+        <Row vertical="center" style={{ gap: tokens.space[3] }}>
           <Link href="/discover" aria-label="Back to discover">
             <IconButton
               variant="secondary"
@@ -469,7 +455,7 @@ export default function HotRoutesPage() {
           >
             <Flame size={16} strokeWidth={2} />
           </span>
-          <div>
+          <Column>
             <Body
               style={{
                 fontWeight: tokens.type.weight.bold,
@@ -489,8 +475,8 @@ export default function HotRoutesPage() {
               <Navigation size={9} strokeWidth={1.75} />
               {locationName}
             </Caption>
-          </div>
-        </div>
+          </Column>
+        </Row>
 
         <IconButton
           variant="secondary"
@@ -513,18 +499,16 @@ export default function HotRoutesPage() {
             </motion.span>
           }
         />
-      </div>
+      </Row>
 
-      <div
+      <Column
         className="no-scrollbar"
         style={{
           flex: 1,
           overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
         }}
       >
-        <div
+        <Column
           style={{
             position: "relative",
             height: 320,
@@ -551,13 +535,12 @@ export default function HotRoutesPage() {
           )}
 
           {!mapLoaded && (
-            <div
+            <Row
+              horizontal="center"
+              vertical="center"
               style={{
                 position: "absolute",
                 inset: 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
               }}
             >
               <motion.div
@@ -571,7 +554,7 @@ export default function HotRoutesPage() {
                   borderTopColor: tokens.color.warm,
                 }}
               />
-            </div>
+            </Row>
           )}
 
           <AnimatePresence>
@@ -599,13 +582,7 @@ export default function HotRoutesPage() {
                     border: `1px solid rgba(255, 255, 255, 0.7)`,
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: tokens.space[3],
-                    }}
-                  >
+                  <Row vertical="center" style={{ gap: tokens.space[3] }}>
                     <span
                       style={{
                         width: 36,
@@ -620,7 +597,7 @@ export default function HotRoutesPage() {
                     >
                       {wInfo.icon}
                     </span>
-                    <div>
+                    <Column>
                       <Body
                         style={{
                           fontSize: 18,
@@ -631,13 +608,7 @@ export default function HotRoutesPage() {
                         {weather.temp}°C
                       </Body>
                       <Caption tone="muted">{wInfo.label}</Caption>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: tokens.space[2],
-                          marginTop: 4,
-                        }}
-                      >
+                      <Row style={{ gap: tokens.space[2], marginTop: 4 }}>
                         <Caption
                           tone="muted"
                           style={{
@@ -660,9 +631,9 @@ export default function HotRoutesPage() {
                           <Droplets size={9} strokeWidth={1.75} />
                           {weather.humidity}%
                         </Caption>
-                      </div>
-                    </div>
-                  </div>
+                      </Row>
+                    </Column>
+                  </Row>
                 </Card>
               </motion.div>
             )}
@@ -690,13 +661,7 @@ export default function HotRoutesPage() {
                 border: `1px solid rgba(255, 255, 255, 0.7)`,
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[2],
-                }}
-              >
+              <Row vertical="center" style={{ gap: tokens.space[2] }}>
                 <span
                   style={{
                     width: 9,
@@ -705,7 +670,7 @@ export default function HotRoutesPage() {
                     background: TRAFFIC_TOKEN[traffic.level],
                   }}
                 />
-                <div>
+                <Column>
                   <Body
                     style={{
                       fontSize: 13,
@@ -718,12 +683,12 @@ export default function HotRoutesPage() {
                   <Caption tone="muted" style={{ whiteSpace: "nowrap" }}>
                     {traffic.description}
                   </Caption>
-                </div>
-              </div>
+                </Column>
+              </Row>
             </Card>
           </motion.div>
 
-          <div
+          <Column
             style={{
               position: "absolute",
               bottom: 0,
@@ -734,11 +699,10 @@ export default function HotRoutesPage() {
               pointerEvents: "none",
             }}
           />
-        </div>
+        </Column>
 
-        <div
+        <Row
           style={{
-            display: "flex",
             padding: `0 ${tokens.space[6]}`,
             marginTop: -tokens.space[2],
             flexShrink: 0,
@@ -778,12 +742,11 @@ export default function HotRoutesPage() {
               sub: "spots found",
             },
           ].map((stat, i) => (
-            <div key={i} style={{ flex: 1 }}>
+            <Column key={i} style={{ flex: 1 }}>
               <Card radius="md" padding="sm" shadow="sm">
-                <div
+                <Row
+                  vertical="center"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
                     gap: tokens.space[2],
                     marginBottom: tokens.space[1],
                     color: tokens.color.textMuted,
@@ -791,7 +754,7 @@ export default function HotRoutesPage() {
                 >
                   {stat.icon}
                   <Caption tone="muted">{stat.label}</Caption>
-                </div>
+                </Row>
                 <Body
                   style={{
                     fontSize: 16,
@@ -803,9 +766,9 @@ export default function HotRoutesPage() {
                 </Body>
                 <Caption tone="muted">{stat.sub}</Caption>
               </Card>
-            </div>
+            </Column>
           ))}
-        </div>
+        </Row>
 
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -817,47 +780,29 @@ export default function HotRoutesPage() {
           }}
         >
           <Card radius="lg" padding="md" shadow="sm">
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: tokens.space[3],
-              }}
+            <Row
+              horizontal="between"
+              vertical="center"
+              style={{ marginBottom: tokens.space[3] }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[2],
-                }}
-              >
+              <Row vertical="center" style={{ gap: tokens.space[2] }}>
                 <TrendingUp
                   size={14}
                   strokeWidth={1.75}
                   style={{ color: TRAFFIC_TOKEN[traffic.level] }}
                 />
                 <H3 style={{ fontSize: tokens.type.size.body }}>Traffic overview</H3>
-              </div>
+              </Row>
               <Pill tone={traffic.tone} size="sm" dot>
                 Live
               </Pill>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: tokens.space[2],
-              }}
-            >
+            </Row>
+            <Column style={{ gap: tokens.space[2] }}>
               {traffic.segments.map((seg) => (
-                <div
+                <Row
                   key={seg.name}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: tokens.space[3],
-                  }}
+                  vertical="center"
+                  style={{ gap: tokens.space[3] }}
                 >
                   <BodySm
                     tone="muted"
@@ -865,9 +810,9 @@ export default function HotRoutesPage() {
                   >
                     {seg.name}
                   </BodySm>
-                  <div style={{ flex: 1 }}>
+                  <Column style={{ flex: 1 }}>
                     <TrafficBar level={seg.status} />
-                  </div>
+                  </Column>
                   <Caption
                     style={{
                       color: TRAFFIC_TOKEN[seg.status],
@@ -880,49 +825,35 @@ export default function HotRoutesPage() {
                   >
                     {seg.status}
                   </Caption>
-                </div>
+                </Row>
               ))}
-            </div>
+            </Column>
           </Card>
         </motion.div>
 
-        <div
+        <Column
           style={{
             padding: `${tokens.space[5]} ${tokens.space[6]} ${tokens.space[2]}`,
             flexShrink: 0,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: tokens.space[3],
-            }}
+          <Row
+            horizontal="between"
+            vertical="center"
+            style={{ marginBottom: tokens.space[3] }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: tokens.space[2],
-              }}
-            >
+            <Row vertical="center" style={{ gap: tokens.space[2] }}>
               <Flame
                 size={16}
                 strokeWidth={1.75}
                 style={{ color: tokens.color.warm }}
               />
               <H3>Hot spots near you</H3>
-            </div>
+            </Row>
             <Caption tone="muted">via OpenStreetMap</Caption>
-          </div>
+          </Row>
 
-          <div
-            style={{
-              display: "flex",
-              gap: tokens.space[2],
-            }}
-          >
+          <Row style={{ gap: tokens.space[2] }}>
             {tabs.map((tab) => {
               const active = activeTab === tab.id;
               return (
@@ -958,13 +889,12 @@ export default function HotRoutesPage() {
                 </button>
               );
             })}
-          </div>
-        </div>
+          </Row>
+        </Column>
 
-        <div
+        <Row
           className="no-scrollbar"
           style={{
-            display: "flex",
             gap: tokens.space[2],
             padding: `${tokens.space[1]} ${tokens.space[6]} ${tokens.space[8]}`,
             overflowX: "auto",
@@ -986,18 +916,18 @@ export default function HotRoutesPage() {
               <PlaceCard key={place.id} place={place} index={i} />
             ))
           ) : (
-            <div style={{ flex: 1, minWidth: 280 }}>
+            <Column style={{ flex: 1, minWidth: 280 }}>
               <EmptyState
                 compact
                 icon={<SearchX size={28} strokeWidth={1.5} />}
                 title={`No ${activeTab === "all" ? "places" : activeTab + "s"} found nearby`}
               />
-            </div>
+            </Column>
           )}
-        </div>
-      </div>
+        </Row>
+      </Column>
 
-      <div
+      <Column
         style={{
           padding: `${tokens.space[1]} ${tokens.space[6]}`,
           background: tokens.color.surface,
@@ -1017,7 +947,7 @@ export default function HotRoutesPage() {
           </a>{" "}
           contributors · Places via Overpass API · Weather via Open-Meteo
         </Caption>
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }

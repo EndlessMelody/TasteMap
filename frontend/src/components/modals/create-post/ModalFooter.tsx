@@ -3,6 +3,7 @@
 import React from "react";
 import { Row, Column, Text, Button } from "@once-ui-system/core";
 import { motion } from "framer-motion";
+import { tokens } from "@/styles/tokens";
 
 interface ModalFooterProps {
   isUploading: boolean;
@@ -14,8 +15,6 @@ interface ModalFooterProps {
   onCancel: () => void;
   onSubmit: () => void;
 }
-
-const BRAND = "#ff6b35";
 
 export function ModalFooter({
   isUploading,
@@ -42,30 +41,24 @@ export function ModalFooter({
       paddingX="20"
       borderTop="neutral-alpha-weak"
       style={{
-        background: "#FFFFFF",
+        backgroundColor: tokens.color.surface,
         flexShrink: 0,
         minHeight: "80px",
       }}
     >
       <Column gap="8" style={{ flex: 1, maxWidth: "200px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <Row horizontal="between" vertical="center">
           <Text variant="body-default-s" onBackground="neutral-medium">
             {isUploading ? "Uploading..." : "Completion"}
           </Text>
           <Text variant="body-default-xs" onBackground="neutral-weak">
             {Math.round(completionPercentage)}%
           </Text>
-        </div>
-        <div
+        </Row>
+        <Column
           style={{
             height: "4px",
-            background: "#E5E5EA",
+            background: tokens.color.border,
             borderRadius: "2px",
             overflow: "hidden",
           }}
@@ -76,11 +69,11 @@ export function ModalFooter({
             transition={{ duration: 0.3 }}
             style={{
               height: "100%",
-              background: canSubmit ? BRAND : "#8E8E93",
+              background: canSubmit ? tokens.color.warm : tokens.color.textMuted,
               borderRadius: "2px",
             }}
           />
-        </div>
+        </Column>
         <Text variant="body-default-xs" onBackground="neutral-weak">
           {isUploading ? "Wait for upload to finish" : destinationHint}
         </Text>
@@ -94,7 +87,7 @@ export function ModalFooter({
           onClick={onSubmit}
           disabled={isSubmitting || isUploading || !canSubmit}
           style={{
-            background: canSubmit ? BRAND : undefined,
+            background: canSubmit ? tokens.color.warm : undefined,
           }}
         >
           {getButtonLabel()}

@@ -2,10 +2,15 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Row, Column, Text } from "@once-ui-system/core";
 import { Camera, ChevronLeft, Star, Image as ImageIcon } from "lucide-react";
+import { tokens } from "@/styles/tokens";
 
 // Re-export original modal
 export { CreatePostModal } from "./create-post";
 export type { CreatePostModalProps } from "./create-post";
+
+// ─── Gradient shade constants (TasteMap warm/red brand palette) ───
+const WARM_GRADIENT = { dark: "#e85d2a", light: "#ff8c5a" };
+const RED_GRADIENT = { base: "#ff4757", light: "#ff7675" };
 
 interface CreatePostCardProps {
     onOpenCreatePost: () => void;
@@ -24,10 +29,10 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({ onOpenCreatePost
             }}
         >
             {/* Card Header */}
-            <div
+            <Column
                 style={{
                     position: "relative",
-                    background: "linear-gradient(135deg, #ff6b35, #e85d2a, #ff8c5a)",
+                    background: `linear-gradient(135deg, ${tokens.color.warm}, ${WARM_GRADIENT.dark}, ${WARM_GRADIENT.light})`,
                     padding: "20px 24px 18px",
                     overflow: "hidden",
                 }}
@@ -47,17 +52,17 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({ onOpenCreatePost
                     }}
                 />
                 <Row style={{ gap: "12px", alignItems: "center" }}>
-                    <div
+                    <Column
+                        center
                         style={{
                             backgroundColor: "rgba(255,255,255,0.2)",
                             padding: "10px",
                             borderRadius: "12px",
-                            display: "flex",
                             backdropFilter: "blur(4px)",
                         }}
                     >
                         <Camera size={20} color="white" />
-                    </div>
+                    </Column>
                     <Column style={{ gap: "2px" }}>
                         <Text
                             style={{ color: "white", fontWeight: 700, fontSize: "1rem", lineHeight: 1.2 }}
@@ -71,25 +76,23 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({ onOpenCreatePost
                         </Text>
                     </Column>
                 </Row>
-            </div>
+            </Column>
 
             {/* Action Buttons */}
-            <div
+            <Column
                 style={{
-                    backgroundColor: "#FFFFFF",
+                    backgroundColor: tokens.color.surface,
                     padding: "16px",
-                    display: "flex",
-                    flexDirection: "column",
                     gap: "10px",
-                    borderLeft: "1px solid #F2F2F7",
-                    borderRight: "1px solid #F2F2F7",
-                    borderBottom: "1px solid #F2F2F7",
+                    borderLeft: `1px solid ${tokens.color.border}`,
+                    borderRight: `1px solid ${tokens.color.border}`,
+                    borderBottom: `1px solid ${tokens.color.border}`,
                     borderBottomLeftRadius: "24px",
                     borderBottomRightRadius: "24px",
                 }}
             >
                 <motion.button
-                    whileHover={{ scale: 1.02, backgroundColor: "#FFF8F5" }}
+                    whileHover={{ scale: 1.02, backgroundColor: tokens.color.surfaceMuted }}
                     whileTap={{ scale: 0.98 }}
                     onClick={onOpenCreatePost}
                     style={{
@@ -98,45 +101,45 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({ onOpenCreatePost
                         gap: "12px",
                         padding: "14px 16px",
                         borderRadius: "14px",
-                        border: "1px solid rgba(255,107,53,0.12)",
-                        backgroundColor: "#FFFAF7",
+                        border: `1px solid ${tokens.color.border}`,
+                        backgroundColor: tokens.color.surfaceMuted,
                         cursor: "pointer",
                         width: "100%",
                         textAlign: "left",
                     }}
                 >
-                    <div
+                    <Column
+                        center
                         style={{
-                            background: "linear-gradient(135deg, #ff6b35, #ff8c5a)",
+                            background: `linear-gradient(135deg, ${tokens.color.warm}, ${WARM_GRADIENT.light})`,
                             padding: "8px",
                             borderRadius: "10px",
-                            display: "flex",
                             flexShrink: 0,
                         }}
                     >
                         <Star size={16} color="white" fill="white" />
-                    </div>
+                    </Column>
                     <Column style={{ gap: "2px", flex: 1 }}>
                         <Text
-                            style={{ color: "#1C1C1E", fontWeight: 600, fontSize: "0.88rem" }}
+                            style={{ color: tokens.color.text, fontWeight: 600, fontSize: "0.88rem" }}
                         >
                             Foodie Feed Post
                         </Text>
                         <Text
-                            style={{ color: "#8E8E93", fontSize: "0.75rem", fontWeight: 500 }}
+                            style={{ color: tokens.color.textMuted, fontSize: "0.75rem", fontWeight: 500 }}
                         >
                             Reviews, ratings & food stories
                         </Text>
                     </Column>
                     <ChevronLeft
                         size={16}
-                        color="#C7C7CC"
+                        color={tokens.color.textMuted}
                         style={{ transform: "rotate(180deg)", flexShrink: 0 }}
                     />
                 </motion.button>
 
                 <motion.button
-                    whileHover={{ scale: 1.02, backgroundColor: "#FFF5F5" }}
+                    whileHover={{ scale: 1.02, backgroundColor: tokens.color.surfaceMuted }}
                     whileTap={{ scale: 0.98 }}
                     onClick={onOpenCreatePost}
                     style={{
@@ -145,43 +148,43 @@ export const CreatePostCard: React.FC<CreatePostCardProps> = ({ onOpenCreatePost
                         gap: "12px",
                         padding: "14px 16px",
                         borderRadius: "14px",
-                        border: "1px solid rgba(255,71,87,0.12)",
-                        backgroundColor: "#FFFAF9",
+                        border: `1px solid ${tokens.color.border}`,
+                        backgroundColor: tokens.color.surfaceMuted,
                         cursor: "pointer",
                         width: "100%",
                         textAlign: "left",
                     }}
                 >
-                    <div
+                    <Column
+                        center
                         style={{
-                            background: "linear-gradient(135deg, #ff4757, #ff7675)",
+                            background: `linear-gradient(135deg, ${RED_GRADIENT.base}, ${RED_GRADIENT.light})`,
                             padding: "8px",
                             borderRadius: "10px",
-                            display: "flex",
                             flexShrink: 0,
                         }}
                     >
                         <ImageIcon size={16} color="white" />
-                    </div>
+                    </Column>
                     <Column style={{ gap: "2px", flex: 1 }}>
                         <Text
-                            style={{ color: "#1C1C1E", fontWeight: 600, fontSize: "0.88rem" }}
+                            style={{ color: tokens.color.text, fontWeight: 600, fontSize: "0.88rem" }}
                         >
                             Discover Reel
                         </Text>
                         <Text
-                            style={{ color: "#8E8E93", fontSize: "0.75rem", fontWeight: 500 }}
+                            style={{ color: tokens.color.textMuted, fontSize: "0.75rem", fontWeight: 500 }}
                         >
                             Short-form video content
                         </Text>
                     </Column>
                     <ChevronLeft
                         size={16}
-                        color="#C7C7CC"
+                        color={tokens.color.textMuted}
                         style={{ transform: "rotate(180deg)", flexShrink: 0 }}
                     />
                 </motion.button>
-            </div>
+            </Column>
         </motion.div>
     );
 };

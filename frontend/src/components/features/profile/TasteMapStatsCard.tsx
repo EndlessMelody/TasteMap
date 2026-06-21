@@ -2,6 +2,7 @@
 
 import React from "react";
 import { TrendingUp } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { Card, H3, Body, Caption } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 
@@ -33,23 +34,16 @@ export const TasteMapStatsCard: React.FC<TasteMapStatsCardProps> = ({
 
   return (
     <Card radius="xl" padding="md" shadow="sm" style={{ flex: 1 }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: tokens.space[2],
-          marginBottom: tokens.space[4],
-        }}
-      >
+      <Row vertical="center" style={{ gap: tokens.space[2], marginBottom: tokens.space[4] }}>
         <TrendingUp
           size={18}
           strokeWidth={1.75}
           style={{ color: tokens.color.textMuted }}
         />
         <H3>TasteMap stats</H3>
-      </div>
+      </Row>
 
-      <div
+      <Column
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
@@ -57,15 +51,13 @@ export const TasteMapStatsCard: React.FC<TasteMapStatsCardProps> = ({
         }}
       >
         {stats.map((stat) => (
-          <div
+          <Column
             key={stat.label}
             style={{
               background: tokens.color.surfaceMuted,
               borderRadius: tokens.radius.md,
               padding: tokens.space[4],
               textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
               gap: tokens.space[1],
             }}
           >
@@ -79,9 +71,9 @@ export const TasteMapStatsCard: React.FC<TasteMapStatsCardProps> = ({
               {formatStat(stat.value)}
             </Body>
             <Caption tone="muted">{stat.label}</Caption>
-          </div>
+          </Column>
         ))}
-      </div>
+      </Column>
     </Card>
   );
 };

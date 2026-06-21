@@ -17,6 +17,7 @@ import {
   TrendingUp,
   MoonStar,
 } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 import { FriendRow, Friend } from "@/components/features/foodies/FriendRow";
 import { useChat } from "@/context/ChatContext";
 import { useFoodies } from "@/hooks/useFoodies";
@@ -101,7 +102,7 @@ function PendingRequestCard({
         interactive
         style={{ overflow: "hidden" }}
       >
-        <div
+        <Column
           style={{
             height: 64,
             position: "relative",
@@ -110,14 +111,14 @@ function PendingRequestCard({
               : tokens.color.surfaceMuted,
           }}
         >
-          <div
+          <Column
             style={{
               position: "absolute",
               inset: 0,
               background: `linear-gradient(to bottom, transparent 40%, ${tokens.color.surface} 100%)`,
             }}
           />
-          <div
+          <Column
             style={{
               position: "absolute",
               top: tokens.space[2],
@@ -134,9 +135,9 @@ function PendingRequestCard({
             >
               {req.match_score}% match
             </Pill>
-          </div>
-        </div>
-        <div
+          </Column>
+        </Column>
+        <Column
           style={{
             padding: `0 ${tokens.space[4]} ${tokens.space[4]}`,
             marginTop: -22,
@@ -151,11 +152,9 @@ function PendingRequestCard({
               boxShadow: tokens.shadow.sm,
             }}
           />
-          <div
+          <Column
             style={{
               marginTop: tokens.space[2],
-              display: "flex",
-              flexDirection: "column",
               gap: tokens.space[1],
             }}
           >
@@ -177,10 +176,9 @@ function PendingRequestCard({
                 {req.title || req.bio}
               </BodySm>
             )}
-          </div>
-          <div
+          </Column>
+          <Row
             style={{
-              display: "flex",
               gap: tokens.space[2],
               marginTop: tokens.space[4],
             }}
@@ -203,8 +201,8 @@ function PendingRequestCard({
             >
               Decline
             </Button>
-          </div>
-        </div>
+          </Row>
+        </Column>
       </Card>
     </motion.div>
   );
@@ -272,7 +270,7 @@ export default function FoodiesPage() {
 
   if (isChatOpen) {
     return (
-      <div
+      <Column
         className="no-scrollbar"
         style={{
           width: 320,
@@ -282,15 +280,11 @@ export default function FoodiesPage() {
           overflowY: "auto",
           background: tokens.color.surfaceMuted,
           borderRight: `1px solid ${tokens.color.border}`,
-          display: "flex",
-          flexDirection: "column",
         }}
       >
-        <div
+        <Column
           style={{
             padding: `${tokens.space[5]} ${tokens.space[4]} ${tokens.space[3]}`,
-            display: "flex",
-            flexDirection: "column",
             gap: tokens.space[3],
             flexShrink: 0,
           }}
@@ -303,13 +297,11 @@ export default function FoodiesPage() {
             placeholder="Search…"
             leading={<Search size={14} strokeWidth={1.75} />}
           />
-          <div style={{ height: 1, background: tokens.color.border }} />
-        </div>
-        <div
+          <Column style={{ height: 1, background: tokens.color.border }} />
+        </Column>
+        <Column
           style={{
             padding: `${tokens.space[1]} 0 ${tokens.space[4]}`,
-            display: "flex",
-            flexDirection: "column",
             gap: 2,
           }}
         >
@@ -324,17 +316,17 @@ export default function FoodiesPage() {
             />
           ))}
           {filtered.length === 0 && (
-            <div
+            <Column
               style={{
                 padding: `${tokens.space[8]} ${tokens.space[4]}`,
                 textAlign: "center",
               }}
             >
               <BodySm tone="muted">No results</BodySm>
-            </div>
+            </Column>
           )}
-        </div>
-      </div>
+        </Column>
+      </Column>
     );
   }
 
@@ -349,7 +341,7 @@ export default function FoodiesPage() {
 
   if (loading) {
     return (
-      <div
+      <Column
         className="no-scrollbar"
         style={{
           width: "100%",
@@ -358,32 +350,29 @@ export default function FoodiesPage() {
           background: tokens.color.bg,
         }}
       >
-        <div
+        <Column
           style={{
             padding: tokens.space[10],
-            display: "flex",
-            flexDirection: "column",
             gap: tokens.space[4],
           }}
         >
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <Skeleton key={i} height={120} radius="lg" />
           ))}
-        </div>
-      </div>
+        </Column>
+      </Column>
     );
   }
 
   if (error) {
     return (
-      <div
+      <Column
+        horizontal="center"
+        vertical="center"
         style={{
           width: "100%",
           height: "100%",
           background: tokens.color.bg,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           padding: tokens.space[6],
         }}
       >
@@ -394,7 +383,7 @@ export default function FoodiesPage() {
             description={error}
           />
         </Card>
-      </div>
+      </Column>
     );
   }
 
@@ -411,7 +400,7 @@ export default function FoodiesPage() {
   ];
 
   return (
-    <div
+    <Column
       className="no-scrollbar"
       style={{
         width: "100%",
@@ -431,30 +420,28 @@ export default function FoodiesPage() {
           padding: `${tokens.space[8]} ${tokens.space[10]} ${tokens.space[6]}`,
         }}
       >
-        <div
+        <Row
+          horizontal="between"
           style={{
-            display: "flex",
-            justifyContent: "space-between",
             alignItems: "flex-end",
             marginBottom: tokens.space[5],
             gap: tokens.space[4],
             flexWrap: "wrap",
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", gap: tokens.space[1] }}>
+          <Column style={{ gap: tokens.space[1] }}>
             <H1>Foodies</H1>
             <Body tone="muted">
               Find foodies with matching taste vectors — invite them to a tour.
             </Body>
-          </div>
+          </Column>
           <Pill tone="success" size="md" dot>
             {onlineCount} online now
           </Pill>
-        </div>
+        </Row>
 
-        <div
+        <Grid
           style={{
-            display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
             gap: tokens.space[3],
           }}
@@ -467,13 +454,7 @@ export default function FoodiesPage() {
               transition={{ delay: i * 0.05 + 0.05, duration: 0.28 }}
             >
               <Card radius="md" padding="sm" shadow="sm" surface="muted">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: tokens.space[3],
-                  }}
-                >
+                <Row vertical="center" style={{ gap: tokens.space[3] }}>
                   <span
                     style={{
                       width: 34,
@@ -489,7 +470,7 @@ export default function FoodiesPage() {
                   >
                     {s.icon}
                   </span>
-                  <div style={{ display: "flex", flexDirection: "column" }}>
+                  <Column>
                     <Body
                       style={{
                         fontSize: 18,
@@ -500,26 +481,24 @@ export default function FoodiesPage() {
                       {s.value}
                     </Body>
                     <Caption tone="muted">{s.label}</Caption>
-                  </div>
-                </div>
+                  </Column>
+                </Row>
               </Card>
             </motion.div>
           ))}
-        </div>
+        </Grid>
 
-        <div
+        <Column
           id="foodies-add-friend"
           style={{ marginTop: tokens.space[5], maxWidth: 480 }}
         >
           <AddFriendSearch onRequestSent={() => {}} />
-        </div>
+        </Column>
       </motion.div>
 
-      <div
+      <Column
         style={{
           padding: `${tokens.space[6]} ${tokens.space[10]} ${tokens.space[12]}`,
-          display: "flex",
-          flexDirection: "column",
           gap: tokens.space[8],
         }}
       >
@@ -529,22 +508,14 @@ export default function FoodiesPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.28, delay: 0.1 }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: tokens.space[2],
-                marginBottom: tokens.space[3],
-              }}
-            >
+            <Row vertical="center" style={{ gap: tokens.space[2], marginBottom: tokens.space[3] }}>
               <H3>Friend requests</H3>
               <Pill tone="warm" size="sm">
                 {pendingRequests.length}
               </Pill>
-            </div>
-            <div
+            </Row>
+            <Grid
               style={{
-                display: "grid",
                 gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
                 gap: tokens.space[3],
               }}
@@ -558,23 +529,16 @@ export default function FoodiesPage() {
                   onDecline={() => declineRequest(req.friendship_id)}
                 />
               ))}
-            </div>
+            </Grid>
           </motion.div>
         )}
 
         {onlineFriends.length > 0 && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[3],
-            }}
-          >
+          <Column style={{ gap: tokens.space[3] }}>
             <Eyebrow tone="muted">Online now</Eyebrow>
-            <div
+            <Row
               className="no-scrollbar"
               style={{
-                display: "flex",
                 gap: tokens.space[3],
                 overflowX: "auto",
                 paddingBottom: 4,
@@ -604,9 +568,9 @@ export default function FoodiesPage() {
                     boxShadow: tokens.shadow.sm,
                   }}
                 >
-                  <div style={{ position: "relative" }}>
+                  <Column style={{ position: "relative" }}>
                     <Avatar src={f.avatar} name={f.name} size="lg" ring="success" />
-                  </div>
+                  </Column>
                   <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
                     {f.name.split(" ")[0]}
                   </BodySm>
@@ -620,17 +584,11 @@ export default function FoodiesPage() {
                   )}
                 </motion.button>
               ))}
-            </div>
-          </div>
+            </Row>
+          </Column>
         )}
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[3],
-          }}
-        >
+        <Column style={{ gap: tokens.space[3] }}>
           <Field
             type="text"
             value={query}
@@ -650,11 +608,10 @@ export default function FoodiesPage() {
             }
           />
 
-          <div
+          <Row
+            vertical="center"
             style={{
-              display: "flex",
               gap: tokens.space[2],
-              alignItems: "center",
               flexWrap: "wrap",
             }}
           >
@@ -714,33 +671,20 @@ export default function FoodiesPage() {
                 ? "s"
                 : ""}
             </Caption>
-          </div>
-        </div>
+          </Row>
+        </Column>
 
         {activeTab === "sent" && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: tokens.space[3],
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: tokens.space[2],
-              }}
-            >
+          <Column style={{ gap: tokens.space[3] }}>
+            <Row vertical="center" style={{ gap: tokens.space[2] }}>
               <H3>Sent requests</H3>
               <Pill tone="neutral" size="sm">
                 {sentRequests.length}
               </Pill>
-            </div>
+            </Row>
             {sentRequests.length > 0 ? (
-              <div
+              <Grid
                 style={{
-                  display: "grid",
                   gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
                   gap: tokens.space[4],
                 }}
@@ -755,7 +699,7 @@ export default function FoodiesPage() {
                     onCancel={(f) => cancelRequest(f.friendshipId!)}
                   />
                 ))}
-              </div>
+              </Grid>
             ) : (
               <Card radius="xl" padding="lg" shadow="none" surface="muted">
                 <EmptyState
@@ -765,13 +709,12 @@ export default function FoodiesPage() {
                 />
               </Card>
             )}
-          </div>
+          </Column>
         )}
 
         {activeTab !== "sent" && filtered.length > 0 && (
-          <div
+          <Grid
             style={{
-              display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
               gap: tokens.space[4],
             }}
@@ -789,7 +732,7 @@ export default function FoodiesPage() {
                 }
               />
             ))}
-          </div>
+          </Grid>
         )}
 
         {activeTab !== "sent" &&
@@ -860,20 +803,8 @@ export default function FoodiesPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.3, delay: 0.05 }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: tokens.space[4],
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[2],
-                }}
-              >
+            <Column style={{ gap: tokens.space[4] }}>
+              <Row vertical="center" style={{ gap: tokens.space[2] }}>
                 <span
                   style={{
                     width: 32,
@@ -888,34 +819,21 @@ export default function FoodiesPage() {
                 >
                   <Sparkles size={14} strokeWidth={1.75} />
                 </span>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: tokens.space[2],
-                    }}
-                  >
+                <Column style={{ gap: 2 }}>
+                  <Row vertical="center" style={{ gap: tokens.space[2] }}>
                     <H3>Discover foodies</H3>
                     <Pill tone="magic" size="sm">
                       AI-matched
                     </Pill>
-                  </div>
+                  </Row>
                   <Caption tone="muted">
                     People with matching taste vectors you haven&apos;t
                     connected with yet
                   </Caption>
-                </div>
-              </div>
-              <div
+                </Column>
+              </Row>
+              <Grid
                 style={{
-                  display: "grid",
                   gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
                   gap: tokens.space[4],
                 }}
@@ -930,11 +848,11 @@ export default function FoodiesPage() {
                     onInvite={(f) => sendRequest(f.id)}
                   />
                 ))}
-              </div>
-            </div>
+              </Grid>
+            </Column>
           </motion.div>
         )}
-      </div>
-    </div>
+      </Column>
+    </Column>
   );
 }

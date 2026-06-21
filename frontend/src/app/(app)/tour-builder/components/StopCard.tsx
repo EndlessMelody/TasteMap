@@ -43,7 +43,7 @@ export function StopCard({ card }: StopCardProps) {
       }}
     >
       {/* ─── LEFT SIDE: IMAGE & IDENTITY ─── */}
-      <div
+      <Column
         style={{
           width: "55%",
           height: "100%",
@@ -57,7 +57,7 @@ export function StopCard({ card }: StopCardProps) {
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
         {/* Gradient overlay for text legibility */}
-        <div
+        <Column
           style={{
             position: "absolute",
             inset: 0,
@@ -110,7 +110,7 @@ export function StopCard({ card }: StopCardProps) {
             {card.subtitle}
           </Text>
         </Column>
-      </div>
+      </Column>
 
       {/* ─── RIGHT SIDE: BENTO DETAILS ─── */}
       <Column
@@ -144,7 +144,7 @@ export function StopCard({ card }: StopCardProps) {
           </Row>
         </Column>
 
-        <div style={{ height: '1px', backgroundColor: border.subtle, width: '100%' }} />
+        <Column style={{ height: '1px', backgroundColor: border.subtle, width: '100%' }} />
 
         {/* Pricing/Rating */}
         <Column style={{ gap: spacing.xs }}>
@@ -160,7 +160,7 @@ export function StopCard({ card }: StopCardProps) {
           </Row>
         </Column>
 
-        <div style={{ height: '1px', backgroundColor: border.subtle, width: '100%' }} />
+        <Column style={{ height: '1px', backgroundColor: border.subtle, width: '100%' }} />
 
         {/* Curation Insight / Reviews */}
         <Column style={{ gap: spacing.m }}>
@@ -176,22 +176,22 @@ export function StopCard({ card }: StopCardProps) {
             Community Consensus
           </Text>
           <Column style={{ gap: spacing.m }}>
-            <div style={{ padding: spacing.m, backgroundColor: 'white', borderRadius: radius.m, border: `1px solid ${border.subtle}`, boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+            <Column style={{ padding: spacing.m, backgroundColor: 'white', borderRadius: radius.m, border: `1px solid ${border.subtle}`, boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
               <Text style={{ color: text.secondary, fontSize: "0.85rem", lineHeight: 1.5, fontStyle: 'italic' }}>
                 &ldquo;{card.reviews_preview?.[0] ?? "A highly recommended spot that matches your taste profile."}&rdquo;
               </Text>
-            </div>
+            </Column>
           </Column>
         </Column>
 
-        <div style={{ marginTop: 'auto', paddingTop: spacing.m }}>
+        <Column style={{ marginTop: 'auto', paddingTop: spacing.m }}>
           <Row vertical="center" style={{ gap: spacing.xs, opacity: 0.6 }}>
             <Sparkles size={14} color={accent.primary} />
             <Text style={{ fontSize: '0.7rem', fontWeight: 700, color: text.tertiary, textTransform: 'uppercase' }}>
               Highly Recommended for your Tour DNA
             </Text>
           </Row>
-        </div>
+        </Column>
       </Column>
     </Row>
   );

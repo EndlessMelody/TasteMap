@@ -10,6 +10,7 @@ import { useGroups } from "@/hooks/useGroups";
 import { useAuth } from "@/context/AuthContext";
 import LobbyCard from "./LobbyCard";
 import LobbyDetailModal from "./LobbyDetailModal";
+import { Column, Row } from "@once-ui-system/core";
 import { H2, Body, Caption, Eyebrow, BodySm, Skeleton } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 
@@ -32,49 +33,27 @@ export default function LobbySection({ lobbies }: LobbySectionProps) {
   };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        gap: tokens.space[5],
-      }}
-    >
-      <div
+    <Column fillWidth style={{ gap: tokens.space[5] }}>
+      <Row
+        horizontal="between"
         style={{
-          display: "flex",
-          justifyContent: "space-between",
           alignItems: "flex-end",
           padding: `0 ${tokens.space[4]}`,
           gap: tokens.space[3],
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: tokens.space[1],
-            flex: 1,
-            minWidth: 0,
-          }}
-        >
+        <Column flex="1" minWidth="0" style={{ gap: tokens.space[1] }}>
           <Eyebrow tone="muted">Collaborate</Eyebrow>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: tokens.space[3],
-            }}
-          >
+          <Row vertical="center" style={{ gap: tokens.space[3] }}>
             <Users
               size={20}
               strokeWidth={1.75}
               style={{ color: tokens.color.warm, flexShrink: 0 }}
             />
             <H2>Social tables</H2>
-          </div>
+          </Row>
           <BodySm tone="muted">{data.length} active sessions near you</BodySm>
-        </div>
+        </Column>
         <Link
           href="/group-rooms"
           style={{
@@ -93,12 +72,11 @@ export default function LobbySection({ lobbies }: LobbySectionProps) {
           View all
           <ArrowRight size={14} strokeWidth={1.75} />
         </Link>
-      </div>
+      </Row>
 
-      <div
+      <Row
         className="no-scrollbar"
         style={{
-          display: "flex",
           gap: tokens.space[4],
           overflowX: "auto",
           paddingBottom: tokens.space[2],
@@ -137,7 +115,7 @@ export default function LobbySection({ lobbies }: LobbySectionProps) {
             />
           ))
         )}
-      </div>
+      </Row>
 
       <AnimatePresence>
         {selectedLobby && (
@@ -147,6 +125,6 @@ export default function LobbySection({ lobbies }: LobbySectionProps) {
           />
         )}
       </AnimatePresence>
-    </div>
+    </Column>
   );
 }

@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Send } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 
 const EXAMPLE_PROMPTS = [
   "A romantic date night, 300k budget",
@@ -30,7 +31,7 @@ export function PromptBar({
       animate={{ opacity: 1, y: 0 }}
       style={{ marginBottom: 28 }}
     >
-      <div style={{ position: "relative" }}>
+      <Column style={{ position: "relative" }}>
         <input
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
@@ -75,7 +76,7 @@ export function PromptBar({
         >
           <Send size={16} color={prompt ? "white" : "#8E8E93"} />
         </button>
-      </div>
+      </Column>
 
       <AnimatePresence>
         {Object.keys(parsedHints).length > 0 && (
@@ -114,7 +115,7 @@ export function PromptBar({
       </AnimatePresence>
 
       {!prompt && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+        <Row style={{ flexWrap: "wrap", gap: 6, marginTop: 8 }}>
           {EXAMPLE_PROMPTS.map((ex) => (
             <button
               key={ex}
@@ -133,10 +134,10 @@ export function PromptBar({
               {ex}
             </button>
           ))}
-        </div>
+        </Row>
       )}
 
-      <div style={{ height: 1, backgroundColor: "#E5E5EA", marginTop: 20 }} />
+      <Column style={{ height: 1, backgroundColor: "#E5E5EA", marginTop: 20 }} />
     </motion.div>
   );
 }

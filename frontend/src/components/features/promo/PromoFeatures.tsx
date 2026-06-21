@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Zap, Users, ShieldCheck } from "lucide-react";
+import { Column, Row, Grid } from "@once-ui-system/core";
 
 const ease = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -58,7 +59,7 @@ export function PromoFeatures() {
         padding: "0",
       }}
     >
-      <div
+      <Column
         style={{
           maxWidth: 1200,
           margin: "0 auto",
@@ -81,7 +82,7 @@ export function PromoFeatures() {
             gap: 16,
           }}
         >
-          <div>
+          <Column>
             <p
               style={{
                 margin: "0 0 8px",
@@ -118,7 +119,7 @@ export function PromoFeatures() {
                 your palate.
               </span>
             </h2>
-          </div>
+          </Column>
           <p
             style={{
               margin: 0,
@@ -135,9 +136,8 @@ export function PromoFeatures() {
         </motion.div>
 
         {/* Bento grid: Feature 1 spans 2 rows (left), F2+F3 stack on right */}
-        <div
+        <Grid
           style={{
-            display: "grid",
             gridTemplateColumns: "1.1fr 0.9fr",
             gridTemplateRows: "1fr 1fr",
             gap: 16,
@@ -166,7 +166,7 @@ export function PromoFeatures() {
             }}
           >
             {/* Glow accent */}
-            <div
+            <Column
               style={{
                 position: "absolute",
                 top: 0,
@@ -178,24 +178,23 @@ export function PromoFeatures() {
               }}
             />
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <Column style={{ gap: 20 }}>
               {/* Tag + icon */}
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div
+              <Row vertical="center" style={{ gap: 12 }}>
+                <Row
+                  horizontal="center"
+                  vertical="center"
                   style={{
                     width: 48,
                     height: 48,
                     borderRadius: 14,
                     backgroundColor: FEATURES[0].bg,
                     border: `1px solid ${FEATURES[0].border}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     color: FEATURES[0].color,
                   }}
                 >
                   {FEATURES[0].icon}
-                </div>
+                </Row>
                 <span
                   style={{
                     fontSize: 11,
@@ -207,9 +206,9 @@ export function PromoFeatures() {
                 >
                   {FEATURES[0].tag}
                 </span>
-              </div>
+              </Row>
 
-              <div>
+              <Column>
                 <h3
                   style={{
                     margin: "0 0 12px",
@@ -232,36 +231,36 @@ export function PromoFeatures() {
                 >
                   {FEATURES[0].desc}
                 </p>
-              </div>
+              </Column>
 
               {/* How it works bullets */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+              <Column style={{ gap: 9 }}>
                 {[
                   "Learns from every save, rating & swipe",
                   "Updates recommendations in real time",
                   "Zero manual searching — ever",
                 ].map((text, i) => (
-                  <div
+                  <Row
                     key={i}
-                    style={{ display: "flex", alignItems: "center", gap: 10 }}
+                    vertical="center"
+                    style={{ gap: 10 }}
                   >
-                    <div
+                    <Row
+                      horizontal="center"
+                      vertical="center"
                       style={{
                         width: 18,
                         height: 18,
                         borderRadius: "50%",
                         backgroundColor: "rgba(255,85,0,0.1)",
                         border: "1px solid rgba(255,85,0,0.18)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
                         flexShrink: 0,
                       }}
                     >
                       <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
                         <path d="M1 3L3 5L7 1" stroke="#FF5500" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
-                    </div>
+                    </Row>
                     <span
                       style={{
                         fontSize: 13,
@@ -271,12 +270,12 @@ export function PromoFeatures() {
                     >
                       {text}
                     </span>
-                  </div>
+                  </Row>
                 ))}
-              </div>
+              </Column>
 
               {/* AI considers tags */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <Column style={{ gap: 10 }}>
                 <p
                   style={{
                     margin: 0,
@@ -289,7 +288,7 @@ export function PromoFeatures() {
                 >
                   AI considers
                 </p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+                <Row style={{ flexWrap: "wrap", gap: 7 }}>
                   {[
                     "Flavour profile",
                     "Cuisine type",
@@ -314,23 +313,22 @@ export function PromoFeatures() {
                       {tag}
                     </span>
                   ))}
-                </div>
-              </div>
+                </Row>
+              </Column>
 
               {/* Mini match preview */}
-              <div
+              <Row
+                vertical="center"
                 style={{
                   backgroundColor: "rgba(255,85,0,0.05)",
                   borderRadius: 12,
                   border: "1px solid rgba(255,85,0,0.12)",
                   padding: "12px 14px",
-                  display: "flex",
-                  alignItems: "center",
                   justifyContent: "space-between",
                   gap: 12,
                 }}
               >
-                <div style={{ minWidth: 0 }}>
+                <Column style={{ minWidth: 0 }}>
                   <p
                     style={{
                       margin: "0 0 2px",
@@ -353,8 +351,8 @@ export function PromoFeatures() {
                   >
                     0.8 km · $$$ · Japanese · Umami
                   </p>
-                </div>
-                <div
+                </Column>
+                <Column
                   style={{
                     flexShrink: 0,
                     padding: "5px 11px",
@@ -368,14 +366,13 @@ export function PromoFeatures() {
                   }}
                 >
                   94% match
-                </div>
-              </div>
-            </div>
+                </Column>
+              </Row>
+            </Column>
 
             {/* Big stat at bottom */}
-            <div
+            <Row
               style={{
-                display: "flex",
                 alignItems: "flex-end",
                 gap: 10,
                 paddingTop: 24,
@@ -403,7 +400,7 @@ export function PromoFeatures() {
               >
                 {FEATURES[0].statLabel}
               </span>
-            </div>
+            </Row>
           </motion.div>
 
           {/* Feature 2 — top right */}
@@ -425,7 +422,7 @@ export function PromoFeatures() {
               boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
             }}
           >
-            <div
+            <Column
               style={{
                 position: "absolute",
                 top: 0,
@@ -436,23 +433,22 @@ export function PromoFeatures() {
                 borderRadius: "20px 20px 0 0",
               }}
             />
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div
+            <Column style={{ gap: 14 }}>
+              <Row
+                horizontal="center"
+                vertical="center"
                 style={{
                   width: 44,
                   height: 44,
                   borderRadius: 13,
                   backgroundColor: FEATURES[1].bg,
                   border: `1px solid ${FEATURES[1].border}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   color: FEATURES[1].color,
                 }}
               >
                 {FEATURES[1].icon}
-              </div>
-              <div>
+              </Row>
+              <Column>
                 <h3
                   style={{
                     margin: "0 0 8px",
@@ -474,9 +470,9 @@ export function PromoFeatures() {
                 >
                   {FEATURES[1].desc}
                 </p>
-              </div>
-            </div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginTop: 16 }}>
+              </Column>
+            </Column>
+            <Row style={{ alignItems: "baseline", gap: 8, marginTop: 16 }}>
               <span
                 style={{
                   fontSize: 30,
@@ -491,7 +487,7 @@ export function PromoFeatures() {
               <span style={{ fontSize: 12, color: "rgba(24,22,15,0.38)" }}>
                 {FEATURES[1].statLabel}
               </span>
-            </div>
+            </Row>
           </motion.div>
 
           {/* Feature 3 — bottom right */}
@@ -513,7 +509,7 @@ export function PromoFeatures() {
               boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
             }}
           >
-            <div
+            <Column
               style={{
                 position: "absolute",
                 top: 0,
@@ -524,23 +520,22 @@ export function PromoFeatures() {
                 borderRadius: "20px 20px 0 0",
               }}
             />
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div
+            <Column style={{ gap: 14 }}>
+              <Row
+                horizontal="center"
+                vertical="center"
                 style={{
                   width: 44,
                   height: 44,
                   borderRadius: 13,
                   backgroundColor: FEATURES[2].bg,
                   border: `1px solid ${FEATURES[2].border}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   color: FEATURES[2].color,
                 }}
               >
                 {FEATURES[2].icon}
-              </div>
-              <div>
+              </Row>
+              <Column>
                 <h3
                   style={{
                     margin: "0 0 8px",
@@ -562,9 +557,9 @@ export function PromoFeatures() {
                 >
                   {FEATURES[2].desc}
                 </p>
-              </div>
-            </div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginTop: 16 }}>
+              </Column>
+            </Column>
+            <Row style={{ alignItems: "baseline", gap: 8, marginTop: 16 }}>
               <span
                 style={{
                   fontSize: 30,
@@ -579,10 +574,10 @@ export function PromoFeatures() {
               <span style={{ fontSize: 12, color: "rgba(24,22,15,0.38)" }}>
                 {FEATURES[2].statLabel}
               </span>
-            </div>
+            </Row>
           </motion.div>
-        </div>
-      </div>
+        </Grid>
+      </Column>
     </section>
   );
 }

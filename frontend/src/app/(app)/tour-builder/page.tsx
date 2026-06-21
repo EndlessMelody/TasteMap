@@ -55,17 +55,16 @@ import { useTourBuilderStore, TourNode } from "@/store/useTourBuilderStore";
 const MapWidget = dynamic(() => import("@/components/MapWidget"), {
   ssr: false,
   loading: () => (
-    <div
+    <Row
+      horizontal="center"
+      vertical="center"
       style={{
         width: "100%",
         height: "100%",
         backgroundColor: surface.page,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
       }}
     >
-      <div
+      <Column
         style={{
           width: 24,
           height: 24,
@@ -75,7 +74,7 @@ const MapWidget = dynamic(() => import("@/components/MapWidget"), {
           animation: "spin 1s linear infinite",
         }}
       />
-    </div>
+    </Row>
   ),
 });
 
@@ -497,9 +496,9 @@ export default function TourBuilderPage() {
         </Row>
 
         {/* Body: Map + Sidebar */}
-        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        <Row style={{ flex: 1, overflow: "hidden" }}>
           {/* Map */}
-          <div style={{ flex: "1 1 60%", position: "relative", minWidth: 0 }}>
+          <Column style={{ flex: "1 1 60%", position: "relative", minWidth: 0 }}>
             <ClientOnly>
               <MapWidget
                 mapId="tour-final-map"
@@ -528,12 +527,11 @@ export default function TourBuilderPage() {
               />
             </ClientOnly>
             {/* Stat pills */}
-            <div
+            <Row
               style={{
                 position: "absolute",
                 bottom: 20,
                 left: 20,
-                display: "flex",
                 gap: 8,
                 zIndex: 10,
               }}
@@ -543,11 +541,10 @@ export default function TourBuilderPage() {
                 { icon: <Timer size={13} />, label: durationLabel },
                 { icon: <Zap size={13} />, label: `+${totalXP} XP` },
               ].map((s) => (
-                <div
+                <Row
                   key={s.label}
+                  vertical="center"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
                     gap: 5,
                     padding: "6px 12px",
                     borderRadius: 20,
@@ -562,10 +559,10 @@ export default function TourBuilderPage() {
                 >
                   {s.icon}
                   {s.label}
-                </div>
+                </Row>
               ))}
-            </div>
-          </div>
+            </Row>
+          </Column>
 
           {/* Sidebar */}
           <motion.div
@@ -582,7 +579,7 @@ export default function TourBuilderPage() {
               overflow: "hidden",
             }}
           >
-            <div
+            <Column
               style={{
                 padding: "20px 24px 14px",
                 borderBottom: `1px solid ${border.subtle}`,
@@ -611,15 +608,13 @@ export default function TourBuilderPage() {
               >
                 Today&apos;s Flavor Journey
               </h3>
-            </div>
+            </Column>
 
-            <div
+            <Column
               style={{
                 flex: 1,
                 overflowY: "auto",
                 padding: "16px 24px",
-                display: "flex",
-                flexDirection: "column",
                 gap: 0,
               }}
             >
@@ -636,15 +631,14 @@ export default function TourBuilderPage() {
                       padding: "12px 0",
                     }}
                   >
-                    <div
+                    <Row
+                      horizontal="center"
+                      vertical="center"
                       style={{
                         width: 28,
                         height: 28,
                         borderRadius: "50%",
                         background: stop.color,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
                         flexShrink: 0,
                         fontSize: 12,
                         fontWeight: 900,
@@ -653,8 +647,8 @@ export default function TourBuilderPage() {
                       }}
                     >
                       {i + 1}
-                    </div>
-                    <div
+                    </Row>
+                    <Column
                       style={{
                         width: 52,
                         height: 52,
@@ -668,8 +662,8 @@ export default function TourBuilderPage() {
                         alt={stop.title}
                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
                       />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                    </Column>
+                    <Column style={{ flex: 1, minWidth: 0 }}>
                       <p
                         style={{
                           margin: 0,
@@ -686,7 +680,7 @@ export default function TourBuilderPage() {
                       >
                         {stop.subtitle}
                       </p>
-                      <div style={{ display: "flex", gap: 8 }}>
+                      <Row style={{ gap: 8 }}>
                         <span
                           style={{
                             display: "flex",
@@ -711,11 +705,11 @@ export default function TourBuilderPage() {
                         >
                           <Sparkles size={10} /> {stop.match}%
                         </span>
-                      </div>
-                    </div>
+                      </Row>
+                    </Column>
                   </motion.div>
                   {i < stops.length - 1 && (
-                    <div
+                    <Column
                       style={{
                         marginLeft: 14,
                         width: 1,
@@ -726,25 +720,23 @@ export default function TourBuilderPage() {
                   )}
                 </React.Fragment>
               ))}
-            </div>
+            </Column>
 
-            <div
+            <Column
               style={{
                 padding: "16px 24px",
                 borderTop: `1px solid ${border.subtle}`,
                 backgroundColor: surface.base,
-                display: "flex",
-                flexDirection: "column",
                 gap: 10,
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Row style={{ justifyContent: "space-between" }}>
                 {[
                   { label: "Duration", value: durationLabel, color: accent.secondary },
                   { label: "Stops", value: `${stops.length}`, color: "#059669" },
                   { label: "XP Earned", value: `+${totalXP}`, color: accent.warning },
                 ].map((s) => (
-                  <div key={s.label} style={{ textAlign: "center" }}>
+                  <Column key={s.label} style={{ textAlign: "center" }}>
                     <p style={{ margin: 0, fontSize: 16, fontWeight: 900, color: s.color }}>
                       {s.value}
                     </p>
@@ -760,12 +752,12 @@ export default function TourBuilderPage() {
                     >
                       {s.label}
                     </p>
-                  </div>
+                  </Column>
                 ))}
-              </div>
-            </div>
+              </Row>
+            </Column>
           </motion.div>
-        </div>
+        </Row>
       </motion.div>
     );
   }
@@ -782,8 +774,6 @@ export default function TourBuilderPage() {
         flex: 1,
         backgroundColor: "#F8FAFF",
         overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
         paddingBottom: "0",
         paddingTop: "0",
         justifyContent: "space-between",
@@ -807,7 +797,7 @@ export default function TourBuilderPage() {
       </AnimatePresence>
 
       {/* ── TOP BAR ── */}
-      <div style={{ width: "100%", zIndex: 100, flexShrink: 0 }}>
+      <Column style={{ width: "100%", zIndex: 100, flexShrink: 0 }}>
         <Row
           fillWidth
           vertical="center"
@@ -850,10 +840,9 @@ export default function TourBuilderPage() {
 
           {/* Centre: AI pill */}
           <Row horizontal="center" style={{ flex: 2, minWidth: 0 }}>
-            <div
+            <Row
+              vertical="center"
               style={{
-                display: "flex",
-                alignItems: "center",
                 gap: "14px",
                 padding: "6px 28px 6px 14px",
                 backgroundColor: "rgba(255,255,255,0.45)",
@@ -864,14 +853,13 @@ export default function TourBuilderPage() {
                 boxShadow: "0 4px 20px rgba(0,122,255,0.08)",
               }}
             >
-              <div
+              <Row
+                horizontal="center"
+                vertical="center"
                 style={{
                   width: 38,
                   height: 38,
                   flexShrink: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                   backgroundColor: "white",
                   borderRadius: "50%",
                   boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
@@ -880,7 +868,7 @@ export default function TourBuilderPage() {
                 <ClientOnly>
                   <FlavorAura data={radarData} isPulsing={isPulsing} size={30} />
                 </ClientOnly>
-              </div>
+              </Row>
               <Column style={{ gap: "1px", minWidth: 0 }}>
                 <Text
                   style={{
@@ -908,13 +896,13 @@ export default function TourBuilderPage() {
                     : `${tourDraft.length} stop${tourDraft.length > 1 ? "s" : ""} pinned — keep swiping!`}
                 </Text>
               </Column>
-            </div>
+            </Row>
           </Row>
 
           {/* Right: user info */}
           <Row horizontal="end" style={{ flex: 1, alignItems: "center", gap: "16px" }}>
-            <div style={{ position: "relative", flexShrink: 0 }}>
-              <div
+            <Column style={{ position: "relative", flexShrink: 0 }}>
+              <Column
                 style={{
                   width: "46px",
                   height: "46px",
@@ -924,7 +912,7 @@ export default function TourBuilderPage() {
                   boxShadow: "0 4px 12px rgba(0,122,255,0.2)",
                 }}
               >
-                <div
+                <Column
                   style={{
                     width: "100%",
                     height: "100%",
@@ -938,20 +926,19 @@ export default function TourBuilderPage() {
                     alt={user?.display_name || "User"}
                     style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   />
-                </div>
-              </div>
-            </div>
+                </Column>
+              </Column>
+            </Column>
           </Row>
         </Row>
-      </div>
+      </Column>
 
       {/* ── SWIPE STAGE ── */}
-      <div
+      <Row
+        horizontal="center"
+        vertical="center"
         style={{
           position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           width: "100%",
           flexGrow: 1,
           minHeight: 0,
@@ -974,20 +961,19 @@ export default function TourBuilderPage() {
           }}
         >
           <Column horizontal="center" style={{ gap: 16 }}>
-            <div
+            <Row
+              horizontal="center"
+              vertical="center"
               style={{
                 width: 80,
                 height: 80,
                 borderRadius: "50%",
                 backgroundColor: "rgba(255,100,100,0.12)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 border: "2px solid rgba(255,100,100,0.25)",
               }}
             >
               <X size={40} color="rgba(255,100,100,0.8)" strokeWidth={3} />
-            </div>
+            </Row>
             <Text style={{ fontSize: "1rem", fontWeight: 900, color: "rgba(255,100,100,0.8)", letterSpacing: "4px" }}>
               SKIP
             </Text>
@@ -1010,20 +996,19 @@ export default function TourBuilderPage() {
           }}
         >
           <Column horizontal="center" style={{ gap: 16 }}>
-            <div
+            <Row
+              horizontal="center"
+              vertical="center"
               style={{
                 width: 80,
                 height: 80,
                 borderRadius: "50%",
                 backgroundColor: `${accent.primary}10`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 border: `2px solid ${accent.primary}25`,
               }}
             >
               <Star size={40} color={accent.primary} fill={accent.primary} strokeWidth={2.5} />
-            </div>
+            </Row>
             <Text style={{ fontSize: "1rem", fontWeight: 900, color: accent.primary, letterSpacing: "4px" }}>
               LIKE
             </Text>
@@ -1050,15 +1035,14 @@ export default function TourBuilderPage() {
                 <TourSkeleton />
               </motion.div>
             ) : deck.length > 0 ? (
-              <div
+              <Row
                 key="cards"
+                horizontal="center"
+                vertical="center"
                 style={{
                   width: "100%",
                   height: "100%",
                   position: "relative",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
                 }}
               >
                 {/* Next card (slightly behind) */}
@@ -1079,19 +1063,18 @@ export default function TourBuilderPage() {
                     }}
                   >
                     <StopCard card={deck[1] as any} />
-                    <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(255,255,255,0.4)", backdropFilter: "blur(4px)" }} />
+                    <Column style={{ position: "absolute", inset: 0, backgroundColor: "rgba(255,255,255,0.4)", backdropFilter: "blur(4px)" }} />
                   </motion.div>
                 )}
 
                 {/* Top card with Star button overlay */}
-                <div
+                <Row
+                  horizontal="center"
+                  vertical="center"
                   style={{
                     perspective: "2000px",
                     width: "100%",
                     height: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
                     zIndex: 5,
                     position: "relative",
                   }}
@@ -1160,8 +1143,8 @@ export default function TourBuilderPage() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
-              </div>
+                </Row>
+              </Row>
             ) : (
               <motion.div
                 key="empty"
@@ -1182,10 +1165,10 @@ export default function TourBuilderPage() {
             )}
           </AnimatePresence>
         </motion.div>
-      </div>
+      </Row>
 
       {/* ── FOOTER CONTROLS ── */}
-      <div
+      <Column
         style={{
           width: "100%",
           zIndex: 100,
@@ -1204,10 +1187,8 @@ export default function TourBuilderPage() {
         >
           {/* Left: Tour Draft counter */}
           <Row style={{ gap: "20px", alignItems: "center", width: "380px" }}>
-            <div
+            <Column
               style={{
-                display: "flex",
-                flexDirection: "column",
                 gap: "2px",
                 padding: "8px 20px",
                 backgroundColor: tourDraft.length > 0 ? "#FFF7ED" : "#F0F9FF",
@@ -1237,8 +1218,8 @@ export default function TourBuilderPage() {
               >
                 TOUR DRAFT
               </Text>
-            </div>
-            <div style={{ width: "1px", height: "32px", backgroundColor: "rgba(0,0,0,0.08)" }} />
+            </Column>
+            <Column style={{ width: "1px", height: "32px", backgroundColor: "rgba(0,0,0,0.08)" }} />
             <Column style={{ gap: "4px" }}>
               <Text style={{ fontSize: "0.85rem", fontWeight: 900, color: text.primary }}>
                 {deck.length} CARDS LEFT
@@ -1250,10 +1231,9 @@ export default function TourBuilderPage() {
           </Row>
 
           {/* Centre: Action buttons */}
-          <div
+          <Row
+            vertical="center"
             style={{
-              display: "flex",
-              alignItems: "center",
               gap: "16px",
               padding: "8px 16px",
               backgroundColor: "rgba(0,0,0,0.03)",
@@ -1332,7 +1312,7 @@ export default function TourBuilderPage() {
               <CheckCircle2 size={16} />
               BUILD TOUR
             </motion.button>
-          </div>
+          </Row>
 
           {/* Right: Tour DNA bar */}
           <Row style={{ gap: "24px", alignItems: "center", width: "380px", justifyContent: "flex-end" }}>
@@ -1341,14 +1321,13 @@ export default function TourBuilderPage() {
                 <Text style={{ fontSize: "0.65rem", fontWeight: 850 }}>TOUR DNA PROFILE</Text>
                 <Text style={{ fontSize: "0.6rem", color: accent.secondary, fontWeight: 800 }}>LIVE</Text>
               </Row>
-              <div
+              <Row
                 style={{
                   width: "100%",
                   height: "12px",
                   backgroundColor: "rgba(0,0,0,0.05)",
                   borderRadius: "6px",
                   overflow: "hidden",
-                  display: "flex",
                 }}
               >
                 {tourDNA.map((seg) => (
@@ -1359,9 +1338,9 @@ export default function TourBuilderPage() {
                     style={{ height: "100%", backgroundColor: seg.color }}
                   />
                 ))}
-              </div>
+              </Row>
             </Column>
-            <div
+            <Column
               style={{
                 width: "150px",
                 height: "80px",
@@ -1397,10 +1376,10 @@ export default function TourBuilderPage() {
                   showBanner={false}
                 />
               </ClientOnly>
-            </div>
+            </Column>
           </Row>
         </Row>
-      </div>
+      </Column>
 
       {/* ── GENERATING OVERLAY ── */}
       <AnimatePresence>
@@ -1439,14 +1418,14 @@ export default function TourBuilderPage() {
                 }}
               />
             ))}
-            <div style={{ position: "relative", zIndex: 10 }}>
+            <Column style={{ position: "relative", zIndex: 10 }}>
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
                 <Activity size={64} color={accent.primary} style={{ filter: `drop-shadow(0 0 20px ${accent.primary}40)` }} />
               </motion.div>
-            </div>
+            </Column>
             <Column horizontal="center" style={{ gap: "16px", marginTop: "40px", zIndex: 10, width: "100vw" }}>
               <AnimatePresence mode="wait">
                 <motion.div

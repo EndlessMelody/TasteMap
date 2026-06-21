@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { Flame, ArrowUpRight, AlertTriangle } from "lucide-react";
 
 import { DiscoverSection, GlassCard } from "@/components/primitives";
+import { Column, Row, Text } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { useReels } from "@/hooks/useReels";
 import type { ReelData } from "@/types/dashboard";
@@ -69,7 +70,7 @@ const ViewAllButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
 
 // ─── Skeletons ───────────────────────────────────────────────────
 const ReelSkeleton: React.FC = () => (
-  <div
+  <Column
     style={{
       flexShrink: 0,
       width: 180,
@@ -105,7 +106,7 @@ const InlineNotice: React.FC<{
         gap: tokens.space[4],
       }}
     >
-      <div
+      <Column
         style={{
           width: 40,
           height: 40,
@@ -120,9 +121,11 @@ const InlineNotice: React.FC<{
         }}
       >
         {icon}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <span
+      </Column>
+      <Column flex="1" minWidth="0">
+        <Text
+          as="span"
+          variant="body-default-s"
           style={{
             display: "block",
             fontSize: tokens.type.size.bodySm,
@@ -132,8 +135,10 @@ const InlineNotice: React.FC<{
           }}
         >
           {title}
-        </span>
-        <span
+        </Text>
+        <Text
+          as="span"
+          variant="body-default-s"
           style={{
             display: "block",
             fontSize: tokens.type.size.caption,
@@ -141,8 +146,8 @@ const InlineNotice: React.FC<{
           }}
         >
           {message}
-        </span>
-      </div>
+        </Text>
+      </Column>
     </GlassCard>
   );
 };
@@ -172,19 +177,11 @@ export const TrendingReels: React.FC<TrendingReelsProps> = ({
       action={<ViewAllButton onClick={() => router.push("/foodies")} />}
     >
       {loading ? (
-        <div
-          style={{
-            display: "flex",
-            gap: tokens.space[3],
-            overflowX: "auto",
-            paddingBottom: 4,
-          }}
-          className="no-scrollbar"
-        >
+        <Row className="no-scrollbar" gap="12" overflowX="auto" paddingBottom="4">
           {[0, 1, 2, 3, 4].map((i) => (
             <ReelSkeleton key={i} />
           ))}
-        </div>
+        </Row>
       ) : error ? (
         <InlineNotice
           icon={<AlertTriangle size={18} strokeWidth={2.2} />}
@@ -199,15 +196,7 @@ export const TrendingReels: React.FC<TrendingReelsProps> = ({
           message="Check back soon — fresh reels drop daily."
         />
       ) : (
-        <div
-          style={{
-            display: "flex",
-            gap: tokens.space[3],
-            overflowX: "auto",
-            paddingBottom: 4,
-          }}
-          className="no-scrollbar"
-        >
+        <Row className="no-scrollbar" gap="12" overflowX="auto" paddingBottom="4">
           {reels.map((reel, i) => (
             <ReelCardV2
               key={reel.id}
@@ -217,7 +206,7 @@ export const TrendingReels: React.FC<TrendingReelsProps> = ({
               onClick={onReelClick}
             />
           ))}
-        </div>
+        </Row>
       )}
     </DiscoverSection>
   );

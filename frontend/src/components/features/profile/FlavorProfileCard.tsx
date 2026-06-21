@@ -10,6 +10,7 @@ import {
   Soup,
   Drumstick,
 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { Card, H3, BodySm, Caption } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 
@@ -31,19 +32,12 @@ const TASTE_DATA: TasteItem[] = [
 export const FlavorProfileCard: React.FC = () => {
   return (
     <Card radius="xl" padding="md" shadow="sm">
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: tokens.space[2],
-          marginBottom: tokens.space[4],
-        }}
-      >
+      <Row vertical="center" style={{ gap: tokens.space[2], marginBottom: tokens.space[4] }}>
         <Heart size={18} strokeWidth={1.75} style={{ color: tokens.color.warm }} />
         <H3>Flavor profile</H3>
-      </div>
+      </Row>
 
-      <div
+      <Column
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
@@ -51,11 +45,10 @@ export const FlavorProfileCard: React.FC = () => {
         }}
       >
         {TASTE_DATA.map((taste) => (
-          <div
+          <Row
             key={taste.label}
+            vertical="center"
             style={{
-              display: "flex",
-              alignItems: "center",
               gap: tokens.space[3],
               padding: tokens.space[3],
               borderRadius: tokens.radius.md,
@@ -77,20 +70,14 @@ export const FlavorProfileCard: React.FC = () => {
             >
               {taste.icon}
             </span>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginBottom: tokens.space[1],
-                }}
-              >
+            <Column style={{ flex: 1, minWidth: 0 }}>
+              <Row horizontal="between" style={{ marginBottom: tokens.space[1] }}>
                 <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
                   {taste.label}
                 </BodySm>
                 <Caption tone="muted">{taste.value}%</Caption>
-              </div>
-              <div
+              </Row>
+              <Column
                 style={{
                   width: "100%",
                   height: 4,
@@ -99,7 +86,7 @@ export const FlavorProfileCard: React.FC = () => {
                   overflow: "hidden",
                 }}
               >
-                <div
+                <Column
                   style={{
                     width: `${taste.value}%`,
                     height: "100%",
@@ -107,11 +94,11 @@ export const FlavorProfileCard: React.FC = () => {
                     transition: "width 0.6s ease",
                   }}
                 />
-              </div>
-            </div>
-          </div>
+              </Column>
+            </Column>
+          </Row>
         ))}
-      </div>
+      </Column>
     </Card>
   );
 };

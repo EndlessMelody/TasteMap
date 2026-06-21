@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { X, Heart } from "lucide-react";
 import { Row } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 
 interface ActionControlsProps {
   onPass: () => void;
@@ -51,7 +52,7 @@ export const ActionControls: React.FC<ActionControlsProps> = ({
           transition: "background-color 0.2s ease, border-color 0.2s ease",
         }}
       >
-        <X size={26} color="#ef4444" strokeWidth={2.5} />
+        <X size={26} color={tokens.color.danger} strokeWidth={2.5} />
       </motion.button>
 
       {/* Like button */}
@@ -79,7 +80,7 @@ export const ActionControls: React.FC<ActionControlsProps> = ({
           transition: "background-color 0.2s ease, border-color 0.2s ease",
         }}
       >
-        <Heart size={26} color="#22c55e" strokeWidth={2.5} />
+        <Heart size={26} color={tokens.color.success} strokeWidth={2.5} />
       </motion.button>
     </Row>
   );

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { MapPin, Menu, X } from "lucide-react";
+import { Row, Column } from "@once-ui-system/core";
 import { useAuth } from "@/context/AuthContext";
 
 const NAV_LINKS = [
@@ -51,32 +52,35 @@ export function PromoNav() {
           : "1px solid transparent",
       }}
     >
-      <div
+      <Row
+        horizontal="between"
+        vertical="center"
         style={{
           maxWidth: 1200, margin: "0 auto", padding: "0 32px",
-          height: 64, display: "flex", alignItems: "center",
-          justifyContent: "space-between",
+          height: 64,
         }}
       >
         {/* Logo */}
-        <div
-          style={{ display: "flex", alignItems: "center", gap: 9, cursor: "pointer" }}
+        <Row
+          vertical="center"
+          style={{ gap: 9, cursor: "pointer" }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         >
-          <div
+          <Row
+            horizontal="center"
+            vertical="center"
             style={{
               width: 32, height: 32, borderRadius: 9,
               background: "linear-gradient(135deg, #FF5500, #FF3300)",
-              display: "flex", alignItems: "center", justifyContent: "center",
               boxShadow: "0 0 0 1px rgba(255,85,0,0.25), 0 4px 14px rgba(255,85,0,0.25)",
             }}
           >
             <MapPin size={16} color="white" />
-          </div>
+          </Row>
           <span style={{ fontSize: 17, fontWeight: 800, letterSpacing: "-0.5px", color: "#18160F" }}>
             TasteMap<span style={{ color: "#FF5500" }}>.</span>
           </span>
-        </div>
+        </Row>
 
         {/* Desktop links */}
         <nav style={{ display: "flex", alignItems: "center", gap: 2 }} className="promo-desktop-nav">
@@ -105,7 +109,7 @@ export function PromoNav() {
         </nav>
 
         {/* CTAs */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <Row vertical="center" style={{ gap: 8 }}>
           {!isLoggedIn && (
             <button
               onClick={() => router.push("/login")}
@@ -160,18 +164,18 @@ export function PromoNav() {
           >
             {mobileOpen ? <X size={20} color="#18160F" /> : <Menu size={20} color="#18160F" />}
           </button>
-        </div>
-      </div>
+        </Row>
+      </Row>
 
       {/* Mobile dropdown */}
       {mobileOpen && (
-        <div
+        <Column
           style={{
             padding: "12px 24px 20px",
             borderTop: "1px solid rgba(0,0,0,0.07)",
             backgroundColor: "rgba(255,252,247,0.97)",
             backdropFilter: "blur(20px)",
-            display: "flex", flexDirection: "column", gap: 4,
+            gap: 4,
           }}
         >
           {NAV_LINKS.map((l) => (
@@ -197,7 +201,7 @@ export function PromoNav() {
           >
             Get Started →
           </button>
-        </div>
+        </Column>
       )}
     </motion.nav>
   );

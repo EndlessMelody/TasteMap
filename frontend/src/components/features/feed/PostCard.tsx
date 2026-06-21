@@ -10,6 +10,7 @@ import {
   Star,
   MapPin,
 } from "lucide-react";
+import { Column, Row } from "@once-ui-system/core";
 import { Card, Body, BodySm, Caption, Pill, Avatar, IconButton } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 import { PostCardProps } from "@/types/dashboard";
@@ -49,29 +50,22 @@ export default function PostCard({
       style={{ width: "100%", marginBottom: tokens.space[5] }}
     >
       <Card radius="xl" padding="none" shadow="sm" style={{ overflow: "hidden" }}>
-        <div
+        <Row
+          horizontal="between"
+          vertical="center"
           onClick={() => onOpen(post)}
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
             padding: tokens.space[4],
             cursor: "pointer",
             gap: tokens.space[3],
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: tokens.space[3],
-              minWidth: 0,
-            }}
-          >
-            <div style={{ position: "relative", flexShrink: 0 }}>
+          <Row vertical="center" style={{ gap: tokens.space[3], minWidth: 0 }}>
+            <Column style={{ flexShrink: 0 }}>
               <Avatar src={avatar} name={name} size="lg" />
               {userLevel != null && (
-                <div
+                <Column
+                  center
                   style={{
                     position: "absolute",
                     bottom: -2,
@@ -81,34 +75,17 @@ export default function PostCard({
                     borderRadius: "50%",
                     width: 20,
                     height: 20,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     border: `2px solid ${tokens.color.surface}`,
                     fontSize: 9,
                     fontWeight: tokens.type.weight.bold,
                   }}
                 >
                   {userLevel}
-                </div>
+                </Column>
               )}
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-                minWidth: 0,
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[2],
-                  flexWrap: "wrap",
-                }}
-              >
+            </Column>
+            <Column style={{ gap: 2, minWidth: 0 }}>
+              <Row vertical="center" style={{ gap: tokens.space[2], flexWrap: "wrap" }}>
                 <Body style={{ fontWeight: tokens.type.weight.semibold }}>
                   {name}
                 </Body>
@@ -117,15 +94,8 @@ export default function PostCard({
                     {userTitle}
                   </Pill>
                 )}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: tokens.space[1],
-                  color: tokens.color.textMuted,
-                }}
-              >
+              </Row>
+              <Row vertical="center" style={{ gap: tokens.space[1], color: tokens.color.textMuted }}>
                 <Caption tone="muted">{time}</Caption>
                 {location && (
                   <>
@@ -134,22 +104,21 @@ export default function PostCard({
                     <Caption tone="muted">{location}</Caption>
                   </>
                 )}
-              </div>
-            </div>
-          </div>
+              </Row>
+            </Column>
+          </Row>
           <IconButton
             variant="ghost"
             size="sm"
             aria-label="More"
             icon={<MoreHorizontal size={18} strokeWidth={1.75} />}
           />
-        </div>
+        </Row>
 
-        <div
+        <Column
+          fillWidth
           onClick={() => onOpen(post)}
           style={{
-            position: "relative",
-            width: "100%",
             background: tokens.color.surfaceMuted,
             cursor: "pointer",
           }}
@@ -165,7 +134,7 @@ export default function PostCard({
               display: "block",
             }}
           />
-          <div
+          <Column
             style={{
               position: "absolute",
               top: tokens.space[4],
@@ -185,24 +154,15 @@ export default function PostCard({
             >
               {rating.toFixed(1)}
             </Pill>
-          </div>
-        </div>
+          </Column>
+        </Column>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: `${tokens.space[2]} ${tokens.space[4]}`,
-          }}
+        <Row
+          horizontal="between"
+          vertical="center"
+          style={{ padding: `${tokens.space[2]} ${tokens.space[4]}` }}
         >
-          <div
-            style={{
-              display: "flex",
-              gap: tokens.space[3],
-              alignItems: "center",
-            }}
-          >
+          <Row vertical="center" style={{ gap: tokens.space[3] }}>
             <button
               type="button"
               onClick={() => onLike(id)}
@@ -252,7 +212,7 @@ export default function PostCard({
                 </BodySm>
               )}
             </button>
-          </div>
+          </Row>
 
           <IconButton
             variant="ghost"
@@ -270,13 +230,11 @@ export default function PostCard({
               />
             }
           />
-        </div>
+        </Row>
 
-        <div
+        <Column
           style={{
             padding: `0 ${tokens.space[4]} ${tokens.space[4]}`,
-            display: "flex",
-            flexDirection: "column",
             gap: tokens.space[2],
           }}
         >
@@ -293,13 +251,7 @@ export default function PostCard({
           </Body>
 
           {tags && tags.length > 0 && (
-            <div
-              style={{
-                display: "flex",
-                gap: tokens.space[1],
-                flexWrap: "wrap",
-              }}
-            >
+            <Row style={{ gap: tokens.space[1], flexWrap: "wrap" }}>
               {tags.map((tag) => (
                 <BodySm
                   key={tag}
@@ -312,7 +264,7 @@ export default function PostCard({
                   #{tag}
                 </BodySm>
               ))}
-            </div>
+            </Row>
           )}
 
           {comments > 0 && (
@@ -324,7 +276,7 @@ export default function PostCard({
               View all {comments} comments
             </BodySm>
           )}
-        </div>
+        </Column>
       </Card>
     </motion.div>
   );
