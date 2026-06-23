@@ -174,6 +174,28 @@ async def optimize_tour(db: AsyncSession, tour_id: int, user_id: int, body: Opti
     total_dist = sum(consecutive_km)
     total_duration = sum(o.estimated_travel_min for o in optimized)
 
+    # ── 4. Persist results back to Tour record & reorder stops ─────────
+    tour_result = await db.execute(select(Tour).where(Tour.id == tour_id, Tour.user_id == user_id))
+    tour = tour_result.scalars().first()
+    if tour:
+        tour.total_distance = round(total_dist, 2)
+        tour.estimated_duration = total_duration
+        tour.status = "ready"
+
+    # Update stop_order in DB to match optimized sequence
+    for opt_stop in optimized:
+        stop_result = await db.execute(
+            select(TourStop).where(
+                TourStop.tour_id == tour_id,
+                TourStop.location_id == opt_stop.location_id,
+            )
+        )
+        db_stop = stop_result.scalars().first()
+        if db_stop:
+            db_stop.stop_order = opt_stop.stop_order
+
+    await db.commit()
+
     return OptimizeResponse(
         optimized_stops=optimized,
         total_distance_km=round(total_dist, 2),

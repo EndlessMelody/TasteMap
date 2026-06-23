@@ -77,7 +77,7 @@ export const UserVectorProvider: ({ children }: {
   const [previousRadarData, setPreviousRadarData] = useState<RadarPoint[] | null>(null);
   const [isPulsing, setIsPulsing] = useState(false);
   
-  const lastUpdateRef = useRef<number>(Date.now());
+  const lastUpdateRef = useRef<number>(0);
   const swipeQueueRef = useRef<{place_id: number, direction: "RIGHT" | "LEFT", client_timestamp: number}[]>([]);
   const batchTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -91,7 +91,7 @@ export const UserVectorProvider: ({ children }: {
     try {
       await apiPost<any>("/api/v1/interactions/swipe-batch", {
         user_id: String(userId),
-        domain: "food",
+        category: "food",
         actions: actions,
       });
     } catch (e) {

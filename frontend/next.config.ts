@@ -22,6 +22,14 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react', 'recharts', 'mapbox-gl', '@supabase/ssr'],
   },
 
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "i.pravatar.cc" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "bjuikfhjrpmrpbvhduey.supabase.co" },
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+    ],
+  },
   allowedDevOrigins: ['localhost:3000', ...getNetworkIPs()],
 
   async rewrites() {

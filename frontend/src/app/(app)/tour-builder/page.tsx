@@ -50,7 +50,7 @@ import { FloatingInsight, FlavorAura } from "@/components/FloatingInsight";
 import { useAuth } from "@/hooks/useAuth";
 import { apiGet, apiPost, apiDelete } from "@/lib/api";
 import { toast } from "sonner";
-import { useTourBuilderStore, TourNode } from "@/store/useTourBuilderStore";
+import { useTourBuilderStore, TourNode, OptimizeResult } from "@/store/useTourBuilderStore";
 
 const MapWidget = dynamic(() => import("@/components/MapWidget"), {
   ssr: false,
@@ -143,6 +143,9 @@ export default function TourBuilderPage() {
     status,
     setStatus,
     resetTour,
+    optimizeResult,
+    setOptimizeResult,
+    reorderTourDraft,
   } = useTourBuilderStore();
 
   const router = useRouter();
@@ -333,11 +336,15 @@ export default function TourBuilderPage() {
         )
       );
 
-      // Step 4: Optimize route
-      await apiPost(`/api/v1/tours/${tour.id}/optimize`, {
+      // Step 4: Optimize route — capture response to reorder stops
+      const optimized = await apiPost<OptimizeResult>(`/api/v1/tours/${tour.id}/optimize`, {
         start_lat: tourDraft[0]?.location[0] ?? 10.897,
         start_lng: tourDraft[0]?.location[1] ?? 106.772,
       });
+
+      // Step 4b: Store optimize result and reorder tourDraft
+      setOptimizeResult(optimized);
+      reorderTourDraft(optimized.optimized_stops);
 
       // Step 5: Render result
       setIsGenerating(false);
@@ -389,7 +396,11 @@ export default function TourBuilderPage() {
 
   if (isTourReady) {
     const stops = tourDraft;
-    const totalMinutes = stops.length * 45;
+    // Use real data from optimize API, fallback to estimated 45min/stop
+    const totalMinutes = optimizeResult
+      ? optimizeResult.total_duration_min + stops.length * 45 // travel time + 45min per stop
+      : stops.length * 45;
+    const totalDistKm = optimizeResult?.total_distance_km;
     // Route line: [lon, lat] order for Mapbox
     const tourRouteCoords: [number, number][] = stops.map((n) => [n.location[1], n.location[0]]);
     const tourSpotIndexMap = new Map(stops.map((n, i) => [n.venue_id, i + 1]));

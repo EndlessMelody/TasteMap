@@ -4,6 +4,19 @@ export type TourTransportMode = 'walking' | 'driving' | 'transit';
 // 'finalizing' added for the Promise.all tour-build phase
 export type BuilderStatus = 'idle' | 'loading' | 'calculating' | 'finalizing' | 'saving' | 'error';
 
+export interface OptimizedStop {
+  stop_order: number;
+  location_id: number;
+  estimated_travel_min: number;
+}
+
+export interface OptimizeResult {
+  optimized_stops: OptimizedStop[];
+  total_distance_km: number;
+  total_duration_min: number;
+  estimated_cost_vnd: number;
+}
+
 export interface TourNode {
   id: string; // Used as the drag & drop array key or local uuid
   venue_id: number;
@@ -44,6 +57,8 @@ interface TourBuilderState {
   groupMembers: number[];
   status: BuilderStatus;
   lastDiscarded: TourNode | null;
+  /** Result from the optimize API call */
+  optimizeResult: OptimizeResult | null;
 
   // Actions
   updateMetadata: (data: Partial<TourMetadata>) => void;
@@ -59,6 +74,10 @@ interface TourBuilderState {
   addToTourDraft: (node: TourNode) => void;
   /** Remove a location from tour draft */
   removeFromTourDraft: (venueId: number) => void;
+  /** Store optimize API response */
+  setOptimizeResult: (result: OptimizeResult) => void;
+  /** Reorder tourDraft according to optimized_stops order */
+  reorderTourDraft: (optimizedStops: OptimizedStop[]) => void;
   resetTour: () => void;
 }
 
@@ -76,6 +95,7 @@ export const useTourBuilderStore = create<TourBuilderState>((set, get) => ({
   groupMembers: [],
   status: 'idle',
   lastDiscarded: null,
+  optimizeResult: null,
 
   updateMetadata: (data) =>
     set((state) => ({ metadata: { ...state.metadata, ...data } })),
@@ -117,6 +137,21 @@ export const useTourBuilderStore = create<TourBuilderState>((set, get) => ({
       tourDraft: state.tourDraft.filter((n) => n.venue_id !== venueId),
     })),
 
+  setOptimizeResult: (result) => set({ optimizeResult: result }),
+
+  reorderTourDraft: (optimizedStops) =>
+    set((state) => {
+      // Create a map from location_id → stop_order
+      const orderMap = new Map(optimizedStops.map((s) => [s.location_id, s.stop_order]));
+      // Sort tourDraft by optimized stop_order
+      const sorted = [...state.tourDraft].sort((a, b) => {
+        const orderA = orderMap.get(a.venue_id) ?? 999;
+        const orderB = orderMap.get(b.venue_id) ?? 999;
+        return orderA - orderB;
+      });
+      return { tourDraft: sorted };
+    }),
+
   resetTour: () =>
     set({
       deckQueue: [],
@@ -125,5 +160,6 @@ export const useTourBuilderStore = create<TourBuilderState>((set, get) => ({
       hasMore: true,
       status: 'idle',
       lastDiscarded: null,
+      optimizeResult: null,
     }),
 }));
