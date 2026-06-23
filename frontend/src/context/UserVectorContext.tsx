@@ -89,11 +89,24 @@ export const UserVectorProvider: ({ children }: {
     const userId = (user as any)?.id || "guest-id";
 
     try {
-      await apiPost<any>("/api/v1/interactions/swipe-batch", {
+      const response = await apiPost<any>("/api/v1/interactions/swipe-batch", {
         user_id: String(userId),
         category: "food",
         actions: actions,
       });
+      
+      // Đồng bộ biểu đồ Radar chuẩn xác với toán học vector 15 chiều từ DB
+      if (response && response.updated_vector && response.updated_vector.length >= 6) {
+        const vec = response.updated_vector;
+        setRadarData([
+          { subject: "Street Food", A: Math.round(vec[0] * 150) || 100, fullMark: 150 },
+          { subject: "Spicy", A: Math.round(vec[1] * 150) || 71, fullMark: 150 },
+          { subject: "Sweet", A: Math.round(vec[2] * 150) || 90, fullMark: 150 },
+          { subject: "Luxury", A: Math.round(vec[3] * 150) || 56, fullMark: 150 },
+          { subject: "Quiet", A: Math.round(vec[4] * 150) || 85, fullMark: 150 },
+          { subject: "Group", A: Math.round(vec[5] * 150) || 120, fullMark: 150 },
+        ]);
+      }
     } catch (e) {
       console.error("Failed to send swipe batch", e);
     }

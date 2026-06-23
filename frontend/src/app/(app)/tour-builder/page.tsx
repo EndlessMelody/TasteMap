@@ -230,7 +230,8 @@ export default function TourBuilderPage() {
   const handleSkip = useCallback(() => {
     if (!activeCard) return;
     const card = activeCard;
-    updateVector(card.venue_id, card.tags, "skip");
+    const effectiveTags = card.tags?.length ? card.tags : ["Street Food", "Spicy", "Group"];
+    updateVector(card.venue_id, effectiveTags, "skip");
     setDiscardDir("left");
     setTimeout(() => {
       popDeckQueue();
@@ -245,7 +246,8 @@ export default function TourBuilderPage() {
   const handleLike = useCallback(() => {
     if (!activeCard) return;
     const card = activeCard;
-    updateVector(card.venue_id, card.tags, "select");
+    const effectiveTags = card.tags?.length ? card.tags : ["Street Food", "Spicy", "Group"];
+    updateVector(card.venue_id, effectiveTags, "select");
     setDiscardDir("right");
     setTimeout(() => {
       popDeckQueue();
@@ -260,7 +262,8 @@ export default function TourBuilderPage() {
   const handleSuperLike = useCallback(() => {
     if (!activeCard) return;
     const card = activeCard;
-    updateVector(card.venue_id, card.tags, "select"); // same as Like
+    const effectiveTags = card.tags?.length ? card.tags : ["Street Food", "Spicy", "Group"];
+    updateVector(card.venue_id, effectiveTags, "select"); // same as Like
     addToTourDraft(card);
     setDiscardDir("right");
     setTimeout(() => {
