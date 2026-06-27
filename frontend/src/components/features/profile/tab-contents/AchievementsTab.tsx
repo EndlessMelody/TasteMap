@@ -121,7 +121,7 @@ export const AchievementsTab: React.FC<AchievementsTabProps> = ({
                   style={{
                     width: 44,
                     height: 44,
-                    borderRadius: tokens.radius.full,
+                    borderRadius: tokens.radius.pill,
                     background: "rgba(255, 153, 0, 0.15)",
                     display: "flex",
                     alignItems: "center",
@@ -175,7 +175,7 @@ export const AchievementsTab: React.FC<AchievementsTabProps> = ({
                         padding: tokens.space[3],
                         borderRadius: tokens.radius.lg,
                         background: tokens.color.surface,
-                        border: `1px solid ${tokens.color.borderSubtle}`,
+                        border: `1px solid ${tokens.color.border}`,
                         display: "flex",
                         flexDirection: "column",
                         gap: tokens.space[2],
