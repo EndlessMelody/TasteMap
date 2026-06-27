@@ -25,7 +25,7 @@ import random
 import string
 import numpy as np
 from numpy.typing import NDArray
-from fastapi import HTTPException
+from src.core.exceptions import ResourceNotFoundException, ForbiddenException, ValidationException, ConflictException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func, and_, or_
@@ -64,7 +64,7 @@ async def create_group(db: AsyncSession, data, creator_id: int) -> dict:
                 payload["invite_code"] = code
                 break
         else:
-            raise HTTPException(status_code=500, detail="Failed to generate unique invite code")
+            raise ValidationException(detail="Failed to generate unique invite code", error_code="INVITE_CODE_FAILED")
     group = Group(**payload)
     db.add(group)
     await db.flush()
@@ -73,7 +73,7 @@ async def create_group(db: AsyncSession, data, creator_id: int) -> dict:
     result = await db.execute(select(User).where(User.id == creator_id))
     user = result.scalar_one_or_none()
     if not user:
-        raise HTTPException(status_code=404, detail="User không tồn tại")
+        raise ResourceNotFoundException(detail="User không tồn tại", error_code="USER_NOT_FOUND")
 
     session_vec = list(user.food_vector) if user.food_vector is not None else [0.5] * 15
 
@@ -90,7 +90,7 @@ async def create_group(db: AsyncSession, data, creator_id: int) -> dict:
         await db.refresh(group)
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+        raise ValidationException(detail=str(e), error_code="CREATE_GROUP_FAILED")
 
     return await _group_to_dict(db, group)
 
@@ -110,9 +110,9 @@ async def join_by_code(db: AsyncSession, invite_code: str, user_id: int) -> dict
     result = await db.execute(select(Group).where(Group.invite_code == invite_code.upper().strip()))
     group = result.scalar_one_or_none()
     if not group:
-        raise HTTPException(status_code=404, detail="Invalid invite code")
+        raise ResourceNotFoundException(detail="Invalid invite code", error_code="INVALID_INVITE_CODE")
     if group.status != "active":
-        raise HTTPException(status_code=400, detail="This room has ended")
+        raise ValidationException(detail="This room has ended", error_code="ROOM_ENDED")
     return await join_group(db, group.id, user_id)
 
 
@@ -120,12 +120,12 @@ async def get_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
     result = await db.execute(select(Group).where(Group.id == group_id))
     group = result.scalars().first()
     if not group:
-        raise HTTPException(status_code=404, detail="Lobby không tìm thấy")
+        raise ResourceNotFoundException(detail="Lobby không tìm thấy", error_code="LOBBY_NOT_FOUND")
     is_member = await is_group_member(db, group_id, user_id)
     # Private rooms are only visible to members; the invite_code is never
     # exposed to non-members (prevents leaking the join secret via the ID).
     if not is_member and not group.is_public:
-        raise HTTPException(status_code=403, detail="Bạn không có quyền xem phòng riêng tư này")
+        raise ForbiddenException(detail="Bạn không có quyền xem phòng riêng tư này", error_code="FORBIDDEN_LOBBY")
     return await _group_to_dict(db, group, include_invite_code=is_member)
 
 
@@ -134,15 +134,15 @@ async def join_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
     group_q = await db.execute(select(Group).where(Group.id == group_id))
     group = group_q.scalars().first()
     if not group:
-        raise HTTPException(status_code=404, detail="Lobby không tồn tại")
+        raise ResourceNotFoundException(detail="Lobby không tồn tại", error_code="LOBBY_NOT_FOUND")
     if group.status != "active":
-        raise HTTPException(status_code=400, detail="Lobby đã kết thúc")
+        raise ValidationException(detail="Lobby đã kết thúc", error_code="LOBBY_ENDED")
 
     members_q = await db.execute(select(GroupMember).where(GroupMember.group_id == group_id))
     members = members_q.scalars().all()
 
     if len(members) >= group.max_spots:
-        raise HTTPException(status_code=400, detail="Lobby đã đầy")
+        raise ConflictException(detail="Lobby đã đầy", error_code="LOBBY_FULL")
 
     existing = next((m for m in members if m.user_id == user_id), None)
     if existing:
@@ -152,7 +152,7 @@ async def join_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
     result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if not user:
-        raise HTTPException(status_code=404, detail="User không tồn tại")
+        raise ResourceNotFoundException(detail="User không tồn tại", error_code="USER_NOT_FOUND")
 
     session_vec = list(user.food_vector) if user.food_vector is not None else [0.5] * 15
 
@@ -173,7 +173,7 @@ async def leave_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
     )
     member = result.scalars().first()
     if not member:
-        raise HTTPException(status_code=404, detail="Bạn không phải thành viên lobby này")
+        raise ResourceNotFoundException(detail="Bạn không phải thành viên lobby này", error_code="NOT_MEMBER")
     await db.delete(member)
     await db.commit()
     return {"status": "left"}
@@ -184,7 +184,7 @@ async def delete_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
     group_q = await db.execute(select(Group).where(Group.id == group_id))
     group = group_q.scalars().first()
     if not group:
-        raise HTTPException(status_code=404, detail="Lobby không tồn tại")
+        raise ResourceNotFoundException(detail="Lobby không tồn tại", error_code="LOBBY_NOT_FOUND")
 
     member_q = await db.execute(
         select(GroupMember).where(
@@ -194,7 +194,7 @@ async def delete_group(db: AsyncSession, group_id: int, user_id: int) -> dict:
     )
     member = member_q.scalars().first()
     if not member or not member.is_host:
-        raise HTTPException(status_code=403, detail="Chỉ chủ phòng mới có quyền xóa lobby")
+        raise ForbiddenException(detail="Chỉ chủ phòng mới có quyền xóa lobby", error_code="HOST_ONLY")
 
     await db.delete(group)
     await db.commit()
@@ -207,7 +207,7 @@ async def set_ready(db: AsyncSession, group_id: int, user_id: int, is_ready: boo
     )
     member = result.scalars().first()
     if not member:
-        raise HTTPException(status_code=404, detail="Bạn không phải thành viên lobby này")
+        raise ResourceNotFoundException(detail="Bạn không phải thành viên lobby này", error_code="NOT_MEMBER")
     member.is_ready = is_ready
     await db.commit()
     return {"is_ready": is_ready}
@@ -240,11 +240,11 @@ async def group_recommend(db: AsyncSession, group_id: int, body, user_id: int) -
     group_q = await db.execute(select(Group).where(Group.id == group_id))
     group = group_q.scalars().first()
     if not group or group.status not in ("active", "in_progress"):
-        raise HTTPException(status_code=400, detail="Lobby không hoạt động")
+        raise ValidationException(detail="Lobby không hoạt động", error_code="LOBBY_INACTIVE")
 
     # Only members may pull the group's recommendation deck
     if not await is_group_member(db, group_id, user_id):
-        raise HTTPException(status_code=403, detail="Bạn không phải thành viên lobby này")
+        raise ForbiddenException(detail="Bạn không phải thành viên lobby này", error_code="NOT_MEMBER")
 
     # Get all members + their SESSION vectors
     members_q = await db.execute(
@@ -254,7 +254,7 @@ async def group_recommend(db: AsyncSession, group_id: int, body, user_id: int) -
     )
     rows = members_q.all()
     if not rows:
-        raise HTTPException(status_code=400, detail="Lobby trống")
+        raise ValidationException(detail="Lobby trống", error_code="LOBBY_EMPTY")
 
     member_data = []
     for gm, user in rows:
@@ -368,11 +368,11 @@ async def group_sync(db: AsyncSession, group_id: int, user_id: int, since_ts: Op
     group_q = await db.execute(select(Group).where(Group.id == group_id))
     group = group_q.scalars().first()
     if not group:
-        raise HTTPException(status_code=404, detail="Lobby không tìm thấy")
+        raise ResourceNotFoundException(detail="Lobby không tìm thấy", error_code="LOBBY_NOT_FOUND")
 
     # Only members may poll the room state
     if not await is_group_member(db, group_id, user_id):
-        raise HTTPException(status_code=403, detail="Bạn không phải thành viên lobby này")
+        raise ForbiddenException(detail="Bạn không phải thành viên lobby này", error_code="NOT_MEMBER")
 
     # Get all members + session vectors
     members_q = await db.execute(
@@ -486,7 +486,7 @@ async def group_vault(
     """
     # Only members may read the group's vault
     if not await is_group_member(db, group_id, user_id):
-        raise HTTPException(status_code=403, detail="Bạn không phải thành viên lobby này")
+        raise ForbiddenException(detail="Bạn không phải thành viên lobby này", error_code="NOT_MEMBER")
 
     # Get all LIKED/STARRED interactions in this group
     inter_q = await db.execute(
@@ -555,15 +555,15 @@ async def group_finish(db: AsyncSession, group_id: int, user_id: int, top_n: int
     )
     host_member = member_q.scalars().first()
     if not host_member or not host_member.is_host:
-        raise HTTPException(status_code=403, detail="Chỉ Host mới có quyền chốt danh sách")
+        raise ForbiddenException(detail="Chỉ Host mới có quyền chốt danh sách", error_code="HOST_ONLY")
 
     # Lock group
     group_q = await db.execute(select(Group).where(Group.id == group_id))
     group = group_q.scalars().first()
     if not group:
-        raise HTTPException(status_code=404, detail="Lobby không tìm thấy")
+        raise ResourceNotFoundException(detail="Lobby không tìm thấy", error_code="LOBBY_NOT_FOUND")
     if group.status == "completed":
-        raise HTTPException(status_code=400, detail="Lobby đã được chốt rồi")
+        raise ValidationException(detail="Lobby đã được chốt rồi", error_code="LOBBY_COMPLETED")
 
     group.status = "completed"
 
@@ -663,7 +663,7 @@ async def group_undo(db: AsyncSession, group_id: int, user_id: int) -> dict:
     group_q = await db.execute(select(Group).where(Group.id == group_id))
     group = group_q.scalars().first()
     if not group or group.status not in ("active", "in_progress"):
-        raise HTTPException(status_code=400, detail="Lobby không hoạt động hoặc đã kết thúc")
+        raise ValidationException(detail="Lobby không hoạt động hoặc đã kết thúc", error_code="LOBBY_INACTIVE")
 
     # Find latest interaction of this user in this group
     inter_q = await db.execute(
@@ -677,7 +677,7 @@ async def group_undo(db: AsyncSession, group_id: int, user_id: int) -> dict:
     )
     last_inter = inter_q.scalars().first()
     if not last_inter:
-        raise HTTPException(status_code=404, detail="Không có thẻ nào để hoàn tác")
+        raise ResourceNotFoundException(detail="Không có thẻ nào để hoàn tác", error_code="NO_INTERACTION")
 
     # Get the location vector for reverse calculation
     loc_q = await db.execute(select(Location).where(Location.id == last_inter.location_id))
@@ -692,7 +692,7 @@ async def group_undo(db: AsyncSession, group_id: int, user_id: int) -> dict:
     )
     member = member_q.scalars().first()
     if not member:
-        raise HTTPException(status_code=404, detail="Bạn không phải thành viên lobby này")
+        raise ForbiddenException(detail="Bạn không phải thành viên lobby này", error_code="NOT_MEMBER")
 
     undone_id = last_inter.id
 
@@ -750,13 +750,13 @@ async def group_swipe(
     valid_actions = ("LIKED", "SKIPPED", "DISLIKED", "STARRED")
     action = action.upper()
     if action not in valid_actions:
-        raise HTTPException(status_code=400, detail=f"Invalid action: {action}")
+        raise ValidationException(detail=f"Invalid action: {action}", error_code="INVALID_ACTION")
 
     # Validate group is in_progress
     group_q = await db.execute(select(Group).where(Group.id == group_id))
     group = group_q.scalars().first()
     if not group or group.status not in ("active", "in_progress"):
-        raise HTTPException(status_code=400, detail="Lobby không hoạt động")
+        raise ValidationException(detail="Lobby không hoạt động", error_code="LOBBY_INACTIVE")
 
     # Validate membership
     member_q = await db.execute(
@@ -767,7 +767,7 @@ async def group_swipe(
     )
     member = member_q.scalars().first()
     if not member:
-        raise HTTPException(status_code=404, detail="Bạn không phải thành viên lobby này")
+        raise ForbiddenException(detail="Bạn không phải thành viên lobby này", error_code="NOT_MEMBER")
 
     # Check for duplicate swipe on same location in this group
     dup_q = await db.execute(
@@ -778,13 +778,13 @@ async def group_swipe(
         )
     )
     if dup_q.scalars().first():
-        raise HTTPException(status_code=400, detail="Bạn đã quẹt thẻ này rồi")
+        raise ConflictException(detail="Bạn đã quẹt thẻ này rồi", error_code="ALREADY_SWIPED")
 
     # Get location vector
     loc_q = await db.execute(select(Location).where(Location.id == location_id))
     loc = loc_q.scalars().first()
     if not loc:
-        raise HTTPException(status_code=404, detail="Location không tồn tại")
+        raise ResourceNotFoundException(detail="Location không tồn tại", error_code="LOCATION_NOT_FOUND")
 
     # Create Interaction record
     interaction = Interaction(
@@ -839,15 +839,15 @@ async def group_launch(db: AsyncSession, group_id: int, user_id: int) -> dict:
     )
     host_member = member_q.scalars().first()
     if not host_member or not host_member.is_host:
-        raise HTTPException(status_code=403, detail="Chỉ Host mới có quyền launch")
+        raise ForbiddenException(detail="Chỉ Host mới có quyền launch", error_code="HOST_ONLY")
 
     # Get group
     group_q = await db.execute(select(Group).where(Group.id == group_id))
     group = group_q.scalars().first()
     if not group:
-        raise HTTPException(status_code=404, detail="Lobby không tìm thấy")
+        raise ResourceNotFoundException(detail="Lobby không tìm thấy", error_code="LOBBY_NOT_FOUND")
     if group.status != "active":
-        raise HTTPException(status_code=400, detail="Lobby không ở trạng thái active")
+        raise ValidationException(detail="Lobby không ở trạng thái active", error_code="LOBBY_NOT_ACTIVE")
 
     # Check all members ready
     members_q = await db.execute(
@@ -855,13 +855,13 @@ async def group_launch(db: AsyncSession, group_id: int, user_id: int) -> dict:
     )
     members = members_q.scalars().all()
     if not members:
-        raise HTTPException(status_code=400, detail="Lobby trống")
+        raise ValidationException(detail="Lobby trống", error_code="LOBBY_EMPTY")
 
     not_ready = [m for m in members if not m.is_ready]
     if not_ready:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Còn {len(not_ready)} thành viên chưa sẵn sàng"
+        raise ValidationException(
+            detail=f"Còn {len(not_ready)} thành viên chưa sẵn sàng",
+            error_code="MEMBERS_NOT_READY"
         )
 
     # Transition to in_progress

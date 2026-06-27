@@ -1,5 +1,5 @@
 """Reels Service — CRUD + Like toggle + View counter."""
-from fastapi import HTTPException
+from src.core.exceptions import ResourceNotFoundException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
@@ -81,7 +81,7 @@ async def get_reel(db: AsyncSession, reel_id: int, viewer_id: Optional[int] = No
     result = await db.execute(select(Reel).options(selectinload(Reel.user)).where(Reel.id == reel_id))
     reel = result.scalars().first()
     if not reel:
-        raise HTTPException(status_code=404, detail="Reel không tồn tại")
+        raise ResourceNotFoundException(detail="Reel không tồn tại", error_code="REEL_NOT_FOUND")
     reel.views_count += 1
     await db.commit()
     return await _reel_to_dict(db, reel, viewer_id)
@@ -97,7 +97,7 @@ async def toggle_like(db: AsyncSession, reel_id: int, user_id: int) -> dict:
     reel_q = await db.execute(select(Reel.id).where(Reel.id == reel_id))
     reel = reel_q.first()
     if not reel:
-        raise HTTPException(status_code=404, detail="Reel không tồn tại")
+        raise ResourceNotFoundException(detail="Reel không tồn tại", error_code="REEL_NOT_FOUND")
 
     if like:
         await db.delete(like)

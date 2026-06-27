@@ -1,6 +1,6 @@
 """Tours Service — CRUD + Graph routing (Dijkstra stub)."""
 import math
-from fastapi import HTTPException
+from src.core.exceptions import ResourceNotFoundException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -67,7 +67,7 @@ async def get_tour(db: AsyncSession, tour_id: int, user_id: int) -> dict:
     result = await db.execute(select(Tour).where(Tour.id == tour_id, Tour.user_id == user_id))
     tour = result.scalars().first()
     if not tour:
-        raise HTTPException(status_code=404, detail="Tour không tồn tại")
+        raise ResourceNotFoundException(detail="Tour không tồn tại", error_code="TOUR_NOT_FOUND")
     stops = await _get_stops(db, tour_id)
     return _tour_to_dict(tour, stops)
 
@@ -76,7 +76,7 @@ async def add_stop(db: AsyncSession, tour_id: int, user_id: int, data: StopCreat
     # Verify tour belongs to user
     result = await db.execute(select(Tour).where(Tour.id == tour_id, Tour.user_id == user_id))
     if not result.scalars().first():
-        raise HTTPException(status_code=404, detail="Tour không tồn tại")
+        raise ResourceNotFoundException(detail="Tour không tồn tại", error_code="TOUR_NOT_FOUND")
 
     if data.stop_order is None:
         count_result = await db.execute(
@@ -90,18 +90,18 @@ async def add_stop(db: AsyncSession, tour_id: int, user_id: int, data: StopCreat
         await db.commit()
     except IntegrityError:
         await db.rollback()
-        raise HTTPException(status_code=404, detail=f"Location {data.location_id} không tồn tại")
+        raise ResourceNotFoundException(detail=f"Location {data.location_id} không tồn tại", error_code="LOCATION_NOT_FOUND")
     return {"id": stop.id, "stop_order": stop.stop_order, "location_id": stop.location_id}
 
 
 async def delete_stop(db: AsyncSession, tour_id: int, stop_id: int, user_id: int):
     tour_q = await db.execute(select(Tour).where(Tour.id == tour_id, Tour.user_id == user_id))
     if not tour_q.scalars().first():
-        raise HTTPException(status_code=404, detail="Tour không tồn tại")
+        raise ResourceNotFoundException(detail="Tour không tồn tại", error_code="TOUR_NOT_FOUND")
     stop_q = await db.execute(select(TourStop).where(TourStop.id == stop_id, TourStop.tour_id == tour_id))
     stop = stop_q.scalars().first()
     if not stop:
-        raise HTTPException(status_code=404, detail="Stop không tồn tại")
+        raise ResourceNotFoundException(detail="Stop không tồn tại", error_code="STOP_NOT_FOUND")
     await db.delete(stop)
     await db.commit()
     return {"status": "deleted"}
@@ -111,7 +111,7 @@ async def update_status(db: AsyncSession, tour_id: int, user_id: int, status: st
     result = await db.execute(select(Tour).where(Tour.id == tour_id, Tour.user_id == user_id))
     tour = result.scalars().first()
     if not tour:
-        raise HTTPException(status_code=404, detail="Tour không tồn tại")
+        raise ResourceNotFoundException(detail="Tour không tồn tại", error_code="TOUR_NOT_FOUND")
     tour.status = status
     await db.commit()
     return {"id": tour_id, "status": status}
@@ -131,7 +131,7 @@ async def optimize_tour(db: AsyncSession, tour_id: int, user_id: int, body: Opti
     )
     rows = stops_result.all()
     if not rows:
-        raise HTTPException(status_code=404, detail="Tour không có stops")
+        raise ResourceNotFoundException(detail="Tour không có stops", error_code="TOUR_EMPTY")
 
     # ── 1. Nearest-Neighbour greedy ───────────────────────────────────────
     remaining = list(rows)

@@ -52,3 +52,26 @@ class MediaUploadResponse(BaseModel):
     url: str
     file_type: str
     size_bytes: int
+
+
+# ─── AI Badge Progression & Roadmap Schemas ──────────────────────────────
+
+class BadgeProgressionItem(BaseModel):
+    badge_id: int
+    name: str
+    icon_name: str
+    rarity: str
+    progress_percent: float
+    current_value: int
+    target_value: int
+    ai_advice: str
+    is_earned: bool
+
+
+class BadgeRoadmapResponse(BaseModel):
+    total_earned: int
+    total_available: int
+    foodie_rank_title: str
+    rarity_score: int
+    next_milestone_advice: str
+    progressions: List[BadgeProgressionItem]

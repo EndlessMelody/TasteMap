@@ -137,13 +137,17 @@ ALLOWED_ORIGINS = [
     "https://tastemap-fork-v1.vercel.app",
 ]
 
+from src.core.audit import AuditLoggingMiddleware
+from src.core.exceptions import TasteMapException
+
+app.add_middleware(AuditLoggingMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type"],
-    expose_headers=[],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
+    expose_headers=["X-Request-ID"],
 )
 
 
@@ -160,26 +164,48 @@ async def security_headers_middleware(request, call_next):
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
-# ── Catch-all exception handler that preserves CORS headers ──────────────
+# ── Centralized Exception Handlers ──────────────────────────────────────────
 from fastapi import Request
 from fastapi.responses import JSONResponse
 
+@app.exception_handler(TasteMapException)
+async def tastemap_exception_handler(request: Request, exc: TasteMapException):
+    """Custom exception handler returning standardized JSON response with trace ID."""
+    trace_id = getattr(request.state, "trace_id", "unknown")
+    logger.warning("TasteMapException: [%s] %s on %s %s (TraceID=%s)", exc.error_code, exc.detail, request.method, request.url.path, trace_id)
+    
+    origin = request.headers.get("origin", "")
+    headers = dict(exc.headers or {})
+    if origin in ALLOWED_ORIGINS:
+        headers["access-control-allow-origin"] = origin
+        headers["access-control-allow-credentials"] = "true"
+    headers["X-Request-ID"] = trace_id
+    
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "success": False,
+            "error": exc.detail,
+            "error_code": exc.error_code,
+            "trace_id": trace_id
+        },
+        headers=headers
+    )
+
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    """Ensure CORS headers are present even on unhandled 500 errors.
-
-    The real exception is logged server-side only; clients receive a generic
-    message so internal paths / DB errors are not disclosed.
-    """
-    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+    """Ensure CORS headers and trace IDs are present even on unhandled 500 errors."""
+    trace_id = getattr(request.state, "trace_id", "unknown")
+    logger.exception("Unhandled error on %s %s (TraceID=%s)", request.method, request.url.path, trace_id)
     origin = request.headers.get("origin", "")
-    headers = {}
+    headers = {"X-Request-ID": trace_id}
     if origin in ALLOWED_ORIGINS:
         headers["access-control-allow-origin"] = origin
         headers["access-control-allow-credentials"] = "true"
     return JSONResponse(
         status_code=500,
-        content={"success": False, "error": "Internal server error"},
+        content={"success": False, "error": "Internal server error", "error_code": "INTERNAL_ERROR", "trace_id": trace_id},
         headers=headers,
     )
 

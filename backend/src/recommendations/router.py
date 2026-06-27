@@ -5,6 +5,8 @@ from src.recommendations.schemas import (
     RecommendationRequest, RecommendationResponse,
     ContextualRequest, ContextualResponse,
     RescueMeRequest, RescueMeResponse,
+    CompatibilityCheckRequest, CompatibilityResponse,
+    GroupConsensusRequest, GroupConsensusResponse,
 )
 from src.recommendations import service
 from src.core.dependencies import get_current_user_id
@@ -72,4 +74,44 @@ async def rescue_me(
         lat=body.lat,
         lng=body.lng,
         category=body.category,
+    )
+
+
+@router.post(
+    "/compatibility-check",
+    response_model=CompatibilityResponse,
+    summary="AI Matchmaker — Phân tích độ tương thích khẩu vị ăn uống giữa các bạn bè",
+    description="Tính cosine similarity 15 chiều, chỉ ra điểm chung và điểm dễ xung đột khi chọn món."
+)
+async def check_compatibility(
+    body: CompatibilityCheckRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
+    return await service.check_compatibility(
+        db=db,
+        current_user_id=user_id,
+        target_user_ids=body.target_user_ids
+    )
+
+
+@router.post(
+    "/group-consensus",
+    response_model=GroupConsensusResponse,
+    summary="AI Group Dining Concierge — Gợi ý điểm chung tối ưu cho nhóm",
+    description="Dùng thuật toán Pareto Min-Max Regret tối ưu hóa độ hài lòng trung bình và bảo vệ thành viên khó tính nhất."
+)
+async def recommend_group_consensus(
+    body: GroupConsensusRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_db),
+):
+    return await service.recommend_group_consensus(
+        db=db,
+        user_ids=body.user_ids,
+        lat=body.lat,
+        lng=body.lng,
+        radius_km=body.radius_km,
+        category=body.category,
+        top_n=body.top_n
     )

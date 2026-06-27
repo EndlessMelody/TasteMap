@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
+from src.core.exceptions import ResourceNotFoundException
 
 from src.db.database import get_db
 from src.gamification import service, schemas
@@ -15,6 +16,15 @@ async def list_all_badges(db: AsyncSession = Depends(get_db)):
 @router.get("/me", response_model=List[schemas.UserBadgeResponse], summary="Lấy danh sách badges của người dùng hiện tại")
 async def my_badges(user_id: int = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)):
     return await service.list_user_badges(db, user_id)
+
+@router.get("/progression", response_model=schemas.BadgeRoadmapResponse, summary="AI Roadmap: Lấy lộ trình chinh phục thành tựu & lời khuyên AI")
+async def get_badge_progression(user_id: int = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)):
+    return await service.get_badge_progression_roadmap(db, user_id)
+
+@router.post("/auto-evaluate", summary="Tự động kiểm tra và cấp phát các huy hiệu đủ điều kiện")
+async def auto_evaluate_badges(user_id: int = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)):
+    result = await service.auto_evaluate_and_award_badges(db, user_id)
+    return {"success": True, "data": result}
 
 @router.get("/user/{user_id}", response_model=List[schemas.UserBadgeResponse], summary="Lấy danh sách badges của user bất kỳ")
 async def user_badges(user_id: int, db: AsyncSession = Depends(get_db)):
@@ -34,14 +44,14 @@ async def create_badge(payload: schemas.BadgeCreate, admin = Depends(get_current
 async def update_badge(badge_id: int, payload: schemas.BadgeUpdate, admin = Depends(get_current_admin), db: AsyncSession = Depends(get_db)):
     badge = await service.update_badge(db, badge_id, payload)
     if not badge:
-        raise HTTPException(status_code=404, detail="Badge not found")
+        raise ResourceNotFoundException(detail="Badge not found", error_code="BADGE_NOT_FOUND")
     return badge
 
 @router.delete("/{badge_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Admin: Xóa badge")
 async def delete_badge(badge_id: int, admin = Depends(get_current_admin), db: AsyncSession = Depends(get_db)):
     success = await service.delete_badge(db, badge_id)
     if not success:
-        raise HTTPException(status_code=404, detail="Badge not found")
+        raise ResourceNotFoundException(detail="Badge not found", error_code="BADGE_NOT_FOUND")
 
 @router.post("/admin/award/{user_id}/{badge_id}", summary="Admin: Cấp huy hiệu cho user")
 async def admin_award_badge(

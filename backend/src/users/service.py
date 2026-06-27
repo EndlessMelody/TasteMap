@@ -2,7 +2,7 @@
 Users Service — extended with profile, stats, top-spots, settings.
 """
 import json
-from fastapi import HTTPException
+from src.core.exceptions import ResourceNotFoundException, ValidationException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func, or_
@@ -29,7 +29,7 @@ class UserService:
         result = await self.db.execute(select(User).where(User.id == user_id))
         user = result.scalars().first()
         if not user:
-            raise HTTPException(status_code=404, detail="Không tìm thấy người dùng")
+            raise ResourceNotFoundException(detail="Không tìm thấy người dùng", error_code="USER_NOT_FOUND")
         return user
 
     async def _compute_stats(self, user_id: int) -> UserStats:
@@ -142,7 +142,7 @@ class UserService:
             await self.db.refresh(user)
         except Exception as e:
             await self.db.rollback()
-            raise HTTPException(status_code=400, detail=str(e))
+            raise ValidationException(detail=f"Lỗi cập nhật người dùng: {str(e)}", error_code="UPDATE_USER_FAILED")
         return await self.get_me(user_id)
 
     async def get_social_context(self, viewer_id: int, target_id: int) -> dict:
@@ -276,7 +276,7 @@ class UserService:
             return new_user
         except Exception as e:
             await self.db.rollback()
-            raise HTTPException(status_code=400, detail=f"Không thể tạo người dùng JIT: {str(e)}")
+            raise ValidationException(detail=f"Không thể tạo người dùng JIT: {str(e)}", error_code="CREATE_USER_FAILED")
 
     async def search_users(self, current_user_id: int, q: str, limit: int = 10) -> list:
         q = q.strip()

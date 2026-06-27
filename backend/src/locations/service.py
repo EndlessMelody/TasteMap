@@ -10,7 +10,7 @@ Công thức Haversine approximate (không cần PostGIS):
 Dùng SQLAlchemy func.sqrt, func.pow, func.cos, func.radians để biểu diễn.
 """
 import math
-from fastapi import HTTPException
+from src.core.exceptions import ResourceNotFoundException, ValidationException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import case, func, or_
@@ -61,7 +61,7 @@ async def get_location_detail(db: AsyncSession, location_id: int) -> LocationDet
     result = await db.execute(select(Location).where(Location.id == location_id))
     loc = result.scalars().first()
     if not loc:
-        raise HTTPException(status_code=404, detail="Không tìm thấy địa điểm")
+        raise ResourceNotFoundException(detail="Không tìm thấy địa điểm", error_code="LOCATION_NOT_FOUND")
 
     # Recent posts (up to 3)
     from src.posts.models import Post
@@ -109,7 +109,7 @@ async def create_location(db: AsyncSession, data: LocationCreate) -> Location:
         await db.refresh(loc)
     except Exception as e:
         await db.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+        raise ValidationException(detail=f"Lỗi tạo địa điểm: {str(e)}", error_code="CREATE_LOCATION_FAILED")
     return loc
 
 

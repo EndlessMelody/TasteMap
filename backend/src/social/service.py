@@ -1,7 +1,7 @@
 """Social Service — Friend request lifecycle."""
 import math
 from typing import Optional
-from fastapi import HTTPException
+from src.core.exceptions import ValidationException, ConflictException, ResourceNotFoundException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import or_
@@ -68,7 +68,7 @@ async def list_friends(db: AsyncSession, user_id: int) -> dict:
 
 async def send_request(db: AsyncSession, user_id: int, friend_id: int) -> dict:
     if user_id == friend_id:
-        raise HTTPException(status_code=400, detail="Không thể kết bạn với chính mình")
+        raise ValidationException(detail="Không thể kết bạn với chính mình", error_code="SELF_FRIEND_REQUEST")
     existing = await db.execute(
         select(Friendship).where(
             or_(
@@ -78,7 +78,7 @@ async def send_request(db: AsyncSession, user_id: int, friend_id: int) -> dict:
         )
     )
     if existing.scalars().first():
-        raise HTTPException(status_code=400, detail="Đã có quan hệ bạn bè / yêu cầu đang chờ")
+        raise ConflictException(detail="Đã có quan hệ bạn bè / yêu cầu đang chờ", error_code="FRIENDSHIP_EXISTS")
 
     sender_res = await db.execute(select(User).where(User.id == user_id))
     sender = sender_res.scalars().first()
@@ -105,7 +105,7 @@ async def accept_request(db: AsyncSession, friendship_id: int, user_id: int) -> 
     result = await db.execute(select(Friendship).where(Friendship.id == friendship_id, Friendship.friend_id == user_id))
     fs = result.scalars().first()
     if not fs:
-        raise HTTPException(status_code=404, detail="Invitation not found")
+        raise ResourceNotFoundException(detail="Invitation not found", error_code="INVITATION_NOT_FOUND")
 
     accepter_res = await db.execute(select(User).where(User.id == user_id))
     accepter = accepter_res.scalars().first()
@@ -132,7 +132,7 @@ async def block_friend(db: AsyncSession, friendship_id: int, user_id: int) -> di
     )
     fs = result.scalars().first()
     if not fs:
-        raise HTTPException(status_code=404, detail="Not found")
+        raise ResourceNotFoundException(detail="Not found", error_code="FRIENDSHIP_NOT_FOUND")
     fs.status = "blocked"
     await db.commit()
     return {"status": "blocked"}
@@ -144,7 +144,7 @@ async def delete_friendship(db: AsyncSession, friendship_id: int, user_id: int) 
     )
     fs = result.scalars().first()
     if not fs:
-        raise HTTPException(status_code=404, detail="Not found")
+        raise ResourceNotFoundException(detail="Not found", error_code="FRIENDSHIP_NOT_FOUND")
     await db.delete(fs)
     await db.commit()
     return {"status": "deleted"}

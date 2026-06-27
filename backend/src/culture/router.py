@@ -4,8 +4,9 @@ Culture Router — Culinary Culture Guide API endpoints.
 
 import base64
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.core.exceptions import ValidationException
 
 from src.db.database import get_db
 from src.core.dependencies import get_current_user_id
@@ -24,13 +25,13 @@ router = APIRouter()
 def _reject_banned_food_query(*texts: str | None) -> None:
     blocked, term = contains_banned_content(*texts)
     if blocked:
-        raise HTTPException(
-            status_code=400,
+        raise ValidationException(
             detail=(
                 "This query is not allowed in Culture Guide. "
                 "Requests related to weed/cigarette/tobacco/vape are blocked. "
                 f"(matched term: {term})"
             ),
+            error_code="BANNED_CONTENT"
         )
 
 
@@ -64,7 +65,7 @@ async def identify_and_story(
 ):
     """Identify food from an image URL and generate its cultural story."""
     if not image_url:
-        raise HTTPException(status_code=400, detail="image_url is required")
+        raise ValidationException(detail="image_url is required", error_code="MISSING_IMAGE_URL")
 
     user = await db.get(User, user_id)
     taste_profile = parse_food_vector(user.food_vector) if user else None
@@ -76,19 +77,19 @@ async def identify_and_story(
     )
 
     if identification.get("is_banned"):
-        raise HTTPException(
-            status_code=400,
+        raise ValidationException(
             detail=(
                 "The uploaded image appears to contain a banned item "
                 "(weed/cigarette/tobacco/vape), so it cannot be processed."
             ),
+            error_code="BANNED_CONTENT"
         )
 
     food_name = identification.get("food_name", "Unknown")
     if food_name == "Unknown":
-        raise HTTPException(
-            status_code=422,
+        raise ValidationException(
             detail="Could not identify the dish from the image. Try a clearer photo or use text search.",
+            error_code="UNIDENTIFIED_FOOD"
         )
 
     _reject_banned_food_query(food_name, identification.get("food_name_local"))
@@ -128,19 +129,19 @@ async def identify_from_upload(
     )
 
     if identification.get("is_banned"):
-        raise HTTPException(
-            status_code=400,
+        raise ValidationException(
             detail=(
                 "The uploaded image appears to contain a banned item "
                 "(weed/cigarette/tobacco/vape), so it cannot be processed."
             ),
+            error_code="BANNED_CONTENT"
         )
 
     food_name = identification.get("food_name", "Unknown")
     if food_name == "Unknown":
-        raise HTTPException(
-            status_code=422,
+        raise ValidationException(
             detail="Could not identify the dish from the image. Try a clearer photo or use text search.",
+            error_code="UNIDENTIFIED_FOOD"
         )
 
     _reject_banned_food_query(food_name, identification.get("food_name_local"))

@@ -4,7 +4,8 @@ Saves files to Supabase Storage and returns the public URL.
 """
 import os
 import uuid
-from fastapi import UploadFile, HTTPException
+from fastapi import UploadFile
+from src.core.exceptions import ValidationException, TasteMapException
 from supabase import create_client, Client
 
 from src.core.config import settings
@@ -63,8 +64,8 @@ def normalize_content_type(content_type: str) -> str:
 
 async def upload_file(file: UploadFile, upload_type: str, base_url: str) -> dict:
     if not supabase:
-        raise HTTPException(
-            status_code=500, detail="Supabase client not initialized. Check configuration."
+        raise TasteMapException(
+            status_code=500, detail="Supabase client not initialized. Check configuration.", error_code="SUPABASE_NOT_INIT"
         )
 
     raw_content_type = file.content_type or ""
@@ -81,22 +82,22 @@ async def upload_file(file: UploadFile, upload_type: str, base_url: str) -> dict
         allowed = ALLOWED_IMAGE_TYPES | ALLOWED_AUDIO_TYPES | ALLOWED_VIDEO_TYPES
         max_mb = MAX_CHAT_MEDIA_MB
     else:
-        raise HTTPException(
-            status_code=400, detail="type phải là 'avatar', 'cover', 'post', 'reel', hoặc 'chat'"
+        raise ValidationException(
+            detail="type phải là 'avatar', 'cover', 'post', 'reel', hoặc 'chat'", error_code="INVALID_UPLOAD_TYPE"
         )
 
     if content_type not in allowed:
-        raise HTTPException(
-            status_code=400,
+        raise ValidationException(
             detail=f"File type '{raw_content_type or content_type}' không được phép cho '{upload_type}'",
+            error_code="INVALID_FILE_TYPE"
         )
 
     contents = await file.read()
     size_bytes = len(contents)
 
     if size_bytes > max_mb * 1024 * 1024:
-        raise HTTPException(
-            status_code=400, detail=f"File quá lớn. Tối đa {max_mb}MB cho '{upload_type}'"
+        raise ValidationException(
+            detail=f"File quá lớn. Tối đa {max_mb}MB cho '{upload_type}'", error_code="FILE_TOO_LARGE"
         )
 
     ext = CONTENT_TYPE_EXTENSION_MAP.get(content_type, content_type.split("/")[-1])
@@ -122,6 +123,6 @@ async def upload_file(file: UploadFile, upload_type: str, base_url: str) -> dict
         # Get public url securely
         public_url = supabase.storage.from_(BUCKET_NAME).get_public_url(file_path)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Lỗi khi upload lên Supabase: {str(e)}")
+        raise TasteMapException(status_code=500, detail=f"Lỗi khi upload lên Supabase: {str(e)}", error_code="UPLOAD_FAILED")
 
     return {"url": public_url, "file_type": content_type, "size_bytes": size_bytes}

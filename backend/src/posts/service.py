@@ -1,5 +1,5 @@
 """Posts Service — Foodie Feed CRUD + Like toggle."""
-from fastapi import HTTPException
+from src.core.exceptions import ResourceNotFoundException, ForbiddenException, ValidationException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func, update
@@ -120,7 +120,7 @@ async def get_post(db: AsyncSession, post_id: int, viewer_id: Optional[int]) -> 
     )
     post = result.scalars().first()
     if not post:
-        raise HTTPException(status_code=404, detail="Post không tồn tại")
+        raise ResourceNotFoundException(detail="Post không tồn tại", error_code="POST_NOT_FOUND")
     return await _post_to_dict(db, post, viewer_id)
 
 
@@ -128,9 +128,9 @@ async def delete_post(db: AsyncSession, post_id: int, user_id: int):
     result = await db.execute(select(Post).where(Post.id == post_id))
     post = result.scalars().first()
     if not post:
-        raise HTTPException(status_code=404, detail="Post không tồn tại")
+        raise ResourceNotFoundException(detail="Post không tồn tại", error_code="POST_NOT_FOUND")
     if post.user_id != user_id:
-        raise HTTPException(status_code=403, detail="Không có quyền xóa post này")
+        raise ForbiddenException(detail="Không có quyền xóa post này", error_code="FORBIDDEN")
     await db.delete(post)
     await db.commit()
     return {"status": "deleted"}
@@ -143,7 +143,7 @@ async def toggle_like(db: AsyncSession, post_id: int, user_id: int) -> dict:
     post_q = await db.execute(select(Post.id).where(Post.id == post_id))
     post = post_q.first()
     if not post:
-        raise HTTPException(status_code=404, detail="Post không tồn tại")
+        raise ResourceNotFoundException(detail="Post không tồn tại", error_code="POST_NOT_FOUND")
 
     if like:
         await db.delete(like)
@@ -192,11 +192,11 @@ async def add_comment(db: AsyncSession, user_id: int, data: CommentCreate, post_
         parent_q = await db.execute(select(Comment).where(Comment.id == parent_id))
         parent = parent_q.scalars().first()
         if not parent:
-            raise HTTPException(status_code=404, detail="Comment không tồn tại")
+            raise ResourceNotFoundException(detail="Comment không tồn tại", error_code="COMMENT_NOT_FOUND")
         if post_id and parent.post_id != post_id:
-            raise HTTPException(status_code=400, detail="Reply không thuộc post này")
+            raise ValidationException(detail="Reply không thuộc post này", error_code="INVALID_REPLY")
         if reel_id and parent.reel_id != reel_id:
-            raise HTTPException(status_code=400, detail="Reply không thuộc reel này")
+            raise ValidationException(detail="Reply không thuộc reel này", error_code="INVALID_REPLY")
         if parent.parent_id is not None:
             parent_id = parent.parent_id
 
@@ -231,9 +231,9 @@ async def delete_comment(db: AsyncSession, comment_id: int, user_id: int):
     result = await db.execute(select(Comment).where(Comment.id == comment_id))
     comment = result.scalars().first()
     if not comment:
-        raise HTTPException(status_code=404, detail="Comment không tồn tại")
+        raise ResourceNotFoundException(detail="Comment không tồn tại", error_code="COMMENT_NOT_FOUND")
     if comment.user_id != user_id:
-        raise HTTPException(status_code=403, detail="Không có quyền xóa comment này")
+        raise ForbiddenException(detail="Không có quyền xóa comment này", error_code="FORBIDDEN")
         
     post_id = comment.post_id
     reel_id = comment.reel_id

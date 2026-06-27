@@ -15,6 +15,7 @@ from typing import Optional
 from src.db.database import get_db
 from src.core.config import settings
 from src.users.models import User
+from src.core.exceptions import UnauthorizedException, ForbiddenException, TasteMapException
 
 # Security scheme for Swagger UI
 reusable_oauth2 = HTTPBearer()
@@ -74,11 +75,11 @@ async def get_token_payload(
     try:
         return _decode_supabase_token(token)
     except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token đã hết hạn")
+        raise UnauthorizedException(detail="Token đã hết hạn", error_code="TOKEN_EXPIRED")
     except jwt.InvalidTokenError as e:
-        raise HTTPException(status_code=401, detail=f"Token không hợp lệ: {str(e)}")
+        raise UnauthorizedException(detail=f"Token không hợp lệ: {str(e)}", error_code="INVALID_TOKEN")
     except Exception as e:
-        raise HTTPException(status_code=401, detail=f"Lỗi xác thực: {str(e)}")
+        raise UnauthorizedException(detail=f"Lỗi xác thực: {str(e)}", error_code="AUTH_ERROR")
 
 
 async def get_current_user_id(
@@ -96,26 +97,28 @@ async def get_current_user_id(
         payload = _decode_supabase_token(token)
         supabase_uid = payload.get("sub")
         if not supabase_uid:
-            raise HTTPException(status_code=401, detail="Token không hợp lệ: thiếu 'sub'")
+            raise UnauthorizedException(detail="Token không hợp lệ: thiếu 'sub'", error_code="MISSING_SUB")
 
         result = await db.execute(select(User.id).where(User.supabase_uid == supabase_uid))
         user_id = result.scalar_one_or_none()
 
         if not user_id:
-            raise HTTPException(
-                status_code=401,
+            raise UnauthorizedException(
                 detail="User chưa được đồng bộ. Vui lòng gọi POST /api/v1/auth/sync trước.",
+                error_code="USER_NOT_SYNCED"
             )
         return user_id
 
     except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token đã hết hạn")
+        raise UnauthorizedException(detail="Token đã hết hạn", error_code="TOKEN_EXPIRED")
     except jwt.InvalidTokenError as e:
-        raise HTTPException(status_code=401, detail=f"Token không hợp lệ: {str(e)}")
+        raise UnauthorizedException(detail=f"Token không hợp lệ: {str(e)}", error_code="INVALID_TOKEN")
+    except TasteMapException:
+        raise
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=401, detail=f"Lỗi xác thực: {str(e)}")
+        raise UnauthorizedException(detail=f"Lỗi xác thực: {str(e)}", error_code="AUTH_ERROR")
 
 
 async def get_current_user(
@@ -128,25 +131,27 @@ async def get_current_user(
         payload = _decode_supabase_token(token)
         supabase_uid = payload.get("sub")
         if not supabase_uid:
-            raise HTTPException(status_code=401, detail="Token không hợp lệ: thiếu 'sub'")
+            raise UnauthorizedException(detail="Token không hợp lệ: thiếu 'sub'", error_code="MISSING_SUB")
 
         result = await db.execute(select(User).where(User.supabase_uid == supabase_uid))
         user = result.scalar_one_or_none()
 
         if not user:
-            raise HTTPException(
-                status_code=401,
+            raise UnauthorizedException(
                 detail="User chưa được đồng bộ.",
+                error_code="USER_NOT_SYNCED"
             )
         return user
     except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token đã hết hạn")
+        raise UnauthorizedException(detail="Token đã hết hạn", error_code="TOKEN_EXPIRED")
     except jwt.InvalidTokenError as e:
-        raise HTTPException(status_code=401, detail=f"Token không hợp lệ: {str(e)}")
+        raise UnauthorizedException(detail=f"Token không hợp lệ: {str(e)}", error_code="INVALID_TOKEN")
+    except TasteMapException:
+        raise
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=401, detail=f"Lỗi xác thực: {str(e)}")
+        raise UnauthorizedException(detail=f"Lỗi xác thực: {str(e)}", error_code="AUTH_ERROR")
 
 
 async def get_current_admin(
@@ -154,7 +159,7 @@ async def get_current_admin(
 ) -> User:
     """Dependency cho các route admin: yêu cầu user có role='admin'."""
     if current_user.role != "admin":
-        raise HTTPException(status_code=403, detail="Không có quyền truy cập. Yêu cầu quyền admin.")
+        raise ForbiddenException(detail="Không có quyền truy cập. Yêu cầu quyền admin.", error_code="ADMIN_REQUIRED")
     return current_user
 
 

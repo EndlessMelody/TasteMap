@@ -2,8 +2,9 @@
 Challenges Router — API endpoints for the gamification system.
 """
 from typing import List, Optional, Any
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.core.exceptions import ValidationException, ResourceNotFoundException
 from src.db.database import get_db
 from src.core.dependencies import get_current_user_id, get_current_admin
 from src.challenges import service, streak_service, leaderboard_service, schemas
@@ -31,7 +32,7 @@ async def create_challenge(
 
 @router.get("/me")
 async def get_my_challenges(
-    status: Optional[str] = Query(None, regex="^(active|completed|claimed|expired)$"),
+    status: Optional[str] = Query(None, pattern="^(active|completed|claimed|expired)$"),
     db: AsyncSession = Depends(get_db),
     user_id: int = Depends(get_current_user_id)
 ):
@@ -75,12 +76,12 @@ async def claim_reward(
     """Nhận thưởng cho thử thách đã hoàn thành."""
     result = await service.claim_challenge_reward(db, user_id, user_challenge_id)
     if not result.get("success"):
-        raise HTTPException(status_code=400, detail=result.get("error"))
+        raise ValidationException(detail=str(result.get("error", "Failed to claim reward")), error_code="CLAIM_REWARD_FAILED")
     return result
 
 @router.get("/leaderboard")
 async def get_rankings(
-    period: str = Query("alltime", regex="^(alltime|monthly|weekly)$"),
+    period: str = Query("alltime", pattern="^(alltime|monthly|weekly)$"),
     limit: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
     user_id: int = Depends(get_current_user_id)
@@ -105,7 +106,7 @@ async def get_challenge_detail(
 ):
     challenge = await service.get_challenge_by_id_admin(db, challenge_id)
     if not challenge:
-        raise HTTPException(status_code=404, detail="Challenge not found")
+        raise ResourceNotFoundException(detail="Challenge not found", error_code="CHALLENGE_NOT_FOUND")
     return challenge
 
 
@@ -118,7 +119,7 @@ async def update_challenge(
 ):
     challenge = await service.update_challenge(db, challenge_id, schema)
     if not challenge:
-        raise HTTPException(status_code=404, detail="Challenge not found")
+        raise ResourceNotFoundException(detail="Challenge not found", error_code="CHALLENGE_NOT_FOUND")
     return challenge
 
 
@@ -130,5 +131,5 @@ async def delete_challenge(
 ):
     success = await service.delete_challenge(db, challenge_id)
     if not success:
-        raise HTTPException(status_code=404, detail="Challenge not found")
+        raise ResourceNotFoundException(detail="Challenge not found", error_code="CHALLENGE_NOT_FOUND")
     return {"status": "success", "message": "Challenge deleted"}

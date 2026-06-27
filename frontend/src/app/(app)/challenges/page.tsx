@@ -469,64 +469,133 @@ function LeaderboardRow({
 }
 
 function BadgesCard() {
+  const [roadmap, setRoadmap] = useState<any>(null);
+
+  useEffect(() => {
+    apiGet<any>("/api/v1/badges/progression")
+      .then((data) => setRoadmap(data))
+      .catch(() => {});
+  }, []);
+
   const items = [
     { label: "Spice Master", icon: <Flame size={16} strokeWidth={1.75} /> },
     { label: "Night Owl", icon: <Moon size={16} strokeWidth={1.75} /> },
     { label: "Photo Pro", icon: <Camera size={16} strokeWidth={1.75} /> },
     { label: "Top Reviewer", icon: <Crown size={16} strokeWidth={1.75} /> },
   ];
+
   return (
     <Card radius="xl" padding="md" shadow="sm">
-      <Row vertical="center" style={{ gap: tokens.space[2], marginBottom: tokens.space[4] }}>
-        <Star
-          size={18}
-          fill="currentColor"
-          style={{ color: tokens.color.warning }}
-        />
-        <H3>My badges</H3>
+      <Row vertical="center" horizontal="between" style={{ marginBottom: tokens.space[4] }}>
+        <Row vertical="center" style={{ gap: tokens.space[2] }}>
+          <Star
+            size={18}
+            fill="currentColor"
+            style={{ color: tokens.color.warning }}
+          />
+          <H3>AI Badge Progression</H3>
+        </Row>
+        {roadmap && (
+          <Pill tone="warning" size="sm">
+            {roadmap.rarity_score} pts
+          </Pill>
+        )}
       </Row>
-      <Grid
-        style={{
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gap: tokens.space[2],
-        }}
-      >
-        {items.map((b) => (
+
+      {roadmap ? (
+        <Column style={{ gap: tokens.space[3] }}>
+          <div
+            style={{
+              padding: tokens.space[3],
+              borderRadius: tokens.radius.md,
+              background: "rgba(255, 153, 0, 0.1)",
+              border: `1px solid rgba(255, 153, 0, 0.3)`,
+            }}
+          >
+            <BodySm style={{ fontWeight: 600, color: "#ff9900", marginBottom: 4 }}>
+              👑 {roadmap.foodie_rank_title}
+            </BodySm>
+            <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
+              💡 {roadmap.next_milestone_advice}
+            </BodySm>
+          </div>
+
+          <BodySm style={{ fontWeight: 600, marginTop: 4 }}>
+            Huy hiệu đang chinh phục ({roadmap.total_earned}/{roadmap.total_available}):
+          </BodySm>
+
+          <Grid style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: tokens.space[2] }}>
+            {roadmap.progressions.slice(0, 4).map((prog: any) => (
+              <Row
+                key={prog.badge_id}
+                vertical="center"
+                style={{
+                  gap: tokens.space[2],
+                  padding: tokens.space[3],
+                  borderRadius: tokens.radius.md,
+                  background: prog.is_earned ? "rgba(16, 185, 129, 0.1)" : tokens.color.surfaceMuted,
+                  border: prog.is_earned ? "1px solid rgba(16, 185, 129, 0.3)" : "none",
+                }}
+              >
+                <span style={{ color: prog.is_earned ? "#10b981" : tokens.color.textMuted }}>
+                  {prog.is_earned ? <Award size={16} /> : <Zap size={16} />}
+                </span>
+                <Column>
+                  <BodySm style={{ fontWeight: tokens.type.weight.semibold, fontSize: "0.85rem" }}>
+                    {prog.name}
+                  </BodySm>
+                  <BodySm tone="subtle" style={{ fontSize: "0.75rem" }}>
+                    {prog.current_value}/{prog.target_value} ({prog.progress_percent}%)
+                  </BodySm>
+                </Column>
+              </Row>
+            ))}
+          </Grid>
+        </Column>
+      ) : (
+        <Grid
+          style={{
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: tokens.space[2],
+          }}
+        >
+          {items.map((b) => (
+            <Row
+              key={b.label}
+              vertical="center"
+              style={{
+                gap: tokens.space[2],
+                padding: tokens.space[3],
+                borderRadius: tokens.radius.md,
+                background: tokens.color.surfaceMuted,
+              }}
+            >
+              <span style={{ color: tokens.color.textMuted }}>{b.icon}</span>
+              <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
+                {b.label}
+              </BodySm>
+            </Row>
+          ))}
           <Row
-            key={b.label}
             vertical="center"
             style={{
               gap: tokens.space[2],
               padding: tokens.space[3],
               borderRadius: tokens.radius.md,
-              background: tokens.color.surfaceMuted,
+              background: "transparent",
+              border: `1px dashed ${tokens.color.border}`,
+              opacity: 0.6,
             }}
           >
-            <span style={{ color: tokens.color.textMuted }}>{b.icon}</span>
-            <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
-              {b.label}
-            </BodySm>
+            <Lock
+              size={14}
+              strokeWidth={1.75}
+              style={{ color: tokens.color.textSubtle }}
+            />
+            <BodySm tone="subtle">Locked</BodySm>
           </Row>
-        ))}
-        <Row
-          vertical="center"
-          style={{
-            gap: tokens.space[2],
-            padding: tokens.space[3],
-            borderRadius: tokens.radius.md,
-            background: "transparent",
-            border: `1px dashed ${tokens.color.border}`,
-            opacity: 0.6,
-          }}
-        >
-          <Lock
-            size={14}
-            strokeWidth={1.75}
-            style={{ color: tokens.color.textSubtle }}
-          />
-          <BodySm tone="subtle">Locked</BodySm>
-        </Row>
-      </Grid>
+        </Grid>
+      )}
     </Card>
   );
 }

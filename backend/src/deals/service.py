@@ -1,5 +1,5 @@
 """Deals Service."""
-from fastapi import HTTPException
+from src.core.exceptions import ResourceNotFoundException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func
@@ -27,7 +27,7 @@ async def get_deal(db: AsyncSession, deal_id: int) -> dict:
     result = await db.execute(select(Deal).where(Deal.id == deal_id))
     deal = result.scalars().first()
     if not deal:
-        raise HTTPException(status_code=404, detail="Deal không tồn tại")
+        raise ResourceNotFoundException(detail="Deal không tồn tại", error_code="DEAL_NOT_FOUND")
     return await _deal_to_dict(db, deal)
 
 

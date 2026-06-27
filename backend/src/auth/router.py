@@ -6,13 +6,14 @@ POST /register/check: Kiem tra email/username da ton tai chua.
 Dung get_token_payload thay vi get_current_user_id de tranh nghich ly ga-va-trung.
 """
 import uuid
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from src.db.database import get_db
 from src.users.models import User
 from src.users.schemas import UserMe, UserStats
+from src.core.exceptions import UnauthorizedException, ConflictException, ValidationException, ResourceNotFoundException
 from src.challenges.models import LevelConfig
 from src.challenges.xp_service import compute_level_progress
 from src.core.dependencies import get_token_payload
@@ -58,9 +59,9 @@ async def sync_user(
     )
 
     if not supabase_uid or not email:
-        raise HTTPException(
-            status_code=401,
+        raise UnauthorizedException(
             detail="Token payload thiếu trường bắt buộc (sub, email).",
+            error_code="INVALID_PAYLOAD"
         )
 
     # ── 2. Tìm user theo supabase_uid ──────────────────────────────────────
@@ -186,12 +187,12 @@ async def send_registration_otp(
     # ── 1. Kiểm tra email chưa được đăng ký ───────────────────────────────
     existing_email = await db.execute(select(User).where(User.email == request.email))
     if existing_email.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise ConflictException(detail="Email already registered", error_code="EMAIL_REGISTERED")
 
     # ── 2. Kiểm tra username chưa được sử dụng ────────────────────────────
     existing_username = await db.execute(select(User).where(User.username == request.username))
     if existing_username.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="Username already taken")
+        raise ConflictException(detail="Username already taken", error_code="USERNAME_TAKEN")
 
     # ── 3. Tạo OTP và gửi email ────────────────────────────────────────────
     otp = await create_otp(request.email)
@@ -214,9 +215,9 @@ async def verify_registration_otp(
 ) -> VerifyOTPResponse:
     is_valid = await verify_otp_code(request.email, request.otp)
     if not is_valid:
-        raise HTTPException(
-            status_code=400,
+        raise ValidationException(
             detail="Invalid or expired code. Please check the code and try again.",
+            error_code="INVALID_OTP"
         )
     return VerifyOTPResponse(success=True, message="Email verified successfully")
 
@@ -233,7 +234,7 @@ async def resolve_email(
     result = await db.execute(select(User.email).where(User.username == request.username))
     email: str | None = result.scalar_one_or_none()
     if not email:
-        raise HTTPException(status_code=404, detail="No account found with that username.")
+        raise ResourceNotFoundException(detail="No account found with that username.", error_code="USER_NOT_FOUND")
     return ResolveEmailResponse(email=email)
 
 

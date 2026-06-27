@@ -1,5 +1,5 @@
 """Bookmarks Service — save locations + auto XP reward."""
-from fastapi import HTTPException
+from src.core.exceptions import ValidationException, ConflictException, ResourceNotFoundException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func
@@ -44,10 +44,10 @@ async def add_bookmark(db: AsyncSession, user_id: int, data: BookmarkCreate) -> 
         target_id = data.reel_id
         target_type = "reel"
     else:
-        raise HTTPException(status_code=400, detail="Thiếu ID đối tượng để bookmark")
+        raise ValidationException(detail="Thiếu ID đối tượng để bookmark", error_code="MISSING_TARGET_ID")
 
     if existing_q.scalars().first():
-        raise HTTPException(status_code=400, detail="Đã bookmark rồi")
+        raise ConflictException(detail="Đã bookmark rồi", error_code="ALREADY_BOOKMARKED")
 
     # Chỉ thưởng XP cho bookmark địa điểm (Taste Vault)
     earned_xp = XP_PER_BOOKMARK if target_type == "location" else 0
@@ -85,7 +85,7 @@ async def toggle_bookmark(db: AsyncSession, user_id: int, body: BookmarkCreate) 
     elif body.reel_id:
         query = query.where(Bookmark.reel_id == body.reel_id)
     else:
-        raise HTTPException(status_code=400, detail="Missing location_id, post_id, or reel_id")
+        raise ValidationException(detail="Missing location_id, post_id, or reel_id", error_code="MISSING_TARGET_ID")
 
     result = await db.execute(query)
     existing = result.scalar_one_or_none()
@@ -103,7 +103,7 @@ async def delete_bookmark(db: AsyncSession, bookmark_id: int, user_id: int) -> d
     result = await db.execute(select(Bookmark).where(Bookmark.id == bookmark_id, Bookmark.user_id == user_id))
     bm = result.scalars().first()
     if not bm:
-        raise HTTPException(status_code=404, detail="Bookmark không tồn tại")
+        raise ResourceNotFoundException(detail="Bookmark không tồn tại", error_code="BOOKMARK_NOT_FOUND")
     await db.delete(bm)
     await db.commit()
     return {"status": "deleted"}

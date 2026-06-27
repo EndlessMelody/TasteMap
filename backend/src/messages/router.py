@@ -1,5 +1,6 @@
 from typing import Optional
-from fastapi import APIRouter, Depends, Query, HTTPException, status
+from fastapi import APIRouter, Depends, Query, status
+from src.core.exceptions import ValidationException, ForbiddenException, ResourceNotFoundException
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -66,7 +67,7 @@ async def send_message(
         )
         return {"success": True, "data": msg}
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise ValidationException(detail=str(e), error_code="INVALID_MESSAGE")
 
 
 @router.patch("/{other_user_id}/read", summary="Mark all messages from user as read")
@@ -94,9 +95,8 @@ async def edit_message(
     """Edit a text message. Only sender can edit, within 15 minutes of sending."""
     result = await service.edit_message(db, message_id, user_id, body.text)
     if not result:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Cannot edit message: not found, not sender, too old, or not a text message"
+        raise ForbiddenException(
+            detail="Cannot edit message: not found, not sender, too old, or not a text message", error_code="CANNOT_EDIT_MESSAGE"
         )
     return {"success": True, "data": result}
 
@@ -112,9 +112,8 @@ async def delete_message(
     """Soft delete a message. Only sender can delete for everyone."""
     success = await service.delete_message(db, message_id, user_id, for_everyone)
     if not success:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Cannot delete message: not found or not authorized"
+        raise ForbiddenException(
+            detail="Cannot delete message: not found or not authorized", error_code="CANNOT_DELETE_MESSAGE"
         )
     return {"success": True, "deleted": True}
 
@@ -134,7 +133,7 @@ async def add_reaction(
     """React to a message with an emoji (👍 ❤️ 😂 🎉 😮 😢 😡). Returns updated message with reactions."""
     result = await service.add_reaction(db, message_id, user_id, body.emoji)
     if not result:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Message not found")
+        raise ResourceNotFoundException(detail="Message not found", error_code="MESSAGE_NOT_FOUND")
     return {"success": True, "data": result}
 
 
@@ -149,5 +148,5 @@ async def remove_reaction(
     """Remove your reaction from a message."""
     result = await service.remove_reaction(db, message_id, user_id, emoji)
     if not result:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Message not found")
+        raise ResourceNotFoundException(detail="Message not found", error_code="MESSAGE_NOT_FOUND")
     return {"success": True, "data": result}

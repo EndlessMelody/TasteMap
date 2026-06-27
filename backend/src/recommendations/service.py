@@ -17,6 +17,7 @@ from typing import List, Dict, Any, Optional, Tuple
 
 from src.locations.models import Location
 from src.users.models import User
+from src.core.exceptions import ResourceNotFoundException, ValidationException
 
 
 # ─── Pure math (no side effects) ─────────────────────────────────────────
@@ -287,3 +288,169 @@ async def rescue_me(
             "image_url": nearest.get("image_url"),
         }}
     return {"place": None}
+
+
+# ─── Group Consensus & Compatibility Engine ──────────────────────────────
+
+TASTE_DIMENSIONS = [
+    "Spicy/Cay", "Sweet/Ngọt", "Sour/Chua", "Salty/Mặn", "Umami/Đậm đà",
+    "Crunchy/Giòn", "Rich/Béo", "Herbal/Thảo mộc", "Grilled/Nướng", "Broth/Nước dùng",
+    "StreetFood/Vỉa hè", "FineDining/Sang trọng", "Cafes/Cà phê", "LateNight/Ăn đêm", "Budget/Bình dân"
+]
+
+
+async def check_compatibility(
+    db: AsyncSession, current_user_id: int, target_user_ids: List[int]
+) -> dict:
+    if not target_user_ids:
+        raise ValidationException(detail="Cần ít nhất 1 target_user_id để kiểm tra độ hợp nhau", error_code="MISSING_TARGETS")
+    
+    all_ids = list(set([current_user_id] + target_user_ids))
+    result = await db.execute(select(User).where(User.id.in_(all_ids)))
+    users_map = {u.id: u for u in result.scalars().all()}
+    
+    if current_user_id not in users_map:
+        raise ResourceNotFoundException(detail="Không tìm thấy người dùng hiện tại", error_code="USER_NOT_FOUND")
+    
+    cur_u = users_map[current_user_id]
+    cur_vec = np.array(cur_u.food_vector if cur_u.food_vector else [0.1]*15, dtype=np.float64)
+    
+    matches = []
+    sim_scores = []
+    
+    for tid in target_user_ids:
+        if tid not in users_map or tid == current_user_id:
+            continue
+        tu = users_map[tid]
+        t_vec = np.array(tu.food_vector if tu.food_vector else [0.1]*15, dtype=np.float64)
+        
+        sim = _cosine_sim(cur_vec, t_vec)
+        sim_scores.append(sim)
+        
+        # Identify shared loves and potential frictions
+        shared = []
+        friction = []
+        for idx, dim_name in enumerate(TASTE_DIMENSIONS):
+            if idx < len(cur_vec) and idx < len(t_vec):
+                v1, v2 = cur_vec[idx], t_vec[idx]
+                if v1 > 0.6 and v2 > 0.6:
+                    shared.append(dim_name)
+                elif abs(v1 - v2) > 0.5:
+                    friction.append(dim_name)
+        
+        if sim > 0.82:
+            label = "Soulmate Foodies ⭐"
+        elif sim > 0.70:
+            label = "Great Dining Buddies 🤝"
+        elif sim > 0.55:
+            label = "Complementary Tastes 🥗"
+        else:
+            label = "Polar Opposites ⚡"
+            
+        matches.append({
+            "user_id": tu.id,
+            "username": tu.username or f"User #{tu.id}",
+            "avatar_url": tu.avatar_url,
+            "similarity_score": round(sim, 3),
+            "compatibility_label": label,
+            "shared_loves": shared[:4],
+            "potential_friction": friction[:3]
+        })
+        
+    overall = round(float(np.mean(sim_scores)), 3) if sim_scores else 0.5
+    summary = f"Đội hình ăn uống đạt độ hòa hợp {int(overall*100)}%." if overall >= 0.7 else "Nhóm có gu ăn uống khá đa dạng, nên ưu tiên các khu tổ hợp ẩm thực hoặc buffet!"
+    
+    return {
+        "overall_harmony": overall,
+        "summary": summary,
+        "matches": matches
+    }
+
+
+async def recommend_group_consensus(
+    db: AsyncSession,
+    user_ids: List[int],
+    lat: Optional[float] = None,
+    lng: Optional[float] = None,
+    radius_km: float = 5.0,
+    category: str = "place",
+    top_n: int = 5
+) -> dict:
+    if not user_ids:
+        raise ValidationException(detail="Danh sách user_ids không được để trống", error_code="EMPTY_GROUP")
+        
+    result = await db.execute(select(User).where(User.id.in_(user_ids)))
+    users = result.scalars().all()
+    if not users:
+        raise ResourceNotFoundException(detail="Không tìm thấy thành viên nào trong nhóm", error_code="USERS_NOT_FOUND")
+        
+    user_vectors = []
+    for u in users:
+        vec = u.food_vector if u.food_vector else [0.1]*15
+        user_vectors.append(np.array(vec, dtype=np.float64))
+        
+    # Consensus vector is the average vector representing group centroid
+    consensus_vec = np.mean(user_vectors, axis=0)
+    
+    # Pass 1: Query candidates
+    candidates = await _fetch_candidates(db, consensus_vec.tolist(), limit=50, domain=category)
+    if not candidates:
+        # Fallback query all locations
+        q = select(Location).where(Location.is_active == True).limit(30)
+        res = await db.execute(q)
+        locs = res.scalars().all()
+        candidates = [{
+            "id": loc.id, "name": loc.name, "lat": loc.latitude, "lng": loc.longitude,
+            "category": loc.category, "price_range": loc.price_range, "image_url": loc.image_url,
+            "place_vector": loc.place_vector or [0.1]*15
+        } for loc in locs]
+        
+    scored_results = []
+    for c in candidates:
+        p_vec = np.array(c["place_vector"] if c["place_vector"] else [0.1]*15, dtype=np.float64)
+        
+        member_satisfactions = []
+        member_scores = []
+        for idx, u in enumerate(users):
+            u_vec = user_vectors[idx]
+            sim = _cosine_sim(u_vec, p_vec)
+            score = round(sim * 100, 1)
+            member_scores.append(score)
+            member_satisfactions.append({
+                "user_id": u.id,
+                "username": u.username or f"User #{u.id}",
+                "match_score": score
+            })
+            
+        mean_score = float(np.mean(member_scores))
+        min_score = float(np.min(member_scores))
+        # Min-Max Regret / Pareto optimization: balance average satisfaction with preventing anyone from having a bad meal
+        harmony_score = round(0.65 * mean_score + 0.35 * min_score, 1)
+        
+        dist_km = None
+        if lat is not None and lng is not None and c["lat"] and c["lng"]:
+            dist_km = round(_haversine_km(lat, lng, c["lat"], c["lng"]), 2)
+            if dist_km > radius_km * 1.5:
+                continue  # Skip far places
+                
+        reason = f"Độ hài lòng nhóm đạt {harmony_score}% — (Thấp nhất trong nhóm: {min_score}%)"
+        
+        scored_results.append({
+            "place_id": c["id"],
+            "name": c["name"],
+            "group_harmony_score": harmony_score,
+            "min_member_score": min_score,
+            "distance_km": dist_km,
+            "member_satisfactions": member_satisfactions,
+            "image_url": c.get("image_url"),
+            "price_range": c.get("price_range"),
+            "reason": reason
+        })
+        
+    scored_results.sort(key=lambda x: x["group_harmony_score"], reverse=True)
+    
+    return {
+        "consensus_vector": [round(float(v), 4) for v in consensus_vec],
+        "group_size": len(users),
+        "recommendations": scored_results[:top_n]
+    }
