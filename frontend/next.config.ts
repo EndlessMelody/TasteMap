@@ -33,13 +33,17 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ['localhost:3000', ...getNetworkIPs()],
 
   async rewrites() {
+    const backendUrl =
+      process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
+      process.env.BACKEND_URL?.replace(/\/$/, "") ||
+      "http://127.0.0.1:8000";
     return [
       {
-        source: '/api/:path*',
-        destination: 'http://127.0.0.1:8000/api/:path*'
-      }
+        source: "/api/:path*",
+        destination: `${backendUrl}/api/:path*`,
+      },
     ];
-  }
+  },
 };
 
 export default nextConfig;
