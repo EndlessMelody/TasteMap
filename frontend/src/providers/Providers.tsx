@@ -26,6 +26,7 @@ import {
 // TasteMap app providers. `ThemeProvider` is aliased to avoid a clash with
 // Once UI's ThemeProvider.
 import { ThemeProvider as AppThemeProvider } from "@/context/ThemeContext";
+import { AccentProvider } from "@/context/AccentContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { AuthProvider as HooksAuthProvider } from "@/hooks/useAuth";
@@ -50,15 +51,17 @@ export function Providers({ children }: { children: ReactNode }) {
         <IconProvider>
           <ToastProvider>
             <AppThemeProvider>
-              <LanguageProvider>
-                <AuthProvider>
-                  <HooksAuthProvider>
-                    <UserVectorProvider>
-                      <ChatProvider>{children}</ChatProvider>
-                    </UserVectorProvider>
-                  </HooksAuthProvider>
-                </AuthProvider>
-              </LanguageProvider>
+              <AccentProvider>
+                <LanguageProvider>
+                  <AuthProvider>
+                    <HooksAuthProvider>
+                      <UserVectorProvider>
+                        <ChatProvider>{children}</ChatProvider>
+                      </UserVectorProvider>
+                    </HooksAuthProvider>
+                  </AuthProvider>
+                </LanguageProvider>
+              </AccentProvider>
             </AppThemeProvider>
           </ToastProvider>
         </IconProvider>

@@ -124,12 +124,19 @@
 
 ## Table `tour_stops`
 
+> Per-stop metrics (`match_score`, `dwell_min`, `travel_min`) are written by the route optimiser
+> ([`POST /tours/{id}/optimize`](../api/discovery.md)) so the cinematic journey view stays
+> consistent on reload. All three are nullable (populated only after optimise).
+
 ### Columns
 
-| Name | Type | Constraints |
-|------|------|-------------|
-| `id` | `int4` | Primary |
-| `tour_id` | `int4` |  |
-| `location_id` | `int4` |  |
-| `stop_order` | `int4` |  |
-| `added_at` | `timestamptz` |  Nullable |
+| Name | Type | Constraints | Description |
+|------|------|-------------|-------------|
+| `id` | `int4` | Primary | |
+| `tour_id` | `int4` |  | FK → `tours.id` |
+| `location_id` | `int4` |  | FK → `locations.id` |
+| `stop_order` | `int4` |  | 1-based visit order (kept contiguous on delete) |
+| `match_score` | `float8` | Nullable | Taste match 0–100 = `round(((cos(u,l)+1)/2)·100)` |
+| `dwell_min` | `int4` | Nullable | Estimated minutes spent at the stop (by category/characteristics) |
+| `travel_min` | `int4` | Nullable | Travel minutes from the previous stop (first stop = 0) |
+| `added_at` | `timestamptz` |  Nullable | |

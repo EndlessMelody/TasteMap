@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import Optional, List
+from pydantic import BaseModel, Field
+from typing import Optional, List, Literal
 from datetime import datetime
 
 
@@ -19,6 +19,8 @@ class LocationStub(BaseModel):
     lng: float
     image_url: Optional[str] = None
     price_range: Optional[str] = None
+    rating: Optional[float] = None
+    category: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -27,6 +29,9 @@ class LocationStub(BaseModel):
 class StopResponse(BaseModel):
     id: int
     stop_order: int
+    match_score: Optional[int] = None
+    dwell_min: Optional[int] = None
+    travel_min: Optional[int] = None
     location: Optional[LocationStub] = None
 
 
@@ -50,12 +55,24 @@ class StatusUpdate(BaseModel):
 class OptimizeRequest(BaseModel):
     start_lat: float
     start_lng: float
+    # Which user vector to personalise against + contextual signals.
+    category: Literal["food", "place"] = "food"
+    time_context: Optional[str] = None  # breakfast / lunch / dinner / late_night ...
+    transport_mode: Literal["walking", "driving", "transit"] = "driving"
 
 
 class OptimizedStop(BaseModel):
     stop_order: int
     location_id: int
     estimated_travel_min: int
+    match_score: Optional[int] = None
+    dwell_min: Optional[int] = None
+
+
+class OptimizeContext(BaseModel):
+    time_slot: str = "any"
+    weather: str = "unknown"
+    weather_coefficient: float = 0.8
 
 
 class OptimizeResponse(BaseModel):
@@ -63,3 +80,4 @@ class OptimizeResponse(BaseModel):
     total_distance_km: float
     total_duration_min: int
     estimated_cost_vnd: int
+    context: OptimizeContext = Field(default_factory=OptimizeContext)

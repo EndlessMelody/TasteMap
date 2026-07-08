@@ -37,6 +37,7 @@ import { tokens } from "@/styles/tokens";
 import { fadeDown } from "@/lib/motion";
 import { useAuth } from "@/context/AuthContext";
 import { useUserVector } from "@/context/UserVectorContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ─── Live weather context ────────────────────────────────────────
 interface WeatherState {
@@ -163,8 +164,17 @@ const VerticalDivider: React.FC = () => (
 );
 
 // ─── Main component ──────────────────────────────────────────────
+// Map the English condition label to an i18n key.
+const CONDITION_KEY: Record<string, string> = {
+  Sunny: "ribbon.sunny",
+  "Partly Cloudy": "ribbon.partlyCloudy",
+  "Light Rain": "ribbon.lightRain",
+  Clear: "ribbon.clear",
+};
+
 export const ContextRibbon: React.FC = () => {
   const { user, isInitializing } = useAuth();
+  const { t } = useLanguage();
   const ctx = useLiveContext();
   const WeatherIcon = ctx.icon;
 
@@ -256,7 +266,7 @@ export const ContextRibbon: React.FC = () => {
                 color: tokens.color.textMuted,
               }}
             >
-              {ctx.condition}
+              {t(CONDITION_KEY[ctx.condition] ?? ctx.condition)}
             </span>
             <span
               style={{
@@ -364,7 +374,7 @@ export const ContextRibbon: React.FC = () => {
               <span style={{ color: tokens.color.text, fontWeight: 700 }}>
                 312
               </span>
-              online
+              {t("ribbon.online")}
             </span>
 
             {/* Trending trait */}

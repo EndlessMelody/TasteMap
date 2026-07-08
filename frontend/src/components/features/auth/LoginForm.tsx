@@ -13,6 +13,7 @@ import {
   Check,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { apiPost } from "@/lib/api";
 import { toast } from "sonner";
@@ -31,19 +32,10 @@ import { tokens } from "@/styles/tokens";
 type View = "login" | "signup";
 type SignupStep = "info" | "password";
 
-const HEADERS: Record<string, { title: string; subtitle: string }> = {
-  login: {
-    title: "Welcome back",
-    subtitle: "Sign in to continue to TasteMap",
-  },
-  info: {
-    title: "Create account",
-    subtitle: "Start your food journey today",
-  },
-  password: {
-    title: "Set your password",
-    subtitle: "Almost done — choose a strong password",
-  },
+const HEADER_KEYS: Record<string, { titleKey: string; subtitleKey: string }> = {
+  login: { titleKey: "auth.welcomeBack", subtitleKey: "auth.signInSubtitle" },
+  info: { titleKey: "auth.createAccount", subtitleKey: "auth.createSubtitle" },
+  password: { titleKey: "auth.setPassword", subtitleKey: "auth.setPasswordSubtitle" },
 };
 
 function GoogleIcon() {
@@ -70,22 +62,23 @@ function GoogleIcon() {
 }
 
 function PasswordStrengthMeter({ password }: { password: string }) {
+  const { t } = useLanguage();
   if (!password) return null;
 
   const criteria = [
-    { label: "8+ characters", met: password.length >= 8 },
-    { label: "Uppercase letter", met: /[A-Z]/.test(password) },
-    { label: "Lowercase letter", met: /[a-z]/.test(password) },
-    { label: "Number", met: /[0-9]/.test(password) },
-    { label: "Special character", met: /[^A-Za-z0-9]/.test(password) },
+    { label: t("auth.crit8"), met: password.length >= 8 },
+    { label: t("auth.critUpper"), met: /[A-Z]/.test(password) },
+    { label: t("auth.critLower"), met: /[a-z]/.test(password) },
+    { label: t("auth.critNumber"), met: /[0-9]/.test(password) },
+    { label: t("auth.critSpecial"), met: /[^A-Za-z0-9]/.test(password) },
   ];
   const score = criteria.filter((c) => c.met).length;
   const LEVELS = [
-    { label: "Very weak", color: tokens.color.danger },
-    { label: "Weak", color: tokens.color.warm },
-    { label: "Fair", color: tokens.color.warning },
-    { label: "Good", color: tokens.color.success },
-    { label: "Strong", color: tokens.color.success },
+    { label: t("auth.veryWeak"), color: tokens.color.danger },
+    { label: t("auth.weak"), color: tokens.color.warm },
+    { label: t("auth.fair"), color: tokens.color.warning },
+    { label: t("auth.good"), color: tokens.color.success },
+    { label: t("auth.strong"), color: tokens.color.success },
   ];
   const level = LEVELS[Math.max(0, score - 1)];
 
@@ -143,6 +136,7 @@ function PasswordStrengthMeter({ password }: { password: string }) {
 export function LoginForm() {
   const router = useRouter();
   const { login, error: authError, clearError } = useAuth();
+  const { t } = useLanguage();
 
   const [view, setView] = useState<View>("login");
   const [signupStep, setSignupStep] = useState<SignupStep>("info");
@@ -191,11 +185,11 @@ export function LoginForm() {
     e.preventDefault();
     clearErrors();
     if (!email.trim()) {
-      setError("Please enter your email or username.");
+      setError(t("auth.errEnterEmailOrUsername"));
       return;
     }
     if (!password) {
-      setError("Please enter your password.");
+      setError(t("auth.errEnterPassword"));
       return;
     }
     setLoading(true);
@@ -213,15 +207,15 @@ export function LoginForm() {
     e.preventDefault();
     clearErrors();
     if (!username.trim()) {
-      setError("Please enter your username.");
+      setError(t("auth.errEnterUsername"));
       return;
     }
     if (!email.trim()) {
-      setError("Please enter your email.");
+      setError(t("auth.errEnterEmail"));
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Please enter a valid email.");
+      setError(t("auth.errValidEmail"));
       return;
     }
     setLoading(true);
@@ -237,11 +231,11 @@ export function LoginForm() {
       };
       if (!result.available) {
         if (result.email_exists && result.username_exists) {
-          setError("Both email and username are already registered.");
+          setError(t("auth.errBothExist"));
         } else if (result.email_exists) {
-          setError("This email is already registered.");
+          setError(t("auth.errEmailExists"));
         } else if (result.username_exists) {
-          setError("This username is already taken.");
+          setError(t("auth.errUsernameExists"));
         } else {
           setError(result.message);
         }
@@ -250,7 +244,7 @@ export function LoginForm() {
       setSignupStep("password");
     } catch (err) {
       const msg =
-        err instanceof Error ? err.message : "Failed to check availability";
+        err instanceof Error ? err.message : t("auth.errCheckFailed");
       setError(msg);
       toast.error(msg);
     } finally {
@@ -262,11 +256,11 @@ export function LoginForm() {
     e.preventDefault();
     clearErrors();
     if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+      setError(t("auth.errPwdMin"));
       return;
     }
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("auth.errPwdMismatch"));
       return;
     }
     setLoading(true);
@@ -277,15 +271,15 @@ export function LoginForm() {
         options: { data: { username } },
       });
       if (err) throw err;
-      toast.success("Account created!");
+      toast.success(t("auth.accountCreated"));
       router.push("/discover");
     } catch (err) {
-      let msg = err instanceof Error ? err.message : "Failed to create account";
+      let msg = err instanceof Error ? err.message : t("auth.errCreateFailed");
       if (
         msg.toLowerCase().includes("user already registered") ||
         msg.toLowerCase().includes("already exists")
       ) {
-        msg = "This email is already registered. Please sign in instead.";
+        msg = t("auth.errEmailExistsSignin");
       }
       setError(msg);
       toast.error(msg);
@@ -306,13 +300,15 @@ export function LoginForm() {
   };
 
   const hKey = view === "login" ? "login" : signupStep;
-  const { title, subtitle } = HEADERS[hKey];
+  const { titleKey, subtitleKey } = HEADER_KEYS[hKey];
+  const title = t(titleKey);
+  const subtitle = t(subtitleKey);
   const backLabel =
     view === "signup" && signupStep === "password"
-      ? "Back"
+      ? t("auth.back")
       : view === "signup"
-      ? "Back to sign in"
-      : "Back to home";
+      ? t("auth.backToSignIn")
+      : t("auth.backToHome");
 
   return (
     <Column
@@ -404,7 +400,7 @@ export function LoginForm() {
             leftIcon={<GoogleIcon />}
             onClick={handleGoogle}
           >
-            Continue with Google
+            {t("auth.continueGoogle")}
           </Button>
           <Row
             vertical="center"
@@ -416,7 +412,7 @@ export function LoginForm() {
               style={{ flex: 1, height: 1, background: tokens.color.border }}
             />
             <Caption tone="subtle">
-              or {view === "login" ? "sign in" : "sign up"} with email
+              {view === "login" ? t("auth.orSignInEmail") : t("auth.orSignUpEmail")}
             </Caption>
             <Column
               style={{ flex: 1, height: 1, background: tokens.color.border }}
@@ -436,15 +432,15 @@ export function LoginForm() {
           }}
         >
           <Field
-            label="Email or username"
+            label={t("auth.emailOrUsername")}
             type="text"
-            placeholder="you@example.com or username"
+            placeholder={t("auth.emailOrUsernamePlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             leading={<Mail size={16} strokeWidth={1.75} />}
           />
           <Field
-            label="Password"
+            label={t("auth.password")}
             type={showPwd ? "text" : "password"}
             placeholder="••••••••"
             value={password}
@@ -452,7 +448,7 @@ export function LoginForm() {
             leading={<Lock size={16} strokeWidth={1.75} />}
             trailing={
               <IconButton
-                aria-label={showPwd ? "Hide password" : "Show password"}
+                aria-label={showPwd ? t("auth.hidePassword") : t("auth.showPassword")}
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowPwd((p) => !p)}
@@ -475,7 +471,7 @@ export function LoginForm() {
             loading={loading}
             rightIcon={!loading && <ArrowRight size={16} strokeWidth={2} />}
           >
-            {loading ? "Signing in…" : "Sign in"}
+            {loading ? t("auth.signingIn") : t("auth.signIn")}
           </Button>
         </form>
       )}
@@ -491,17 +487,17 @@ export function LoginForm() {
           }}
         >
           <Field
-            label="Username"
+            label={t("auth.username")}
             type="text"
-            placeholder="your username"
+            placeholder={t("auth.usernamePlaceholder")}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             leading={<User size={16} strokeWidth={1.75} />}
           />
           <Field
-            label="Email"
+            label={t("auth.email")}
             type="email"
-            placeholder="you@example.com"
+            placeholder={t("auth.emailPlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             leading={<Mail size={16} strokeWidth={1.75} />}
@@ -515,7 +511,7 @@ export function LoginForm() {
             loading={loading}
             rightIcon={!loading && <ArrowRight size={16} strokeWidth={2} />}
           >
-            {loading ? "Checking…" : "Continue"}
+            {loading ? t("auth.checking") : t("auth.continueBtn")}
           </Button>
         </form>
       )}
@@ -532,16 +528,16 @@ export function LoginForm() {
         >
           <Column>
             <Field
-              label="Password"
+              label={t("auth.password")}
               type={showPwd ? "text" : "password"}
-              placeholder="At least 8 characters"
+              placeholder={t("auth.atLeast8")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoFocus
               leading={<Lock size={16} strokeWidth={1.75} />}
               trailing={
                 <IconButton
-                  aria-label={showPwd ? "Hide password" : "Show password"}
+                  aria-label={showPwd ? t("auth.hidePassword") : t("auth.showPassword")}
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowPwd((p) => !p)}
@@ -558,15 +554,15 @@ export function LoginForm() {
             <PasswordStrengthMeter password={password} />
           </Column>
           <Field
-            label="Confirm password"
+            label={t("auth.confirmPassword")}
             type={showConfirm ? "text" : "password"}
-            placeholder="Re-enter your password"
+            placeholder={t("auth.reenterPassword")}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             leading={<Lock size={16} strokeWidth={1.75} />}
             trailing={
               <IconButton
-                aria-label={showConfirm ? "Hide password" : "Show password"}
+                aria-label={showConfirm ? t("auth.hidePassword") : t("auth.showPassword")}
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowConfirm((p) => !p)}
@@ -589,7 +585,7 @@ export function LoginForm() {
             loading={loading}
             rightIcon={!loading && <ArrowRight size={16} strokeWidth={2} />}
           >
-            {loading ? "Creating account…" : "Create account"}
+            {loading ? t("auth.creatingAccount") : t("auth.createAccountBtn")}
           </Button>
         </form>
       )}
@@ -597,8 +593,8 @@ export function LoginForm() {
       {/* Switch view */}
       <BodySm tone="muted" style={{ textAlign: "center" }}>
         {view === "login"
-          ? "Don't have an account? "
-          : "Already have an account? "}
+          ? t("auth.noAccount")
+          : t("auth.haveAccount")}
         <button
           type="button"
           onClick={() => switchView(view === "login" ? "signup" : "login")}
@@ -612,13 +608,12 @@ export function LoginForm() {
             padding: 0,
           }}
         >
-          {view === "login" ? "Sign up" : "Sign in"}
+          {view === "login" ? t("auth.signUp") : t("auth.signIn")}
         </button>
       </BodySm>
 
       <Caption tone="subtle" style={{ textAlign: "center", lineHeight: 1.6 }}>
-        By continuing you agree to TasteMap&apos;s Terms of Service and Privacy
-        Policy.
+        {t("auth.terms")}
       </Caption>
     </Column>
   );

@@ -36,6 +36,7 @@ import {
 import { toast } from "sonner";
 import { Column, Row, Grid } from "@once-ui-system/core";
 import { apiGet, apiPost } from "@/lib/api";
+import { useLanguage } from "@/context/LanguageContext";
 import { LobbyDetailModal, AvatarStack } from "@/components/features/lobby";
 import type {
   LobbyData,
@@ -165,15 +166,39 @@ const STATUS_LABEL: Record<LobbyStatus, string> = {
   "in-progress": "Live",
   full: "Full",
 };
+// i18n key maps — logic still keys off the English enum values above.
+const STATUS_LABEL_KEY: Record<LobbyStatus, string> = {
+  waiting: "groupRooms.statusWaiting",
+  "in-progress": "groupRooms.statusLive",
+  full: "groupRooms.statusFull",
+};
+const CATEGORY_KEY: Record<string, string> = {
+  "Food Challenge": "groupRooms.catFoodChallenge",
+  "Coffee Tour": "groupRooms.catCoffeeTour",
+  "Street Food": "groupRooms.catStreetFood",
+  "Hidden Gems": "groupRooms.catHiddenGems",
+  "Night Market": "groupRooms.catNightMarket",
+  Brunch: "groupRooms.catBrunch",
+  "Ramen Hunt": "groupRooms.catRamenHunt",
+  "Dessert Crawl": "groupRooms.catDessertCrawl",
+  All: "groupRooms.catAll",
+};
+const TAB_KEY: Record<string, string> = {
+  All: "groupRooms.tabAll",
+  Waiting: "groupRooms.tabWaiting",
+  "In Progress": "groupRooms.tabInProgress",
+  Full: "groupRooms.tabFull",
+};
 
 function JoinByCodeModal({ onClose }: { onClose: () => void }) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleJoin = async () => {
     if (!code.trim()) {
-      toast.error("Please enter an invite code.");
+      toast.error(t("groupRooms.enterInviteCode"));
       return;
     }
     setLoading(true);
@@ -181,12 +206,12 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
       const room = await apiPost<ApiRoom>("/api/v1/groups/join-by-code", {
         invite_code: code.trim().toUpperCase(),
       });
-      toast.success(`Joined "${room.name}".`);
+      toast.success(t("groupRooms.joinedRoom", { name: room.name }));
       onClose();
       router.push(`/group-rooms/${room.id}`);
     } catch (err) {
       const msg =
-        err instanceof Error ? err.message : "Invalid or expired invite code.";
+        err instanceof Error ? err.message : t("groupRooms.invalidCode");
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -230,7 +255,7 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
             <IconButton
               variant="ghost"
               size="sm"
-              aria-label="Close"
+              aria-label={t("groupRooms.close")}
               icon={<X size={16} strokeWidth={1.75} />}
               onClick={onClose}
               style={{
@@ -254,9 +279,9 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
             >
               <KeyRound size={22} strokeWidth={1.75} />
             </span>
-            <H2>Join private room</H2>
+            <H2>{t("groupRooms.joinPrivateRoom")}</H2>
             <BodySm tone="muted" style={{ marginTop: tokens.space[1] }}>
-              Enter the invite code from your host.
+              {t("groupRooms.enterCodeFromHost")}
             </BodySm>
           </Column>
           <Column
@@ -266,7 +291,7 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
             }}
           >
             <Field
-              label="Invite code"
+              label={t("groupRooms.inviteCode")}
               placeholder="FEAST-4X2K"
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
@@ -283,7 +308,7 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
             />
             <Row style={{ gap: tokens.space[3] }}>
               <Button variant="ghost" size="md" fullWidth onClick={onClose}>
-                Cancel
+                {t("groupRooms.cancel")}
               </Button>
               <Button
                 variant="primary"
@@ -293,7 +318,7 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
                 leftIcon={<KeyRound size={14} strokeWidth={1.75} />}
                 onClick={handleJoin}
               >
-                Join room
+                {t("groupRooms.joinRoom")}
               </Button>
             </Row>
           </Column>
@@ -311,6 +336,7 @@ function RoomCard({
   onClick: () => void;
 }) {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const isJoined = Boolean(
     user && lobby.members.some((m) => m.user_id === user.id),
   );
@@ -372,7 +398,7 @@ function RoomCard({
                 border: "1px solid rgba(255, 255, 255, 0.25)",
               }}
             >
-              {lobby.category}
+              {t(CATEGORY_KEY[lobby.category] ?? lobby.category)}
             </Pill>
           </Column>
         )}
@@ -396,7 +422,7 @@ function RoomCard({
               )
             }
           >
-            {lobby.is_public === false ? "Private" : "Public"}
+            {lobby.is_public === false ? t("groupRooms.private") : t("groupRooms.public")}
           </Pill>
         </Column>
 
@@ -420,7 +446,7 @@ function RoomCard({
             }
             dot={status === "waiting"}
           >
-            {STATUS_LABEL[status]}
+            {t(STATUS_LABEL_KEY[status])}
           </Pill>
         </Column>
 
@@ -517,7 +543,7 @@ function RoomCard({
             style={{ marginBottom: tokens.space[1] }}
           >
             <Caption tone="muted">
-              {lobby.members.length} / {lobby.spots} joined
+              {t("groupRooms.joined", { n: lobby.members.length, m: lobby.spots })}
             </Caption>
             {spotsLeft > 0 ? (
               <Caption
@@ -526,7 +552,7 @@ function RoomCard({
                   fontWeight: tokens.type.weight.semibold,
                 }}
               >
-                {spotsLeft} spot{spotsLeft > 1 ? "s" : ""} left
+                {spotsLeft > 1 ? t("groupRooms.spotsLeft", { n: spotsLeft }) : t("groupRooms.spotLeft", { n: spotsLeft })}
               </Caption>
             ) : (
               <Caption
@@ -535,7 +561,7 @@ function RoomCard({
                   fontWeight: tokens.type.weight.semibold,
                 }}
               >
-                Full
+                {t("groupRooms.full")}
               </Caption>
             )}
           </Row>
@@ -612,12 +638,12 @@ function RoomCard({
               }}
             >
               {status === "full"
-                ? "Full"
+                ? t("groupRooms.full")
                 : status === "in-progress"
-                  ? "Watch"
+                  ? t("groupRooms.watch")
                   : isJoined
-                    ? "Enter"
-                    : "Join"}
+                    ? t("groupRooms.enter")
+                    : t("groupRooms.join")}
             </Button>
           </Row>
         </Row>
@@ -634,6 +660,7 @@ function CreateRoomModal({
   onCreated: (room: LobbyData) => void;
 }) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [route, setRoute] = useState("");
@@ -646,7 +673,7 @@ function CreateRoomModal({
 
   const handleCreate = async () => {
     if (!name.trim() || !route.trim()) {
-      toast.error("Room name and route are required.");
+      toast.error(t("groupRooms.roomNameRouteRequired"));
       return;
     }
     if (!isPublic && !pendingCode) {
@@ -665,12 +692,12 @@ function CreateRoomModal({
       const created = await apiPost<ApiRoom>("/api/v1/groups/", body);
       const mapped = mapApiRoom(created);
       onCreated(mapped);
-      toast.success(`Room "${name}" created.`);
+      toast.success(t("groupRooms.roomCreated", { name }));
       onClose();
       router.push(`/group-rooms/${created.id}`);
     } catch (err) {
       const msg =
-        err instanceof Error ? err.message : "Failed to create room.";
+        err instanceof Error ? err.message : t("groupRooms.failedToCreate");
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -718,15 +745,15 @@ function CreateRoomModal({
             }}
           >
             <Column>
-              <H2>Create a room</H2>
+              <H2>{t("groupRooms.createTitle")}</H2>
               <BodySm tone="muted" style={{ marginTop: tokens.space[1] }}>
-                Host a new group food adventure.
+                {t("groupRooms.createSubtitle")}
               </BodySm>
             </Column>
             <IconButton
               variant="ghost"
               size="sm"
-              aria-label="Close"
+              aria-label={t("groupRooms.close")}
               icon={<X size={18} strokeWidth={1.75} />}
               onClick={onClose}
             />
@@ -742,15 +769,15 @@ function CreateRoomModal({
             }}
           >
             <Field
-              label="Room name"
-              placeholder="e.g. Spicy Noodle Challenge"
+              label={t("groupRooms.roomName")}
+              placeholder={t("groupRooms.roomNamePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <Field
               multiline
-              label="Description"
-              placeholder="Tell others what the vibe is…"
+              label={t("groupRooms.description")}
+              placeholder={t("groupRooms.descriptionPlaceholder")}
               rows={2}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -758,7 +785,7 @@ function CreateRoomModal({
 
             <Column style={{ gap: tokens.space[2] }}>
               <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
-                Category
+                {t("groupRooms.category")}
               </BodySm>
               <Row style={{ flexWrap: "wrap", gap: tokens.space[2] }}>
                 {(ALL_CATEGORIES.slice(1) as LobbyCategory[]).map((cat) => {
@@ -787,7 +814,7 @@ function CreateRoomModal({
                         fontFamily: "inherit",
                       }}
                     >
-                      {CATEGORY_ICON[cat]} {cat}
+                      {CATEGORY_ICON[cat]} {t(CATEGORY_KEY[cat] ?? cat)}
                     </button>
                   );
                 })}
@@ -795,8 +822,8 @@ function CreateRoomModal({
             </Column>
 
             <Field
-              label="Route / location"
-              placeholder="e.g. District 1 → Bến Thành"
+              label={t("groupRooms.routeLocation")}
+              placeholder={t("groupRooms.routePlaceholder")}
               value={route}
               onChange={(e) => setRoute(e.target.value)}
               leading={<MapPin size={16} strokeWidth={1.75} />}
@@ -805,8 +832,8 @@ function CreateRoomModal({
             <Row style={{ gap: tokens.space[3] }}>
               <Column style={{ flex: 1 }}>
                 <Field
-                  label="Time"
-                  placeholder="Tonight at 8 PM"
+                  label={t("groupRooms.time")}
+                  placeholder={t("groupRooms.timePlaceholder")}
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
                   leading={<Clock size={15} strokeWidth={1.75} />}
@@ -814,13 +841,13 @@ function CreateRoomModal({
               </Column>
               <Column style={{ gap: tokens.space[2] }}>
                 <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
-                  Max spots
+                  {t("groupRooms.maxSpots")}
                 </BodySm>
                 <Row vertical="center" style={{ gap: tokens.space[2] }}>
                   <IconButton
                     variant="secondary"
                     size="sm"
-                    aria-label="Decrease spots"
+                    aria-label={t("groupRooms.decreaseSpots")}
                     onClick={() => setSpots(Math.max(2, spots - 1))}
                     icon={<span style={{ fontSize: 18 }}>−</span>}
                   />
@@ -837,7 +864,7 @@ function CreateRoomModal({
                   <IconButton
                     variant="secondary"
                     size="sm"
-                    aria-label="Increase spots"
+                    aria-label={t("groupRooms.increaseSpots")}
                     onClick={() => setSpots(Math.min(12, spots + 1))}
                     icon={<span style={{ fontSize: 18 }}>+</span>}
                   />
@@ -847,7 +874,7 @@ function CreateRoomModal({
 
             <Column style={{ gap: tokens.space[2] }}>
               <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
-                Room visibility
+                {t("groupRooms.roomVisibility")}
               </BodySm>
               <Grid
                 style={{
@@ -905,10 +932,10 @@ function CreateRoomModal({
                             lineHeight: 1,
                           }}
                         >
-                          {pub ? "Public" : "Private"}
+                          {pub ? t("groupRooms.public") : t("groupRooms.private")}
                         </BodySm>
                         <Caption tone="muted" style={{ marginTop: 2 }}>
-                          {pub ? "Anyone can join" : "Invite code only"}
+                          {pub ? t("groupRooms.anyoneCanJoin") : t("groupRooms.inviteCodeOnly")}
                         </Caption>
                       </Column>
                     </button>
@@ -934,8 +961,7 @@ function CreateRoomModal({
                       }}
                     />
                     <BodySm tone="muted">
-                      An invite code will be generated for you automatically.
-                      Share it with friends after creation.
+                      {t("groupRooms.inviteCodeNote")}
                     </BodySm>
                   </Row>
                 </Card>
@@ -950,7 +976,7 @@ function CreateRoomModal({
             }}
           >
             <Button variant="ghost" size="md" fullWidth onClick={onClose}>
-              Cancel
+              {t("groupRooms.cancel")}
             </Button>
             <Button
               variant={pendingCode ? "primary" : "primary"}
@@ -966,7 +992,7 @@ function CreateRoomModal({
               }
               onClick={handleCreate}
             >
-              {pendingCode ? "Confirm & create" : "Create room"}
+              {pendingCode ? t("groupRooms.confirmCreate") : t("groupRooms.createRoomBtn")}
             </Button>
           </Row>
         </Card>
@@ -983,6 +1009,7 @@ export default function GroupRoomsPage() {
   );
   const router = useRouter();
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   const [rooms, setRooms] = useState<LobbyData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -1011,12 +1038,12 @@ export default function GroupRoomsPage() {
       );
       setRooms(data.items.map(mapApiRoom));
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Failed to load rooms.";
+      const msg = err instanceof Error ? err.message : t("groupRooms.failedToLoad");
       setFetchError(msg);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchRooms();
@@ -1105,7 +1132,7 @@ export default function GroupRoomsPage() {
               }}
             >
               <ChevronLeft size={20} strokeWidth={1.75} />
-              Discover
+              {t("groupRooms.discover")}
             </Link>
             <Column
               style={{
@@ -1115,9 +1142,9 @@ export default function GroupRoomsPage() {
               }}
             />
             <Column>
-              <H1 style={{ fontSize: 22, lineHeight: 1 }}>Group rooms</H1>
+              <H1 style={{ fontSize: 22, lineHeight: 1 }}>{t("groupRooms.title")}</H1>
               <Caption tone="muted" style={{ marginTop: 2 }}>
-                {counts.All} active · {totalMembers} explorers online
+                {t("groupRooms.activeExplorers", { active: counts.All, members: totalMembers })}
               </Caption>
             </Column>
           </Row>
@@ -1129,7 +1156,7 @@ export default function GroupRoomsPage() {
               leftIcon={<KeyRound size={15} strokeWidth={1.75} />}
               onClick={() => setShowJoinByCode(true)}
             >
-              Join with code
+              {t("groupRooms.joinWithCode")}
             </Button>
             <Button
               variant="primary"
@@ -1137,7 +1164,7 @@ export default function GroupRoomsPage() {
               leftIcon={<Plus size={16} strokeWidth={1.75} />}
               onClick={() => setShowCreate(true)}
             >
-              Create room
+              {t("groupRooms.createRoom")}
             </Button>
           </Row>
         </Row>
@@ -1159,17 +1186,17 @@ export default function GroupRoomsPage() {
         >
           {[
             {
-              label: "Active rooms",
+              label: t("groupRooms.statActiveRooms"),
               value: counts.All,
               icon: <Home size={20} strokeWidth={1.75} />,
             },
             {
-              label: "Explorers online",
+              label: t("groupRooms.statExplorers"),
               value: totalMembers,
               icon: <Users size={20} strokeWidth={1.75} />,
             },
             {
-              label: "In progress now",
+              label: t("groupRooms.statInProgress"),
               value: inProgressCount,
               icon: <Zap size={20} strokeWidth={1.75} />,
             },
@@ -1249,7 +1276,7 @@ export default function GroupRoomsPage() {
                   transition: "all 0.18s ease",
                 }}
               >
-                {tab}
+                {t(TAB_KEY[tab])}
                 <Pill
                   tone={isActive ? "warm" : "neutral"}
                   size="sm"
@@ -1273,14 +1300,14 @@ export default function GroupRoomsPage() {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search rooms…"
+              placeholder={t("groupRooms.searchRooms")}
               leading={<Search size={15} strokeWidth={1.75} />}
               trailing={
                 search ? (
                   <IconButton
                     variant="ghost"
                     size="sm"
-                    aria-label="Clear"
+                    aria-label={t("groupRooms.clear")}
                     onClick={() => setSearch("")}
                     icon={<X size={14} strokeWidth={1.75} />}
                   />
@@ -1327,7 +1354,7 @@ export default function GroupRoomsPage() {
                 }}
               >
                 {CATEGORY_ICON[cat]}
-                {cat === "All" ? "All categories" : cat}
+                {cat === "All" ? t("groupRooms.allCategories") : t(CATEGORY_KEY[cat] ?? cat)}
               </button>
             );
           })}
@@ -1360,11 +1387,11 @@ export default function GroupRoomsPage() {
               <Card radius="xl" padding="lg" shadow="none" surface="muted">
                 <EmptyState
                   icon={<AlertTriangle size={32} strokeWidth={1.5} />}
-                  title="Could not load rooms"
+                  title={t("groupRooms.couldNotLoad")}
                   description={fetchError}
                   action={
                     <Button variant="primary" size="md" onClick={fetchRooms}>
-                      Retry
+                      {t("groupRooms.retry")}
                     </Button>
                   }
                 />
@@ -1380,8 +1407,8 @@ export default function GroupRoomsPage() {
               <Card radius="xl" padding="lg" shadow="none" surface="muted">
                 <EmptyState
                   icon={<SearchX size={32} strokeWidth={1.5} />}
-                  title="No rooms found"
-                  description="Try a different filter or create your own."
+                  title={t("groupRooms.noRoomsFound")}
+                  description={t("groupRooms.noRoomsDesc")}
                   action={
                     <Button
                       variant="primary"
@@ -1389,7 +1416,7 @@ export default function GroupRoomsPage() {
                       leftIcon={<Plus size={15} strokeWidth={1.75} />}
                       onClick={() => setShowCreate(true)}
                     >
-                      Create a room
+                      {t("groupRooms.createARoom")}
                     </Button>
                   }
                 />

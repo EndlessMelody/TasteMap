@@ -14,9 +14,11 @@ import { Bike, ArrowRight, ShoppingBag } from "lucide-react";
 import { Column, Row } from "@once-ui-system/core";
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
+import { useLanguage } from "@/context/LanguageContext";
 
 export const TasteSignatureCard: React.FC = () => {
   const [hovered, setHovered] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <GlassCard
@@ -112,7 +114,7 @@ export const TasteSignatureCard: React.FC = () => {
               display: "block",
             }}
           />
-          Open now
+          {t("promo.openNow")}
         </span>
       </Row>
 
@@ -128,7 +130,7 @@ export const TasteSignatureCard: React.FC = () => {
             color: tokens.color.text,
           }}
         >
-          Get it{" "}
+          {t("promo.getPrefix")}{" "}
           <span
             style={{
               background: "linear-gradient(90deg, #EE4D2D 0%, #FF8C00 100%)",
@@ -136,7 +138,7 @@ export const TasteSignatureCard: React.FC = () => {
               WebkitTextFillColor: "transparent",
             }}
           >
-            delivered.
+            {t("promo.getHighlight")}
           </span>
         </p>
         <p
@@ -148,7 +150,7 @@ export const TasteSignatureCard: React.FC = () => {
             lineHeight: 1.4,
           }}
         >
-          Free delivery on your first order
+          {t("promo.freeDelivery")}
         </p>
       </Column>
 
@@ -172,7 +174,7 @@ export const TasteSignatureCard: React.FC = () => {
           }}
         >
           <Bike size={12} color={tokens.color.textMuted} />
-          15–25 min
+          {t("promo.eta")}
         </span>
 
         {/* CTA button */}
@@ -197,7 +199,7 @@ export const TasteSignatureCard: React.FC = () => {
             letterSpacing: "0.2px",
           }}
         >
-          Order now
+          {t("promo.orderNow")}
           <ArrowRight size={11} color="white" />
         </motion.button>
       </Row>

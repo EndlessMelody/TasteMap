@@ -5,9 +5,23 @@
 
 import { supabase } from "@/lib/supabase";
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
-  "http://127.0.0.1:8000";
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+
+/**
+ * Single source of truth for the backend base URL.
+ * Reads NEXT_PUBLIC_API_URL; falls back to localhost only in development.
+ * All other modules should import this instead of re-deriving a fallback.
+ */
+export function getApiBase(): string {
+  const fromEnv = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+  if (fromEnv) return fromEnv;
+  // In production an unset API URL is a misconfiguration — return empty so
+  // calls resolve against the current origin rather than silently hitting
+  // a developer's localhost.
+  return IS_PRODUCTION ? "" : "http://127.0.0.1:8000";
+}
+
+const BASE_URL = getApiBase();
 
 function getBaseUrlCandidates(): string[] {
   const urls: string[] = [];
@@ -19,7 +33,9 @@ function getBaseUrlCandidates(): string[] {
 
   add(BASE_URL);
 
-  if (typeof window !== "undefined") {
+  // Multi-candidate localhost probing is a dev-only convenience. In production
+  // we must never fall back to localhost.
+  if (!IS_PRODUCTION && typeof window !== "undefined") {
     const host = window.location.host;
     const protocol = window.location.protocol;
     if (host) {

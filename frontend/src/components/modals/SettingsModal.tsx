@@ -22,10 +22,17 @@ import {
 } from "lucide-react";
 import { tokens } from "@/styles/tokens";
 import { useTheme, type Theme } from "@/context/ThemeContext";
-import { useLanguage, type Lang } from "@/context/LanguageContext";
+import { useAccent, type Accent } from "@/context/AccentContext";
+import { useLanguage } from "@/context/LanguageContext";
 
-// Accent color swatches — display-only data, not theme tokens
-const ACCENT_SWATCHES = ["#ED1B24", "#ff6b35", "#A855F7", "#FBBF24", "#34C759", "#F97316"];
+// Accent options map Once UI named schemes to the dot color shown in the picker.
+const ACCENT_SWATCHES: { id: Accent; swatch: string }[] = [
+  { id: "orange", swatch: "#ff6b35" },
+  { id: "red", swatch: "#ED1B24" },
+  { id: "violet", swatch: "#A855F7" },
+  { id: "yellow", swatch: "#FBBF24" },
+  { id: "green", swatch: "#34C759" },
+];
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -40,7 +47,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 }) => {
   const [activeSettingsTab, setActiveSettingsTab] = useState(initialTab);
   const { theme, setTheme } = useTheme();
-  const { lang, setLang, t } = useLanguage();
+  const { accent, setAccent } = useAccent();
+  const { lang, setLang, t, locales } = useLanguage();
 
   return (
     <AnimatePresence>
@@ -106,7 +114,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   variant="heading-strong-s"
                   style={{ color: tokens.color.text }}
                 >
-                  {t("settingsTitle")}
+                  {t("settings.title")}
                 </Heading>
                 <IconButton
                   onClick={onClose}
@@ -125,17 +133,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               {[
                 {
                   id: "appearance",
-                  labelKey: "appearance",
+                  labelKey: "settings.appearance",
                   icon: <Palette size={16} />,
                 },
                 {
                   id: "language",
-                  labelKey: "language",
+                  labelKey: "settings.language",
                   icon: <Globe size={16} />,
                 },
                 {
                   id: "notifications",
-                  labelKey: "notifications",
+                  labelKey: "settings.notifications",
                   icon: <BellRing size={16} />,
                 },
               ].map((tab) => (
@@ -182,10 +190,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               {[
                 {
                   id: "support",
-                  labelKey: "support",
+                  labelKey: "settings.support",
                   icon: <LifeBuoy size={16} />,
                 },
-                { id: "about", labelKey: "about", icon: <Info size={16} /> },
+                { id: "about", labelKey: "settings.about", icon: <Info size={16} /> },
               ].map((tab) => (
                 <Row
                   key={tab.id}
@@ -247,10 +255,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       variant="heading-strong-m"
                       style={{ color: tokens.color.text }}
                     >
-                      {t("appearanceTitle")}
+                      {t("settings.appearanceTitle")}
                     </Heading>
                     <Text style={{ color: tokens.color.textMuted, fontSize: "0.8rem" }}>
-                      {t("appearanceSubtitle")}
+                      {t("settings.appearanceSubtitle")}
                     </Text>
                   </Column>
 
@@ -258,17 +266,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     {[
                       {
                         id: "light" as Theme,
-                        labelKey: "themeLight",
+                        labelKey: "settings.themeLight",
                         icon: <Sun size={24} />,
                       },
                       {
                         id: "dark" as Theme,
-                        labelKey: "themeDark",
+                        labelKey: "settings.themeDark",
                         icon: <Moon size={24} />,
                       },
                       {
                         id: "system" as Theme,
-                        labelKey: "themeSystem",
+                        labelKey: "settings.themeSystem",
                         icon: <Monitor size={24} />,
                       },
                     ].map((opt) => {
@@ -337,28 +345,38 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         letterSpacing: "1px",
                       }}
                     >
-                      {t("accentColor")}
+                      {t("settings.accentColor")}
                     </Text>
                     <Row style={{ gap: "10px" }}>
-                      {ACCENT_SWATCHES.map((c) => (
-                        <Column
-                          key={c}
-                          style={{
-                            width: "36px",
-                            height: "36px",
-                            borderRadius: "50%",
-                            backgroundColor: c,
-                            border:
-                              c === "#ff6b35"
+                      {ACCENT_SWATCHES.map((s) => {
+                        const selected = accent === s.id;
+                        return (
+                          <Column
+                            key={s.id}
+                            center
+                            onClick={() => setAccent(s.id)}
+                            role="button"
+                            aria-label={t(`accent.${s.id}`)}
+                            aria-pressed={selected}
+                            style={{
+                              width: "36px",
+                              height: "36px",
+                              borderRadius: "50%",
+                              backgroundColor: s.swatch,
+                              border: selected
                                 ? `3px solid ${tokens.color.text}`
                                 : "2px solid transparent",
-                            cursor: "pointer",
-                            transition: "transform 0.15s",
-                            boxShadow:
-                              c === "#ff6b35" ? `0 0 12px ${c}60` : "none",
-                          }}
-                        />
-                      ))}
+                              cursor: "pointer",
+                              transition: "transform 0.15s",
+                              boxShadow: selected ? `0 0 12px ${s.swatch}60` : "none",
+                            }}
+                          >
+                            {selected && (
+                              <Check size={14} color="#fff" strokeWidth={3} />
+                            )}
+                          </Column>
+                        );
+                      })}
                     </Row>
                   </Column>
                 </>
@@ -371,17 +389,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       variant="heading-strong-m"
                       style={{ color: tokens.color.text }}
                     >
-                      {t("languageTitle")}
+                      {t("settings.languageTitle")}
                     </Heading>
                     <Text style={{ color: tokens.color.textMuted, fontSize: "0.8rem" }}>
-                      {t("languageSubtitle")}
+                      {t("settings.languageSubtitle")}
                     </Text>
                   </Column>
                   <Column style={{ gap: "8px" }}>
-                    {[
-                      { code: "vi" as Lang, label: "Tiếng Việt", flag: "🇻🇳" },
-                      { code: "en" as Lang, label: "English", flag: "🇺🇸" },
-                    ].map((l) => {
+                    {locales.map((l) => {
                       const active = lang === l.code;
                       return (
                         <Row
@@ -441,7 +456,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     variant="heading-strong-m"
                     style={{ color: tokens.color.text }}
                   >
-                    {t("supportTitle")}
+                    {t("settings.supportTitle")}
                   </Heading>
                   <Text
                     style={{
@@ -450,10 +465,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       lineHeight: 1.6,
                     }}
                   >
-                    {t("supportBody")}
+                    {t("settings.supportBody")}
                   </Text>
                   <Button variant="primary" style={{ borderRadius: "12px" }}>
-                    {t("contactSupport")}
+                    {t("settings.contactSupport")}
                   </Button>
                 </Column>
               )}

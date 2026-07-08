@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Camera, X, Save, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
-import { apiUploadMedia, ApiError } from "@/lib/api";
+import { apiUploadMedia, ApiError, getApiBase } from "@/lib/api";
 import { Column, Row } from "@once-ui-system/core";
 import {
   Card,
@@ -176,9 +176,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       if (uploadedAvatarUrl) formData.append("avatar_url", uploadedAvatarUrl);
       if (uploadedCoverUrl) formData.append("cover_url", uploadedCoverUrl);
 
-      const API_URL =
-        process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
-        "http://127.0.0.1:8000";
+      const API_URL = getApiBase();
 
       const res = await fetch(`${API_URL}/api/v1/users/me`, {
         method: "PATCH",

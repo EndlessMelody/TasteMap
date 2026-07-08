@@ -9,6 +9,7 @@ import type { ItineraryStop } from "../types";
 import { SWAP_POOL } from "../constants";
 import { RouteMap } from "../RouteMap";
 import { StopCard } from "../StopCard";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface StepResultProps {
   stops: ItineraryStop[];
@@ -18,6 +19,7 @@ interface StepResultProps {
 
 export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultProps) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [stops, setStops] = useState<ItineraryStop[]>(initialStops);
   const [activeStop, setActiveStop] = useState<number | null>(null);
   const [swapping, setSwapping] = useState<number | null>(null);
@@ -75,15 +77,15 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
             backdropFilter: "blur(8px)",
           }}
         >
-          <ChevronLeft size={15} /> Back
+          <ChevronLeft size={15} /> {t("aiPlanner.back")}
         </motion.button>
 
         <Column style={{ flex: 1 }}>
           <h1 style={{ fontSize: 17, fontWeight: 900, color: "#1C1C1E", margin: 0, letterSpacing: -0.3 }}>
-            Your Plan
+            {t("aiPlanner.yourPlan")}
           </h1>
           <p style={{ fontSize: 11, color: "#8E8E93", margin: 0 }}>
-            {stops.length} stops · Ho Chi Minh City
+            {t("aiPlanner.stopsCity", { n: stops.length })}
           </p>
         </Column>
 
@@ -102,7 +104,7 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
             letterSpacing: "0.05em",
           }}
         >
-          <Sparkles size={9} /> AI Generated
+          <Sparkles size={9} /> {t("aiPlanner.aiGenerated")}
         </span>
       </Row>
 
@@ -175,10 +177,10 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                         letterSpacing: -0.3,
                       }}
                     >
-                      Afternoon Street Food Sprint
+                      {t("aiPlanner.heroTitle")}
                     </h3>
                     <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", margin: 0 }}>
-                      {stops.length} stops · ~4.5 hours · Ho Chi Minh City
+                      {t("aiPlanner.heroMeta", { n: stops.length })}
                     </p>
                   </Column>
                   <Column style={{ textAlign: "right" }}>
@@ -239,10 +241,10 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
 
                 <Grid style={{ gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   {[
-                    { label: "Total Stops", value: `${stops.length} places`, color: "#ff6b35", emoji: "📍" },
-                    { label: "Est. Duration", value: "~4.5 hours", color: "#FF9500", emoji: "⏱️" },
-                    { label: "Budget", value: "305,000đ", color: "#34C759", emoji: "💰" },
-                    { label: "XP Earned", value: `+${totalXp} XP`, color: "#A855F7", emoji: "⚡" },
+                    { label: t("aiPlanner.statTotalStops"), value: t("aiPlanner.statPlaces", { n: stops.length }), color: "#ff6b35", emoji: "📍" },
+                    { label: t("aiPlanner.statDuration"), value: t("aiPlanner.statDurationValue"), color: "#FF9500", emoji: "⏱️" },
+                    { label: t("aiPlanner.statBudget"), value: "305,000đ", color: "#34C759", emoji: "💰" },
+                    { label: t("aiPlanner.statXp"), value: `+${totalXp} XP`, color: "#A855F7", emoji: "⚡" },
                   ].map(({ label, value, color, emoji }) => (
                     <Column
                       key={label}
@@ -297,7 +299,7 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                   cursor: "pointer",
                 }}
               >
-                <RotateCcw size={14} /> Regenerate
+                <RotateCcw size={14} /> {t("aiPlanner.regenerate")}
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -317,7 +319,7 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                   cursor: "pointer",
                 }}
               >
-                <Send size={14} /> Share
+                <Send size={14} /> {t("aiPlanner.share")}
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -344,7 +346,7 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                   cursor: "pointer",
                 }}
               >
-                <Map size={15} /> View on Map
+                <Map size={15} /> {t("aiPlanner.viewOnMap")}
               </motion.button>
             </Row>
           </motion.div>

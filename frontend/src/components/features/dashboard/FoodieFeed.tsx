@@ -32,6 +32,7 @@ import { usePosts } from "@/hooks/usePosts";
 import { useSocialStore } from "@/store/socialStore";
 import { apiPost } from "@/lib/api";
 import type { PostData } from "@/types/dashboard";
+import { useLanguage } from "@/context/LanguageContext";
 
 import { PostCardV2 } from "./social";
 
@@ -42,7 +43,9 @@ interface FoodieFeedProps {
 }
 
 // ─── Inline toolbar actions ──────────────────────────────────────
-const FilterButton: React.FC = () => (
+const FilterButton: React.FC = () => {
+  const { t } = useLanguage();
+  return (
   <button
     type="button"
     style={{
@@ -64,15 +67,18 @@ const FilterButton: React.FC = () => (
     onMouseLeave={(e) => {
       e.currentTarget.style.backgroundColor = tokens.color.surfaceMuted;
     }}
-    aria-label="Filter feed"
+    aria-label={t("feedSection.filterFeed")}
   >
     <SlidersHorizontal size={14} strokeWidth={2.4} />
   </button>
-);
+  );
+};
 
 const LocalPill: React.FC<{ location?: string }> = ({
   location = "Dĩ An",
-}) => (
+}) => {
+  const { t } = useLanguage();
+  return (
   <span
     style={{
       display: "inline-flex",
@@ -101,11 +107,14 @@ const LocalPill: React.FC<{ location?: string }> = ({
         boxShadow: `0 0 6px ${tokens.color.success}`,
       }}
     />
-    Local · {location}
+    {t("feedSection.local", { location })}
   </span>
-);
+  );
+};
 
-const SurfingButton: React.FC = () => (
+const SurfingButton: React.FC = () => {
+  const { t } = useLanguage();
+  return (
   <Link
     href="/feed"
     style={{
@@ -137,9 +146,10 @@ const SurfingButton: React.FC = () => (
     }}
   >
     <Zap size={13} fill="currentColor" />
-    Lướt Ngay
+    {t("feedSection.surfNow")}
   </Link>
-);
+  );
+};
 
 
 // ─── Skeletons ───────────────────────────────────────────────────
@@ -239,6 +249,7 @@ const PostGrid: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 export const FoodieFeed: React.FC<FoodieFeedProps> = ({ onPostClick }) => {
   const { posts, loading, error } = usePosts(8);
   const updatePost = useSocialStore((state) => state.updatePost);
+  const { t } = useLanguage();
 
   const handleToggleLike = async (id: number) => {
     const post = posts.find((p) => p.id === id);
@@ -258,12 +269,12 @@ export const FoodieFeed: React.FC<FoodieFeedProps> = ({ onPostClick }) => {
   };
 
   const subtitle = loading
-    ? "Fetching the freshest reviews…"
+    ? t("feedSection.fetching")
     : error
-      ? "Couldn't reach the community feed"
+      ? t("feedSection.errorSub")
       : posts.length > 0
-        ? `Reviews & stories from foodies near you · ${posts.length} posts`
-        : "No posts yet — be the first to share a spot";
+        ? t("feedSection.reviewsNear", { n: posts.length })
+        : t("feedSection.emptySub");
 
   const toolbar = (
     <Row vertical="center" gap="8">
@@ -275,8 +286,8 @@ export const FoodieFeed: React.FC<FoodieFeedProps> = ({ onPostClick }) => {
 
   return (
     <DiscoverSection
-      eyebrow="Community"
-      title="TasteMap Feed"
+      eyebrow={t("feedSection.community")}
+      title={t("feedSection.title")}
       subtitle={subtitle}
       icon={<MessageCircle size={18} />}
       accent={tokens.color.danger}
@@ -291,15 +302,15 @@ export const FoodieFeed: React.FC<FoodieFeedProps> = ({ onPostClick }) => {
       ) : error ? (
         <InlineNotice
           icon={<AlertTriangle size={18} strokeWidth={2.2} />}
-          title="Couldn't load the feed"
+          title={t("feedSection.couldntLoad")}
           message={error}
           tone="danger"
         />
       ) : posts.length === 0 ? (
         <InlineNotice
           icon={<MessageCircle size={18} strokeWidth={2.2} />}
-          title="The feed is quiet"
-          message="Be the first foodie to drop a review."
+          title={t("feedSection.quiet")}
+          message={t("feedSection.quietBody")}
         />
       ) : (
         <PostGrid>

@@ -2,6 +2,8 @@
  * Image utilities for handling fallbacks and normalization
  */
 
+import { getApiBase } from "@/lib/api";
+
 // Stock images for different location categories
 const STOCK_IMAGES = {
   food: [
@@ -62,9 +64,9 @@ export function normalizeImageUrl(
       return imageUrl;
     }
     // If it's a relative path, prepend API base URL
-    const baseUrl = typeof window !== "undefined" 
+    const baseUrl = typeof window !== "undefined"
       ? `${window.location.protocol}//${window.location.host}`
-      : (process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://127.0.0.1:8000");
+      : getApiBase();
     return `${baseUrl}/${imageUrl.replace(/^\/+/, "")}`;
   }
   

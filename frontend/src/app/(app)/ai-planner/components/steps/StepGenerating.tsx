@@ -4,15 +4,24 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Brain } from "lucide-react";
 import { Column, Row } from "@once-ui-system/core";
-import { THINKING_MSGS } from "../constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 const FOOD_PARTICLES = ["🍜", "🥖", "🍵", "🍰", "🍣", "🥟", "🧋", "🍤", "🍚", "🔥"];
+const THINKING_KEYS = [
+  "aiPlanner.think1",
+  "aiPlanner.think2",
+  "aiPlanner.think3",
+  "aiPlanner.think4",
+  "aiPlanner.think5",
+  "aiPlanner.think6",
+];
 
 interface StepGeneratingProps {
   onDone: () => void;
 }
 
 export function StepGenerating({ onDone }: StepGeneratingProps) {
+  const { t } = useLanguage();
   const [msgIdx, setMsgIdx] = useState(0);
 
   useEffect(() => {
@@ -24,8 +33,8 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
     };
   }, [onDone]);
 
-  const msg = THINKING_MSGS[Math.min(msgIdx, THINKING_MSGS.length - 1)];
-  const progress = Math.min(((msgIdx + 1) / THINKING_MSGS.length) * 100, 100);
+  const msg = t(THINKING_KEYS[Math.min(msgIdx, THINKING_KEYS.length - 1)]);
+  const progress = Math.min(((msgIdx + 1) / THINKING_KEYS.length) * 100, 100);
 
   return (
     <Column
@@ -160,7 +169,7 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
             margin: "0 0 10px",
           }}
         >
-          Crafting your itinerary
+          {t("aiPlanner.crafting")}
         </h3>
         <AnimatePresence mode="wait">
           <motion.p
@@ -187,13 +196,13 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
       >
         <Column style={{ height: 64, position: "relative", width: "100%" }}>
           <AnimatePresence>
-            {THINKING_MSGS.map((m, i) => {
+            {THINKING_KEYS.map((mKey, i) => {
               if (i < msgIdx - 1 || i > msgIdx + 1) return null;
               const isCurrent = i === msgIdx;
               const isPast = i < msgIdx;
               return (
                 <motion.div
-                  key={m}
+                  key={mKey}
                   initial={{ opacity: 0, y: 16, scale: 0.92 }}
                   animate={{
                     opacity: isCurrent ? 1 : isPast ? 0 : 0.3,
@@ -222,7 +231,7 @@ export function StepGenerating({ onDone }: StepGeneratingProps) {
                       <Sparkles size={13} color="#FF6B35" />
                     </motion.div>
                   )}
-                  {m}
+                  {t(mKey)}
                 </motion.div>
               );
             })}

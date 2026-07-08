@@ -201,24 +201,31 @@ Danh sách tour của user hiện tại.
 
 ### `GET /api/v1/tours/{tour_id}` 🆕
 
-Chi tiết tour + danh sách stops (ordered).
+Chi tiết tour + danh sách stops (ordered). Sau khi `optimize`, mỗi stop kèm `match_score`,
+`dwell_min`, `travel_min` (đã persist) để render lại journey view nhất quán.
 
 **Response:**
 ```json
 {
   "id": 1,
-  "status": "building",
+  "status": "ready",
   "total_distance": 5.2,
   "estimated_cost": 250000,
   "estimated_duration": 180,
   "stops": [
     {
       "stop_order": 1,
-      "location": { "id": 1, "name": "Bún Bò Huế", "lat": 10.89, "lng": 106.79, "image_url": "...", "price_range": "35k" }
+      "match_score": 92,
+      "dwell_min": 45,
+      "travel_min": 0,
+      "location": { "id": 1, "name": "Bún Bò Huế", "lat": 10.89, "lng": 106.79, "image_url": "...", "price_range": "35k", "rating": 4.6, "category": "food" }
     },
     {
       "stop_order": 2,
-      "location": { "id": 5, "name": "Matcha Garden", "lat": 10.90, "lng": 106.80, "image_url": "...", "price_range": "65k" }
+      "match_score": 88,
+      "dwell_min": 60,
+      "travel_min": 12,
+      "location": { "id": 5, "name": "Matcha Garden", "lat": 10.90, "lng": 106.80, "image_url": "...", "price_range": "65k", "rating": 4.4, "category": "place" }
     }
   ]
 }
@@ -245,25 +252,45 @@ Xóa một stop khỏi tour. Tự re-order các stops còn lại.
 
 ### `POST /api/v1/tours/{tour_id}/optimize` 🆕
 
-**Graph Routing** — Tối ưu thứ tự ghé thăm các stops (bài toán dạng visit-all / TSP).
+🔒 **Auth bắt buộc.** `user_id` suy ra từ token — dùng để nạp **taste vector** của user.
+
+**Vector-Aware Routing** — Tối ưu thứ tự ghé thăm các stops (visit-all / TSP).
 
 Thuật toán: **Nearest-Neighbour greedy** (xuất phát từ `start_lat/start_lng`) + cải thiện **2-opt**
-(số stops nhỏ, ~≤10 nên chạy đủ nhanh).
+(số stops nhỏ, ~≤10). Khác với shortest-path thuần, hàm chi phí được **cá nhân hoá theo vector sở
+thích** của user + ngữ cảnh (thời tiết/thời gian), nên route ưu tiên nơi user thực sự thích và hợp
+khung giờ — không chỉ gần nhất.
 
-Hàm chi phí mỗi cạnh:
-`Cost = Travel_Time + Weather_Penalty − w · Location_Score`
-- `Travel_Time = haversine_km / SPEED_KMH × 60` (phút)
-- `Location_Score` chuẩn hoá từ `locations.rating` (0–5 → 0–1)
-- `Weather_Penalty` = `0.0` (placeholder — chưa tích hợp weather service)
-- `w` = trọng số ưu tiên địa điểm chất lượng cao
+Hàm chi phí mỗi cạnh (đơn vị **phút**, nhỏ hơn = tốt hơn):
+`Cost = Travel_Time + w_W·Weather_Penalty − w_S·sim·M_S − w_R·Rating·M_R − w_T·OpenFit·M_T`
+- `Travel_Time = haversine_km / SPEED_KMH × 60`.
+- `sim = (cosine(user_vector, location.vector) + 1) / 2` ∈ [0,1] → lưu mỗi stop là `match_score = round(sim×100)`.
+- `Rating` chuẩn hoá từ `locations.rating` (0–5 → 0–1).
+- `OpenFit` ∈ [0,1]: độ khớp `open_hours` với `time_context`.
+- `Weather_Penalty`: hệ số thời tiết (hiện mock `0.8`, tách riêng 1 helper cho weather API sau).
+- `dwell_min` (thời gian ở mỗi điểm) suy ra theo `category`/`characteristics`; `estimated_cost_vnd`
+  được parse & cộng từ `price_range`.
 
+Xem [Mathematical Models](../math_models.md#tour-routing-itinerary--vector-aware-cost-model).
 Cross-link DB: [`tours` / `tour_stops`](../database_schema/content.md) · [`locations`](../database_schema/content.md).
 
 **Request:**
+
+| Field | Type | Required | Default | Mô tả |
+|---|---|---|---|---|
+| `start_lat` | float | ✅ | — | Vĩ độ điểm xuất phát |
+| `start_lng` | float | ✅ | — | Kinh độ điểm xuất phát |
+| `category` | "food" \| "place" | ❌ | "food" | Chọn `food_vector` hay `place_vector` của user |
+| `time_context` | string | ❌ | null | "breakfast"/"lunch"/"dinner"/"late_night"... → tính `OpenFit` |
+| `transport_mode` | "walking" \| "driving" \| "transit" | ❌ | "driving" | Điều chỉnh `SPEED_KMH` |
+
 ```json
 {
   "start_lat": 10.89,
-  "start_lng": 106.79
+  "start_lng": 106.79,
+  "category": "food",
+  "time_context": "dinner",
+  "transport_mode": "driving"
 }
 ```
 
@@ -271,15 +298,22 @@ Cross-link DB: [`tours` / `tour_stops`](../database_schema/content.md) · [`loca
 ```json
 {
   "optimized_stops": [
-    { "stop_order": 1, "location_id": 5, "estimated_travel_min": 0 },
-    { "stop_order": 2, "location_id": 1, "estimated_travel_min": 12 },
-    { "stop_order": 3, "location_id": 8, "estimated_travel_min": 8 }
+    { "stop_order": 1, "location_id": 5, "estimated_travel_min": 0,  "match_score": 92, "dwell_min": 45 },
+    { "stop_order": 2, "location_id": 1, "estimated_travel_min": 12, "match_score": 88, "dwell_min": 60 },
+    { "stop_order": 3, "location_id": 8, "estimated_travel_min": 8,  "match_score": 84, "dwell_min": 30 }
   ],
   "total_distance_km": 4.8,
-  "total_duration_min": 165,
-  "estimated_cost_vnd": 210000
+  "total_duration_min": 155,
+  "estimated_cost_vnd": 210000,
+  "context": {
+    "time_slot": "dinner",
+    "weather": "unknown",
+    "weather_coefficient": 0.8
+  }
 }
 ```
+- `total_duration_min` = Σ `estimated_travel_min` + Σ `dwell_min`.
+- `estimated_cost_vnd` = Σ `parse_price(location.price_range)` (0 nếu không parse được).
 
 ---
 

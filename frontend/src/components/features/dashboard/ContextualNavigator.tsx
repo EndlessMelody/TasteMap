@@ -9,9 +9,11 @@ import { ContextCard } from "@/components/cards/ContextCard";
 import { getDynamicContext } from "@/utils/dashboard-utils";
 import { H2, Body, Caption, BodySm, Eyebrow, Pill } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
+import { useLanguage } from "@/context/LanguageContext";
 
 export const ContextualNavigator = () => {
   const ctx = getDynamicContext();
+  const { t } = useLanguage();
   const { picks, loading, error } = useRecommendations(5, undefined, "food");
 
   return (
@@ -23,7 +25,7 @@ export const ContextualNavigator = () => {
       <Column fillWidth gap="16">
         <Row fillWidth horizontal="between" vertical="end" gap="16">
           <Column gap="4" paddingLeft="16">
-            <Eyebrow style={{ color: ctx.accent }}>Right now</Eyebrow>
+            <Eyebrow style={{ color: ctx.accent }}>{t("discover.rightNow")}</Eyebrow>
             <Row vertical="center" gap="8" style={{ flexWrap: "wrap" }}>
               {ctx.icon}
               <H2>{ctx.title}</H2>
@@ -70,7 +72,7 @@ export const ContextualNavigator = () => {
                 fontSize: tokens.type.size.bodySm,
               }}
             >
-              AI picks
+              {t("discover.aiPicks")}
             </Body>
           </button>
         </Row>
@@ -78,7 +80,7 @@ export const ContextualNavigator = () => {
         <Row className="no-scrollbar" fillWidth gap="16" overflowX="auto" paddingBottom="4">
           {loading ? (
             <BodySm tone="muted" style={{ padding: tokens.space[5] }}>
-              Loading recommendations…
+              {t("discover.loadingRecs")}
             </BodySm>
           ) : error ? (
             <BodySm
@@ -91,7 +93,7 @@ export const ContextualNavigator = () => {
               <ContextCard
                 key={pick.place_id}
                 title={pick.name}
-                subtitle={`${pick.price_range || "$$"} · Top pick`}
+                subtitle={`${pick.price_range || "$$"} · ${t("discover.topPick")}`}
                 match={Math.round(pick.match_score)}
                 accent={ctx.accent}
                 img={
@@ -103,7 +105,7 @@ export const ContextualNavigator = () => {
             ))
           ) : (
             <BodySm tone="muted" style={{ padding: tokens.space[5] }}>
-              No recommendations found.
+              {t("discover.noRecs")}
             </BodySm>
           )}
         </Row>

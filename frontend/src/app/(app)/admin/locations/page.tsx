@@ -24,6 +24,7 @@ import {
   UploadCloud,
   Download,
 } from "lucide-react";
+import { getApiBase } from "@/lib/api";
 
 // ═══════════════════════════════════════════════════════════════════════
 //  15-DIM VECTOR DEFINITIONS — Mô tả chi tiết từng chiều
@@ -1025,7 +1026,7 @@ export default function AdminLocationsPage() {
       return toast.error("Lat/Lng phải là số");
 
     setSaving(true);
-    const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const API = getApiBase();
 
     try {
       const body: Record<string, unknown> = {
@@ -1205,7 +1206,7 @@ export default function AdminLocationsPage() {
 
       let successCount = 0;
       let errorCount = 0;
-      const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const API = getApiBase();
 
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];

@@ -11,19 +11,44 @@ import {
 } from "lucide-react";
 import { Column, Row, Grid } from "@once-ui-system/core";
 import { MOODS, CUISINES, GROUPS, DURATIONS, BUDGETS, parsePrompt } from "./constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-const AI_MESSAGES: Record<string, string> = {
-  _default: "What food adventure are we planning today?",
-  casual: "Keeping it chill? I'll find some great spots to unwind.",
-  adventurous: "Bold choice! Let's explore something new and unexpected.",
-  romantic: "Date night — I'll find the most memorable spots.",
-  family: "Family outing — I'll pick places everyone will love!",
+// i18n key maps — logic keys off the English id/label values in constants.ts.
+const AI_MESSAGE_KEY: Record<string, string> = {
+  _default: "aiPlanner.aiMsgDefault",
+  casual: "aiPlanner.aiMsgCasual",
+  adventurous: "aiPlanner.aiMsgAdventurous",
+  romantic: "aiPlanner.aiMsgRomantic",
+  family: "aiPlanner.aiMsgFamily",
+};
+const CUISINE_KEY: Record<string, string> = {
+  Vietnamese: "aiPlanner.cuisine_vietnamese",
+  Cafe: "aiPlanner.cuisine_cafe",
+  Ramen: "aiPlanner.cuisine_ramen",
+  "Street Food": "aiPlanner.cuisine_streetFood",
+  BBQ: "aiPlanner.cuisine_bbq",
+  Japanese: "aiPlanner.cuisine_japanese",
+  Dessert: "aiPlanner.cuisine_dessert",
+  Healthy: "aiPlanner.cuisine_healthy",
+};
+const DURATION_KEY: Record<string, { label: string; desc: string }> = {
+  "2 hours": { label: "aiPlanner.dur_h2", desc: "aiPlanner.durDesc_h2" },
+  "4 hours": { label: "aiPlanner.dur_h4", desc: "aiPlanner.durDesc_h4" },
+  "Half Day": { label: "aiPlanner.dur_half", desc: "aiPlanner.durDesc_half" },
+  "Full Day": { label: "aiPlanner.dur_full", desc: "aiPlanner.durDesc_full" },
+};
+const BUDGET_KEY: Record<string, { label: string; desc: string }> = {
+  "< 100k": { label: "aiPlanner.bud_1", desc: "aiPlanner.budDesc_1" },
+  "100–300k": { label: "aiPlanner.bud_2", desc: "aiPlanner.budDesc_2" },
+  "300–500k": { label: "aiPlanner.bud_3", desc: "aiPlanner.budDesc_3" },
+  "500k+": { label: "aiPlanner.bud_4", desc: "aiPlanner.budDesc_4" },
 };
 
 function AIGreeting({ username, mood }: { username: string; mood: string | null }) {
-  const message = mood ? (AI_MESSAGES[mood] ?? AI_MESSAGES._default) : AI_MESSAGES._default;
+  const { t } = useLanguage();
+  const message = t(mood ? (AI_MESSAGE_KEY[mood] ?? AI_MESSAGE_KEY._default) : AI_MESSAGE_KEY._default);
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -70,7 +95,7 @@ function AIGreeting({ username, mood }: { username: string; mood: string | null 
             transition={{ duration: 0.3 }}
             style={{ fontSize: 14, color: "#1C1C1E", fontWeight: 500, margin: 0, lineHeight: 1.5 }}
           >
-            Hey <strong>{username}</strong>! {message}
+            {t("aiPlanner.hey")} <strong>{username}</strong>! {message}
           </motion.p>
         </AnimatePresence>
       </Column>
@@ -132,6 +157,7 @@ function PromptInput({
   onSubmit: () => void;
   accentColor: string;
 }) {
+  const { t } = useLanguage();
   return (
     <Column style={{ marginBottom: 32 }}>
       <Column style={{ position: "relative" }}>
@@ -139,7 +165,7 @@ function PromptInput({
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && onSubmit()}
-          placeholder="Or describe it in your own words… e.g. 'romantic dinner, 300k'"
+          placeholder={t("aiPlanner.promptPlaceholder")}
           style={{
             width: "100%",
             padding: "14px 52px 14px 18px",
@@ -195,7 +221,7 @@ function PromptInput({
             exit={{ opacity: 0 }}
             style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8, alignItems: "center" }}
           >
-            <span style={{ fontSize: 11, color: "#8E8E93", fontWeight: 600 }}>Got it:</span>
+            <span style={{ fontSize: 11, color: "#8E8E93", fontWeight: 600 }}>{t("aiPlanner.gotIt")}</span>
             {Object.entries(parsedHints).map(([k, v]) => (
               <span
                 key={k}
@@ -219,9 +245,10 @@ function PromptInput({
 }
 
 function MoodSection({ mood, setMood }: { mood: string | null; setMood: (v: string) => void }) {
+  const { t } = useLanguage();
   return (
     <Column style={{ marginBottom: 28 }}>
-      <SectionLabel text="What's the vibe today?" />
+      <SectionLabel text={t("aiPlanner.vibeLabel")} />
       <Grid style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
         {MOODS.map((m) => {
           const selected = mood === m.id;
@@ -271,8 +298,8 @@ function MoodSection({ mood, setMood }: { mood: string | null; setMood: (v: stri
                 {m.icon}
               </span>
               <Column style={{ position: "relative", zIndex: 1 }}>
-                <p style={{ fontSize: 14, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{m.label}</p>
-                <p style={{ fontSize: 11, color: "#8E8E93", margin: 0 }}>{m.desc}</p>
+                <p style={{ fontSize: 14, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{t(`aiPlanner.mood_${m.id}`)}</p>
+                <p style={{ fontSize: 11, color: "#8E8E93", margin: 0 }}>{t(`aiPlanner.moodDesc_${m.id}`)}</p>
               </Column>
               {selected && (
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ marginLeft: "auto", zIndex: 1 }}>
@@ -296,9 +323,10 @@ function CuisineSection({
   toggleCuisine: (v: string) => void;
   accentColor: string;
 }) {
+  const { t } = useLanguage();
   return (
     <Column style={{ marginBottom: 28 }}>
-      <SectionLabel text="Any cuisine preferences? (optional)" />
+      <SectionLabel text={t("aiPlanner.cuisineLabel")} />
       <Row style={{ flexWrap: "wrap", gap: 8 }}>
         {CUISINES.map((c) => {
           const selected = cuisines.includes(c.label);
@@ -333,7 +361,7 @@ function CuisineSection({
               }}
             >
               <span style={{ fontSize: 15 }}>{c.emoji}</span>
-              {c.label}
+              {t(CUISINE_KEY[c.label] ?? c.label)}
             </motion.button>
           );
         })}
@@ -351,9 +379,10 @@ function GroupSection({
   setGroup: (v: string) => void;
   accentColor: string;
 }) {
+  const { t } = useLanguage();
   return (
     <Column style={{ marginBottom: 28 }}>
-      <SectionLabel text="Who's coming?" />
+      <SectionLabel text={t("aiPlanner.groupLabel")} />
       <Grid style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
         {GROUPS.map((g) => {
           const selected = group === g.id;
@@ -377,8 +406,8 @@ function GroupSection({
               }}
             >
               <span style={{ fontSize: 26 }}>{g.emoji}</span>
-              <p style={{ fontSize: 12, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{g.label}</p>
-              <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>{g.desc}</p>
+              <p style={{ fontSize: 12, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{t(`aiPlanner.group_${g.id}`)}</p>
+              <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>{t(`aiPlanner.groupDesc_${g.id}`)}</p>
             </motion.button>
           );
         })}
@@ -404,6 +433,7 @@ function SettingsSection({
   setLocation: (v: string) => void;
   accentColor: string;
 }) {
+  const { t } = useLanguage();
   const QUICK_LOCS = [
     { name: "District 1", emoji: "📍" },
     { name: "Bình Thạnh", emoji: "🏙️" },
@@ -416,7 +446,7 @@ function SettingsSection({
       {/* Duration + Budget side by side */}
       <Grid style={{ gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         <Column>
-          <SectionLabel text="How long?" />
+          <SectionLabel text={t("aiPlanner.durationLabel")} />
           <Column style={{ gap: 8 }}>
             {DURATIONS.map((d) => {
               const selected = duration === d.label;
@@ -440,8 +470,8 @@ function SettingsSection({
                 >
                   <span style={{ fontSize: 18 }}>{d.icon}</span>
                   <Column>
-                    <p style={{ fontSize: 13, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{d.label}</p>
-                    <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>{d.desc}</p>
+                    <p style={{ fontSize: 13, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{t(DURATION_KEY[d.label]?.label ?? d.label)}</p>
+                    <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>{t(DURATION_KEY[d.label]?.desc ?? d.desc)}</p>
                   </Column>
                   {selected && <CheckCircle size={14} color={accentColor} style={{ marginLeft: "auto" }} />}
                 </motion.button>
@@ -451,7 +481,7 @@ function SettingsSection({
         </Column>
 
         <Column>
-          <SectionLabel text="Budget / person" />
+          <SectionLabel text={t("aiPlanner.budgetLabel")} />
           <Column style={{ gap: 8 }}>
             {BUDGETS.map((b) => {
               const selected = budget === b.label;
@@ -475,8 +505,8 @@ function SettingsSection({
                 >
                   <span style={{ fontSize: 18 }}>{b.icon}</span>
                   <Column>
-                    <p style={{ fontSize: 13, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{b.label}</p>
-                    <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>{b.desc}</p>
+                    <p style={{ fontSize: 13, fontWeight: 800, color: "#1C1C1E", margin: 0 }}>{t(BUDGET_KEY[b.label]?.label ?? b.label)}</p>
+                    <p style={{ fontSize: 10, color: "#8E8E93", margin: 0 }}>{t(BUDGET_KEY[b.label]?.desc ?? b.desc)}</p>
                   </Column>
                   {selected && <CheckCircle size={14} color="#34C759" style={{ marginLeft: "auto" }} />}
                 </motion.button>
@@ -488,11 +518,11 @@ function SettingsSection({
 
       {/* Location */}
       <Column>
-        <SectionLabel text="Starting point" />
+        <SectionLabel text={t("aiPlanner.startingLabel")} />
         <input
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="e.g. District 1, Ho Chi Minh City"
+          placeholder={t("aiPlanner.startingPlaceholder")}
           style={{
             width: "100%",
             padding: "13px 16px",
@@ -563,6 +593,7 @@ function StickyBar({
   accentColor: string;
   onGenerate: () => void;
 }) {
+  const { t } = useLanguage();
   const selectedMood = MOODS.find((m) => m.id === mood);
   const selectedGroup = GROUPS.find((g) => g.id === group);
 
@@ -590,7 +621,7 @@ function StickyBar({
               color: selectedMood.accentColor,
             }}
           >
-            {selectedMood.emoji} {selectedMood.label}
+            {selectedMood.emoji} {t(`aiPlanner.mood_${selectedMood.id}`)}
           </span>
         )}
         {selectedGroup && (
@@ -604,7 +635,7 @@ function StickyBar({
               color: "#636366",
             }}
           >
-            {selectedGroup.emoji} {selectedGroup.label}
+            {selectedGroup.emoji} {t(`aiPlanner.group_${selectedGroup.id}`)}
           </span>
         )}
         {cuisines.length > 0 && (
@@ -618,12 +649,12 @@ function StickyBar({
               color: "#636366",
             }}
           >
-            {cuisines.length} cuisine{cuisines.length > 1 ? "s" : ""}
+            {cuisines.length > 1 ? t("aiPlanner.cuisinePlural", { n: cuisines.length }) : t("aiPlanner.cuisineSingular", { n: cuisines.length })}
           </span>
         )}
         {!canGenerate && (
           <span style={{ fontSize: 12, color: "#C7C7CC" }}>
-            Pick a vibe + group to continue
+            {t("aiPlanner.pickVibeGroup")}
           </span>
         )}
       </Row>
@@ -652,7 +683,7 @@ function StickyBar({
         }}
       >
         <Sparkles size={15} />
-        Generate
+        {t("aiPlanner.generate")}
         {canGenerate && <ChevronRight size={15} />}
       </motion.button>
     </Row>
@@ -694,6 +725,7 @@ export function PlannerForm({
   setLocation,
   onGenerate,
 }: PlannerFormProps) {
+  const { t } = useLanguage();
   const [prompt, setPrompt] = useState("");
   const [parsedHints, setParsedHints] = useState<Record<string, string>>({});
 
@@ -755,7 +787,7 @@ export function PlannerForm({
           <Sparkles size={15} color="white" />
         </Row>
         <span style={{ fontSize: 17, fontWeight: 800, color: "#1C1C1E", letterSpacing: -0.3 }}>
-          AI Food Planner
+          {t("aiPlanner.appTitle")}
         </span>
       </Row>
 
@@ -785,7 +817,7 @@ export function PlannerForm({
           >
             <Column style={{ flex: 1, height: 1, backgroundColor: "rgba(0,0,0,0.06)" }} />
             <span style={{ fontSize: 11, fontWeight: 700, color: "#C7C7CC", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-              Or select below
+              {t("aiPlanner.orSelectBelow")}
             </span>
             <Column style={{ flex: 1, height: 1, backgroundColor: "rgba(0,0,0,0.06)" }} />
           </Row>
@@ -803,7 +835,7 @@ export function PlannerForm({
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
               >
-                <AIReaction text="Nice choice! Who's joining the adventure?" accentColor={accentColor} />
+                <AIReaction text={t("aiPlanner.reactionGroup")} accentColor={accentColor} />
                 <CuisineSection cuisines={cuisines} toggleCuisine={toggleCuisine} accentColor={accentColor} />
                 <GroupSection group={group} setGroup={setGroup} accentColor={accentColor} />
               </motion.div>
@@ -820,7 +852,7 @@ export function PlannerForm({
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
               >
-                <AIReaction text="Perfect — let's nail the details." accentColor={accentColor} />
+                <AIReaction text={t("aiPlanner.reactionDetails")} accentColor={accentColor} />
                 <SettingsSection
                   duration={duration}
                   setDuration={setDuration}

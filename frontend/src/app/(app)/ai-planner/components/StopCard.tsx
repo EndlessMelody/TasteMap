@@ -15,6 +15,7 @@ import {
 import { Column, Row } from "@once-ui-system/core";
 import type { ItineraryStop } from "./types";
 import { STOP_CATEGORY_ICON } from "./constants";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface StopCardProps {
   stop: ItineraryStop;
@@ -39,6 +40,7 @@ export function StopCard({
   onSwap,
   onRemove,
 }: StopCardProps) {
+  const { t } = useLanguage();
   return (
     <motion.div
       initial={{ opacity: 0, x: -12 }}
@@ -276,7 +278,7 @@ export function StopCard({
                             cursor: "pointer",
                           }}
                         >
-                          <RefreshCw size={11} /> Swap
+                          <RefreshCw size={11} /> {t("aiPlanner.swap")}
                         </button>
                         <button
                           onClick={onRemove}
@@ -294,7 +296,7 @@ export function StopCard({
                             cursor: "pointer",
                           }}
                         >
-                          <Trash2 size={11} /> Remove
+                          <Trash2 size={11} /> {t("aiPlanner.remove")}
                         </button>
                         {stop.lat && stop.lng && (
                           <a
@@ -350,15 +352,15 @@ export function StopCard({
                         >
                           <Brain size={11} color="#ff6b35" />
                           <span style={{ fontSize: 10, color: "#ff6b35", fontWeight: 700 }}>
-                            Why this stop
+                            {t("aiPlanner.whyThisStop")}
                           </span>
                         </Row>
                         <p style={{ fontSize: 11, color: "#636366", lineHeight: 1.6 }}>
-                          Matched: <b style={{ color: "#3C3C43" }}>{stop.category}</b> preference ·
-                          budget fits at <b style={{ color: "#3C3C43" }}>{stop.cost}</b>
+                          {t("aiPlanner.matchedLabel")} <b style={{ color: "#3C3C43" }}>{stop.category}</b> {t("aiPlanner.preferenceBudget")}{" "}
+                          <b style={{ color: "#3C3C43" }}>{stop.cost}</b>
                           {stop.travelToNext
-                            ? ` · ${stop.travelToNext} to next stop`
-                            : " · final stop of route"}
+                            ? ` · ${t("aiPlanner.toNextStop", { travel: stop.travelToNext })}`
+                            : ` ${t("aiPlanner.finalStop")}`}
                         </p>
                       </Column>
                     </motion.div>
@@ -377,7 +379,7 @@ export function StopCard({
                   >
                     <ArrowRight size={11} color="#8E8E93" />
                     <span style={{ fontSize: 11, color: "#8E8E93" }}>
-                      {stop.travelToNext} to next stop
+                      {t("aiPlanner.toNextStop", { travel: stop.travelToNext })}
                     </span>
                   </Row>
                 )}

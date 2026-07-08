@@ -23,6 +23,7 @@ import { Column, Row, Text } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { useReels } from "@/hooks/useReels";
 import type { ReelData } from "@/types/dashboard";
+import { useLanguage } from "@/context/LanguageContext";
 
 import { ReelCardV2 } from "./social";
 
@@ -33,7 +34,9 @@ interface TrendingReelsProps {
 }
 
 // ─── View all button ─────────────────────────────────────────────
-const ViewAllButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+const ViewAllButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+  const { t } = useLanguage();
+  return (
   <button
     type="button"
     onClick={onClick}
@@ -63,10 +66,11 @@ const ViewAllButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
       e.currentTarget.style.backgroundColor = tokens.color.surfaceMuted;
     }}
   >
-    View all
+    {t("discover.viewAll")}
     <ArrowUpRight size={12} strokeWidth={2.6} />
   </button>
-);
+  );
+};
 
 // ─── Skeletons ───────────────────────────────────────────────────
 const ReelSkeleton: React.FC = () => (
@@ -158,19 +162,20 @@ export const TrendingReels: React.FC<TrendingReelsProps> = ({
 }) => {
   const router = useRouter();
   const { reels, loading, error } = useReels(10);
+  const { t } = useLanguage();
 
   const subtitle = loading
-    ? "Loading what's hot this week…"
+    ? t("discover.reelsLoading")
     : error
-      ? "Couldn't reach the reels feed"
+      ? t("discover.reelsErrorSub")
       : reels.length > 0
-        ? `What's hot in your city · ${reels.length} reels`
-        : "No trending reels yet — be the first to post";
+        ? t("discover.reelsHotCity", { n: reels.length })
+        : t("discover.reelsEmptySub");
 
   return (
     <DiscoverSection
-      eyebrow="Trending"
-      title="Taste Reels"
+      eyebrow={t("discover.trending")}
+      title={t("discover.tasteReels")}
       subtitle={subtitle}
       icon={<Flame size={18} />}
       accent={tokens.color.danger}
@@ -185,15 +190,15 @@ export const TrendingReels: React.FC<TrendingReelsProps> = ({
       ) : error ? (
         <InlineNotice
           icon={<AlertTriangle size={18} strokeWidth={2.2} />}
-          title="Couldn't load reels"
+          title={t("discover.couldntLoadReels")}
           message={error}
           tone="danger"
         />
       ) : reels.length === 0 ? (
         <InlineNotice
           icon={<Flame size={18} strokeWidth={2.2} />}
-          title="No trending reels yet"
-          message="Check back soon — fresh reels drop daily."
+          title={t("discover.noTrendingReels")}
+          message={t("discover.reelsCheckBack")}
         />
       ) : (
         <Row className="no-scrollbar" gap="12" overflowX="auto" paddingBottom="4">

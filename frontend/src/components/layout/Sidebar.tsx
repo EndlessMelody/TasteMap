@@ -21,6 +21,7 @@ import { Column, Row } from "@once-ui-system/core";
 import { useUiStore } from "@/store/uiStore";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { Avatar, BodySm } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 
@@ -316,6 +317,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const router = useRouter();
   const { user } = useAuth();
   const C = useThemeColors();
+  const { t } = useLanguage();
   const isCreatePostModalOpen = useUiStore((state) => state.isCreatePostModalOpen);
 
   return (
@@ -323,7 +325,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       className="no-scrollbar"
       animate={{
         width: isFullScreen ? 0 : isOpen ? 240 : 72,
-        minWidth: isFullScreen ? 0 : isOpen ? 240 : 72,
       }}
       transition={{
         duration: 0.28,
@@ -408,74 +409,74 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* ─── Menu Section ─── */}
       <Column style={{ gap: "1px", width: "100%", flexShrink: 0 }}>
-        <SectionLabel label="Menu" visible={isOpen} />
+        <SectionLabel label={t("nav.sectionMenu")} visible={isOpen} />
         <SidebarItem
           icon={<Compass size={17} />}
-          label="Discover"
+          label={t("nav.discover")}
           active={currentPath === "/discover"}
           collapsed={!isOpen}
           onClick={() => router.push("/discover")}
         />
         <SidebarItem
           icon={<Hand size={17} />}
-          label="Tour Builder"
+          label={t("nav.tourBuilder")}
           active={currentPath === "/tour-builder"}
           collapsed={!isOpen}
-          badge="New"
+          badge={t("sidebar.badgeNew")}
           onClick={() => router.push("/tour-builder")}
         />
         <SidebarItem
           icon={<Trophy size={17} />}
-          label="Challenges"
+          label={t("nav.challenges")}
           active={currentPath === "/challenges"}
           collapsed={!isOpen}
           onClick={() => router.push("/challenges")}
         />
         <SidebarItem
           icon={<Map size={17} />}
-          label="Explore"
+          label={t("nav.explore")}
           active={currentPath === "/explore"}
           collapsed={!isOpen}
           onClick={() => router.push("/explore")}
         />
         <SidebarItem
           icon={<Sparkles size={17} />}
-          label="AI Planner"
+          label={t("nav.aiPlanner")}
           active={currentPath === "/ai-planner"}
           collapsed={!isOpen}
-          badge="AI"
+          badge={t("sidebar.badgeAi")}
           onClick={() => router.push("/ai-planner")}
         />
         <SidebarItem
           icon={<BookOpen size={17} />}
-          label="Culture Guide"
+          label={t("nav.cultureGuide")}
           active={currentPath === "/culture"}
           collapsed={!isOpen}
-          badge="New"
+          badge={t("sidebar.badgeNew")}
           onClick={() => router.push("/culture")}
         />
       </Column>
 
       {/* ─── Social Section ─── */}
       <Column style={{ gap: "1px", width: "100%", flexShrink: 0 }}>
-        <SectionLabel label="Social" visible={isOpen} />
+        <SectionLabel label={t("nav.sectionSocial")} visible={isOpen} />
         <SidebarItem
           icon={<Users size={17} />}
-          label="Foodies"
+          label={t("nav.foodies")}
           active={currentPath === "/foodies"}
           collapsed={!isOpen}
           onClick={() => router.push("/foodies")}
         />
         <SidebarItem
           icon={<Mic size={17} />}
-          label="Group Rooms"
+          label={t("nav.groupRooms")}
           active={currentPath === "/group-rooms"}
           collapsed={!isOpen}
           onClick={() => router.push("/group-rooms")}
         />
         <SidebarItem
           icon={<SquarePlus size={17} />}
-          label="Create"
+          label={t("nav.create")}
           active={isCreatePostModalOpen}
           collapsed={!isOpen}
           onClick={() => useUiStore.getState().openCreatePost("post")}
@@ -485,13 +486,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* ─── Admin Section ─── */}
       {user?.role === "admin" && (
         <Column style={{ gap: "1px", width: "100%", flexShrink: 0 }}>
-          <SectionLabel label="Admin" visible={isOpen} />
+          <SectionLabel label={t("nav.sectionAdmin")} visible={isOpen} />
           <SidebarItem
             icon={<Shield size={17} />}
-            label="Dashboard"
+            label={t("nav.dashboard")}
             active={currentPath.startsWith("/admin")}
             collapsed={!isOpen}
-            badge="Admin"
+            badge={t("sidebar.badgeAdmin")}
             onClick={() => router.push("/admin")}
           />
         </Column>
@@ -511,6 +512,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
   const { user, isInitializing: loading, logout: signOut } = useAuth();
   const router = useRouter();
   const C = useThemeColors();
+  const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -659,10 +661,10 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
               whiteSpace: "nowrap",
             }}
           >
-            Sign In
+            {t("sidebar.signIn")}
           </BodySm>
           <span style={{ color: C.profileSub, fontSize: "11px" }}>
-            Not logged in
+            {t("sidebar.notLoggedIn")}
           </span>
         </motion.div>
       </button>
@@ -753,7 +755,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
             <BadgeCheck size={12} color={tokens.color.warm} />
           </Row>
           <span style={{ color: C.profileSub, fontSize: "11px" }}>
-            Level {user?.level ?? 1}
+            {t("sidebar.level", { n: user?.level ?? 1 })}
           </span>
         </Column>
         <button
@@ -762,7 +764,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
             signOut();
             router.push("/");
           }}
-          title="Sign out"
+          title={t("sidebar.signOut")}
           style={{
             background: "none",
             border: "none",

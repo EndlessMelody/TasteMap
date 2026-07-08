@@ -12,6 +12,7 @@ import { DiscoverSection, GlassCard } from "@/components/primitives";
 import { Column, Row, Text } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 import { apiGet } from "@/lib/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 import { VaultCardV2 } from "./vault";
 
@@ -19,12 +20,14 @@ import { VaultCardV2 } from "./vault";
 const ScrollControls: React.FC<{
   onScrollLeft: () => void;
   onScrollRight: () => void;
-}> = ({ onScrollLeft, onScrollRight }) => (
+}> = ({ onScrollLeft, onScrollRight }) => {
+  const { t } = useLanguage();
+  return (
   <Row vertical="center" gap="8">
     <button
       type="button"
       onClick={onScrollLeft}
-      aria-label="Scroll left"
+      aria-label={t("vault.scrollLeft")}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -50,7 +53,7 @@ const ScrollControls: React.FC<{
     <button
       type="button"
       onClick={onScrollRight}
-      aria-label="Scroll right"
+      aria-label={t("vault.scrollRight")}
       style={{
         display: "inline-flex",
         alignItems: "center",
@@ -74,7 +77,8 @@ const ScrollControls: React.FC<{
       <ChevronRight size={18} strokeWidth={2.4} />
     </button>
   </Row>
-);
+  );
+};
 
 // ─── Skeletons ───────────────────────────────────────────────────
 const VaultSkeleton: React.FC = () => (
@@ -169,6 +173,7 @@ interface TasteVaultProps {
 }
 
 export const TasteVault: React.FC<TasteVaultProps> = ({ onPostClick, onReelClick }) => {
+  const { t } = useLanguage();
   const vaultRef = useRef<HTMLDivElement>(null);
   const [bookmarks, setBookmarks] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -201,17 +206,17 @@ export const TasteVault: React.FC<TasteVaultProps> = ({ onPostClick, onReelClick
   };
 
   const subtitle = loading
-    ? "Fetching your saved items…"
+    ? t("vault.fetching")
     : error
-      ? "Couldn't reach the vault"
+      ? t("vault.errorSub")
       : bookmarks.length > 0
-        ? `Your curated collection · ${bookmarks.length} items`
-        : "Your vault is empty — save locations, posts, or reels to see them here";
+        ? t("vault.curated", { n: bookmarks.length })
+        : t("vault.emptySub");
 
   return (
     <DiscoverSection
-      eyebrow="Collection"
-      title="The Taste Vault"
+      eyebrow={t("vault.collection")}
+      title={t("vault.title")}
       subtitle={subtitle}
       icon={<Bookmark size={18} />}
       accent={tokens.color.warning}
@@ -231,15 +236,15 @@ export const TasteVault: React.FC<TasteVaultProps> = ({ onPostClick, onReelClick
       ) : error ? (
         <InlineNotice
           icon={<AlertTriangle size={18} strokeWidth={2.2} />}
-          title="Couldn't load the vault"
+          title={t("vault.couldntLoad")}
           message={error}
           tone="danger"
         />
       ) : bookmarks.length === 0 ? (
         <InlineNotice
           icon={<Bookmark size={18} strokeWidth={2.2} />}
-          title="Your vault is empty"
-          message="Save interesting food spots, posts, or reels to your collection."
+          title={t("vault.empty")}
+          message={t("vault.emptyBody")}
         />
       ) : (
         <Row

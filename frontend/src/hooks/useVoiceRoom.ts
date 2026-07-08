@@ -231,15 +231,20 @@ export function useVoiceRoom(
       }
     }
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     if (typeof window !== "undefined") {
       const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       add(`${wsProtocol}//${window.location.host}`);
-      add(`${wsProtocol}//${window.location.hostname}:8000`);
-      add("ws://127.0.0.1:8000");
-      add("ws://localhost:8000");
+      // localhost fallbacks are a dev-only convenience — never probe them in prod.
+      if (!isProduction) {
+        add(`${wsProtocol}//${window.location.hostname}:8000`);
+        add("ws://127.0.0.1:8000");
+        add("ws://localhost:8000");
+      }
     }
 
-    if (urls.length === 0) {
+    if (urls.length === 0 && !isProduction) {
       add("ws://127.0.0.1:8000");
     }
 

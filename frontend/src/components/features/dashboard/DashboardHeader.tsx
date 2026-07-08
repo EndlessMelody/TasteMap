@@ -14,6 +14,7 @@ import { ProfileMenuItem } from "@/components/common/ProfileMenuItem";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useInbox } from "@/hooks/useInbox";
 import { LocationSelector } from "./LocationSelector";
@@ -31,6 +32,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 }) => {
   const router = useRouter();
   const { user, isInitializing: loading, logout: signOut } = useAuth();
+  const { t } = useLanguage();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -118,8 +120,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isProfileMenuOpen]);
 
-  const handleComingSoon = () =>
-    toast("Will be updated in the next version 🚀");
+  const handleComingSoon = () => toast(t("header.comingSoon"));
 
   return (
     <motion.div
@@ -177,7 +178,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             }}
           />
           <input
-            placeholder="Search locations, tours, foodies..."
+            placeholder={t("header.searchPlaceholder")}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
             style={{
@@ -259,7 +260,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             icon={
               <Bell size={20} color={isNotifOpen ? tokens.color.warning : tokens.color.textMuted} />
             }
-            aria-label="Notifications"
+            aria-label={t("header.notifications")}
             variant="ghost"
             onClick={() => setIsNotifOpen(!isNotifOpen)}
             style={{ borderRadius: "10px" }}
@@ -318,7 +319,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                     borderBottom: `1px solid ${tokens.color.surfaceMuted}`,
                   }}
                 >
-                  <H3>Notifications</H3>
+                  <H3>{t("header.notifications")}</H3>
                   {unreadCount > 0 && (
                     <button
                       onClick={markAllRead}
@@ -332,7 +333,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                         padding: 0,
                       }}
                     >
-                      Mark all read
+                      {t("header.markAllRead")}
                     </button>
                   )}
                 </Row>
@@ -342,7 +343,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   {notifsLoading ? (
                     <Column style={{ padding: "24px 20px", textAlign: "center" }}>
                       <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
-                        Loading…
+                        {t("common.loading")}
                       </BodySm>
                     </Column>
                   ) : notifications.length === 0 ? (
@@ -351,7 +352,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                         🔔
                       </Column>
                       <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
-                        You&apos;re all caught up!
+                        {t("header.allCaughtUp")}
                       </BodySm>
                     </Column>
                   ) : (
@@ -436,7 +437,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                                   cursor: "pointer",
                                 }}
                               >
-                                Accept
+                                {t("header.accept")}
                               </button>
                               <button
                                 onClick={() =>
@@ -454,7 +455,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                                   cursor: "pointer",
                                 }}
                               >
-                                Decline
+                                {t("header.decline")}
                               </button>
                             </Row>
                           )}
@@ -477,7 +478,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 color={isMsgOpen ? tokens.color.warm : tokens.color.textMuted}
               />
             }
-            aria-label="Messages"
+            aria-label={t("header.messages")}
             variant="ghost"
             onClick={() => setIsMsgOpen(!isMsgOpen)}
             style={{ borderRadius: "10px" }}
@@ -536,7 +537,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                     borderBottom: `1px solid ${tokens.color.surfaceMuted}`,
                   }}
                 >
-                  <H3>Messages</H3>
+                  <H3>{t("header.messages")}</H3>
                 </Row>
 
                 {/* Conversations List */}
@@ -544,7 +545,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   {inboxLoading ? (
                     <Column style={{ padding: "24px 20px", textAlign: "center" }}>
                       <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
-                        Loading…
+                        {t("common.loading")}
                       </BodySm>
                     </Column>
                   ) : conversations.length === 0 ? (
@@ -553,7 +554,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                         💬
                       </Column>
                       <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
-                        No messages yet
+                        {t("header.noMessages")}
                       </BodySm>
                     </Column>
                   ) : (
@@ -607,7 +608,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                               }}
                             >
                               {c.is_sent_by_me && (
-                                <span style={{ color: tokens.color.textMuted }}>You: </span>
+                                <span style={{ color: tokens.color.textMuted }}>{t("header.you")} </span>
                               )}
                               {c.last_message}
                             </BodySm>
@@ -696,7 +697,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                  e.currentTarget.style.transform = "none";
                }}
              >
-              Sign In
+              {t("sidebar.signIn")}
             </button>
           ) : (
             /* ── Logged in: avatar + name + dropdown ── */
@@ -729,10 +730,10 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                     fontSize: "0.85rem",
                   }}
                 >
-                  {user?.display_name || user?.username || "User"}
+                  {user?.display_name || user?.username || t("header.user")}
                 </BodySm>
                 <span style={{ color: tokens.color.textSubtle, fontSize: "0.7rem" }}>
-                  Level {user?.level ?? 1}
+                  {t("sidebar.level", { n: user?.level ?? 1 })}
                 </span>
               </motion.div>
             </motion.div>
@@ -767,7 +768,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 >
                   <ProfileMenuItem
                     icon={<User size={16} />}
-                    label="Hồ sơ cá nhân"
+                    label={t("header.myProfile")}
                     onClick={() => {
                       setIsProfileMenuOpen(false);
                       router.push("/profile");
@@ -775,7 +776,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   />
                   <ProfileMenuItem
                     icon={<Settings size={16} />}
-                    label="Tùy chỉnh hệ thống"
+                    label={t("header.systemSettings")}
                     onClick={() => {
                       setIsProfileMenuOpen(false);
                       onSettingsClick();
@@ -783,7 +784,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   />
                   <ProfileMenuItem
                     icon={<Info size={16} />}
-                    label="Thông tin & Trợ giúp"
+                    label={t("header.infoHelp")}
                     onClick={() => {
                       setIsProfileMenuOpen(false);
                       handleComingSoon();
@@ -802,7 +803,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 />
                 <ProfileMenuItem
                   icon={<LogOut size={16} color={tokens.color.danger} />}
-                  label="Đăng xuất"
+                  label={t("nav.logout")}
                   onClick={() => {
                     setIsProfileMenuOpen(false);
                     signOut();

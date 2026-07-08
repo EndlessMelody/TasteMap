@@ -3,7 +3,7 @@
 import React, { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
-import { apiPost, apiGet } from "@/lib/api";
+import { apiPost, apiGet, getApiBase } from "@/lib/api";
 import { normalizeImageUrl } from "@/lib/image-utils";
 import MapWidget from "@/components/MapWidget";
 import {
@@ -198,7 +198,7 @@ export default function CulturePage() {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("language", "vi");
-      const BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://127.0.0.1:8000";
+      const BASE_URL = getApiBase();
       const { supabase } = await import("@/lib/supabase");
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;

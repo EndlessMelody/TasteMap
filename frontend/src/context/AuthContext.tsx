@@ -8,7 +8,7 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import { supabase } from "@/lib/supabase";
-import { apiPost } from "@/lib/api";
+import { apiPost, getApiBase } from "@/lib/api";
 import { BadgeSummary } from "@/types/gamification";
 
 export interface UserData {
@@ -197,7 +197,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/auth/sync`, {
+        const response = await fetch(`${getApiBase()}/api/v1/auth/sync`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

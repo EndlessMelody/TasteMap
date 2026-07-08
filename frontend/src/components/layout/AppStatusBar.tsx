@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Column, Row, Text } from "@once-ui-system/core";
+import { useLanguage } from "@/context/LanguageContext";
 import { 
   Database, 
   BrainCircuit, 
@@ -19,6 +20,7 @@ import {
  * displaying AI contexts, telemetry, and environmental coefficients.
  */
 export const AppStatusBar = () => {
+  const { t } = useLanguage();
   const [time, setTime] = React.useState<string>("");
 
   React.useEffect(() => {
@@ -141,7 +143,7 @@ export const AppStatusBar = () => {
           <Row gap="8" vertical="center" s={{ hide: true }}>
             <CloudRain size={12} style={{ color: "#8E8E93" }} />
             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>
-              Weather: +0.2
+              {t("statusbar.weather")}: +0.2
             </Text>
           </Row>
           <Row gap="8" vertical="center">
@@ -150,7 +152,7 @@ export const AppStatusBar = () => {
               variant="body-default-xs"
               style={{ color: "#1C1C1E", fontWeight: 600 }}
             >
-              342 Lobbies
+              {t("statusbar.lobbies", { n: 342 })}
             </Text>
           </Row>
           <Column

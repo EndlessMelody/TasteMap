@@ -41,6 +41,11 @@ class TourStop(Base):
 
     stop_order = Column(Integer, nullable=False)  # 1-based position trong tour
 
+    # Per-stop metrics written by the route optimiser (nullable until optimise runs)
+    match_score = Column(Float, nullable=True)   # taste match 0–100 = round(((cos(u,l)+1)/2)·100)
+    dwell_min = Column(Integer, nullable=True)   # estimated minutes spent at the stop
+    travel_min = Column(Integer, nullable=True)  # travel minutes from previous stop (first = 0)
+
     added_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationships

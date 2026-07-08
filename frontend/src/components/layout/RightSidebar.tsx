@@ -31,6 +31,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useFoodies } from "@/hooks/useFoodies";
 import { useRouter } from "next/navigation";
 import { apiGet } from "@/lib/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 /* ─── Types ─── */
 interface TrendingSpot {
@@ -65,6 +66,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
   const { user } = useAuth();
   const { friends, loading: friendsLoading } = useFoodies();
   const router = useRouter();
+  const { t } = useLanguage();
   
   const [trendingSpots, setTrendingSpots] = useState<TrendingSpot[]>([]);
   const [spotsLoading, setSpotsLoading] = useState(true);
@@ -164,7 +166,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   letterSpacing: "1.5px",
                 }}
               >
-                Taste Profile
+                {t("rightbar.tasteProfile")}
               </Text>
             </Row>
           ) : (
@@ -181,7 +183,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           }}
         >
           {isExpanded ? (
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={50}>
               <RadarChart
                 data={radarData}
                 cx="50%"
@@ -210,7 +212,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               </RadarChart>
             </ResponsiveContainer>
           ) : (
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={50}>
               <RadarChart
                 data={radarData}
                 cx="50%"
@@ -255,7 +257,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 color: "#1C1C1E",
               }}
             >
-              Top taste:{" "}
+              {t("rightbar.topTaste")}{" "}
               <span style={{ color: "#ff6b35", fontWeight: 700 }}>
                 {topTrait.subject}
               </span>
@@ -314,7 +316,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                     letterSpacing: "1.5px",
                   }}
                 >
-                  Foodie Friends
+                  {t("rightbar.foodieFriends")}
                 </Text>
                 <span
                   style={{
@@ -346,7 +348,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   transition: "color 0.15s",
                 }}
               >
-                All
+                {t("rightbar.all")}
                 <ChevronRight size={12} />
               </button>
             </>
@@ -449,7 +451,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                       textAlign: "left",
                     }}
                   >
-                    {(friend as any).match ? `${(friend as any).match}% Match` : friend.status}
+                    {(friend as any).match ? t("rightbar.match", { n: (friend as any).match }) : friend.status}
                   </Text>
                 </Column>
               )}
@@ -489,7 +491,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   letterSpacing: "1.5px",
                 }}
               >
-                Trending Near You
+                {t("rightbar.trendingNearYou")}
               </Text>
             </Row>
           ) : (
@@ -628,17 +630,17 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         >
           <StatCard
             icon={<Heart size={14} color="#EF4444" />}
-            label="Saved"
+            label={t("rightbar.saved")}
             value={String(user?.stats?.followers || 24)}
           />
           <StatCard
             icon={<Zap size={14} color="#FBBF24" />}
-            label="Reviews"
+            label={t("rightbar.reviews")}
             value={String(user?.stats?.reviews || 0)}
           />
           <StatCard
             icon={<MapPin size={14} color="#ff6b35" />}
-            label="Visited"
+            label={t("rightbar.visited")}
             value={String(user?.stats?.visited || 18)}
           />
         </motion.div>

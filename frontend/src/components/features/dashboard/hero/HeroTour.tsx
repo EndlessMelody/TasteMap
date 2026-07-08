@@ -33,12 +33,14 @@ import {
 import { Column, Row } from "@once-ui-system/core";
 import { tokens, matchTone } from "@/styles/tokens";
 import { useRecommendations } from "@/hooks/useRecommendations";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ─── Live weather (duplicated from ContextRibbon — see TODO note) ──
 interface WeatherState {
   icon: LucideIcon;
   color: string;
-  label: string;
+  temp: string;
+  conditionKey: string;
 }
 
 function useLiveWeather(): WeatherState {
@@ -49,23 +51,15 @@ function useLiveWeather(): WeatherState {
   }, []);
   const h = now.getHours();
   if (h >= 5 && h < 12) {
-    return { icon: Sun, color: tokens.color.warning, label: "29°C · Sunny" };
+    return { icon: Sun, color: tokens.color.warning, temp: "29°C", conditionKey: "ribbon.sunny" };
   }
   if (h >= 12 && h < 17) {
-    return {
-      icon: Cloud,
-      color: tokens.color.textMuted,
-      label: "31°C · Partly Cloudy",
-    };
+    return { icon: Cloud, color: tokens.color.textMuted, temp: "31°C", conditionKey: "ribbon.partlyCloudy" };
   }
   if (h >= 17 && h < 20) {
-    return {
-      icon: CloudRain,
-      color: tokens.color.cool,
-      label: "27°C · Light Rain",
-    };
+    return { icon: CloudRain, color: tokens.color.cool, temp: "27°C", conditionKey: "ribbon.lightRain" };
   }
-  return { icon: Moon, color: tokens.color.magic, label: "25°C · Clear" };
+  return { icon: Moon, color: tokens.color.magic, temp: "25°C", conditionKey: "ribbon.clear" };
 }
 
 // ─── Fallback image ──────────────────────────────────────────────
@@ -75,13 +69,14 @@ const FALLBACK_IMG =
 // ─── Main component ──────────────────────────────────────────────
 export const HeroTour: React.FC = () => {
   const router = useRouter();
+  const { t } = useLanguage();
   const { picks, loading } = useRecommendations(1, undefined, "place");
   const tour = picks && picks.length > 0 ? picks[0] : null;
   const weather = useLiveWeather();
   const WeatherIcon = weather.icon;
 
   const bgImage = tour?.image_url || FALLBACK_IMG;
-  const title = tour?.name || "Weekend Street Food Tour";
+  const title = tour?.name || t("heroTour.defaultTitle");
   const matchPct = tour
     ? tour.match_score > 1
       ? Math.round(tour.match_score)
@@ -169,7 +164,7 @@ export const HeroTour: React.FC = () => {
               textTransform: "uppercase",
             }}
           >
-            Featured
+            {t("heroTour.featured")}
           </span>
         </span>
 
@@ -197,7 +192,7 @@ export const HeroTour: React.FC = () => {
               textTransform: "uppercase",
             }}
           >
-            {matchPct}% Match
+            {t("rightbar.match", { n: matchPct })}
           </span>
         </span>
       </Row>
@@ -225,7 +220,7 @@ export const HeroTour: React.FC = () => {
             color: "rgba(255,255,255,0.75)",
           }}
         >
-          Today&apos;s featured tour
+          {t("heroTour.todaysFeatured")}
         </span>
 
         {/* Title */}
@@ -241,7 +236,7 @@ export const HeroTour: React.FC = () => {
             textShadow: "0 2px 16px rgba(0,0,0,0.25)",
           }}
         >
-          {loading ? "Loading your tour…" : title}
+          {loading ? t("heroTour.loadingTour") : title}
         </h1>
 
         {/* Meta row */}
@@ -267,7 +262,7 @@ export const HeroTour: React.FC = () => {
               color="rgba(255,255,255,0.92)"
               strokeWidth={2.2}
             />
-            {weather.label}
+            {weather.temp} · {t(weather.conditionKey)}
           </span>
 
           <span
@@ -285,7 +280,7 @@ export const HeroTour: React.FC = () => {
               color="rgba(255,255,255,0.92)"
               strokeWidth={2.2}
             />
-            {tour?.price_range || "3 stops · 1.2km"}
+            {tour?.price_range || t("heroTour.defaultMeta")}
           </span>
         </Row>
 
@@ -319,7 +314,7 @@ export const HeroTour: React.FC = () => {
               overflow: "hidden",
             }}
           >
-            <span style={{ position: "relative", zIndex: 1 }}>Start Tour</span>
+            <span style={{ position: "relative", zIndex: 1 }}>{t("heroTour.startTour")}</span>
             <ArrowRight
               size={16}
               color={tokens.color.text}

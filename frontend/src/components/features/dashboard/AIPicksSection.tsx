@@ -48,6 +48,8 @@ import {
   type Recommendation,
 } from "@/hooks/useRecommendations";
 import { useUserVector } from "@/context/UserVectorContext";
+import { useLanguage } from "@/context/LanguageContext";
+import type { TFunction } from "@/i18n";
 
 // ─── Dynamic import for 3D mascot (avoid SSR issues) ────────────
 const TasteMapMascot = dynamic(
@@ -68,17 +70,18 @@ function generateReasoning(
   pick: Recommendation,
   index: number,
   topTrait: string | null,
+  t: TFunction,
 ): string {
   const reasons = [
     topTrait
-      ? `Your love for ${topTrait} cuisine matches perfectly with their signature dishes`
-      : "Matches your unique taste profile with 15-dimension vector analysis",
-    "Highly rated by foodies with similar preferences to yours",
-    "The flavor profile aligns closely with your recent discoveries",
-    "Popular among users who share your dining style",
+      ? t("aipicks.reasonTrait", { trait: topTrait })
+      : t("aipicks.reasonDefault"),
+    t("aipicks.reasonRated"),
+    t("aipicks.reasonFlavor"),
+    t("aipicks.reasonPopular"),
     topTrait
-      ? `Their ${topTrait}-inspired menu scored highest in our AI matching`
-      : "Our AI detected a strong pattern match with your food journey",
+      ? t("aipicks.reasonTraitMenu", { trait: topTrait })
+      : t("aipicks.reasonPattern"),
   ];
 
   // Pick a deterministic reason based on place_id
@@ -95,7 +98,9 @@ function getReasonIcon(index: number) {
 const RefreshButton: React.FC<{ onClick: () => void; spinning: number }> = ({
   onClick,
   spinning,
-}) => (
+}) => {
+  const { t } = useLanguage();
+  return (
   <button
     type="button"
     onClick={onClick}
@@ -132,9 +137,10 @@ const RefreshButton: React.FC<{ onClick: () => void; spinning: number }> = ({
     >
       <RefreshCw size={12} strokeWidth={2.4} />
     </motion.span>
-    Refresh
+    {t("aipicks.refresh")}
   </button>
-);
+  );
+};
 
 // ─── Fallback image ──────────────────────────────────────────────
 const FALLBACK_IMG =
@@ -149,6 +155,7 @@ const RecommendationCard: React.FC<{
   index: number;
 }> = ({ pick, rank, reasoning, reasoningTrait, index }) => {
   const router = useRouter();
+  const { t } = useLanguage();
   const img =
     pick.image_url && pick.image_url.trim() !== ""
       ? pick.image_url
@@ -160,7 +167,7 @@ const RecommendationCard: React.FC<{
       : Math.round(pick.match_score * 100);
 
   const RankIcon = rank === 1 ? Award : Medal;
-  const rankLabel = rank === 1 ? "Best Match" : "Great Fit";
+  const rankLabel = rank === 1 ? t("aipicks.bestMatch") : t("aipicks.greatFit");
   const rankColor = rank === 1 ? tokens.color.magic : tokens.color.cool;
   const ReasonIcon = getReasonIcon(index);
 
@@ -313,7 +320,7 @@ const RecommendationCard: React.FC<{
               }}
             >
               <MapPin size={10} strokeWidth={2.5} />
-              {1 + (pick.place_id % 8)}.{pick.place_id % 9} km away
+              {t("aipicks.kmAway", { d: `${1 + (pick.place_id % 8)}.${pick.place_id % 9}` })}
             </span>
 
             {/* Weather */}
@@ -404,7 +411,7 @@ const RecommendationCard: React.FC<{
             }}
           >
             <Star size={10} strokeWidth={2.4} />
-            Add to Tour
+            {t("aipicks.addToTour")}
             <ArrowRight size={10} strokeWidth={2.4} />
           </button>
         </Column>
@@ -555,7 +562,9 @@ const LoadingSkeleton: React.FC = () => (
 const ErrorCard: React.FC<{ message: string; onRetry: () => void }> = ({
   message,
   onRetry,
-}) => (
+}) => {
+  const { t } = useLanguage();
+  return (
   <GlassCard
     variant="flat"
     padding="lg"
@@ -592,7 +601,7 @@ const ErrorCard: React.FC<{ message: string; onRetry: () => void }> = ({
           marginBottom: 2,
         }}
       >
-        Couldn&apos;t load picks
+        {t("aipicks.couldntLoad")}
       </span>
       <span
         style={{
@@ -620,12 +629,15 @@ const ErrorCard: React.FC<{ message: string; onRetry: () => void }> = ({
         cursor: "pointer",
       }}
     >
-      Retry
+      {t("aipicks.retry")}
     </button>
   </GlassCard>
-);
+  );
+};
 
-const EmptyCard: React.FC = () => (
+const EmptyCard: React.FC = () => {
+  const { t } = useLanguage();
+  return (
   <GlassCard
     variant="flat"
     padding="lg"
@@ -658,7 +670,7 @@ const EmptyCard: React.FC = () => (
           marginBottom: 2,
         }}
       >
-        No picks yet
+        {t("aipicks.noPicks")}
       </span>
       <span
         style={{
@@ -667,15 +679,17 @@ const EmptyCard: React.FC = () => (
           color: tokens.color.textMuted,
         }}
       >
-        Take a few swipes to unlock personalized recommendations.
+        {t("aipicks.noPicksBody")}
       </span>
     </Column>
   </GlassCard>
-);
+  );
+};
 
 // ─── Main component ──────────────────────────────────────────────
 export const AIPicksSection: React.FC<AIPicksSectionProps> = () => {
   const { radarData } = useUserVector();
+  const { t } = useLanguage();
 
   // Build a 15-dim proxy vector from the 6-point radar (pad remaining dims with 0.5)
   const userVector = useMemo(() => {
@@ -704,28 +718,28 @@ export const AIPicksSection: React.FC<AIPicksSectionProps> = () => {
   const topPicks = picks.slice(0, 2);
 
   const subtitle = reasoningTrait
-    ? `Because you liked ${reasoningTrait} · ${picks.length || 4} spots analyzed`
-    : "Curated for you · vector-matched to your taste";
+    ? t("aipicks.subtitleTrait", { trait: reasoningTrait, n: picks.length || 4 })
+    : t("aipicks.subtitleDefault");
 
   // Dynamic mascot message
   const mascotMessage = useMemo(() => {
-    if (loading) return "Scanning your taste DNA...";
-    if (error) return "Hmm, let me try again...";
-    if (picks.length === 0) return "Let's discover your taste!";
-    if (reasoningTrait) return `Found ${reasoningTrait} gems!`;
-    return "I picked these for you!";
-  }, [loading, error, picks.length, reasoningTrait]);
+    if (loading) return t("aipicks.mascotScanning");
+    if (error) return t("aipicks.mascotTryAgain");
+    if (picks.length === 0) return t("aipicks.mascotDiscover");
+    if (reasoningTrait) return t("aipicks.mascotFound", { trait: reasoningTrait });
+    return t("aipicks.mascotPicked");
+  }, [loading, error, picks.length, reasoningTrait, t]);
 
   const mascotSubMessage = useMemo(() => {
-    if (loading) return "Analyzing 15 dimensions...";
-    if (picks.length > 0) return `${picks.length} spots matched your vector`;
-    return "Swipe to teach me your taste";
-  }, [loading, picks.length]);
+    if (loading) return t("aipicks.mascotAnalyzing");
+    if (picks.length > 0) return t("aipicks.mascotMatched", { n: picks.length });
+    return t("aipicks.mascotSwipe");
+  }, [loading, picks.length, t]);
 
   return (
     <DiscoverSection
-      eyebrow="For You"
-      title="TasteMatch AI"
+      eyebrow={t("aipicks.forYou")}
+      title={t("aipicks.title")}
       subtitle={subtitle}
       icon={<Sparkles size={18} />}
       accent={tokens.color.magic}
@@ -792,7 +806,7 @@ export const AIPicksSection: React.FC<AIPicksSectionProps> = () => {
                 key={pick.place_id}
                 pick={pick}
                 rank={i + 1}
-                reasoning={generateReasoning(pick, i, reasoningTrait)}
+                reasoning={generateReasoning(pick, i, reasoningTrait, t)}
                 reasoningTrait={reasoningTrait}
                 index={i}
               />

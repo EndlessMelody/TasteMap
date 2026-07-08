@@ -116,6 +116,17 @@
   --animate-shimmer: shimmer 1.6s ease-in-out infinite;
 }
 
+/*
+ * Global UI density. Once UI sizing (fonts, spacing, widths) is rem-based, so
+ * scaling the root font-size shrinks the whole interface uniformly. 85% gives
+ * the compact, "pro app" density. Tune this single value to taste (e.g. 87.5%
+ * for a touch larger). Note: Once UI's data-scaling token only covers spacing
+ * (min 90%) and not fonts, so the root font-size is the better global lever.
+ */
+html {
+  font-size: 85%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

@@ -24,6 +24,7 @@ import Map from "@/components/Map";
 import { GlassCard } from "@/components/primitives";
 import { tokens } from "@/styles/tokens";
 import type { Spot } from "@/app/(app)/explore/types";
+import { useLanguage } from "@/context/LanguageContext";
 
 // ─── Default center (Dĩ An area) ─────────────────────────────────
 const DEFAULT_CENTER: [number, number] = [10.897, 106.772];
@@ -94,6 +95,7 @@ function isMapAvailable(): boolean {
 // ─── Main component ──────────────────────────────────────────────
 export const NearbyNowCard: React.FC = () => {
   const router = useRouter();
+  const { t } = useLanguage();
   const spots = MOCK_SPOTS;
   const mapReady = isMapAvailable();
 
@@ -156,7 +158,7 @@ export const NearbyNowCard: React.FC = () => {
               color: tokens.color.textSubtle,
             }}
           >
-            Nearby Now
+            {t("nearby.nearbyNow")}
           </span>
         </Row>
 
@@ -168,7 +170,7 @@ export const NearbyNowCard: React.FC = () => {
             letterSpacing: tokens.type.tracking.normal,
           }}
         >
-          {spots.length} within 2km
+          {t("nearby.within2km", { n: spots.length })}
         </span>
       </Row>
 
@@ -219,7 +221,7 @@ export const NearbyNowCard: React.FC = () => {
                 color: tokens.color.text,
               }}
             >
-              Map preview unavailable
+              {t("nearby.mapUnavailable")}
             </span>
             <span
               style={{
@@ -227,7 +229,7 @@ export const NearbyNowCard: React.FC = () => {
                 color: tokens.color.textMuted,
               }}
             >
-              Add a Mapbox token to enable
+              {t("nearby.addMapboxToken")}
             </span>
           </Column>
         )}
@@ -268,7 +270,7 @@ export const NearbyNowCard: React.FC = () => {
             letterSpacing: tokens.type.tracking.normal,
           }}
         >
-          Open map view
+          {t("nearby.openMapView")}
         </span>
         <ArrowUpRight size={14} color={tokens.color.warm} strokeWidth={2.4} />
       </button>

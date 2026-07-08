@@ -10,7 +10,11 @@ import { BrainCircuit } from "lucide-react";
 import { useUserVector } from "@/context/UserVectorContext";
 import ClientOnly from "./common/ClientOnly";
 import { motion, AnimatePresence } from "framer-motion";
-import { accent } from "@/app/(app)/tour-builder/tokens";
+import { tokens } from "@/styles/tokens";
+
+// Local alias kept so existing `accent.primary` call-sites read unchanged,
+// now sourced from the theme-aware global token system.
+const accent = { primary: tokens.color.warm };
 
 interface FloatingInsightProps {
   cardsLeft?: number;

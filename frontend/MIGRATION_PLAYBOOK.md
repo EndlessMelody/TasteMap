@@ -13,7 +13,7 @@ modules**, organized by page, working in **both light and dark**.
 
 | Phase | State |
 |---|---|
-| 0 Branch + baseline | ✅ baseline 52 tsc errors; `next build` already failed pre-migration → gate on **tsc-delta + dev boot**, not a clean build |
+| 0 Branch + baseline | ✅ baseline 52 tsc errors; `next build` failed pre-migration → gated on **tsc-delta + dev boot** throughout. As of Phase 6, `next build` succeeds cleanly (0 tsc errors, all 22 routes generate). |
 | 1 Once UI foundation (`@once-ui-system/core`, `sass`, `classnames`, `Providers.tsx`, CSS + `data-*`) | ✅ committed |
 | 2 `styles/theme.scss` brand → `#ff6b35` | ✅ committed |
 | 3a Dedup dead modal + 4 unused legacy cards | ✅ committed |

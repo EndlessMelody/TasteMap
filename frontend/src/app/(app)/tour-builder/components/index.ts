@@ -1,12 +1,14 @@
 /**
- * Tour Builder Components
- * Barrel export for all Tour Builder-specific UI primitives.
+ * Tour Builder — component barrel.
+ * Phase views + journey primitives, all built on @/styles/tokens + @/components/ui.
  */
-
-export { StopCard } from "./StopCard";
-export { RouteChip } from "./RouteChip";
-export { BudgetBadge } from "./BudgetBadge";
-export { StatusBadge } from "./StatusBadge";
-export { TimelineNode, TimelineConnector } from "./TimelineNode";
-export { StatPill } from "./StatPill";
-export { TourSkeleton, EmptyState } from "./TourSkeleton";
+export { CurationCanvas } from "./CurationCanvas";
+export { SwipeAssistDrawer } from "./SwipeAssistDrawer";
+export { OptimizingScene } from "./OptimizingScene";
+export { JourneyView } from "./JourneyView";
+export { JourneyStopCard } from "./JourneyStopCard";
+export { JourneyStats } from "./JourneyStats";
+export { RouteLine } from "./RouteLine";
+export { SavedPlaceCard } from "./SavedPlaceCard";
+export { DraftStopRow } from "./DraftStopRow";
+export { AssistSwipeCard } from "./AssistSwipeCard";

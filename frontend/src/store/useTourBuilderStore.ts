@@ -8,6 +8,16 @@ export interface OptimizedStop {
   stop_order: number;
   location_id: number;
   estimated_travel_min: number;
+  /** Taste match 0–100 from the vector-aware optimiser */
+  match_score?: number | null;
+  /** Estimated minutes spent at the stop */
+  dwell_min?: number | null;
+}
+
+export interface OptimizeContext {
+  time_slot: string;
+  weather: string;
+  weather_coefficient: number;
 }
 
 export interface OptimizeResult {
@@ -15,6 +25,7 @@ export interface OptimizeResult {
   total_distance_km: number;
   total_duration_min: number;
   estimated_cost_vnd: number;
+  context?: OptimizeContext;
 }
 
 export interface TourNode {
@@ -36,6 +47,11 @@ export interface TourNode {
   order_index: number;
   rating?: number;
   reviews_preview?: string[];
+  /** Where the node entered the draft (saved vault vs swipe assist) */
+  source?: "saved" | "assist";
+  /** Populated after optimise for the journey view */
+  match_score?: number | null;
+  dwell_min?: number | null;
 }
 
 export interface TourMetadata {
