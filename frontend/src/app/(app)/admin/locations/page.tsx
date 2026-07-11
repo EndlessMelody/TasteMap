@@ -10,7 +10,6 @@ import {
   Button,
   IconButton,
 } from "@once-ui-system/core";
-import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import {
   MapPin,
@@ -24,7 +23,7 @@ import {
   UploadCloud,
   Download,
 } from "lucide-react";
-import { getApiBase } from "@/lib/api";
+import { apiPost, ApiError } from "@/lib/api";
 
 // ═══════════════════════════════════════════════════════════════════════
 //  15-DIM VECTOR DEFINITIONS — Mô tả chi tiết từng chiều
@@ -1026,7 +1025,6 @@ export default function AdminLocationsPage() {
       return toast.error("Lat/Lng phải là số");
 
     setSaving(true);
-    const API = getApiBase();
 
     try {
       const body: Record<string, unknown> = {
@@ -1056,18 +1054,10 @@ export default function AdminLocationsPage() {
         }
       }
 
-      const res = await fetch(`${API}/api/v1/locations/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || `Lỗi ${res.status}`);
-      }
-
-      const data = await res.json();
+      const data = await apiPost<{ id: number; name: string }>(
+        "/api/v1/locations/",
+        body,
+      );
       toast.success(`✅ Đã lưu "${data.name}" (ID: ${data.id})`);
       setRecentLocations((prev) =>
         [{ id: data.id, name: data.name }, ...prev].slice(0, 8),
@@ -1075,15 +1065,16 @@ export default function AdminLocationsPage() {
       resetForm();
     } catch (err: unknown) {
       toast.error(
-        `❌ ${err instanceof Error ? err.message : "Lỗi không xác định"}`,
+        `❌ ${err instanceof ApiError ? err.message : err instanceof Error ? err.message : "Lỗi không xác định"}`,
       );
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDownloadTemplate = () => {
+  const handleDownloadTemplate = async () => {
     try {
+      const XLSX = await import("xlsx");
       const wsTemplate = XLSX.utils.json_to_sheet([
         {
           name: "Quán Ăn Mẫu",
@@ -1185,6 +1176,7 @@ export default function AdminLocationsPage() {
 
     setImporting(true);
     try {
+      const XLSX = await import("xlsx");
       const data = await file.arrayBuffer();
       const wb = XLSX.read(data);
       const ws = wb.Sheets[wb.SheetNames[0]];
@@ -1206,7 +1198,6 @@ export default function AdminLocationsPage() {
 
       let successCount = 0;
       let errorCount = 0;
-      const API = getApiBase();
 
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
@@ -1253,13 +1244,7 @@ export default function AdminLocationsPage() {
             }
           }
 
-          const res = await fetch(`${API}/api/v1/locations/`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-          });
-
-          if (!res.ok) throw new Error("API error");
+          await apiPost("/api/v1/locations/", body);
 
           successCount++;
         } catch (err: any) {

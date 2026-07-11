@@ -35,6 +35,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "bjuikfhjrpmrpbvhduey.supabase.co" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
     ],
+    // Cache optimized variants for 31 days so repeat views of the same
+    // Supabase/Unsplash image don't re-burn the Vercel image-optimization quota.
+    minimumCacheTTL: 2678400,
   },
   allowedDevOrigins: ['localhost:3000', ...getNetworkIPs()],
 

@@ -198,7 +198,10 @@ Create a `.env` file inside the `backend/` directory:
 
 ```env
 PORT=8000
-DATABASE_URL=postgresql+asyncpg://postgres:[password]@[host]:5432/postgres
+# Transaction pooler (port 6543) — app runtime
+DATABASE_URL=postgresql+asyncpg://postgres:[password]@[host]:6543/postgres?prepared_statement_cache_size=0
+# Direct/session connection (port 5432) — Alembic migrations only
+DATABASE_URL_DIRECT=postgresql+asyncpg://postgres:[password]@[host]:5432/postgres
 REDIS_URL=redis://localhost:6379
 SECRET_KEY=your-secret-key
 GROQ_API_KEY=gsk_your_key_here
@@ -209,6 +212,8 @@ SUPABASE_JWT_SECRET=your-jwt-secret
 ```
 
 </details>
+
+> For production deployment (Vercel + Render + Supabase), see [`docs/deployment.md`](./docs/deployment.md) — it covers the two-connection-string Supabase setup, Render blueprint env vars, and go-live checklist.
 
 ### 4. Frontend Setup
 
@@ -254,8 +259,12 @@ DEBUG=true
 # ─────────────────────────────────────────
 # Database (Supabase / PostgreSQL + pgvector)
 # ─────────────────────────────────────────
-DATABASE_URL=postgresql+asyncpg://postgres:[password]@[host]:5432/postgres
-DATABASE_POOL_SIZE=20
+# Transaction pooler (port 6543) — app runtime
+DATABASE_URL=postgresql+asyncpg://postgres:[password]@[host]:6543/postgres?prepared_statement_cache_size=0
+# Direct/session connection (port 5432) — Alembic migrations only
+DATABASE_URL_DIRECT=postgresql+asyncpg://postgres:[password]@[host]:5432/postgres
+DB_POOL_SIZE=5
+DB_MAX_OVERFLOW=5
 
 # ─────────────────────────────────────────
 # Redis (Caching & Rate Limiting)

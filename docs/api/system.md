@@ -72,3 +72,46 @@ Upload ảnh/video lên server (hoặc S3/Cloudinary/R2). Frontend dùng link tr
 ```
 
 ---
+
+## 19. Health & Readiness
+
+> Module: `src/main.py` — Root-level infra endpoints (không nằm dưới `/api/v1`), dùng cho load balancer / Render health check. Không có bảng DB tương ứng (N/A trong Traceability Matrix).
+
+### `GET /health` 🆕
+
+Liveness probe — luôn trả `200` nếu process còn sống, không kiểm tra dependency nào.
+
+**Response:**
+```json
+{ "status": "ok" }
+```
+
+---
+
+### `GET /health/ready` 🆕
+
+Readiness probe — kiểm tra thực sự kết nối được tới Database (`SELECT 1`) và Redis (`PING`). Dùng làm `healthCheckPath` cho Render (`render.yaml`), thay vì `/health`, để tránh trường hợp deploy "healthy" trong khi DB/Redis đã chết.
+
+**Response (200 — sẵn sàng):**
+```json
+{
+  "status": "ready",
+  "checks": {
+    "database": "ok",
+    "redis": "ok"
+  }
+}
+```
+
+**Response (503 — chưa sẵn sàng):**
+```json
+{
+  "status": "not_ready",
+  "checks": {
+    "database": "ok",
+    "redis": "error: <exception message>"
+  }
+}
+```
+
+---

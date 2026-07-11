@@ -1,0 +1,5 @@
+# Extra dependencies for local seed/ETL scripts only (backend/scripts/*.py).
+# Not required by the app runtime — install on top of backend/requirements.txt
+# when running crawl_hcmc_locations.py / import_to_postgres.py locally.
+pandas==3.0.2
+psycopg2-binary==2.9.11

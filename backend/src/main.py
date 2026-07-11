@@ -33,19 +33,75 @@ class MockRedisPipeline:
         return results
 
 class InMemoryRedis:
-    """Fallback khi Redis chưa bật — giả lập get/set và Sorted Sets (ZSET) bằng dict."""
+    """Fallback khi Redis chưa bật (dev only) — giả lập get/set, TTL, và Sorted Sets (ZSET) bằng dict."""
     def __init__(self):
         self._store = {}
+        self._expiry = {}
         self._zsets = {}
 
+    def _evict_if_expired(self, key):
+        import time
+        exp = self._expiry.get(key)
+        if exp is not None and time.monotonic() >= exp:
+            self._store.pop(key, None)
+            self._expiry.pop(key, None)
+
     async def get(self, key):
+        self._evict_if_expired(key)
         return self._store.get(key)
 
-    async def set(self, key, value):
+    async def set(self, key, value, nx: bool = False, ex: int | None = None):
+        self._evict_if_expired(key)
+        if nx and key in self._store:
+            return None
         self._store[key] = value
+        if ex is not None:
+            import time
+            self._expiry[key] = time.monotonic() + ex
+        else:
+            self._expiry.pop(key, None)
+        return True
+
+    async def setex(self, key, seconds, value):
+        import time
+        self._store[key] = value
+        self._expiry[key] = time.monotonic() + seconds
+
+    async def incr(self, key):
+        self._evict_if_expired(key)
+        value = int(self._store.get(key, 0)) + 1
+        self._store[key] = str(value)
+        return value
+
+    async def incrby(self, key, amount):
+        self._evict_if_expired(key)
+        value = int(self._store.get(key, 0)) + int(amount)
+        self._store[key] = str(value)
+        return value
+
+    async def expire(self, key, seconds):
+        import time
+        if key in self._store:
+            self._expiry[key] = time.monotonic() + seconds
+        return True
+
+    async def delete(self, *keys):
+        count = 0
+        for k in keys:
+            self._expiry.pop(k, None)
+            if k in self._store:
+                del self._store[k]
+                count += 1
+        return count
+
+    async def exists(self, key):
+        self._evict_if_expired(key)
+        return 1 if key in self._store else 0
 
     async def scan(self, cursor=0, match="*", count=100):
         import fnmatch
+        for k in list(self._store.keys()):
+            self._evict_if_expired(k)
         keys = [k for k in self._store.keys() if fnmatch.fnmatch(k, match)]
         return 0, keys
 
@@ -98,19 +154,29 @@ class InMemoryRedis:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Thử kết nối Redis, nếu không được thì dùng InMemoryRedis
+    # Thử kết nối Redis, nếu không được thì dùng InMemoryRedis (chỉ ở dev).
+    # Ở production, Redis là bắt buộc (OTP TTL, rate limiting, cache) — nếu
+    # không kết nối được, ứng dụng phải dừng khởi động thay vì chạy sai lệch âm thầm.
     try:
         r = redis.from_url(settings.REDIS_URL, decode_responses=True)
         await r.ping()
         app.state.redis = r
         print("[OK] Redis connected successfully!")
-    except Exception:
+    except Exception as exc:
+        if settings.is_production:
+            raise RuntimeError(
+                f"Redis unreachable at startup (REDIS_URL) -- refusing to start in production: {exc}"
+            ) from exc
         app.state.redis = InMemoryRedis()
-        print("[WARN] Redis unavailable -- using InMemoryRedis fallback.")
+        print("[WARN] Redis unavailable -- using InMemoryRedis fallback (dev only).")
 
     # Khởi động cronjob dọn dẹp interaction (3:00 AM hàng ngày)
     from src.tasks.interaction_cleanup import schedule_cleanup
     schedule_cleanup(app)
+
+    # Khởi động cronjob gia hạn subscription (3:30 AM hàng ngày)
+    from src.tasks.subscription_renewal import schedule_subscription_renewal
+    schedule_subscription_renewal(app)
     
     # Initialize redis client for global access
     init_redis(app)
@@ -121,29 +187,47 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    openapi_url=None if settings.is_production else f"{settings.API_V1_STR}/openapi.json",
+    docs_url=None if settings.is_production else "/docs",
+    redoc_url=None if settings.is_production else "/redoc",
     description="API hành vi dựa trên vector cho hệ thống backend.",
     version="1.0.0",
     lifespan=lifespan
 )
 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
-ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-    "https://tastemap-fork-v1.vercel.app",
-]
+ALLOWED_ORIGINS = settings.allowed_origins_list
+
+import re as _re
+_ALLOWED_ORIGIN_PATTERN = _re.compile(settings.ALLOWED_ORIGIN_REGEX) if settings.ALLOWED_ORIGIN_REGEX else None
+
+
+def _is_origin_allowed(origin: str) -> bool:
+    if not origin:
+        return False
+    if _is_origin_allowed(origin):
+        return True
+    return bool(_ALLOWED_ORIGIN_PATTERN and _ALLOWED_ORIGIN_PATTERN.fullmatch(origin))
 
 from src.core.audit import AuditLoggingMiddleware
 from src.core.exceptions import TasteMapException
+from src.core.rate_limit import limiter
 
+app.state.limiter = limiter
+
+from slowapi.middleware import SlowAPIMiddleware
+
+app.add_middleware(GZipMiddleware, minimum_size=1024)
 app.add_middleware(AuditLoggingMiddleware)
+app.add_middleware(SlowAPIMiddleware)
+# CORS must be the outermost of these so preflight OPTIONS requests short-circuit
+# here rather than being consumed by the rate limiter or reaching the route.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=settings.ALLOWED_ORIGIN_REGEX or None,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
@@ -167,6 +251,29 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 # ── Centralized Exception Handlers ──────────────────────────────────────────
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
+
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
+    """Standardized 429 response, consistent with other centralized handlers."""
+    trace_id = getattr(request.state, "trace_id", "unknown")
+    origin = request.headers.get("origin", "")
+    headers = {"X-Request-ID": trace_id, "Retry-After": str(getattr(exc, "retry_after", 60))}
+    if _is_origin_allowed(origin):
+        headers["access-control-allow-origin"] = origin
+        headers["access-control-allow-credentials"] = "true"
+    return JSONResponse(
+        status_code=429,
+        content={
+            "success": False,
+            "error": "Too many requests. Please try again later.",
+            "error_code": "RATE_LIMITED",
+            "trace_id": trace_id,
+        },
+        headers=headers,
+    )
+
 
 @app.exception_handler(TasteMapException)
 async def tastemap_exception_handler(request: Request, exc: TasteMapException):
@@ -176,7 +283,7 @@ async def tastemap_exception_handler(request: Request, exc: TasteMapException):
     
     origin = request.headers.get("origin", "")
     headers = dict(exc.headers or {})
-    if origin in ALLOWED_ORIGINS:
+    if _is_origin_allowed(origin):
         headers["access-control-allow-origin"] = origin
         headers["access-control-allow-credentials"] = "true"
     headers["X-Request-ID"] = trace_id
@@ -200,7 +307,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     logger.exception("Unhandled error on %s %s (TraceID=%s)", request.method, request.url.path, trace_id)
     origin = request.headers.get("origin", "")
     headers = {"X-Request-ID": trace_id}
-    if origin in ALLOWED_ORIGINS:
+    if _is_origin_allowed(origin):
         headers["access-control-allow-origin"] = origin
         headers["access-control-allow-credentials"] = "true"
     return JSONResponse(
@@ -216,5 +323,37 @@ os.makedirs("static/uploads", exist_ok=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/health")
-async def health_check():
+@limiter.exempt
+async def health_check(request: Request):
     return {"status": "ok"}
+
+
+@app.get("/health/ready")
+@limiter.exempt
+async def readiness_check(request: Request):
+    """Deep readiness probe used by Render — verifies DB and Redis are reachable."""
+    from sqlalchemy import text
+    from src.db.database import engine
+
+    checks: dict[str, str] = {}
+
+    try:
+        async with engine.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+        checks["database"] = "ok"
+    except Exception as exc:
+        checks["database"] = f"error: {exc}"
+
+    try:
+        ping = getattr(request.app.state.redis, "ping", None)
+        if ping is not None:
+            await ping()
+        checks["redis"] = "ok"
+    except Exception as exc:
+        checks["redis"] = f"error: {exc}"
+
+    is_ready = all(v == "ok" for v in checks.values())
+    return JSONResponse(
+        status_code=200 if is_ready else 503,
+        content={"status": "ready" if is_ready else "not_ready", "checks": checks},
+    )
