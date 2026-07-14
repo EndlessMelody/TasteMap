@@ -30,12 +30,13 @@ import {
 import { tokens } from "@/styles/tokens";
 
 type View = "login" | "signup";
-type SignupStep = "info" | "password";
+type SignupStep = "info" | "password" | "otp";
 
 const HEADER_KEYS: Record<string, { titleKey: string; subtitleKey: string }> = {
   login: { titleKey: "auth.welcomeBack", subtitleKey: "auth.signInSubtitle" },
   info: { titleKey: "auth.createAccount", subtitleKey: "auth.createSubtitle" },
   password: { titleKey: "auth.setPassword", subtitleKey: "auth.setPasswordSubtitle" },
+  otp: { titleKey: "auth.verifyEmail", subtitleKey: "auth.verifyEmailSubtitle" },
 };
 
 function GoogleIcon() {
@@ -145,6 +146,7 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [otpCode, setOtpCode] = useState("");
 
   const [showPwd, setShowPwd] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -165,12 +167,16 @@ export function LoginForm() {
     setSignupStep("info");
     setPassword("");
     setConfirmPassword("");
+    setOtpCode("");
     clearErrors();
   };
 
   const handleBack = () => {
     clearErrors();
-    if (signupStep === "password") {
+    if (signupStep === "otp") {
+      setSignupStep("password");
+      setOtpCode("");
+    } else if (signupStep === "password") {
       setSignupStep("info");
       setPassword("");
       setConfirmPassword("");
@@ -265,14 +271,20 @@ export function LoginForm() {
     }
     setLoading(true);
     try {
-      const { error: err } = await supabase.auth.signUp({
+      const { data, error: err } = await supabase.auth.signUp({
         email,
         password,
         options: { data: { username } },
       });
       if (err) throw err;
-      toast.success(t("auth.accountCreated"));
-      router.push("/discover");
+
+      if (data.session) {
+        toast.success(t("auth.accountCreated"));
+        router.push("/discover");
+      } else {
+        toast.success(t("auth.otpSent"));
+        setSignupStep("otp");
+      }
     } catch (err) {
       let msg = err instanceof Error ? err.message : t("auth.errCreateFailed");
       if (
@@ -281,6 +293,53 @@ export function LoginForm() {
       ) {
         msg = t("auth.errEmailExistsSignin");
       }
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearErrors();
+    if (!otpCode.trim()) {
+      setError("Please enter the 6-digit verification code.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error: verifyErr } = await supabase.auth.verifyOtp({
+        email,
+        token: otpCode.trim(),
+        type: "signup",
+      });
+      if (verifyErr) throw verifyErr;
+      toast.success("Account verified successfully!");
+      router.push("/discover");
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Invalid verification code";
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    clearErrors();
+    setLoading(true);
+    try {
+      const { error: resendErr } = await supabase.auth.resend({
+        type: "signup",
+        email,
+      });
+      if (resendErr) throw resendErr;
+      toast.success("Verification code resent to your email!");
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Failed to resend code";
       setError(msg);
       toast.error(msg);
     } finally {
@@ -304,7 +363,7 @@ export function LoginForm() {
   const title = t(titleKey);
   const subtitle = t(subtitleKey);
   const backLabel =
-    view === "signup" && signupStep === "password"
+    view === "signup" && (signupStep === "password" || signupStep === "otp")
       ? t("auth.back")
       : view === "signup"
       ? t("auth.backToSignIn")
@@ -342,8 +401,8 @@ export function LoginForm() {
       {/* Progress (signup only) */}
       {view === "signup" && (
         <Row style={{ gap: tokens.space[2] }}>
-          {(["info", "password"] as SignupStep[]).map((step) => {
-            const order = ["info", "password"];
+          {(["info", "password", "otp"] as SignupStep[]).map((step) => {
+            const order = ["info", "password", "otp"];
             const active = step === signupStep;
             const done = order.indexOf(step) < order.indexOf(signupStep);
             return (
@@ -587,6 +646,59 @@ export function LoginForm() {
           >
             {loading ? t("auth.creatingAccount") : t("auth.createAccountBtn")}
           </Button>
+        </form>
+      )}
+
+      {/* SIGNUP step 3: otp */}
+      {view === "signup" && signupStep === "otp" && (
+        <form
+          onSubmit={handleVerifyOtp}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: tokens.space[4],
+          }}
+        >
+          <Field
+            label="Verification Code"
+            type="text"
+            placeholder="Enter 6-digit code (e.g. 123456)"
+            value={otpCode}
+            onChange={(e) => setOtpCode(e.target.value)}
+            autoFocus
+            leading={<Mail size={16} strokeWidth={1.75} />}
+          />
+          <BodySm tone="muted" style={{ lineHeight: 1.5 }}>
+            We sent a 6-digit code to <strong style={{ color: tokens.color.text }}>{email}</strong>. Check your inbox and spam folder.
+          </BodySm>
+          {error && <BodySm style={{ color: tokens.color.danger }}>{error}</BodySm>}
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={loading}
+            rightIcon={!loading && <Check size={16} strokeWidth={2} />}
+          >
+            {loading ? "Verifying…" : "Verify & Complete"}
+          </Button>
+          <Row horizontal="center" style={{ marginTop: 4 }}>
+            <button
+              type="button"
+              onClick={handleResendOtp}
+              disabled={loading}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: tokens.type.size.bodySm,
+                fontWeight: tokens.type.weight.semibold,
+                color: tokens.color.warm,
+              }}
+            >
+              Didn&apos;t get the code? Resend
+            </button>
+          </Row>
         </form>
       )}
 

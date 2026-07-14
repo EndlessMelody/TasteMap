@@ -43,9 +43,11 @@ const nextConfig: NextConfig = {
 
   async rewrites() {
     // In production the frontend talks to the backend via its absolute URL
-    // (NEXT_PUBLIC_API_URL), so no proxy rewrite is needed — and a hardcoded
-    // localhost rewrite would break the Vercel deployment.
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+    // (NEXT_PUBLIC_API_URL / BACKEND_URL), so no proxy rewrite is needed — and a
+    // hardcoded localhost rewrite would break the Vercel deployment.
+    const apiUrl = (
+      process.env.NEXT_PUBLIC_API_URL || process.env.BACKEND_URL
+    )?.replace(/\/$/, "");
 
     if (apiUrl) {
       return [
