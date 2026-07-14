@@ -27,11 +27,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useUserVector } from "@/context/UserVectorContext";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
 import { useFoodies } from "@/hooks/useFoodies";
 import { useRouter } from "next/navigation";
 import { apiGet } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
+import { tokens } from "@/styles/tokens";
 
 /* ─── Types ─── */
 interface TrendingSpot {
@@ -126,8 +127,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         overflowX: "hidden",
         overflowY: "auto",
         transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)",
-        borderLeft: "1px solid rgba(0,0,0,0.06)",
-        backgroundColor: "#FFF4EE",
+        borderLeft: `1px solid ${tokens.color.border}`,
+        backgroundColor: tokens.color.surfaceWarm,
         padding: isExpanded ? "20px 16px" : "20px 8px",
         gap: "20px",
       }}
@@ -150,9 +151,9 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   width: 6,
                   height: 6,
                   borderRadius: "50%",
-                  backgroundColor: isPulsing ? "#34C759" : "#ff6b35",
+                  backgroundColor: isPulsing ? tokens.color.success : tokens.color.warm,
                   boxShadow: isPulsing
-                    ? "0 0 8px rgba(52,199,89,0.5)"
+                    ? `0 0 8px ${tokens.color.success}80`
                     : "none",
                   transition: "all 0.3s",
                 }}
@@ -161,7 +162,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 style={{
                   fontSize: "0.7rem",
                   fontWeight: 700,
-                  color: "rgba(0,0,0,0.3)",
+                  color: tokens.color.textSubtle,
                   textTransform: "uppercase",
                   letterSpacing: "1.5px",
                 }}
@@ -170,7 +171,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               </Text>
             </Row>
           ) : (
-            <Sparkles size={18} color="#ff6b35" />
+            <Sparkles size={18} color={tokens.color.warm} />
           )}
         </Row>
 
@@ -191,7 +192,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 outerRadius="72%"
               >
                 <PolarGrid
-                  stroke="rgba(0,0,0,0.06)"
+                  stroke={tokens.color.border}
                   strokeDasharray="3 3"
                 />
                 <PolarAngleAxis
@@ -199,13 +200,13 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   tick={{
                     fontSize: 10,
                     fontWeight: 600,
-                    fill: "rgba(0,0,0,0.4)",
+                    fill: tokens.color.textMuted,
                   }}
                 />
                 <Radar
                   dataKey="A"
-                  stroke="#ff6b35"
-                  fill="rgba(255, 107, 53, 0.15)"
+                  stroke={tokens.color.warm}
+                  fill={`${tokens.color.warm}26`}
                   strokeWidth={2}
                   dot
                 />
@@ -220,13 +221,13 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 outerRadius="80%"
               >
                 <PolarGrid
-                  stroke="rgba(0,0,0,0.06)"
+                  stroke={tokens.color.border}
                   strokeDasharray="3 3"
                 />
                 <Radar
                   dataKey="A"
-                  stroke="#ff6b35"
-                  fill="rgba(255, 107, 53, 0.15)"
+                  stroke={tokens.color.warm}
+                  fill={`${tokens.color.warm}26`}
                   strokeWidth={2}
                 />
               </RadarChart>
@@ -245,20 +246,20 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               gap: 8,
               padding: "8px 12px",
               borderRadius: 12,
-              backgroundColor: "rgba(255, 107, 53, 0.06)",
-              border: "1px solid rgba(255, 107, 53, 0.12)",
+              backgroundColor: `${tokens.color.warm}0F`,
+              border: `1px solid ${tokens.color.warm}1F`,
             }}
           >
-            <TrendingUp size={14} color="#ff6b35" />
+            <TrendingUp size={14} color={tokens.color.warm} />
             <Text
               style={{
                 fontSize: "0.78rem",
                 fontWeight: 600,
-                color: "#1C1C1E",
+                color: tokens.color.text,
               }}
             >
               {t("rightbar.topTaste")}{" "}
-              <span style={{ color: "#ff6b35", fontWeight: 700 }}>
+              <span style={{ color: tokens.color.warm, fontWeight: 700 }}>
                 {topTrait.subject}
               </span>
             </Text>
@@ -266,7 +267,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               style={{
                 fontSize: "0.7rem",
                 fontWeight: 700,
-                color: "rgba(0,0,0,0.3)",
+                color: tokens.color.textSubtle,
                 marginLeft: "auto",
               }}
             >
@@ -279,7 +280,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       <Column
         style={{
           height: 1,
-          backgroundColor: "rgba(0,0,0,0.06)",
+          backgroundColor: tokens.color.border,
           flexShrink: 0,
         }}
       />
@@ -303,15 +304,15 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                     width: 6,
                     height: 6,
                     borderRadius: "50%",
-                    backgroundColor: "#34C759",
-                    boxShadow: "0 0 6px rgba(52,199,89,0.4)",
+                    backgroundColor: tokens.color.success,
+                    boxShadow: `0 0 6px ${tokens.color.success}66`,
                   }}
                 />
                 <Text
                   style={{
                     fontSize: "0.7rem",
                     fontWeight: 700,
-                    color: "rgba(0,0,0,0.3)",
+                    color: tokens.color.textSubtle,
                     textTransform: "uppercase",
                     letterSpacing: "1.5px",
                   }}
@@ -322,10 +323,10 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   style={{
                     padding: "1px 7px",
                     borderRadius: 20,
-                    backgroundColor: "rgba(52,199,89,0.1)",
+                    backgroundColor: `${tokens.color.success}1A`,
                     fontSize: "0.65rem",
                     fontWeight: 700,
-                    color: "#16A34A",
+                    color: tokens.color.success,
                   }}
                 >
                   {displayFriends.length}
@@ -340,7 +341,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   display: "flex",
                   alignItems: "center",
                   gap: 2,
-                  color: "rgba(0,0,0,0.3)",
+                  color: tokens.color.textSubtle,
                   fontSize: "0.7rem",
                   fontWeight: 600,
                   padding: "4px 6px",
@@ -354,7 +355,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
             </>
           ) : (
             <Column style={{ position: "relative" }}>
-              <Users size={18} color="rgba(0,0,0,0.4)" />
+              <Users size={18} color={tokens.color.textSubtle} />
               <Column
                 style={{
                   position: "absolute",
@@ -363,8 +364,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   width: 8,
                   height: 8,
                   borderRadius: "50%",
-                  backgroundColor: "#34C759",
-                  border: "2px solid white",
+                  backgroundColor: tokens.color.success,
+                  border: `2px solid ${tokens.color.surface}`,
                 }}
               />
             </Column>
@@ -387,7 +388,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 border: "none",
                 backgroundColor:
                   hoveredFriend === friend.id
-                    ? "rgba(0,0,0,0.03)"
+                    ? tokens.color.border
                     : "transparent",
                 cursor: "pointer",
                 transition: "background 0.15s",
@@ -410,8 +411,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                       width: 8,
                       height: 8,
                       borderRadius: "50%",
-                      backgroundColor: "#34C759",
-                      border: "2px solid white",
+                      backgroundColor: tokens.color.success,
+                      border: `2px solid ${tokens.color.surface}`,
                     }}
                   />
                 )}
@@ -430,7 +431,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                     style={{
                       fontSize: "0.82rem",
                       fontWeight: 600,
-                      color: "#1C1C1E",
+                      color: tokens.color.text,
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -443,7 +444,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   <Text
                     style={{
                       fontSize: "0.7rem",
-                      color: "rgba(0,0,0,0.4)",
+                      color: tokens.color.textMuted,
                       whiteSpace: "nowrap",
                       overflow: "hidden",
                       textOverflow: "ellipsis",
@@ -463,7 +464,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
       <Column
         style={{
           height: 1,
-          backgroundColor: "rgba(0,0,0,0.06)",
+          backgroundColor: tokens.color.border,
           flexShrink: 0,
         }}
       />
@@ -481,12 +482,12 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         >
           {isExpanded ? (
             <Row style={{ alignItems: "center", gap: 8 }}>
-              <Flame size={14} color="#EF4444" />
+              <Flame size={14} color={tokens.color.danger} />
               <Text
                 style={{
                   fontSize: "0.7rem",
                   fontWeight: 700,
-                  color: "rgba(0,0,0,0.3)",
+                  color: tokens.color.textSubtle,
                   textTransform: "uppercase",
                   letterSpacing: "1.5px",
                 }}
@@ -495,7 +496,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               </Text>
             </Row>
           ) : (
-            <Flame size={18} color="#EF4444" />
+            <Flame size={18} color={tokens.color.danger} />
           )}
         </Row>
 
@@ -510,8 +511,8 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                   gap: isExpanded ? 10 : 0,
                   padding: isExpanded ? "10px 12px" : "8px 0",
                   borderRadius: 12,
-                  border: "1px solid rgba(0,0,0,0.05)",
-                  backgroundColor: "rgba(0,0,0,0.015)",
+                  border: `1px solid ${tokens.color.border}`,
+                  backgroundColor: tokens.color.surfaceMuted,
                   cursor: "pointer",
                   transition: "all 0.15s",
                   width: "100%",
@@ -525,12 +526,11 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                     width: isExpanded ? 36 : 32,
                     height: isExpanded ? 36 : 32,
                     borderRadius: 10,
-                    background:
-                      "linear-gradient(135deg, rgba(255,107,53,0.1), rgba(255,140,90,0.08))",
+                    background: `linear-gradient(135deg, ${tokens.color.warm}1A, ${tokens.color.warmBright}14)`,
                     flexShrink: 0,
                   }}
                 >
-                  <Utensils size={isExpanded ? 16 : 14} color="#ff6b35" />
+                  <Utensils size={isExpanded ? 16 : 14} color={tokens.color.warm} />
                 </Row>
 
                 {isExpanded && (
@@ -547,7 +547,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                         style={{
                           fontSize: "0.82rem",
                           fontWeight: 700,
-                          color: "#1C1C1E",
+                          color: tokens.color.text,
                           whiteSpace: "nowrap",
                           textAlign: "left",
                         }}
@@ -558,12 +558,12 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                         <Row style={{ alignItems: "center", gap: 3 }}>
                           <MapPin
                             size={10}
-                            color="rgba(0,0,0,0.3)"
+                            color={tokens.color.textSubtle}
                           />
                           <Text
                             style={{
                               fontSize: "0.68rem",
-                              color: "rgba(0,0,0,0.4)",
+                              color: tokens.color.textMuted,
                               fontWeight: 500,
                             }}
                           >
@@ -573,13 +573,13 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                         <Row style={{ alignItems: "center", gap: 3 }}>
                           <Star
                             size={10}
-                            color="#FBBF24"
-                            fill="#FBBF24"
+                            color={tokens.color.warning}
+                            fill={tokens.color.warning}
                           />
                           <Text
                             style={{
                               fontSize: "0.68rem",
-                              color: "rgba(0,0,0,0.5)",
+                              color: tokens.color.textMuted,
                               fontWeight: 600,
                             }}
                           >
@@ -593,11 +593,11 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                       style={{
                         padding: "3px 8px",
                         borderRadius: 8,
-                        backgroundColor: "rgba(22,163,74,0.08)",
-                        border: "1px solid rgba(22,163,74,0.15)",
+                        backgroundColor: `${tokens.color.success}14`,
+                        border: `1px solid ${tokens.color.success}26`,
                         fontSize: "0.65rem",
                         fontWeight: 700,
-                        color: "#16A34A",
+                        color: tokens.color.success,
                         flexShrink: 0,
                       }}
                     >
@@ -629,17 +629,17 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           }}
         >
           <StatCard
-            icon={<Heart size={14} color="#EF4444" />}
+            icon={<Heart size={14} color={tokens.color.danger} />}
             label={t("rightbar.saved")}
             value={String(user?.stats?.followers || 24)}
           />
           <StatCard
-            icon={<Zap size={14} color="#FBBF24" />}
+            icon={<Zap size={14} color={tokens.color.warning} />}
             label={t("rightbar.reviews")}
             value={String(user?.stats?.reviews || 0)}
           />
           <StatCard
-            icon={<MapPin size={14} color="#ff6b35" />}
+            icon={<MapPin size={14} color={tokens.color.warm} />}
             label={t("rightbar.visited")}
             value={String(user?.stats?.visited || 18)}
           />
@@ -667,8 +667,8 @@ function StatCard({
         gap: 4,
         padding: "10px 6px",
         borderRadius: 12,
-        backgroundColor: "rgba(0,0,0,0.02)",
-        border: "1px solid rgba(0,0,0,0.04)",
+        backgroundColor: tokens.color.surfaceMuted,
+        border: `1px solid ${tokens.color.border}`,
       }}
     >
       {icon}
@@ -676,7 +676,7 @@ function StatCard({
         style={{
           fontSize: "1rem",
           fontWeight: 800,
-          color: "#1C1C1E",
+          color: tokens.color.text,
           lineHeight: 1,
         }}
       >
@@ -686,7 +686,7 @@ function StatCard({
         style={{
           fontSize: "0.6rem",
           fontWeight: 600,
-          color: "rgba(0,0,0,0.35)",
+          color: tokens.color.textSubtle,
           textTransform: "uppercase",
           letterSpacing: "0.5px",
         }}

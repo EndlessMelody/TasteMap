@@ -37,11 +37,20 @@ export const palette = {
   // variant), kept literal since several call sites append a hex alpha
   // suffix (e.g. `${tokens.color.warm}30`), which only works on hex strings.
   warm: "#ff6b35",
+  warmBright: "#ff8c5a",
+  surfaceWarm: "#FFF4EE",
+  surfaceInk: "#1C1C1E",
   cool: "#0a84ff",
   magic: "#a855f7",
   success: "#34c759",
   warning: "#fbbf24",
   danger: "#e63946",
+  // Membership tier identity — see DESIGN.md §14.1 for the written justification.
+  // tierFeast reuses the violet endpoint already present in gradients.signature
+  // (not a new hue); tierGold is the one net-new accent, reserved exclusively
+  // for the Omakase tier.
+  tierFeast: "#7b2ff7",
+  tierGold: "#d4a017",
 } as const;
 
 // ─── Gradients (reserved for AI / magic moments — decorative, theme-invariant) ─
@@ -49,6 +58,8 @@ export const gradients = {
   signature: "linear-gradient(135deg, #ff6b35 0%, #e63946 50%, #7b2ff7 100%)",
   signatureSoft:
     "linear-gradient(135deg, rgba(255, 107, 53, 0.12) 0%, rgba(230, 57, 70, 0.1) 50%, rgba(123, 47, 247, 0.12) 100%)",
+  // Omakase tier only — animated gold shimmer (see DecoratedAvatar + MembershipPage).
+  tierGold: "linear-gradient(135deg, #f5c542 0%, #d4a017 45%, #f8edc8 100%)",
 } as const;
 
 // ─── Shadows ─────────────────────────────────────────────────────
@@ -58,6 +69,9 @@ export const shadows = {
   lg: "var(--shadow-elevated)",
   glowMagic: "0 8px 32px -8px rgba(168, 85, 247, 0.35)",
   glowWarm: "0 8px 32px -8px rgba(255, 107, 53, 0.35)",
+  glowGold: "0 8px 32px -8px rgba(212, 160, 23, 0.4)",
+  // Feast tier only — distinct from glowMagic (reserved for AI moments).
+  glowFeast: "0 8px 32px -8px rgba(123, 47, 247, 0.35)",
 } as const;
 
 // ─── Radii (theme-invariant) ──────────────────────────────────────

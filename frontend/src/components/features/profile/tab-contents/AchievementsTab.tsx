@@ -110,27 +110,26 @@ export const AchievementsTab: React.FC<AchievementsTabProps> = ({
           radius="xl"
           padding="lg"
           style={{
-            background: `linear-gradient(135deg, ${tokens.color.surfaceMuted} 0%, rgba(255, 153, 0, 0.08) 100%)`,
+            background: `linear-gradient(135deg, ${tokens.color.surfaceMuted} 0%, ${tokens.color.warning}14 100%)`,
             border: `1px solid ${tokens.color.border}`,
           }}
         >
           <Column style={{ gap: tokens.space[4] }}>
             <Row horizontal="between" vertical="center" style={{ flexWrap: "wrap", gap: tokens.space[3] }}>
               <Row vertical="center" style={{ gap: tokens.space[3] }}>
-                <div
+                <Row
+                  horizontal="center"
+                  vertical="center"
                   style={{
                     width: 44,
                     height: 44,
                     borderRadius: tokens.radius.pill,
-                    background: "rgba(255, 153, 0, 0.15)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#ff9900",
+                    background: `${tokens.color.warning}26`,
+                    color: tokens.color.warning,
                   }}
                 >
                   <Sparkles size={24} />
-                </div>
+                </Row>
                 <Column>
                   <Row vertical="center" style={{ gap: tokens.space[2] }}>
                     <H3>{roadmap.foodie_rank_title}</H3>
@@ -158,7 +157,7 @@ export const AchievementsTab: React.FC<AchievementsTabProps> = ({
               <BodySm style={{ fontWeight: 600, color: tokens.color.text }}>
                 Lộ trình chinh phục tiếp theo (AI Advised):
               </BodySm>
-              <div
+              <Column
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
@@ -169,49 +168,47 @@ export const AchievementsTab: React.FC<AchievementsTabProps> = ({
                   .filter((p) => !p.is_earned)
                   .slice(0, 3)
                   .map((prog) => (
-                    <div
+                    <Column
                       key={prog.badge_id}
                       style={{
                         padding: tokens.space[3],
                         borderRadius: tokens.radius.lg,
                         background: tokens.color.surface,
                         border: `1px solid ${tokens.color.border}`,
-                        display: "flex",
-                        flexDirection: "column",
                         gap: tokens.space[2],
                       }}
                     >
                       <Row horizontal="between" vertical="center">
-                        <span style={{ fontWeight: 600, fontSize: "0.9rem" }}>{prog.name}</span>
+                        <span style={{ fontWeight: 600, fontSize: tokens.type.size.bodySm }}>{prog.name}</span>
                         <Pill tone="neutral" size="sm">
                           {prog.current_value}/{prog.target_value}
                         </Pill>
                       </Row>
                       {/* Progress bar */}
-                      <div
+                      <Column
                         style={{
                           width: "100%",
                           height: 6,
                           background: tokens.color.surfaceMuted,
-                          borderRadius: 3,
+                          borderRadius: tokens.radius.pill,
                           overflow: "hidden",
                         }}
                       >
-                        <div
+                        <Column
                           style={{
                             width: `${prog.progress_percent}%`,
                             height: "100%",
-                            background: prog.progress_percent >= 80 ? "#10b981" : "#3b82f6",
+                            background: prog.progress_percent >= 80 ? tokens.color.success : tokens.color.cool,
                             transition: "width 0.3s ease",
                           }}
                         />
-                      </div>
-                      <BodySm tone="subtle" style={{ fontSize: "0.8rem", fontStyle: "italic" }}>
+                      </Column>
+                      <BodySm tone="subtle" style={{ fontSize: tokens.type.size.caption, fontStyle: "italic" }}>
                         💡 {prog.ai_advice}
                       </BodySm>
-                    </div>
+                    </Column>
                   ))}
-              </div>
+              </Column>
             </Column>
           </Column>
         </Card>

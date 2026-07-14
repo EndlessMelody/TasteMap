@@ -1,5 +1,5 @@
 """Bookmarks Service — save locations + auto XP reward."""
-from src.core.exceptions import ValidationException, ConflictException, ResourceNotFoundException
+from src.core.exceptions import ValidationException, ConflictException, ResourceNotFoundException, QuotaExceededException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func
@@ -8,6 +8,7 @@ from src.locations.models import Location
 from src.users.models import User
 from src.bookmarks.schemas import BookmarkCreate
 from src.challenges.xp_service import award_xp
+from src.membership.entitlements import get_entitlements
 
 XP_PER_BOOKMARK = 10
 
@@ -48,6 +49,14 @@ async def add_bookmark(db: AsyncSession, user_id: int, data: BookmarkCreate) -> 
 
     if existing_q.scalars().first():
         raise ConflictException(detail="Đã bookmark rồi", error_code="ALREADY_BOOKMARKED")
+
+    user_q = await db.execute(select(User.membership_tier).where(User.id == user_id))
+    tier = user_q.scalar_one_or_none() or "bite"
+    max_bookmarks = get_entitlements(tier)["vault_bookmarks_max"]
+    if max_bookmarks is not None:
+        count_q = await db.execute(select(func.count()).select_from(Bookmark).where(Bookmark.user_id == user_id))
+        if (count_q.scalar_one() or 0) >= max_bookmarks:
+            raise QuotaExceededException(feature="vault_bookmarks", tier=tier, limit=max_bookmarks)
 
     # Chỉ thưởng XP cho bookmark địa điểm (Taste Vault)
     earned_xp = XP_PER_BOOKMARK if target_type == "location" else 0
@@ -124,7 +133,8 @@ async def _bookmark_to_dict(db: AsyncSession, bm: Bookmark) -> dict:
         loc = loc_q.scalars().first()
         if loc:
             res["location"] = {
-                "id": loc.id, "name": loc.name, "image_url": loc.image_url, 
+                "id": loc.id, "name": loc.name, "lat": loc.lat, "lng": loc.lng,
+                "image_url": loc.image_url,
                 "rating": loc.rating, "category": loc.category, "price_range": loc.price_range
             }
     

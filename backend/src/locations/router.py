@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, Query, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.database import get_db
 from src.locations import service
@@ -15,9 +15,10 @@ router = APIRouter()
     summary="Danh sách địa điểm",
     description="Paginated, filterable. Dùng category='food'|'place'."
 )
-@cached_response(ttl=300)
+@cached_response(ttl=300, cache_control="public, max-age=300, stale-while-revalidate=60")
 async def list_locations(
     request: Request,
+    response: Response,
     category: Optional[str] = Query(None),
     city: Optional[str] = Query(None),
     search: Optional[str] = Query(None),
@@ -34,8 +35,8 @@ async def list_locations(
     response_model=LocationDetail,
     summary="Chi tiết địa điểm (kèm posts gần đây + deals)"
 )
-@cached_response(ttl=600)
-async def get_location(request: Request, location_id: int, db: AsyncSession = Depends(get_db)):
+@cached_response(ttl=600, cache_control="public, max-age=600, stale-while-revalidate=120")
+async def get_location(request: Request, response: Response, location_id: int, db: AsyncSession = Depends(get_db)):
     return await service.get_location_detail(db, location_id)
 
 
@@ -62,9 +63,10 @@ async def create_location(
     summary="Tìm địa điểm theo tên món ăn",
     description="Tìm các địa điểm có tên món ăn tương tự (hỗ trợ Culture Guide)"
 )
-@cached_response(ttl=600)
+@cached_response(ttl=600, cache_control="public, max-age=600")
 async def get_locations_by_food(
     request: Request,
+    response: Response,
     food_name: str,
     limit: int = Query(10, ge=1, le=50),
     db: AsyncSession = Depends(get_db)

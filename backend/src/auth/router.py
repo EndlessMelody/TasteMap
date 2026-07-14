@@ -6,17 +6,19 @@ POST /register/check: Kiem tra email/username da ton tai chua.
 Dung get_token_payload thay vi get_current_user_id de tranh nghich ly ga-va-trung.
 """
 import uuid
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from src.db.database import get_db
 from src.users.models import User
-from src.users.schemas import UserMe, UserStats
+from src.users.schemas import UserMe, UserStats, FrameStub
 from src.core.exceptions import UnauthorizedException, ConflictException, ValidationException, ResourceNotFoundException
 from src.challenges.models import LevelConfig
 from src.challenges.xp_service import compute_level_progress
 from src.core.dependencies import get_token_payload
+from src.membership.entitlements import resolve_effective_tier
+from src.core.rate_limit import limiter
 from src.auth.schemas import (
     SendOTPRequest, SendOTPResponse, VerifyOTPRequest, VerifyOTPResponse,
     CheckUserExistsRequest, CheckUserExistsResponse,
@@ -42,7 +44,9 @@ _DEFAULT_VECTOR: list[float] = [0.5] * 15
         "Endpoint này KHÔNG yêu cầu user đã tồn tại trong DB trước."
     ),
 )
+@limiter.limit("30/minute")
 async def sync_user(
+    request: Request,
     payload: dict = Depends(get_token_payload),
     db: AsyncSession = Depends(get_db),
 ) -> UserMe:
@@ -78,6 +82,13 @@ async def sync_user(
     async def build_user_me(u: User) -> UserMe:
         """Build UserMe response with correctly computed relative XP."""
         progress = await compute_level_progress(db, u)
+
+        # Refresh the membership_tier snapshot (subscription x streak) on every sync.
+        await resolve_effective_tier(db, u)
+        await db.commit()
+        await db.refresh(u)
+        equipped_frame = FrameStub.model_validate(u.equipped_frame) if u.equipped_frame is not None else None
+
         return UserMe(
             id=u.id,
             username=u.username,
@@ -100,6 +111,8 @@ async def sync_user(
             created_at=u.created_at,
             stats=UserStats(),
             badges=[],
+            membership_tier=u.membership_tier or "bite",
+            equipped_frame=equipped_frame,
         )
 
     async def repair_stats(u: User):
@@ -180,23 +193,25 @@ async def sync_user(
     response_model=SendOTPResponse,
     summary="Gửi OTP xác minh email khi đăng ký",
 )
+@limiter.limit("3/minute;10/hour")
 async def send_registration_otp(
-    request: SendOTPRequest,
+    request: Request,
+    body: SendOTPRequest,
     db: AsyncSession = Depends(get_db),
 ) -> SendOTPResponse:
     # ── 1. Kiểm tra email chưa được đăng ký ───────────────────────────────
-    existing_email = await db.execute(select(User).where(User.email == request.email))
+    existing_email = await db.execute(select(User).where(User.email == body.email))
     if existing_email.scalar_one_or_none():
         raise ConflictException(detail="Email already registered", error_code="EMAIL_REGISTERED")
 
     # ── 2. Kiểm tra username chưa được sử dụng ────────────────────────────
-    existing_username = await db.execute(select(User).where(User.username == request.username))
+    existing_username = await db.execute(select(User).where(User.username == body.username))
     if existing_username.scalar_one_or_none():
         raise ConflictException(detail="Username already taken", error_code="USERNAME_TAKEN")
 
     # ── 3. Tạo OTP và gửi email ────────────────────────────────────────────
-    otp = await create_otp(request.email)
-    await email_service.send_otp_email(request.email, otp, request.username)
+    otp = await create_otp(body.email)
+    await email_service.send_otp_email(body.email, otp, body.username)
 
     return SendOTPResponse(
         success=True,
@@ -210,10 +225,12 @@ async def send_registration_otp(
     response_model=VerifyOTPResponse,
     summary="Xac minh ma OTP dang ky",
 )
+@limiter.limit("10/minute")
 async def verify_registration_otp(
-    request: VerifyOTPRequest,
+    request: Request,
+    body: VerifyOTPRequest,
 ) -> VerifyOTPResponse:
-    is_valid = await verify_otp_code(request.email, request.otp)
+    is_valid = await verify_otp_code(body.email, body.otp)
     if not is_valid:
         raise ValidationException(
             detail="Invalid or expired code. Please check the code and try again.",
@@ -227,11 +244,13 @@ async def verify_registration_otp(
     response_model=ResolveEmailResponse,
     summary="Resolve username to email for login",
 )
+@limiter.limit("20/minute")
 async def resolve_email(
-    request: ResolveEmailRequest,
+    request: Request,
+    body: ResolveEmailRequest,
     db: AsyncSession = Depends(get_db),
 ) -> ResolveEmailResponse:
-    result = await db.execute(select(User.email).where(User.username == request.username))
+    result = await db.execute(select(User.email).where(User.username == body.username))
     email: str | None = result.scalar_one_or_none()
     if not email:
         raise ResourceNotFoundException(detail="No account found with that username.", error_code="USER_NOT_FOUND")
@@ -243,8 +262,10 @@ async def resolve_email(
     response_model=CheckUserExistsResponse,
     summary="Kiem tra email va username da ton tai chua",
 )
+@limiter.limit("30/minute")
 async def check_user_exists(
-    request: CheckUserExistsRequest,
+    request: Request,
+    body: CheckUserExistsRequest,
     db: AsyncSession = Depends(get_db),
 ) -> CheckUserExistsResponse:
     """Kiem tra email va username co san de dang ky khong."""
@@ -252,7 +273,7 @@ async def check_user_exists(
     # Only check username here to avoid false positives from orphaned Postgres rows.
     username_exists = False
 
-    existing_username = await db.execute(select(User).where(User.username == request.username))
+    existing_username = await db.execute(select(User).where(User.username == body.username))
     if existing_username.scalar_one_or_none():
         username_exists = True
 

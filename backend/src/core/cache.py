@@ -2,26 +2,39 @@ import json
 import hashlib
 from functools import wraps
 from typing import Any, Callable
-from fastapi import Request
+from fastapi import Request, Response
 from src.db.redis import redis_client
 
-def cached_response(ttl: int = 60):
+def cached_response(ttl: int = 60, cache_control: str | None = None):
     """
     Decorator to cache FastAPI endpoint responses in Redis.
     Uses the request path and query params to generate a cache key.
+
+    If cache_control is set, it's applied as the Cache-Control response header
+    on both cache hits and misses (requires the endpoint to accept a `response:
+    Response` param, injected by FastAPI — does not change the response body/schema).
     """
     def decorator(func: Callable):
         @wraps(func)
         async def wrapper(*args, **kwargs):
             # Attempt to find the Request object in kwargs
             request: Request = kwargs.get("request")
-            
+
             # If request isn't explicitly passed, try to find it in args
             if not request:
                 for arg in args:
                     if isinstance(arg, Request):
                         request = arg
                         break
+
+            response: Response = kwargs.get("response")
+            if not response:
+                for arg in args:
+                    if isinstance(arg, Response):
+                        response = arg
+                        break
+            if response is not None and cache_control:
+                response.headers["Cache-Control"] = cache_control
 
             # If no request is found, we cannot cache properly by path/query, so just run the function
             if not request:

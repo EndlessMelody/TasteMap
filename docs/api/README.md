@@ -14,9 +14,10 @@ Tài liệu này là bản đồ dẫn đường cho toàn bộ hệ thống API
 - **[Người dùng](./users.md):** Quản lý Profile, Tìm kiếm, Social Context.
 - **[Mạng xã hội](./social.md):** Bạn bè, Chat 1-1, Nhóm (Lobby), Thông báo.
 - **[Nội dung](./content.md):** Địa điểm, Bài viết, Reels, Bình luận, Vault.
-- **[Khám phá AI](./discovery.md):** Swipe Feed, AI Story, Tours, Culture Guide.
+- **[Khám phá AI](./discovery.md):** Swipe Feed, AI Story, Tours, AI Planner, Culture Guide.
 - **[Gamification](./gamification.md):** Huy hiệu, Thử thách, XP, Bảng xếp hạng.
 - **[Hệ thống](./system.md):** Cài đặt, Upload Media.
+- **[Hội viên & Thanh toán](./monetization.md):** 4 bậc hội viên (Bite/Savor/Feast/Omakase), thanh toán mock Visa, quota, khung avatar.
 
 ## 3. System Traceability Matrix
 
@@ -31,3 +32,4 @@ Bản đồ truy vết giữa API Domain và Database Schema:
 | Gợi ý AI & Khám phá (Discovery) | `discovery.md` | `interactions.md` | `interactions`, `bookmarks` |
 | Gamification & Thử thách | `gamification.md` | `gamification.md` | `badges`, `challenges`, `user_challenges` |
 | Hệ thống (System) | `system.md` | N/A | Upload storage, System settings |
+| Hội viên & Thanh toán (Membership) | `monetization.md` | `monetization.md` | `subscriptions`, `payment_transactions`, `avatar_frames` |

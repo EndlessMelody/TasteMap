@@ -259,6 +259,18 @@ Every token has a dark-mode value already. Pages must work in both themes — ne
 3. If genuinely missing, add it to `tokens.ts` (colors → an Once UI semantic CSS var; non-colors → a literal), document here, then use it.
 4. Adding a new accent color requires a written justification in PR description. Default is **no**.
 
+### 14.1 Approved exception: Membership tier gold
+
+`tokens.color.tierGold` (`#d4a017`) and `tokens.gradient.tierGold` were added for the 4-tier
+Membership system (Bite/Savor/Feast/Omakase — see `docs/api/monetization.md`). Justification:
+each tier needs a visually distinct, escalating identity (Discord-Nitro-style), and gold is the
+only accent left unclaimed by an existing meaning (`magic` purple is AI-only, `warm` orange is
+already the streak/flame color reused for the Savor tier, `danger`/`success`/`warning` are status
+colors). **Gold is reserved exclusively for Omakase tier identity** (tier badge, avatar frame,
+membership page hero) — never used for generic emphasis, CTAs, or any non-membership surface.
+`tokens.color.tierFeast` is not a new hue; it names the existing violet endpoint of
+`gradients.signature` for the Feast tier's identity.
+
 ---
 
 ## 15. Migration status

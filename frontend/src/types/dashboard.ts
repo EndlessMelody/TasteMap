@@ -1,5 +1,6 @@
 import React from "react";
 import { BadgeSummary } from "./gamification";
+import { MembershipTier, FrameStub } from "./membership";
 
 export interface UserMe {
   id: number;
@@ -34,6 +35,8 @@ export interface UserMe {
     accent_color: string;
   };
   badges: BadgeSummary[];
+  membership_tier?: MembershipTier;
+  equipped_frame?: FrameStub | null;
 }
 
 export interface ReelData {

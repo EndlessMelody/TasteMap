@@ -16,22 +16,14 @@ const THINKING_KEYS = [
   "aiPlanner.think6",
 ];
 
-interface StepGeneratingProps {
-  onDone: () => void;
-}
-
-export function StepGenerating({ onDone }: StepGeneratingProps) {
+export function StepGenerating() {
   const { t } = useLanguage();
   const [msgIdx, setMsgIdx] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => setMsgIdx((i) => i + 1), 900);
-    const timer = setTimeout(onDone, 5600);
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timer);
-    };
-  }, [onDone]);
+    return () => clearInterval(interval);
+  }, []);
 
   const msg = t(THINKING_KEYS[Math.min(msgIdx, THINKING_KEYS.length - 1)]);
   const progress = Math.min(((msgIdx + 1) / THINKING_KEYS.length) * 100, 100);

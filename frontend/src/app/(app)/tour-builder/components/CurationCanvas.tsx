@@ -8,12 +8,14 @@
  */
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Column, Row, Grid } from "@once-ui-system/core";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, Sparkles, Wand2, Bookmark, MapPinned } from "lucide-react";
 import { toast } from "sonner";
 import { Button, H2, H3, Body, BodySm, Caption, Eyebrow, Skeleton, EmptyState } from "@/components/ui";
 import { GlassCard } from "@/components/primitives/GlassCard";
+import ClientOnly from "@/components/common/ClientOnly";
 import { tokens } from "@/styles/tokens";
 import { fadeUp, stagger } from "@/lib/motion";
 import { apiGet } from "@/lib/api";
@@ -21,14 +23,19 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useTourBuilderStore } from "@/store/useTourBuilderStore";
 import { SavedPlaceCard } from "./SavedPlaceCard";
 import { DraftStopRow } from "./DraftStopRow";
-import { savedToTourNode } from "../lib";
+import { savedToTourNode, accentFor, DEFAULT_CENTER } from "../lib";
 import type { SavedPlace } from "../lib";
+import type { Spot } from "@/app/(app)/explore/types";
+
+const MapWidget = dynamic(() => import("@/components/MapWidget"), { ssr: false });
 
 interface BookmarkRecord {
   id: number;
   location?: {
     id: number;
     name: string;
+    lat?: number | null;
+    lng?: number | null;
     image_url?: string | null;
     rating?: number | null;
     category?: string | null;
@@ -59,6 +66,8 @@ export function CurationCanvas({ onOpenAssist, onBuild }: CurationCanvasProps) {
           .map((b) => ({
             id: b.location!.id,
             name: b.location!.name,
+            lat: b.location!.lat ?? null,
+            lng: b.location!.lng ?? null,
             image_url: b.location!.image_url ?? null,
             rating: b.location!.rating ?? null,
             category: b.location!.category ?? null,
@@ -77,6 +86,44 @@ export function CurationCanvas({ onOpenAssist, onBuild }: CurationCanvasProps) {
   }, []);
 
   const draftIds = useMemo(() => new Set(tourDraft.map((n) => n.venue_id)), [tourDraft]);
+
+  const draftWithCoords = useMemo(
+    () => tourDraft.filter((n) => n.location[0] !== 0 || n.location[1] !== 0),
+    [tourDraft],
+  );
+  const draftSpots: Spot[] = useMemo(
+    () =>
+      draftWithCoords.map((n) => ({
+        id: n.venue_id,
+        name: n.title,
+        category: "place",
+        emoji: "📍",
+        accent: accentFor(n.venue_id),
+        lat: n.location[0],
+        lon: n.location[1],
+        rating: n.rating ?? 5,
+        reviewCount: 0,
+        priceLevel: 2,
+        isOpen: true,
+        closesAt: "",
+        distance: "",
+        img: n.img ?? "",
+        description: n.subtitle ?? "",
+        tags: n.tags ?? [],
+      })),
+    [draftWithCoords],
+  );
+  const draftRouteCoords: [number, number][] = useMemo(
+    () => draftWithCoords.map((n) => [n.location[1], n.location[0]]),
+    [draftWithCoords],
+  );
+  const draftCenter: [number, number] = draftWithCoords[0]
+    ? [draftWithCoords[0].location[0], draftWithCoords[0].location[1]]
+    : DEFAULT_CENTER;
+  const draftIndexMap = useMemo(
+    () => new Map(draftWithCoords.map((n, i) => [n.venue_id, i + 1])),
+    [draftWithCoords],
+  );
 
   const toggleSaved = (place: SavedPlace, index: number) => {
     if (draftIds.has(place.id)) removeFromTourDraft(place.id);
@@ -186,6 +233,26 @@ export function CurationCanvas({ onOpenAssist, onBuild }: CurationCanvasProps) {
               <H3>{tourDraft.length === 1 ? t("tour.stopSingular", { n: tourDraft.length }) : t("tour.stopPlural", { n: tourDraft.length })}</H3>
             </Row>
           </Column>
+
+          {draftSpots.length > 0 && (
+            <Column style={{ padding: `${tokens.space[3]} ${tokens.space[5]} 0` }}>
+              <GlassCard variant="flat" padding="none" radius="lg" fillWidth>
+                <Column style={{ height: 140, width: "100%" }}>
+                  <ClientOnly>
+                    <MapWidget
+                      mapId="tour-draft-preview-map"
+                      spots={draftSpots}
+                      center={draftCenter}
+                      zoom={12}
+                      routeCoords={draftRouteCoords.length >= 2 ? draftRouteCoords : undefined}
+                      planSpotIndexMap={draftIndexMap}
+                      showBanner={false}
+                    />
+                  </ClientOnly>
+                </Column>
+              </GlassCard>
+            </Column>
+          )}
 
           <Column className="no-scrollbar" style={{ flex: 1, overflowY: "auto", padding: tokens.space[5], gap: tokens.space[2] }}>
             {tourDraft.length === 0 ? (

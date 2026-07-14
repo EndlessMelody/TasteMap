@@ -14,6 +14,7 @@ import { useAuth } from "@/context/AuthContext";
 const RightSidebar = dynamic(() => import("@/components/layout/RightSidebar").then((mod) => mod.RightSidebar), { ssr: false });
 const CreatePostModal = dynamic(() => import("@/components/modals/CreatePostModal").then((mod) => mod.CreatePostModal), { ssr: false });
 const MessagingSidebar = dynamic(() => import("@/components/features/foodies/MessagingSidebar").then((mod) => mod.MessagingSidebar), { ssr: false });
+const CheckoutModal = dynamic(() => import("@/components/features/membership/CheckoutModal").then((mod) => mod.CheckoutModal), { ssr: false });
 
 // Authenticated app shell: sidebars, status bar, global modals, route guard.
 // The marketing shell (`/`, `/login`) lives in `app/(marketing)/layout.tsx`.
@@ -23,6 +24,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isRightExpanded, setIsRightExpanded] = useState(false);
 
   const { isCreatePostModalOpen, closeCreatePost, createPostType } = useUiStore();
+  const { isCheckoutOpen, closeCheckout, checkoutPlan } = useUiStore();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -168,6 +170,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         isOpen={isCreatePostModalOpen}
         onClose={closeCreatePost}
         initialType={createPostType}
+      />
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={closeCheckout}
+        initialPlan={checkoutPlan}
       />
     </Row>
   );

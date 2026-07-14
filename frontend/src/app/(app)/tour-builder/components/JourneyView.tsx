@@ -5,46 +5,84 @@
  * Ambient map glow companion → hero stop cards linked by animated route lines.
  * Renders from the authoritative GET /tours/{id} payload (TourDetail).
  */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Column, Row } from "@once-ui-system/core";
-import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
-import { RotateCcw, Navigation2, Sparkles } from "lucide-react";
-import { Button, H2, Caption, Eyebrow } from "@/components/ui";
+import { motion, Reorder } from "framer-motion";
+import { RotateCcw, Navigation2, Sparkles, GripVertical, Wand2 } from "lucide-react";
+import { toast } from "sonner";
+import { Button, H2, Caption, Eyebrow, BodySm } from "@/components/ui";
 import { GlassCard } from "@/components/primitives/GlassCard";
-import ClientOnly from "@/components/common/ClientOnly";
 import { useLanguage } from "@/context/LanguageContext";
 import { tokens } from "@/styles/tokens";
 import { fadeUp, stagger, transitions } from "@/lib/motion";
+import { apiGet, apiPost, apiPut } from "@/lib/api";
 import { JourneyStopCard } from "./JourneyStopCard";
 import { RouteLine } from "./RouteLine";
 import { JourneyStats } from "./JourneyStats";
-import { DEFAULT_CENTER, accentFor } from "../lib";
-import type { TourDetail } from "../lib";
-import type { TourTransportMode } from "@/store/useTourBuilderStore";
-
-const MapWidget = dynamic(() => import("@/components/MapWidget"), { ssr: false });
+import { accentFor, timeContextNow } from "../lib";
+import type { TourDetail, JourneyStop } from "../lib";
+import { TourMap } from "@/components/features/tours";
+import type { TourTransportMode, OptimizeResult } from "@/store/useTourBuilderStore";
 
 interface JourneyViewProps {
   tour: TourDetail;
   transportMode: TourTransportMode;
   onStartOver: () => void;
   onStartTour: () => void;
+  onTourUpdate: (tour: TourDetail) => void;
 }
 
-export function JourneyView({ tour, transportMode, onStartOver, onStartTour }: JourneyViewProps) {
+export function JourneyView({ tour, transportMode, onStartOver, onStartTour, onTourUpdate }: JourneyViewProps) {
   const { t } = useLanguage();
-  const stops = tour.stops.filter((s) => s.location);
+  const [orderedStops, setOrderedStops] = useState<JourneyStop[]>(() => tour.stops.filter((s) => s.location));
+  const [reordering, setReordering] = useState(false);
+  const [reoptimizing, setReoptimizing] = useState(false);
+
+  useEffect(() => {
+    setOrderedStops(tour.stops.filter((s) => s.location));
+  }, [tour]);
+
+  const stops = orderedStops;
   const xp = stops.reduce((sum, s) => sum + (s.match_score ?? 0), 0);
+  const hasMapStops = stops.some(
+    (s) => s.location && (s.location.lat !== 0 || s.location.lng !== 0)
+  );
+  const needsReoptimize = stops.length > 1 && stops.some((s) => s.match_score == null);
 
-  const routeCoords = stops
-    .map((s) => (s.location ? ([s.location.lng, s.location.lat] as [number, number]) : null))
-    .filter((c): c is [number, number] => !!c && (c[0] !== 0 || c[1] !== 0));
+  const handleReorder = async (newOrder: JourneyStop[]) => {
+    setOrderedStops(newOrder);
+    setReordering(true);
+    try {
+      const updated = await apiPut<TourDetail>(`/api/v1/tours/${tour.id}/stops/order`, {
+        stop_ids: newOrder.map((s) => s.id),
+      });
+      onTourUpdate(updated);
+    } catch {
+      toast.error(t("tour.reoptimizeFailed"));
+    } finally {
+      setReordering(false);
+    }
+  };
 
-  const spotIndexMap = new Map(stops.map((s) => [s.location!.id, s.stop_order]));
-  const center: [number, number] = stops[0]?.location
-    ? [stops[0].location.lat, stops[0].location.lng]
-    : DEFAULT_CENTER;
+  const handleReoptimize = async () => {
+    setReoptimizing(true);
+    try {
+      const first = orderedStops[0]?.location;
+      await apiPost<OptimizeResult>(`/api/v1/tours/${tour.id}/optimize`, {
+        start_lat: first?.lat ?? null,
+        start_lng: first?.lng ?? null,
+        category: "food",
+        time_context: timeContextNow(),
+        transport_mode: transportMode,
+      });
+      const detail = await apiGet<TourDetail>(`/api/v1/tours/${tour.id}`);
+      onTourUpdate(detail);
+    } catch {
+      toast.error(t("tour.reoptimizeFailed"));
+    } finally {
+      setReoptimizing(false);
+    }
+  };
 
   return (
     <Column fillWidth fillHeight style={{ background: tokens.color.bg, overflow: "hidden", position: "relative" }}>
@@ -120,39 +158,10 @@ export function JourneyView({ tour, transportMode, onStartOver, onStartTour }: J
           </motion.div>
 
           {/* Ambient map companion */}
-          {routeCoords.length >= 1 && (
+          {hasMapStops && (
             <motion.div variants={fadeUp}>
               <GlassCard variant="elevated" padding="none" radius="xl" fillWidth>
-                <Column style={{ height: 220, width: "100%" }}>
-                  <ClientOnly>
-                    <MapWidget
-                      mapId="tour-journey-map"
-                      spots={stops.map((s) => ({
-                        id: s.location!.id,
-                        name: s.location!.name,
-                        lat: s.location!.lat,
-                        lon: s.location!.lng,
-                        category: "place",
-                        emoji: "📍",
-                        accent: accentFor(s.location!.id),
-                        rating: s.location!.rating ?? 5,
-                        reviewCount: 0,
-                        priceLevel: 2,
-                        isOpen: true,
-                        closesAt: "",
-                        distance: "",
-                        img: s.location!.image_url ?? "",
-                        description: s.location!.category ?? "",
-                        tags: [],
-                      }))}
-                      center={center}
-                      zoom={13}
-                      routeCoords={routeCoords.length >= 2 ? routeCoords : undefined}
-                      planSpotIndexMap={spotIndexMap}
-                      showBanner={false}
-                    />
-                  </ClientOnly>
-                </Column>
+                <TourMap stops={stops} mapId="tour-journey-map" height={220} zoom={13} />
               </GlassCard>
             </motion.div>
           )}
@@ -167,10 +176,58 @@ export function JourneyView({ tour, transportMode, onStartOver, onStartTour }: J
             />
           </motion.div>
 
-          {/* Vertical hero story */}
-          <Column fillWidth style={{ gap: 0, marginTop: tokens.space[2] }}>
+          {/* Reorder hint / re-optimize */}
+          <motion.div variants={fadeUp}>
+            <Row
+              horizontal="between"
+              vertical="center"
+              style={{
+                gap: tokens.space[2],
+                padding: `${tokens.space[2]} ${tokens.space[3]}`,
+                borderRadius: tokens.radius.md,
+                background: needsReoptimize ? `${tokens.color.warm}10` : tokens.color.surfaceMuted,
+                border: `1px solid ${needsReoptimize ? `${tokens.color.warm}40` : tokens.color.border}`,
+              }}
+            >
+              <BodySm tone="muted">{t("tour.reorderHint")}</BodySm>
+              <Button
+                variant={needsReoptimize ? "primary" : "ghost"}
+                size="sm"
+                leftIcon={<Wand2 size={13} />}
+                loading={reoptimizing}
+                onClick={handleReoptimize}
+              >
+                {reoptimizing ? t("tour.reoptimizing") : t("tour.reoptimize")}
+              </Button>
+            </Row>
+          </motion.div>
+
+          {/* Vertical hero story — drag to reorder */}
+          <Reorder.Group
+            axis="y"
+            values={stops}
+            onReorder={handleReorder}
+            as="div"
+            style={{ display: "flex", flexDirection: "column", gap: 0, marginTop: tokens.space[2], opacity: reordering ? 0.7 : 1 }}
+          >
             {stops.map((stop, i) => (
-              <React.Fragment key={stop.id}>
+              <Reorder.Item key={stop.id} value={stop} as="div" style={{ position: "relative" }}>
+                <Row
+                  vertical="center"
+                  style={{
+                    position: "absolute",
+                    top: tokens.space[4],
+                    right: tokens.space[4],
+                    zIndex: 2,
+                    cursor: "grab",
+                    color: "#fff",
+                    background: "rgba(0,0,0,0.35)",
+                    borderRadius: tokens.radius.pill,
+                    padding: 6,
+                  }}
+                >
+                  <GripVertical size={14} />
+                </Row>
                 <JourneyStopCard stop={stop} />
                 {i < stops.length - 1 && (
                   <RouteLine
@@ -179,9 +236,9 @@ export function JourneyView({ tour, transportMode, onStartOver, onStartTour }: J
                     accent={accentFor(stop.location!.id)}
                   />
                 )}
-              </React.Fragment>
+              </Reorder.Item>
             ))}
-          </Column>
+          </Reorder.Group>
 
           {/* Footer CTA */}
           <motion.div variants={fadeUp} transition={transitions.smooth}>

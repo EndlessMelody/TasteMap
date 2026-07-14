@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Column, Row, Grid } from "@once-ui-system/core";
+import { tokens } from "@/styles/tokens";
 import {
     ShieldAlert,
     TrendingUp,
@@ -88,9 +89,9 @@ export default function AdminDashboard() {
     // Hiển thị màn hình chờ mượt mà trong lúc check quyền
     if (isInitializing || !isAuthorized) {
         return (
-            <Column horizontal="center" vertical="center" style={{ flex: 1, height: "100%", backgroundColor: "#F2F2F7" }}>
-                <Loader2 style={{ color: "#007AFF", marginBottom: 16, animation: "spin 0.8s linear infinite" }} size={40} />
-                <Row vertical="center" style={{ fontSize: 15, fontWeight: 700, color: "#8E8E93", gap: 8 }}>
+            <Column horizontal="center" vertical="center" style={{ flex: 1, height: "100%", backgroundColor: tokens.color.surfaceMuted }}>
+                <Loader2 style={{ color: tokens.color.cool, marginBottom: 16, animation: "spin 0.8s linear infinite" }} size={40} />
+                <Row vertical="center" style={{ fontSize: 15, fontWeight: 700, color: tokens.color.textMuted, gap: 8 }}>
                     <Lock size={16} /> Verifying Clearance...
                 </Row>
                 <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>

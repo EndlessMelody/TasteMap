@@ -10,6 +10,6 @@ export * from "./FriendsListCard";
 export * from "./ProfileStickyHeader";
 export * from "./ProfileCover";
 export * from "./ProfileAvatarGroup";
-export * from "./tab-contents/PostsTab";
+export * from "./tab-contents";
 
 

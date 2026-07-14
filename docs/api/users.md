@@ -56,9 +56,12 @@ Lấy thông tin user hiện tại (từ JWT token). Bao gồm cả private fiel
   "phone": "+84 901 234 567",
   "food_vector": [0.8, 0.3, ...],
   "place_vector": [0.5, 0.7, ...],
-  "settings": { "theme": "dark", "language": "vi", ... }
+  "settings": { "theme": "dark", "language": "vi", ... },
+  "membership_tier": "feast",
+  "equipped_frame": { "id": 4, "slug": "feast-signature-gradient", "style_key": "feast-signature-gradient", "accent_color": "#7b2ff7", "is_animated": false }
 }
 ```
+> `membership_tier` / `equipped_frame` are computed by `resolve_effective_tier()` on every call — see [`monetization.md`](./monetization.md) and [`docs/database_schema/monetization.md`](../database_schema/monetization.md).
 
 ---
 

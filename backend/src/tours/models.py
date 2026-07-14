@@ -14,6 +14,8 @@ class Tour(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
 
+    title = Column(String(120), nullable=True)  # display name; user-set or AI Planner auto-generated
+
     total_distance = Column(Float, nullable=True)   # km
     estimated_cost = Column(Integer, nullable=True)  # VND
     estimated_duration = Column(Integer, nullable=True)  # minutes

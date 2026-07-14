@@ -12,51 +12,25 @@ import {
 import { Zap, Edit3, Trash2, Eye, X, Save, AlertCircle as AlertIcon, Users } from "lucide-react";
 import { apiGet, apiPost, apiPut, apiDelete } from "@/lib/api";
 import { toast, Toaster } from "sonner";
-
-// ═══════════════════════════════════════════════════════════════════════
-//  TYPES — Phản ánh chính xác Backend Schema đã triển khai
-// ═══════════════════════════════════════════════════════════════════════
-interface Challenge {
-    id: number;
-    title: string;
-    description: string;
-    category: string;
-    difficulty: "Easy" | "Medium" | "Hard";
-    xp_reward: number;
-    target_count: number;
-    action_type: string;
-    action_filter: any;
-    badge_id: number | null;
-    icon: string;
-    accent_color: string;
-    duration_days: number | null;
-    start_date: string | null;
-    end_date: string | null;
-    is_active: boolean;
-    is_recurring: boolean;
-    participants_count: number;
-    completion_rate: number;
-    // UI helper field
-    computedStatus?: "Active" | "Draft" | "Expired" | "Scheduled";
-}
+import type { AdminChallenge, AdminChallengeStatus, ChallengeFormData } from "@/types/challenges";
 
 export default function ChallengeManagementPage() {
-    const [challenges, setChallenges] = useState<Challenge[]>([]);
+    const [challenges, setChallenges] = useState<AdminChallenge[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<"All" | "Active" | "Draft" | "Expired">("All");
+    const [activeTab, setActiveTab] = useState<"All" | AdminChallengeStatus>("All");
     const [searchQuery, setSearchQuery] = useState("");
 
     // Modal States
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isViewOpen, setIsViewOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-    const [selectedChallenge, setSelectedChallenge] = useState<any>(null);
+    const [selectedChallenge, setSelectedChallenge] = useState<AdminChallenge | null>(null);
     const [formMode, setFormMode] = useState<"create" | "edit">("create");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Helper: Tính toán trạng thái dựa trên thời gian và flag is_active
-    const deriveStatus = useCallback((c: Challenge): "Active" | "Draft" | "Expired" | "Scheduled" => {
+    const deriveStatus = useCallback((c: AdminChallenge): AdminChallengeStatus => {
         if (!c.is_active) return "Draft";
         const now = new Date();
         if (c.start_date && new Date(c.start_date) > now) return "Scheduled";
@@ -67,9 +41,9 @@ export default function ChallengeManagementPage() {
     const fetchChallenges = useCallback(async () => {
         setIsLoading(true);
         try {
-            const response = await apiGet<any>("/api/v1/challenges");
+            const response = await apiGet<AdminChallenge[]>("/api/v1/challenges");
             if (Array.isArray(response)) {
-                const enriched = response.map((c: Challenge) => ({
+                const enriched = response.map((c) => ({
                     ...c,
                     computedStatus: deriveStatus(c)
                 }));
@@ -77,8 +51,8 @@ export default function ChallengeManagementPage() {
             } else {
                 setError("Định dạng dữ liệu không hợp lệ từ máy chủ");
             }
-        } catch (err: any) {
-            setError(err.message || "Lỗi kết nối API");
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Lỗi kết nối API");
         } finally {
             setIsLoading(false);
         }
@@ -100,21 +74,22 @@ export default function ChallengeManagementPage() {
         if (!selectedChallenge) return;
         setIsSubmitting(true);
         try {
-            const res = await apiDelete<any>(`/api/v1/challenges/${selectedChallenge.id}`);
+            await apiDelete<void>(`/api/v1/challenges/${selectedChallenge.id}`);
             toast.success("Đã xoá thử thách thành công");
             setIsDeleteOpen(false);
             fetchChallenges();
-        } catch (err: any) {
-            toast.error(err.message || "Lỗi khi xoá thử thách");
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : "Lỗi khi xoá thử thách");
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    const handleFormSubmit = async (formData: any) => {
+    const handleFormSubmit = async (formData: Record<string, unknown>) => {
+        if (!selectedChallenge && formMode === "edit") return;
         setIsSubmitting(true);
         try {
-            const endpoint = formMode === "create" ? "/api/v1/challenges/" : `/api/v1/challenges/${selectedChallenge.id}`;
+            const endpoint = formMode === "create" ? "/api/v1/challenges/" : `/api/v1/challenges/${selectedChallenge!.id}`;
             const method = formMode === "create" ? apiPost : apiPut;
 
             await method(endpoint, formData);
@@ -122,8 +97,8 @@ export default function ChallengeManagementPage() {
             toast.success(`Đã ${formMode === "create" ? "tạo" : "cập nhật"} thử thách thành công`);
             setIsFormOpen(false);
             fetchChallenges();
-        } catch (err: any) {
-            toast.error(err.message || "Lỗi lưu dữ liệu");
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : "Lỗi lưu dữ liệu");
         } finally {
             setIsSubmitting(false);
         }
@@ -269,10 +244,10 @@ export default function ChallengeManagementPage() {
                 {/* Toolbar: Search & Tabs */}
                 <Row fillWidth horizontal="between" vertical="center" style={{ flexWrap: "wrap", gap: 20 }}>
                     <Row gap="4" style={{ background: "rgba(0,0,0,0.05)", padding: 4, borderRadius: 16 }}>
-                        {["All", "Active", "Scheduled", "Draft", "Expired"].map((tab) => (
+                        {(["All", "Active", "Scheduled", "Draft", "Expired"] as const).map((tab) => (
                             <button
                                 key={tab}
-                                onClick={() => setActiveTab(tab as any)}
+                                onClick={() => setActiveTab(tab)}
                                 style={{
                                     padding: "10px 24px",
                                     borderRadius: 12,
@@ -464,8 +439,17 @@ export default function ChallengeManagementPage() {
 //  SUB-COMPONENTS: MODALS
 // ═══════════════════════════════════════════════════════════════════════
 
-function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSubmitting }: any) {
-    const [formData, setFormData] = useState<any>({
+interface ChallengeFormModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onSubmit: (data: Record<string, unknown>) => void;
+    initialData: AdminChallenge | null;
+    mode: "create" | "edit";
+    isSubmitting: boolean;
+}
+
+function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSubmitting }: ChallengeFormModalProps) {
+    const [formData, setFormData] = useState<ChallengeFormData>({
         title: "", description: "", category: "discovery", difficulty: "Easy",
         xp_reward: 100, target_count: 1, action_type: "check_in",
         action_filter: "{}", icon: "trophy", accent_color: "#007AFF",
@@ -476,7 +460,17 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
     useEffect(() => {
         if (initialData && mode === "edit") {
             setFormData({
-                ...initialData,
+                title: initialData.title,
+                description: initialData.description,
+                category: initialData.category,
+                difficulty: initialData.difficulty,
+                xp_reward: initialData.xp_reward,
+                target_count: initialData.target_count,
+                action_type: initialData.action_type,
+                icon: initialData.icon,
+                accent_color: initialData.accent_color,
+                is_active: initialData.is_active,
+                is_recurring: initialData.is_recurring,
                 badge_id: initialData.badge_id || "",
                 duration_days: initialData.duration_days || "",
                 start_date: initialData.start_date ? initialData.start_date.substring(0, 16) : "",
@@ -599,7 +593,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                                     <select
                                         style={inputStyle}
                                         value={formData.difficulty}
-                                        onChange={e => setFormData({ ...formData, difficulty: e.target.value })}
+                                        onChange={e => setFormData({ ...formData, difficulty: e.target.value as ChallengeFormData["difficulty"] })}
                                     >
                                         {["Easy", "Medium", "Hard"].map(opt => (
                                             <option key={opt} value={opt}>{opt}</option>
@@ -762,15 +756,21 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
     );
 }
 
-function ChallengeViewModal({ isOpen, onClose, challenge }: any) {
-    const StatusBadge = ({ status }: any) => {
-        const colors: any = {
+interface ChallengeViewModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    challenge: AdminChallenge | null;
+}
+
+function ChallengeViewModal({ isOpen, onClose, challenge }: ChallengeViewModalProps) {
+    const StatusBadge = ({ status }: { status?: AdminChallengeStatus }) => {
+        const colors: Record<AdminChallengeStatus, { bg: string; text: string }> = {
             Active: { bg: "#E3F2FD", text: "#1976D2" },
             Scheduled: { bg: "#F3E5F5", text: "#7B1FA2" },
             Expired: { bg: "#FFEBEE", text: "#D32F2F" },
             Draft: { bg: "#F5F5F5", text: "#616161" }
         };
-        const color = colors[status] || colors.Draft;
+        const color = (status ? colors[status] : undefined) || colors.Draft;
         return (
             <Column style={{
                 padding: "4px 12px",
@@ -906,7 +906,15 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: any) {
     );
 }
 
-function DeleteConfirmModal({ isOpen, onClose, onConfirm, challengeTitle, isSubmitting }: any) {
+interface DeleteConfirmModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onConfirm: () => void;
+    challengeTitle?: string;
+    isSubmitting: boolean;
+}
+
+function DeleteConfirmModal({ isOpen, onClose, onConfirm, challengeTitle, isSubmitting }: DeleteConfirmModalProps) {
     if (!isOpen) return null;
 
     return (

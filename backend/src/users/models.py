@@ -42,6 +42,12 @@ class User(Base):
 
     primary_badge_id = Column(Integer, ForeignKey("badges.id", ondelete="SET NULL"), nullable=True)
 
+    # Membership — xem docs/database_schema/monetization.md
+    # membership_tier là snapshot lazily-computed bởi resolve_effective_tier(),
+    # KHÔNG phải nguồn sự thật (nguồn thật = subscriptions.status + user_streaks.current_streak).
+    membership_tier = Column(String(10), nullable=False, default="bite", server_default="bite")
+    equipped_frame_id = Column(Integer, ForeignKey("avatar_frames.id", ondelete="SET NULL"), nullable=True)
+
     # User settings — JSONB cho linh hoạt, không cần table riêng
     # VD: {"theme": "dark", "language": "vi", "notif_friends": true, "notif_deals": true, ...}
     settings = Column(JSONB, nullable=True, default={})
@@ -73,3 +79,4 @@ class User(Base):
     xp_transactions = relationship("XpTransaction", back_populates="user", lazy="selectin")
 
     primary_badge = relationship("Badge", foreign_keys=[primary_badge_id], lazy="selectin")
+    equipped_frame = relationship("AvatarFrame", foreign_keys=[equipped_frame_id], lazy="selectin")

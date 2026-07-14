@@ -8,9 +8,10 @@ Implementing Two-Pass Filtering (Vector-First) as per 04-ai-algorithm.md:
 import json
 import logging
 import math
-from typing import List, Optional
+from typing import Dict, List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import func
 
 from src.locations.models import Location
 from src.posts.models import Post
@@ -153,10 +154,14 @@ async def get_feed_cards(
     # Cắt lấy đúng số thẻ cần hiển thị cho trang hiện tại
     page_items = scored_items[offset : offset + limit]
     
+    reviews_by_location = await _get_reviews_previews_bulk(
+        db, [item[1].id for item in page_items]
+    )
+
     cards = []
     for item in page_items:
         score, loc, dist_km, match_percent = item
-        reviews = await _get_reviews_preview(db, loc.id)
+        reviews = reviews_by_location.get(loc.id, [])
         cards.append(_build_card(loc, dist_km, match_percent, reviews))
         
     # Tính next_cursor cho lần tải trang tiếp theo
@@ -179,20 +184,38 @@ async def get_feed_cards(
     return response_data
 
 
-async def _get_reviews_preview(db: AsyncSession, location_id: int) -> List[str]:
-    """Lấy 2 câu review ngắn nhất của địa điểm để phục vụ flip card."""
+async def _get_reviews_previews_bulk(
+    db: AsyncSession, location_ids: List[int]
+) -> Dict[int, List[str]]:
+    """Lấy top-2 review (theo likes) cho mỗi location trong 1 query duy nhất, tránh N+1."""
+    if not location_ids:
+        return {}
     try:
-        result = await db.execute(
-            select(Post.review)
-            .where(Post.location_id == location_id)
-            .order_by(Post.likes_count.desc())
-            .limit(2)
+        ranked = (
+            select(
+                Post.location_id,
+                Post.review,
+                func.row_number()
+                .over(
+                    partition_by=Post.location_id,
+                    order_by=Post.likes_count.desc(),
+                )
+                .label("rn"),
+            )
+            .where(Post.location_id.in_(location_ids))
+            .subquery()
         )
-        rows = result.all()
-        return [row[0][:120] for row in rows if row[0]]
+        result = await db.execute(
+            select(ranked.c.location_id, ranked.c.review).where(ranked.c.rn <= 2)
+        )
+        previews: Dict[int, List[str]] = {}
+        for loc_id, review in result.all():
+            if review:
+                previews.setdefault(loc_id, []).append(review[:120])
+        return previews
     except Exception as e:
-        logger.warning(f"[FEED] Error getting reviews for location {location_id}: {e}")
-        return []
+        logger.warning(f"[FEED] Error getting bulk reviews for {location_ids}: {e}")
+        return {}
 
 
 def _build_card(loc: Location, distance_km: Optional[float], match_percent: int, reviews: List[str]) -> dict:

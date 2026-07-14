@@ -4,7 +4,7 @@ import React, { ImgHTMLAttributes } from "react";
 import { Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
 
-export type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
+export type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 
 const SIZE: Record<AvatarSize, number> = {
   xs: 24,
@@ -12,6 +12,7 @@ const SIZE: Record<AvatarSize, number> = {
   md: 40,
   lg: 56,
   xl: 80,
+  "2xl": 160,
 };
 
 const FONT_SIZE: Record<AvatarSize, string> = {
@@ -20,6 +21,7 @@ const FONT_SIZE: Record<AvatarSize, string> = {
   md: "14px",
   lg: "18px",
   xl: "24px",
+  "2xl": "48px",
 };
 
 // Editorial neutral palette — no warm-only orange bias.

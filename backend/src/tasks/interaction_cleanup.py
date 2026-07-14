@@ -35,7 +35,22 @@ async def _aggregate_and_purge():
     2. Với mỗi user: lấy vector các location đã LIKED trong tháng cũ,
        tính weighted average → blend vào user vector hiện tại.
     3. Xoá raw interactions cũ hơn 30 ngày.
+
+    Với --workers > 1, mỗi worker process chạy scheduler riêng — dùng Redis
+    lock (SET NX EX) để đảm bảo job chỉ chạy 1 lần trên toàn cụm mỗi ngày.
     """
+    from src.db.redis import RedisClient
+
+    try:
+        client = RedisClient.get_client()
+        acquired = await client.set("lock:interaction_cleanup", "1", nx=True, ex=3600)
+    except Exception:
+        acquired = True  # Redis not ready yet — fail open rather than skip the job.
+
+    if not acquired:
+        logger.info("interaction_cleanup: lock held by another worker, skipping.")
+        return
+
     cutoff = datetime.now(timezone.utc) - timedelta(days=PURGE_DAYS)
 
     async with AsyncSessionLocal() as session:

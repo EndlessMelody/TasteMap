@@ -7,6 +7,7 @@ import { getInitials } from "@/lib/avatar";
 import { apiGet, apiPost } from "@/lib/api";
 import { MessageCircle, Send, X } from "lucide-react";
 import { FaMedal } from "react-icons/fa";
+import { tokens } from "@/styles/tokens";
 
 type CommentEntityType = "post" | "reel";
 
@@ -152,11 +153,11 @@ function CommentItem({
           <Column style={{ flex: 1, minWidth: 0 }}>
             <Column
               style={{
-                backgroundColor: isReply ? "#FFF7F2" : "#F5F5F7",
+                backgroundColor: isReply ? tokens.color.surfaceWarm : tokens.color.surfaceMuted,
                 borderRadius: "14px",
                 borderTopLeftRadius: "4px",
                 padding: "8px 12px",
-                border: isReply ? "1px solid rgba(255, 107, 53, 0.12)" : "none",
+                border: isReply ? `1px solid ${tokens.color.warm}1F` : "none",
                 width: "fit-content"
               }}
             >
@@ -171,7 +172,7 @@ function CommentItem({
                   style={{
                     fontSize: "13.5px",
                     fontWeight: 600,
-                    color: "#1d1d1f",
+                    color: tokens.color.text,
                   }}
                 >
                   {name}
@@ -181,8 +182,8 @@ function CommentItem({
                     style={{
                       fontSize: "11px",
                       fontWeight: 500,
-                      color: "#e76c3fff",
-                      backgroundColor: "rgba(254, 142, 72, 0.08)",
+                      color: tokens.color.warm,
+                      backgroundColor: `${tokens.color.warm}14`,
                       padding: "1px 6px",
                       borderRadius: "10px",
                     }}
@@ -214,7 +215,7 @@ function CommentItem({
                 style={{
                   fontSize: "13.5px",
                   lineHeight: "1.5",
-                  color: "#333",
+                  color: tokens.color.text,
                   marginTop: "2px",
                   whiteSpace: "pre-wrap",
                   wordBreak: "break-word",
@@ -225,14 +226,14 @@ function CommentItem({
             </Column>
           </Column>
           <Row style={{ gap: "12px", marginTop: "5px", paddingLeft: "4px" }}>
-            <span style={{ color: "#C0C0C0", fontSize: "0.68rem" }}>
+            <span style={{ color: tokens.color.textSubtle, fontSize: "0.68rem" }}>
               {adaptTime(comment.created_at)}
             </span>
             <button
               type="button"
               onClick={() => onReply(comment)}
               style={{
-                color: "#A3A3A3",
+                color: tokens.color.textSubtle,
                 fontSize: "0.68rem",
                 fontWeight: 700,
                 cursor: "pointer",
@@ -376,14 +377,14 @@ export function CommentSection({
                 key={i}
                 animate={{ opacity: [0.3, 1, 0.3] }}
                 transition={{ duration: 1.2, delay: i * 0.2, repeat: Infinity }}
-                style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#D0D0D0" }}
+                style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: tokens.color.borderStrong }}
               />
             ))}
           </Row>
         ) : comments.length === 0 ? (
           <Column style={{ textAlign: "center", padding: "24px 0" }}>
-            <MessageCircle size={28} color="#E0E0E0" />
-            <p style={{ margin: "8px 0 0", color: "#C0C0C0", fontSize: "0.8rem" }}>{emptyMessage}</p>
+            <MessageCircle size={28} color={tokens.color.borderStrong} />
+            <p style={{ margin: "8px 0 0", color: tokens.color.textSubtle, fontSize: "0.8rem" }}>{emptyMessage}</p>
           </Column>
         ) : (
           <Column
@@ -403,9 +404,9 @@ export function CommentSection({
       <Column
         style={{
           padding: "12px 16px 14px",
-          borderTop: "1px solid #F0F0F0",
+          borderTop: `1px solid ${tokens.color.border}`,
           gap: "8px",
-          backgroundColor: "#FFFFFF",
+          backgroundColor: tokens.color.surface,
           flexShrink: 0,
           ...inputWrapperStyle,
         }}
@@ -419,7 +420,7 @@ export function CommentSection({
               padding: "0 4px",
             }}
           >
-            <span style={{ fontSize: "0.72rem", color: "#8A8A8A", fontWeight: 600 }}>
+            <span style={{ fontSize: "0.72rem", color: tokens.color.textMuted, fontWeight: 600 }}>
               Đang trả lời @{replyingTo.username}
             </span>
             <button
@@ -431,7 +432,7 @@ export function CommentSection({
                 gap: "4px",
                 border: "none",
                 background: "none",
-                color: "#A0A0A0",
+                color: tokens.color.textMuted,
                 cursor: "pointer",
                 padding: 0,
                 fontSize: "0.72rem",
@@ -448,10 +449,10 @@ export function CommentSection({
           vertical="center"
           style={{
             gap: "8px",
-            backgroundColor: "#F5F5F7",
+            backgroundColor: tokens.color.surfaceMuted,
             borderRadius: "22px",
             padding: "8px 8px 8px 14px",
-            border: `1.5px solid ${isInputFocused ? "rgba(255,107,53,0.35)" : "transparent"
+            border: `1.5px solid ${isInputFocused ? `${tokens.color.warm}59` : "transparent"
               }`,
             transition: "border-color 0.2s",
           }}
@@ -481,7 +482,7 @@ export function CommentSection({
               padding: 0,
               fontSize: "0.83rem",
               outline: "none",
-              color: "#1C1C1E",
+              color: tokens.color.text,
             }}
           />
           <motion.button
@@ -494,7 +495,7 @@ export function CommentSection({
               height: "30px",
               borderRadius: "50%",
               border: "none",
-              backgroundColor: newComment.trim() ? "#ff6b35" : "#E5E5EA",
+              backgroundColor: newComment.trim() ? tokens.color.warm : tokens.color.borderStrong,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -502,7 +503,7 @@ export function CommentSection({
               flexShrink: 0,
             }}
           >
-            <Send size={14} color="#fff" />
+            <Send size={14} color={tokens.color.textInverse} />
           </motion.button>
         </Row>
       </Column>

@@ -3,6 +3,7 @@
 import React, { useState, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { apiPost, apiGet, getApiBase } from "@/lib/api";
 import { normalizeImageUrl } from "@/lib/image-utils";
 import MapWidget from "@/components/MapWidget";
@@ -145,6 +146,7 @@ const SUGGESTED_DISHES = [
 
 export default function CulturePage() {
   useAuth();
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [story, setStory] = useState<CultureStoryResponse | null>(null);
   const [locations, setLocations] = useState<LocationItem[]>([]);
@@ -317,7 +319,7 @@ export default function CulturePage() {
               <Column style={{ flex: "1 1 200px", minWidth: 180 }}>
                 <Field
                   type="text"
-                  placeholder="Type a dish name (e.g. Phở, Bánh Mì)"
+                  placeholder={t("culture.searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}

@@ -7,7 +7,9 @@ from src.interactions.schemas import SwipeBatchRequest, SwipeBatchResponse, Inte
 from src.interactions.service import process_swipe_batch
 from src.interactions.models import Interaction
 from src.locations.models import Location
-from src.core.dependencies import get_current_user_id
+from src.core.dependencies import get_current_user_id, get_current_user
+from src.membership import quota
+from src.users.models import User
 from typing import Optional
 
 router = APIRouter()
@@ -22,9 +24,11 @@ router = APIRouter()
 async def swipe_batch(
     request: Request,
     body: SwipeBatchRequest,
-    user_id: int = Depends(get_current_user_id),
+    user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
+    user_id = user.id
+    await quota.consume(request, user, "swipes", amount=len(body.actions))
     redis = request.app.state.redis
     actions_data = [action.model_dump() for action in body.actions]
     result = await process_swipe_batch(

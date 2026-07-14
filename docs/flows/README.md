@@ -14,9 +14,10 @@ The following workflows outline the exact sequencing between the User Interface,
 | **Authentication**     | Active  | `auth_registration.md`                       | OTP Verification, Supabase Auth integration, and PostgreSQL JIT Provisioning. |
 | **Discovery / Swipes** | Active  | `discovery_swipe.md`                          | Swipe engine, Vector learning (U=U+αP), Super Like, batching, Tour finalization. |
 | **Group Lobby**        | Planned | `group_lobby.md` (TBD)                       | Real-time WebSocket room dynamics, Minimax arbitration, and "Tour DNA". |
-| **Tour Building**      | Planned | `tour_optimization.md` (TBD)                 | Route optimization via Dijkstra's algorithm, constraint evaluation.          |
+| **Tour Building**      | Active  | `discovery_swipe.md` §4                      | Route optimization via Nearest-Neighbour greedy + 2-opt over a vector-aware cost model, constraint evaluation. |
 | **Social**             | Active  | `social_profile.md`               | Friend requests, unlocking badges, and feed interactions.                    |
 | **Gamification**       | Active  | `challenges_gamification.md`                 | XP & Leveling, Challenge auto-enrollment, Streak check-ins, Leaderboards.    |
+| **Monetization**       | Active  | `monetization.md`                            | Tier resolution (Bite/Savor/Feast/Omakase), mock Visa checkout, renewal sweep, quota enforcement, streak freezes. |
 
 ---
 

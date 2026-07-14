@@ -9,6 +9,11 @@ from src.core.config import settings
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,
+    pool_size=settings.DB_POOL_SIZE,
+    max_overflow=settings.DB_MAX_OVERFLOW,
+    pool_timeout=30,
+    pool_pre_ping=True,
+    pool_recycle=1800,
     connect_args={
         "statement_cache_size": 0,
         "prepared_statement_cache_size": 0,
@@ -36,6 +41,7 @@ async def get_db():
 # Tier 1 — Không phụ thuộc bảng nào
 from src.users.models import User                          # noqa: F401
 from src.locations.models import Location                  # noqa: F401
+from src.membership.models import AvatarFrame               # noqa: F401
 
 # Tier 2 — Phụ thuộc users / locations
 from src.interactions.models import Interaction            # noqa: F401
@@ -43,8 +49,11 @@ from src.groups.models import Group, GroupMember           # noqa: F401
 from src.social.models import Friendship                   # noqa: F401
 from src.gamification.models import Badge, UserBadge       # noqa: F401
 from src.challenges.models import (                             # noqa: F401
-    Challenge, UserChallenge, UserStreak, 
+    Challenge, UserChallenge, UserStreak,
     XpTransaction, ChallengeProgressLog
+)
+from src.membership.models import (                         # noqa: F401
+    PaymentMethod, UserFrame, StreakFreeze
 )
 
 # Tier 3 — Social content (phụ thuộc users + locations)
@@ -54,3 +63,4 @@ from src.tours.models import Tour, TourStop                # noqa: F401
 from src.bookmarks.models import Bookmark                  # noqa: F401
 from src.notifications.models import Notification          # noqa: F401
 from src.deals.models import Deal                          # noqa: F401
+from src.membership.models import Subscription, PaymentTransaction  # noqa: F401 (phụ thuộc payment_methods)

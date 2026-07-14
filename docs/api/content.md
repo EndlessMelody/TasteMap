@@ -301,6 +301,7 @@ Danh sách bookmarks của user hiện tại.
       "id": 1,
       "location": {
         "id": 5, "name": "Banh Mi Pho 古",
+        "lat": 10.7769, "lng": 106.7009,
         "image_url": "...", "rating": 4.8,
         "category": "food", "price_range": "25k"
       },

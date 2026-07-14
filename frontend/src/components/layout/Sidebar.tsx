@@ -8,6 +8,7 @@ import {
   Hand,
   Trophy,
   Map,
+  ListChecks,
   Sparkles,
   Users,
   Mic,
@@ -15,6 +16,7 @@ import {
   BookOpen,
   Shield,
   SquarePlus,
+  Crown,
   User as UserIcon,
 } from "lucide-react";
 import { Column, Row } from "@once-ui-system/core";
@@ -22,45 +24,45 @@ import { useUiStore } from "@/store/uiStore";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { Avatar, BodySm } from "@/components/ui";
+import { BodySm, DecoratedAvatar } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 
 // ─── Design tokens ───
 const LIGHT_C = {
-  bg: "#FFF4EE",
+  bg: tokens.color.surfaceWarm,
   border: "rgba(0, 0, 0, 0.06)",
   sectionLabel: "rgba(0, 0, 0, 0.3)",
   itemDefault: "rgba(0, 0, 0, 0.5)",
-  itemActive: "#ff6b35",
+  itemActive: tokens.color.warm,
   itemHover: "rgba(0, 0, 0, 0.04)",
-  itemActiveBg: "rgba(255, 107, 53, 0.08)",
-  indicator: "#ff6b35",
-  logo: "#ff6b35",
+  itemActiveBg: `${tokens.color.warm}14`,
+  indicator: tokens.color.warm,
+  logo: tokens.color.warm,
   profileName: "rgba(0, 0, 0, 0.85)",
   profileSub: "rgba(0, 0, 0, 0.4)",
-  widgetBg: "rgba(255, 107, 53, 0.05)",
-  widgetBorder: "rgba(255, 107, 53, 0.15)",
+  widgetBg: `${tokens.color.warm}0D`,
+  widgetBorder: `${tokens.color.warm}26`,
   progressBg: "rgba(0, 0, 0, 0.06)",
-  progressFill: "#ff6b35",
+  progressFill: tokens.color.warm,
   divider: "rgba(0,0,0,0.06)",
 };
 
 const DARK_C = {
-  bg: "#1C1C1E",
+  bg: tokens.color.surfaceInk,
   border: "rgba(255, 255, 255, 0.08)",
   sectionLabel: "rgba(255, 255, 255, 0.3)",
   itemDefault: "rgba(255, 255, 255, 0.5)",
-  itemActive: "#ff8c5a",
+  itemActive: tokens.color.warmBright,
   itemHover: "rgba(255, 255, 255, 0.06)",
-  itemActiveBg: "rgba(255, 140, 90, 0.12)",
-  indicator: "#ff8c5a",
-  logo: "#ff8c5a",
+  itemActiveBg: `${tokens.color.warmBright}1F`,
+  indicator: tokens.color.warmBright,
+  logo: tokens.color.warmBright,
   profileName: "rgba(255, 255, 255, 0.9)",
   profileSub: "rgba(255, 255, 255, 0.4)",
-  widgetBg: "rgba(255, 140, 90, 0.08)",
-  widgetBorder: "rgba(255, 140, 90, 0.2)",
+  widgetBg: `${tokens.color.warmBright}14`,
+  widgetBorder: `${tokens.color.warmBright}33`,
   progressBg: "rgba(255, 255, 255, 0.08)",
-  progressFill: "#ff8c5a",
+  progressFill: tokens.color.warmBright,
   divider: "rgba(255,255,255,0.08)",
 };
 
@@ -426,6 +428,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           onClick={() => router.push("/tour-builder")}
         />
         <SidebarItem
+          icon={<ListChecks size={17} />}
+          label={t("nav.myTours")}
+          active={currentPath === "/tours"}
+          collapsed={!isOpen}
+          onClick={() => router.push("/tours")}
+        />
+        <SidebarItem
           icon={<Trophy size={17} />}
           label={t("nav.challenges")}
           active={currentPath === "/challenges"}
@@ -454,6 +463,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           collapsed={!isOpen}
           badge={t("sidebar.badgeNew")}
           onClick={() => router.push("/culture")}
+        />
+        <SidebarItem
+          icon={<Crown size={17} />}
+          label={t("nav.membership")}
+          active={currentPath === "/membership"}
+          collapsed={!isOpen}
+          onClick={() => router.push("/membership")}
         />
       </Column>
 
@@ -698,13 +714,11 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
       }}
     >
       <Column style={{ position: "relative", flexShrink: 0 }}>
-        <Avatar
+        <DecoratedAvatar
           src={user?.avatar_url || ""}
+          name={user?.display_name || user?.username}
           size="sm"
-          style={{
-            border: `2px solid ${C.indicator}40`,
-            display: "block",
-          }}
+          frame={user?.equipped_frame ?? null}
         />
         <Column
           style={{
@@ -714,8 +728,8 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
             width: "9px",
             height: "9px",
             borderRadius: "50%",
-            backgroundColor: "#4ADE80",
-            border: "2px solid #FFFFFF",
+            backgroundColor: tokens.color.success,
+            border: `2px solid ${C.bg}`,
           }}
         />
       </Column>
@@ -778,7 +792,7 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
             transition: "color 0.15s",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#FF3B30";
+            e.currentTarget.style.color = tokens.color.danger;
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.color = "rgba(0,0,0,0.3)";

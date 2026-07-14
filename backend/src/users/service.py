@@ -10,12 +10,13 @@ import redis.asyncio as aioredis
 from typing import Optional, List
 
 from src.users.models import User
-from src.users.schemas import UserUpdate, UserStats, BadgeSummary, UserProfile, UserMe
+from src.users.schemas import UserUpdate, UserStats, BadgeSummary, UserProfile, UserMe, FrameStub
 from src.posts.models import Post
 from src.bookmarks.models import Bookmark
 from src.social.models import Friendship
 from src.gamification.models import UserBadge, Badge
 from src.challenges.xp_service import compute_level_progress
+from src.membership.entitlements import resolve_effective_tier
 
 
 class UserService:
@@ -81,11 +82,21 @@ class UserService:
     async def get_user_by_id(self, user_id: int) -> User:
         return await self._get_user_or_404(user_id)
 
+    async def _resolve_tier_and_frame(self, user: User) -> Optional[FrameStub]:
+        """Refresh the membership_tier snapshot and return the equipped frame, if any."""
+        await resolve_effective_tier(self.db, user)
+        await self.db.commit()
+        await self.db.refresh(user)
+        if user.equipped_frame is not None:
+            return FrameStub.model_validate(user.equipped_frame)
+        return None
+
     async def get_profile(self, user_id: int) -> UserProfile:
         user = await self._get_user_or_404(user_id)
         stats = await self._compute_stats(user_id)
         badges = await self._get_badges(user_id)
         progress = await compute_level_progress(self.db, user)
+        equipped_frame = await self._resolve_tier_and_frame(user)
         return UserProfile(
             id=user.id,
             username=user.username,
@@ -102,6 +113,8 @@ class UserService:
             created_at=user.created_at,
             stats=stats,
             badges=badges,
+            membership_tier=user.membership_tier or "bite",
+            equipped_frame=equipped_frame,
         )
 
     async def get_me(self, user_id: int) -> UserMe:
@@ -109,6 +122,7 @@ class UserService:
         stats = await self._compute_stats(user_id)
         badges = await self._get_badges(user_id)
         progress = await compute_level_progress(self.db, user)
+        equipped_frame = await self._resolve_tier_and_frame(user)
         return UserMe(
             id=user.id,
             username=user.username,
@@ -130,6 +144,8 @@ class UserService:
             created_at=user.created_at,
             stats=stats,
             badges=badges,
+            membership_tier=user.membership_tier or "bite",
+            equipped_frame=equipped_frame,
         )
 
     async def update_me(self, user_id: int, data: UserUpdate) -> UserMe:

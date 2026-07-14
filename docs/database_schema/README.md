@@ -11,6 +11,7 @@ Vui lòng tham khảo các file chi tiết dưới đây khi cần làm việc v
 * **[`content.md`](./content.md):** UGC (User-Generated Content) bao gồm Posts, Reels, Locations, Comments và Deals.
 * **[`interactions.md`](./interactions.md):** Dữ liệu hành vi người dùng (Swipes), Bookmarks (Taste Vault) dùng để train AI.
 * **[`gamification.md`](./gamification.md):** Cấp độ (Levels), XP, Huy hiệu (Badges) và Hệ thống Thử thách (Challenges/Streaks).
+* **[`monetization.md`](./monetization.md):** Hệ thống Hội viên 4 bậc (Membership Tiers), thanh toán mock Visa (Subscriptions/Payments) và khung avatar (Avatar Frames).
 
 ---
 

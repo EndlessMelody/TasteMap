@@ -1,42 +1,91 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Sparkles, Zap, RotateCcw, Send, Map, ChevronLeft } from "lucide-react";
 import { Column, Row, Grid } from "@once-ui-system/core";
+import { toast } from "sonner";
 import type { ItineraryStop } from "../types";
-import { SWAP_POOL } from "../constants";
-import { RouteMap } from "../RouteMap";
 import { StopCard } from "../StopCard";
 import { useLanguage } from "@/context/LanguageContext";
+import { apiDelete, apiGet, apiPost } from "@/lib/api";
+import { TourMap, formatDuration, formatVnd } from "@/components/features/tours";
+import type { TourDetail } from "@/components/features/tours/lib";
+import { tourToItineraryStops } from "../../lib/generatePlan";
+import type { PlannerAlternate } from "../../lib/generatePlan";
 
 interface StepResultProps {
+  tour: TourDetail;
+  alternates: PlannerAlternate[];
   stops: ItineraryStop[];
   onRegen: () => void;
   onBack: () => void;
+  onTourUpdate: (tour: TourDetail) => void;
 }
 
-export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultProps) {
+export function StepResult({ tour, alternates, stops: initialStops, onRegen, onBack, onTourUpdate }: StepResultProps) {
   const router = useRouter();
   const { t } = useLanguage();
+  const [localTour, setLocalTour] = useState(tour);
+  const [pool, setPool] = useState<PlannerAlternate[]>(alternates);
   const [stops, setStops] = useState<ItineraryStop[]>(initialStops);
   const [activeStop, setActiveStop] = useState<number | null>(null);
   const [swapping, setSwapping] = useState<number | null>(null);
-  const [pool, setPool] = useState([...SWAP_POOL]);
 
+  useEffect(() => {
+    setLocalTour(tour);
+    setStops(tourToItineraryStops(tour, "walking"));
+  }, [tour]);
+
+  const liveStops = useMemo(() => localTour.stops.filter((s) => s.location), [localTour]);
   const totalXp = stops.reduce((s, x) => s + x.xp, 0);
 
-  const handleSwap = async (i: number) => {
-    setSwapping(i);
-    await new Promise((r) => setTimeout(r, 1400));
-    const next = { ...pool[0], time: stops[i].time, travelToNext: stops[i].travelToNext };
-    setPool((p) => [...p.slice(1), p[0]]);
-    setStops((prev) => prev.map((s, idx) => (idx === i ? next : s)));
-    setSwapping(null);
+  const applyUpdatedTour = (detail: TourDetail) => {
+    setLocalTour(detail);
+    setStops(tourToItineraryStops(detail, "walking"));
+    onTourUpdate(detail);
   };
 
-  const handleRemove = (i: number) => setStops((prev) => prev.filter((_, idx) => idx !== i));
+  const handleSwap = async (i: number) => {
+    const stopToReplace = liveStops[i];
+    const alt = pool[0];
+    if (!stopToReplace || !alt) {
+      toast.error(t("aiPlanner.swapFailed"));
+      return;
+    }
+    setSwapping(i);
+    try {
+      await apiDelete(`/api/v1/tours/${localTour.id}/stops/${stopToReplace.id}`);
+      await apiPost(`/api/v1/tours/${localTour.id}/stops`, { location_id: alt.id });
+      const first = liveStops[0]?.location;
+      await apiPost(`/api/v1/tours/${localTour.id}/optimize`, {
+        start_lat: first?.lat ?? null,
+        start_lng: first?.lng ?? null,
+        category: "food",
+        transport_mode: "walking",
+      });
+      const detail = await apiGet<TourDetail>(`/api/v1/tours/${localTour.id}`);
+      applyUpdatedTour(detail);
+      setPool((p) => [...p.slice(1), { id: stopToReplace.location!.id, name: stopToReplace.location!.name, lat: stopToReplace.location!.lat, lng: stopToReplace.location!.lng, image_url: stopToReplace.location!.image_url, price_range: stopToReplace.location!.price_range, rating: stopToReplace.location!.rating, category: stopToReplace.location!.category }]);
+    } catch {
+      toast.error(t("aiPlanner.swapFailed"));
+    } finally {
+      setSwapping(null);
+    }
+  };
+
+  const handleRemove = async (i: number) => {
+    const stopToRemove = liveStops[i];
+    if (!stopToRemove) return;
+    try {
+      await apiDelete(`/api/v1/tours/${localTour.id}/stops/${stopToRemove.id}`);
+      const detail = await apiGet<TourDetail>(`/api/v1/tours/${localTour.id}`);
+      applyUpdatedTour(detail);
+    } catch {
+      toast.error(t("aiPlanner.removeStopFailed"));
+    }
+  };
 
   return (
     <Column
@@ -177,15 +226,15 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                         letterSpacing: -0.3,
                       }}
                     >
-                      {t("aiPlanner.heroTitle")}
+                      {localTour.title || t("aiPlanner.yourPlan")}
                     </h3>
                     <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", margin: 0 }}>
-                      {t("aiPlanner.heroMeta", { n: stops.length })}
+                      {t("aiPlanner.stopsCity", { n: stops.length })}
                     </p>
                   </Column>
                   <Column style={{ textAlign: "right" }}>
                     <p style={{ fontSize: 18, fontWeight: 900, color: "white", margin: "0 0 4px" }}>
-                      305,000đ
+                      {formatVnd(localTour.estimated_cost)}
                     </p>
                     <span
                       style={{
@@ -213,7 +262,7 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
               <Column style={{ flex: "0 0 460px" }}>
                 {stops.map((stop, i) => (
                   <StopCard
-                    key={`${stop.name}-${i}`}
+                    key={stop.id ?? `${stop.name}-${i}`}
                     stop={stop}
                     index={i}
                     total={stops.length}
@@ -237,13 +286,15 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                   minWidth: 0,
                 }}
               >
-                <RouteMap stops={stops} activeStop={activeStop} />
+                <Column style={{ borderRadius: 20, overflow: "hidden", border: "1px solid rgba(0,0,0,0.06)" }}>
+                  <TourMap stops={liveStops} mapId="ai-planner-result-map" height={260} zoom={13} />
+                </Column>
 
                 <Grid style={{ gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   {[
                     { label: t("aiPlanner.statTotalStops"), value: t("aiPlanner.statPlaces", { n: stops.length }), color: "#ff6b35", emoji: "📍" },
-                    { label: t("aiPlanner.statDuration"), value: t("aiPlanner.statDurationValue"), color: "#FF9500", emoji: "⏱️" },
-                    { label: t("aiPlanner.statBudget"), value: "305,000đ", color: "#34C759", emoji: "💰" },
+                    { label: t("aiPlanner.statDuration"), value: formatDuration(localTour.estimated_duration), color: "#FF9500", emoji: "⏱️" },
+                    { label: t("aiPlanner.statBudget"), value: formatVnd(localTour.estimated_cost), color: "#34C759", emoji: "💰" },
                     { label: t("aiPlanner.statXp"), value: `+${totalXp} XP`, color: "#A855F7", emoji: "⚡" },
                   ].map(({ label, value, color, emoji }) => (
                     <Column
@@ -275,6 +326,19 @@ export function StepResult({ stops: initialStops, onRegen, onBack }: StepResultP
                     </Column>
                   ))}
                 </Grid>
+
+                <Row
+                  vertical="center"
+                  style={{
+                    gap: 6,
+                    fontSize: 11,
+                    color: "#34C759",
+                    fontWeight: 700,
+                    padding: "8px 12px",
+                  }}
+                >
+                  {t("aiPlanner.savedAsTour")}
+                </Row>
               </Column>
             </Row>
 

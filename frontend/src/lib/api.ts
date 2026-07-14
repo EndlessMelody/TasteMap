@@ -55,6 +55,7 @@ export class ApiError extends Error {
   constructor(
     public status: number,
     message: string,
+    public errorCode?: string,
   ) {
     super(message);
     this.name = "ApiError";
@@ -134,16 +135,18 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   if (!res.ok) {
     let message = `HTTP ${res.status}`;
+    let errorCode: string | undefined;
     try {
       const err = await res.json();
       message =
         typeof err.detail === "object"
           ? JSON.stringify(err.detail)
-          : (err.detail ?? err.message ?? message);
+          : (err.detail ?? err.error ?? err.message ?? message);
+      errorCode = err.error_code;
     } catch {
       // ignore parse errors
     }
-    throw new ApiError(res.status, message);
+    throw new ApiError(res.status, message, errorCode);
   }
 
   // 204 No Content — no body

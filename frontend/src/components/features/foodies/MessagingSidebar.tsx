@@ -52,6 +52,7 @@ import { useMessages } from "../../../hooks/useMessages";
 import { useMediaUpload } from "@/hooks/useMediaUpload";
 import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import { apiPost, apiPatch, apiDelete } from "@/lib/api";
+import { tokens } from "@/styles/tokens";
 
 interface MessagingSidebarProps {
   isOpen: boolean;
@@ -225,8 +226,8 @@ const VoiceMessagePlayer: React.FC<VoiceMessagePlayerProps> = ({
             justifyContent: "center",
             background: isMe
               ? "rgba(255,255,255,0.2)"
-              : "rgba(255,107,53,0.14)",
-            color: isMe ? "#ffffff" : "#ff6b35",
+              : `${tokens.color.warm}24`,
+            color: isMe ? tokens.color.textInverse : tokens.color.warm,
             flexShrink: 0,
           }}
         >
@@ -249,7 +250,7 @@ const VoiceMessagePlayer: React.FC<VoiceMessagePlayerProps> = ({
             flex: 1,
             margin: 0,
             cursor: totalDuration > 0 ? "pointer" : "default",
-            accentColor: isMe ? "#ffffff" : "#ff6b35",
+            accentColor: isMe ? tokens.color.textInverse : tokens.color.warm,
             opacity: totalDuration > 0 ? 1 : 0.65,
           }}
         />
@@ -790,7 +791,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
     return { ...msg, pos, showDate, isLastMe };
   });
 
-  const composerAccent = "#ff6b35";
+  const composerAccent = tokens.color.warm;
   const canCompose = Boolean(activeUser);
   const hasComposerDraft = Boolean(message.trim()) || Boolean(audioBlob);
   const canUseMediaButtons = canCompose && !sending && !mediaUploading;
@@ -962,7 +963,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   size="m"
                   style={{
                     border: "2.5px solid var(--surface-background)",
-                    boxShadow: "0 2px 10px rgba(255,107,53,0.10)",
+                    boxShadow: `0 2px 10px ${tokens.color.warm}1A`,
                     display: "block",
                   }}
                 />
@@ -975,7 +976,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                       width: 10,
                       height: 10,
                       borderRadius: "50%",
-                      backgroundColor: "#34c759",
+                      backgroundColor: tokens.color.success,
                       border: "2px solid var(--surface-background)",
                     }}
                   />
@@ -997,11 +998,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                       style={{
                         fontSize: 11,
                         fontWeight: 700,
-                        color: activeUser.match >= 85 ? "#16A34A" : "#D97706",
+                        color: activeUser.match >= 85 ? tokens.color.success : tokens.color.warning,
                         backgroundColor:
                           activeUser.match >= 85
-                            ? "rgba(52,199,89,0.08)"
-                            : "rgba(245,158,11,0.08)",
+                            ? `${tokens.color.success}14`
+                            : `${tokens.color.warning}14`,
                         padding: "2px 7px",
                         borderRadius: 10,
                       }}
@@ -1014,7 +1015,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   variant="body-default-xs"
                   style={{
                     color: activeUser.isOnline
-                      ? "#34c759"
+                      ? tokens.color.success
                       : "var(--neutral-on-background-weak)",
                     fontWeight: 600,
                   }}
@@ -1039,8 +1040,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               borderRadius: "50%",
               width: 36,
               height: 36,
-              color: "#ff6b35",
-              backgroundColor: "rgba(255,107,53,0.06)",
+              color: tokens.color.warm,
+              backgroundColor: `${tokens.color.warm}0F`,
               transition: "background-color 0.15s",
             }}
           >
@@ -1051,8 +1052,8 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               borderRadius: "50%",
               width: 36,
               height: 36,
-              color: "#ff6b35",
-              backgroundColor: "rgba(255,107,53,0.06)",
+              color: tokens.color.warm,
+              backgroundColor: `${tokens.color.warm}0F`,
               transition: "background-color 0.15s",
             }}
           >
@@ -1150,11 +1151,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   height: 28,
                                   borderRadius: 9,
                                   backgroundColor: item.danger
-                                    ? "rgba(239,68,68,0.1)"
-                                    : "rgba(255,107,53,0.1)",
+                                    ? `${tokens.color.danger}1A`
+                                    : `${tokens.color.warm}1A`,
                                   color: item.danger
-                                    ? "#ef4444"
-                                    : "#ff6b35",
+                                    ? tokens.color.danger
+                                    : tokens.color.warm,
                                   flexShrink: 0,
                                 }}
                               >
@@ -1168,7 +1169,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   variant="body-default-s"
                                   style={{
                                     color: item.danger
-                                      ? "#dc2626"
+                                      ? tokens.color.danger
                                       : "var(--neutral-on-background-strong)",
                                     fontWeight: 600,
                                   }}
@@ -1243,15 +1244,15 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                 width: 76,
                 height: 76,
                 borderRadius: 26,
-                background: "linear-gradient(135deg, rgba(255, 107, 53, 0.12) 0%, rgba(230, 57, 70, 0.1) 50%, rgba(123, 47, 247, 0.12) 100%)",
-                border: "1.5px solid rgba(255,107,53,0.18)",
-                boxShadow: "0 4px 20px rgba(255,107,53,0.08)",
+                background: tokens.gradient.signatureSoft,
+                border: `1.5px solid ${tokens.color.warm}2E`,
+                boxShadow: `0 4px 20px ${tokens.color.warm}14`,
               }}
             >
               <MessageCircle
                 size={32}
                 strokeWidth={2}
-                color="#ff6b35"
+                color={tokens.color.warm}
               />
             </Row>
             <Column style={{ alignItems: "center", gap: 6 }}>
@@ -1296,7 +1297,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = "var(--surface-background)";
-                    e.currentTarget.style.borderColor = "#ff6b35";
+                    e.currentTarget.style.borderColor = tokens.color.warm;
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = "var(--neutral-background-weak)";
@@ -1394,9 +1395,9 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                               msg.content_type === "text" ? "11px 16px" : "8px",
                             borderRadius: bubbleRadius(msg.sender, msg.pos),
                             background: isMe
-                              ? "linear-gradient(135deg, #ff6b35 0%, #e65721 100%)"
+                              ? `linear-gradient(135deg, ${tokens.color.warm} 0%, ${tokens.color.warmBright} 100%)`
                               : "var(--surface-background)",
-                            color: isMe ? "white" : "var(--neutral-on-background-strong)",
+                            color: isMe ? tokens.color.textInverse : "var(--neutral-on-background-strong)",
                             border: isMe
                               ? "none"
                               : "1px solid var(--neutral-alpha-weak)",
@@ -1507,14 +1508,14 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   borderRadius: 8,
                                   background: isMe
                                     ? "rgba(255,255,255,0.2)"
-                                    : "rgba(255,107,53,0.1)",
+                                    : `${tokens.color.warm}1A`,
                                 }}
                               >
                                 <ImageIcon
                                   size={16}
                                   strokeWidth={2.25}
                                   color={
-                                    isMe ? "white" : "#ff6b35"
+                                    isMe ? tokens.color.textInverse : tokens.color.warm
                                   }
                                 />
                               </Row>
@@ -1589,10 +1590,10 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                   padding: "2px 8px",
                                   borderRadius: 12,
                                   border: reaction.has_reacted
-                                    ? "1px solid #ff6b35"
+                                    ? `1px solid ${tokens.color.warm}`
                                     : "1px solid var(--neutral-alpha-weak)",
                                   background: reaction.has_reacted
-                                    ? "rgba(255,107,53,0.1)"
+                                    ? `${tokens.color.warm}1A`
                                     : isMe
                                       ? "rgba(255,255,255,0.1)"
                                       : "var(--neutral-background-weak)",
@@ -1690,13 +1691,13 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                                 <Clock3
                                   size={14}
                                   strokeWidth={2.4}
-                                  color="#ff6b35"
+                                  color={tokens.color.warm}
                                 />
                               ) : (
                                 <CheckCheck
                                   size={14}
                                   strokeWidth={2.5}
-                                  color="#ff6b35"
+                                  color={tokens.color.warm}
                                 />
                               ))}
                           </Row>
@@ -1792,7 +1793,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
           }
           tooltip={isRecording ? "Stop recording" : "Record voice"}
           style={{
-            color: isRecording ? "#ef4444" : composerAccent,
+            color: isRecording ? tokens.color.danger : composerAccent,
             backgroundColor: "transparent",
             width: 34,
             height: 34,
@@ -1929,11 +1930,11 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
         <Column
           style={{
             padding: "4px 14px 8px",
-            color: "#dc2626",
+            color: tokens.color.danger,
             fontSize: 12,
             fontWeight: 600,
-            borderTop: "1px solid rgba(220,38,38,0.1)",
-            backgroundColor: "rgba(220,38,38,0.04)",
+            borderTop: `1px solid ${tokens.color.danger}1A`,
+            backgroundColor: `${tokens.color.danger}0A`,
           }}
         >
           Microphone error: {recordingError}
@@ -1953,7 +1954,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               right: 14,
               bottom: 62,
               width: "min(360px, calc(100vw - 30px))",
-              backgroundColor: "#1f2329",
+              backgroundColor: tokens.color.surfaceInk,
               borderRadius: 14,
               border: "1px solid rgba(255,255,255,0.08)",
               boxShadow: "0 22px 44px rgba(0,0,0,0.38)",
@@ -1986,7 +1987,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
                     borderRadius: 20,
                     border: "1px solid rgba(255,255,255,0.09)",
                     backgroundColor: "rgba(255,255,255,0.12)",
-                    color: "#f8fafc",
+                    color: tokens.color.textInverse,
                     padding: "0 14px 0 36px",
                     fontSize: 14,
                     outline: "none",
@@ -2081,7 +2082,7 @@ export const MessagingSidebar: React.FC<MessagingSidebarProps> = ({
               width: 40,
               height: 40,
               borderRadius: "50%",
-              background: "linear-gradient(135deg, #ef4444, #dc2626)",
+              background: `linear-gradient(135deg, ${tokens.color.danger}, ${tokens.color.danger}CC)`,
               animation: "pulse 1.5s infinite",
             }}
           >

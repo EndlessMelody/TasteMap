@@ -12,6 +12,8 @@ class BookmarkCreate(BaseModel):
 class LocationStub(BaseModel):
     id: int
     name: str
+    lat: Optional[float] = None
+    lng: Optional[float] = None
     image_url: Optional[str] = None
     rating: Optional[float] = None
     category: Optional[str] = None

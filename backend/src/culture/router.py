@@ -4,12 +4,13 @@ Culture Router — Culinary Culture Guide API endpoints.
 
 import base64
 
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile, File, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core.exceptions import ValidationException
 
 from src.db.database import get_db
 from src.core.dependencies import get_current_user_id
+from src.membership.quota import enforce_quota
 from src.users.models import User
 from src.culture.schemas import CultureQuery, CultureStoryResponse, CultureStorySection
 from src.culture.service import (
@@ -18,8 +19,9 @@ from src.culture.service import (
     parse_food_vector,
     contains_banned_content,
 )
+from src.core.rate_limit import limiter
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(enforce_quota("culture_calls"))])
 
 
 def _reject_banned_food_query(*texts: str | None) -> None:
@@ -36,7 +38,9 @@ def _reject_banned_food_query(*texts: str | None) -> None:
 
 
 @router.post("/story", response_model=CultureStoryResponse)
+@limiter.limit("10/minute")
 async def get_culture_story_by_name(
+    request: Request,
     query: CultureQuery,
     db: AsyncSession = Depends(get_db),
     user_id: int = Depends(get_current_user_id),
@@ -57,7 +61,9 @@ async def get_culture_story_by_name(
 
 
 @router.post("/identify", response_model=CultureStoryResponse)
+@limiter.limit("10/minute")
 async def identify_and_story(
+    request: Request,
     image_url: str | None = None,
     language: str = "vi",
     db: AsyncSession = Depends(get_db),
@@ -109,7 +115,9 @@ async def identify_and_story(
 
 
 @router.post("/identify-upload", response_model=CultureStoryResponse)
+@limiter.limit("10/minute")
 async def identify_from_upload(
+    request: Request,
     file: UploadFile = File(...),
     language: str = "vi",
     db: AsyncSession = Depends(get_db),

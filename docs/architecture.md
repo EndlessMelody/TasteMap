@@ -11,7 +11,7 @@ The Smart Travel App acts as a "Tinder for Travel", allowing users to swipe on l
 3. **Database**: PostgreSQL (pgvector)
    - Stores user profiles, location metadata, and vector embeddings for swiping algorithms.
 4. **Algorithmic Core**: Python/Numpy
-   - Computes match percentages, shortest paths (Dijkstra), and itinerary optimization.
+   - Computes match percentages and itinerary optimization (Nearest-Neighbour + 2-opt over a vector-aware cost model — see `docs/math_models.md`).
 
 ## API Contracts
 *(To be detailed as endpoints are built)*

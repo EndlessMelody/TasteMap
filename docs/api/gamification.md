@@ -99,6 +99,12 @@ Lấy thông tin streak (chuỗi ngày check-in) của user.
 
 Điểm danh hàng ngày (Daily Check-in) để giữ streak và nhận XP.
 
+**Response:**
+```json
+{ "status": "success", "current_streak": 8, "xp_awarded": 18, "leveled_up": false, "freeze_used": false }
+```
+> `freeze_used: true` khi hệ thống tự động dùng 1 lượt "streak freeze" để tha thứ một ngày bị bỏ lỡ thay vì reset streak — xem [`monetization.md`](./monetization.md) (streak freeze là quyền lợi theo tier: Savor 1/tháng, Feast 2/tháng, Omakase 3/tháng).
+
 ---
 
 ### `POST /api/v1/challenges/{challenge_id}/join` 🆕

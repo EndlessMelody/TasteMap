@@ -20,6 +20,18 @@ class BadgeStub(BaseModel):
         from_attributes = True
 
 
+class FrameStub(BaseModel):
+    """Equipped avatar frame — see docs/api/monetization.md (FrameStub)."""
+    id: int
+    slug: str
+    style_key: str
+    accent_color: str
+    is_animated: bool = False
+
+    class Config:
+        from_attributes = True
+
+
 class BadgeSummary(BaseModel):
     id: int
     name: str
@@ -103,6 +115,8 @@ class UserProfile(BaseModel):
     stats: UserStats = UserStats()
     primary_badge: Optional[BadgeStub] = None
     badges: List[BadgeSummary] = []
+    membership_tier: str = "bite"
+    equipped_frame: Optional[FrameStub] = None
 
     class Config:
         from_attributes = True
@@ -132,6 +146,8 @@ class UserMe(BaseModel):
     stats: UserStats = UserStats()
     primary_badge: Optional[BadgeStub] = None
     badges: List[BadgeSummary] = []
+    membership_tier: str = "bite"
+    equipped_frame: Optional[FrameStub] = None
 
     class Config:
         from_attributes = True

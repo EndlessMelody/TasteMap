@@ -1,13 +1,16 @@
 "use client";
 
 import React from "react";
-import { Column, Row } from "@once-ui-system/core";
+import { Row } from "@once-ui-system/core";
 import { tokens } from "@/styles/tokens";
+import { DecoratedAvatar, type DecoratedAvatarFrame } from "@/components/ui/DecoratedAvatar";
+
 interface ProfileAvatarGroupUser {
   display_name?: string;
   username?: string;
   avatar_url?: string;
   level?: number | null;
+  equipped_frame?: DecoratedAvatarFrame | null;
 }
 
 interface ProfileAvatarGroupProps {
@@ -15,79 +18,38 @@ interface ProfileAvatarGroupProps {
 }
 
 /**
- * Hero avatar — 160px circular, 4px white ring, level badge.
- * Editorial: no animated conic ring, no infinite glow.
+ * Hero avatar — 160px circular, 4px surface ring, level badge, optional
+ * membership tier frame (see DecoratedAvatar). Editorial: no infinite glow
+ * unless the equipped frame itself calls for it (Omakase only).
  */
 export const ProfileAvatarGroup: React.FC<ProfileAvatarGroupProps> = ({
   user,
 }) => {
-  const initials = (user?.display_name || user?.username || "?")
-    .split(" ")
-    .filter(Boolean)
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
   return (
-    <Row style={{ position: "relative", width: 160, height: 160 }}>
-      <Column
-        center
-        style={{
-          width: 160,
-          height: 160,
-          borderRadius: "50%",
-          border: `4px solid ${tokens.color.surface}`,
-          background: tokens.color.surfaceMuted,
-          boxShadow: tokens.shadow.md,
-          overflow: "hidden",
-        }}
-      >
-        {user?.avatar_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={user.avatar_url}
-            alt=""
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        ) : (
-          <span
-            style={{
-              color: tokens.color.textInverse,
-              background: tokens.color.text,
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 48,
-              fontWeight: tokens.type.weight.semibold,
-            }}
-          >
-            {initials}
-          </span>
-        )}
-      </Column>
-
-      <Row
-        style={{
-          position: "absolute",
-          bottom: 4,
-          right: 4,
-          background: tokens.color.warm,
-          color: tokens.color.textInverse,
-          borderRadius: tokens.radius.md,
-          padding: `${tokens.space[1]} ${tokens.space[3]}`,
-          border: `3px solid ${tokens.color.surface}`,
-          fontSize: tokens.type.size.caption,
-          fontWeight: tokens.type.weight.bold,
-          letterSpacing: tokens.type.tracking.wide,
-          textTransform: "uppercase",
-        }}
-      >
-        Lv {user?.level || 1}
-      </Row>
-    </Row>
+    <DecoratedAvatar
+      size="2xl"
+      name={user?.display_name || user?.username}
+      src={user?.avatar_url}
+      frame={user?.equipped_frame}
+      avatarRingColor={tokens.color.surface}
+      badge={
+        <Row
+          style={{
+            background: tokens.color.warm,
+            color: tokens.color.textInverse,
+            borderRadius: tokens.radius.md,
+            padding: `${tokens.space[1]} ${tokens.space[3]}`,
+            border: `3px solid ${tokens.color.surface}`,
+            fontSize: tokens.type.size.caption,
+            fontWeight: tokens.type.weight.bold,
+            letterSpacing: tokens.type.tracking.wide,
+            textTransform: "uppercase",
+          }}
+        >
+          Lv {user?.level || 1}
+        </Row>
+      }
+    />
   );
 };
 

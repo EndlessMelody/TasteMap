@@ -40,6 +40,8 @@ export { Pill, Chip } from "./Pill";
 export type { PillTone, PillSize } from "./Pill";
 export { Avatar } from "./Avatar";
 export type { AvatarSize } from "./Avatar";
+export { DecoratedAvatar } from "./DecoratedAvatar";
+export type { DecoratedAvatarFrame } from "./DecoratedAvatar";
 
 // States
 export { EmptyState } from "./EmptyState";

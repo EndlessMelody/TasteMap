@@ -149,8 +149,9 @@ Step 3: Add all stops CONCURRENTLY (Promise.all anti-pattern fix)
         POST /api/v1/tours/7/stops { "location_id": 68 },
       ])
 
-Step 4: Optimize Route (Dijkstra/A*)
+Step 4: Optimize Route (Nearest-Neighbour + 2-opt)
    └─ POST /api/v1/tours/7/optimize { "start_lat": 10.89, "start_lng": 106.79 }
+      (start_lat/start_lng are optional — omit to start from the first added stop)
    └─ Response: optimized_stops[] with travel_min between each stop
 
 Step 5: Render Tour Map View
@@ -163,10 +164,12 @@ Step 5: Render Tour Map View
 
 ### 4.2 Optimization Algorithm Reference
 
-The backend `POST /api/v1/tours/{id}/optimize` applies a **modified Dijkstra/A*** algorithm:
+The backend `POST /api/v1/tours/{id}/optimize` applies a **Nearest-Neighbour greedy + 2-opt**
+algorithm over a vector-aware cost model (see [`docs/api/discovery.md` §8](../api/discovery.md) and
+[`docs/math_models.md`](../math_models.md#tour-routing-itinerary--vector-aware-cost-model)):
 
 ```
-Edge Cost = Traffic_Time + Weather_Penalty − Location_Match_Score
+Edge Cost = Travel_Time + Weather_Penalty − Taste_Match_Bonus − Rating_Bonus − OpenFit_Bonus
 ```
 
 Returns an `optimized_stops[]` array with re-ordered `stop_order` and `estimated_travel_min` between stops.

@@ -10,6 +10,7 @@ from src.recommendations.schemas import (
 )
 from src.recommendations import service
 from src.core.dependencies import get_current_user_id
+from src.membership.quota import enforce_quota
 
 router = APIRouter()
 
@@ -18,7 +19,8 @@ router = APIRouter()
     "/",
     response_model=RecommendationResponse,
     summary="Gợi ý top-N (vector-only)",
-    description="Two-Pass: pgvector ANN → numpy scoring."
+    description="Two-Pass: pgvector ANN → numpy scoring.",
+    dependencies=[Depends(enforce_quota("recommendation_calls"))],
 )
 async def get_recommendations(
     request: RecommendationRequest,

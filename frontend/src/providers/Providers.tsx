@@ -29,7 +29,6 @@ import { ThemeProvider as AppThemeProvider } from "@/context/ThemeContext";
 import { AccentProvider } from "@/context/AccentContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { AuthProvider as HooksAuthProvider } from "@/hooks/useAuth";
 import { UserVectorProvider } from "@/context/UserVectorContext";
 import { ChatProvider } from "@/context/ChatContext";
 
@@ -54,11 +53,9 @@ export function Providers({ children }: { children: ReactNode }) {
               <AccentProvider>
                 <LanguageProvider>
                   <AuthProvider>
-                    <HooksAuthProvider>
-                      <UserVectorProvider>
-                        <ChatProvider>{children}</ChatProvider>
-                      </UserVectorProvider>
-                    </HooksAuthProvider>
+                    <UserVectorProvider>
+                      <ChatProvider>{children}</ChatProvider>
+                    </UserVectorProvider>
                   </AuthProvider>
                 </LanguageProvider>
               </AccentProvider>

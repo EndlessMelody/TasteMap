@@ -4,7 +4,15 @@ from datetime import datetime
 
 
 class TourCreate(BaseModel):
-    pass  # No required fields — creates empty tour
+    title: Optional[str] = Field(None, max_length=120)
+
+
+class TourUpdate(BaseModel):
+    title: str = Field(..., min_length=1, max_length=120)
+
+
+class ReorderRequest(BaseModel):
+    stop_ids: List[int]
 
 
 class StopCreate(BaseModel):
@@ -37,6 +45,7 @@ class StopResponse(BaseModel):
 
 class TourResponse(BaseModel):
     id: int
+    title: Optional[str] = None
     status: str
     total_distance: Optional[float] = None
     estimated_cost: Optional[int] = None
@@ -53,8 +62,9 @@ class StatusUpdate(BaseModel):
 
 
 class OptimizeRequest(BaseModel):
-    start_lat: float
-    start_lng: float
+    # Optional — if omitted, the optimiser starts from the first added stop.
+    start_lat: Optional[float] = None
+    start_lng: Optional[float] = None
     # Which user vector to personalise against + contextual signals.
     category: Literal["food", "place"] = "food"
     time_context: Optional[str] = None  # breakfast / lunch / dinner / late_night ...

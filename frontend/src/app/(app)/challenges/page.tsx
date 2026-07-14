@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { Column, Row, Grid } from "@once-ui-system/core";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { apiGet, apiPost } from "@/lib/api";
 import { toast } from "sonner";
 import {
@@ -77,17 +78,21 @@ const BADGE_ICON: Record<string, React.ReactElement> = {
 
 type PillToneStrict = "success" | "warning" | "danger" | "neutral";
 
-const DIFF_CONFIG: Record<
-  Difficulty,
-  { label: string; tone: PillToneStrict }
-> = {
-  easy: { label: "Easy", tone: "success" },
-  medium: { label: "Medium", tone: "warning" },
-  hard: { label: "Hard", tone: "danger" },
+const DIFF_CONFIG: Record<Difficulty, { tone: PillToneStrict }> = {
+  easy: { tone: "success" },
+  medium: { tone: "warning" },
+  hard: { tone: "danger" },
 };
 
 const CAT_TABS = ["All", "Active", "Completed", "Claimed", "Upcoming"] as const;
 type CatTab = (typeof CAT_TABS)[number];
+const CAT_TAB_KEY: Record<CatTab, string> = {
+  All: "all",
+  Active: "active",
+  Completed: "completed",
+  Claimed: "claimed",
+  Upcoming: "upcoming",
+};
 
 type LeaderboardPeriod = "weekly" | "monthly" | "alltime";
 
@@ -100,6 +105,7 @@ function ChallengeCard({
   index: number;
   onAction: (action: "join" | "claim", id: string) => void;
 }) {
+  const { t } = useLanguage();
   const diff = DIFF_CONFIG[c.challenge.difficulty] || DIFF_CONFIG.medium;
   const isCompleted = c.status === "completed";
   const isClaimed = c.status === "claimed";
@@ -183,7 +189,7 @@ function ChallengeCard({
             size="md"
             leftIcon={<Zap size={12} fill="currentColor" />}
           >
-            {c.challenge.xp_reward} XP
+            {t("challenges.card.xpAmount", { n: c.challenge.xp_reward })}
           </Pill>
         </Row>
 
@@ -191,7 +197,7 @@ function ChallengeCard({
           <Column style={{ gap: tokens.space[2] }}>
             <Row horizontal="between" style={{ gap: tokens.space[3] }}>
               <BodySm tone="muted">
-                Progress:{" "}
+                {t("challenges.card.progress")}{" "}
                 <span
                   style={{
                     color: tokens.color.text,
@@ -211,9 +217,9 @@ function ChallengeCard({
                 }}
               >
                 {isClaimed
-                  ? "Claimed"
+                  ? t("challenges.card.claimed")
                   : isCompleted
-                    ? "Reward ready"
+                    ? t("challenges.card.rewardReady")
                     : `${Math.round(c.percentage)}%`}
               </BodySm>
             </Row>
@@ -252,7 +258,7 @@ function ChallengeCard({
         >
           <Row vertical="center" style={{ gap: tokens.space[2] }}>
             <Pill tone={diff.tone} size="sm">
-              {diff.label}
+              {t(`challenges.difficulty.${c.challenge.difficulty}`)}
             </Pill>
             {c.deadline_display && (
               <BodySm
@@ -275,7 +281,7 @@ function ChallengeCard({
               size="md"
               leftIcon={<CheckCircle size={14} strokeWidth={1.75} />}
             >
-              Completed
+              {t("challenges.card.completedPill")}
             </Pill>
           ) : isCompleted ? (
             <Button
@@ -284,7 +290,7 @@ function ChallengeCard({
               leftIcon={<Trophy size={14} strokeWidth={1.75} />}
               onClick={() => onAction("claim", c.id)}
             >
-              Claim reward
+              {t("challenges.card.claimReward")}
             </Button>
           ) : isUpcoming ? (
             <Button
@@ -293,7 +299,7 @@ function ChallengeCard({
               rightIcon={<ArrowRight size={14} strokeWidth={1.75} />}
               onClick={() => onAction("join", c.challenge.id)}
             >
-              Join challenge
+              {t("challenges.card.joinChallenge")}
             </Button>
           ) : (
             <Button
@@ -301,7 +307,7 @@ function ChallengeCard({
               size="sm"
               rightIcon={<ChevronRight size={14} strokeWidth={1.75} />}
             >
-              Details
+              {t("challenges.card.details")}
             </Button>
           )}
         </Row>
@@ -319,6 +325,7 @@ function LeaderboardRow({
   maxXp: number;
   index: number;
 }) {
+  const { t } = useLanguage();
   const barPct = maxXp > 0 ? (entry.xp / maxXp) * 100 : 0;
   const isMe = entry.is_current_user;
   const isTop3 = entry.rank <= 3;
@@ -422,11 +429,11 @@ function LeaderboardRow({
           </Body>
           {isMe && (
             <Pill tone="warm" size="sm">
-              You
+              {t("challenges.you")}
             </Pill>
           )}
           <Pill tone="neutral" size="sm">
-            Lv {entry.level}
+            {t("challenges.levelShort", { n: entry.level })}
           </Pill>
         </Row>
         <Column
@@ -462,17 +469,36 @@ function LeaderboardRow({
         >
           {entry.xp.toLocaleString()}
         </Body>
-        <Caption tone="muted">XP</Caption>
+        <Caption tone="muted">{t("challenges.xpLabel")}</Caption>
       </Column>
     </motion.div>
   );
 }
 
+interface BadgeProgressionItem {
+  badge_id: number;
+  name: string;
+  is_earned: boolean;
+  current_value: number;
+  target_value: number;
+  progress_percent: number;
+}
+
+interface BadgeRoadmap {
+  total_earned: number;
+  total_available: number;
+  foodie_rank_title: string;
+  rarity_score: number;
+  next_milestone_advice: string;
+  progressions: BadgeProgressionItem[];
+}
+
 function BadgesCard() {
-  const [roadmap, setRoadmap] = useState<any>(null);
+  const { t } = useLanguage();
+  const [roadmap, setRoadmap] = useState<BadgeRoadmap | null>(null);
 
   useEffect(() => {
-    apiGet<any>("/api/v1/badges/progression")
+    apiGet<BadgeRoadmap>("/api/v1/badges/progression")
       .then((data) => setRoadmap(data))
       .catch(() => {});
   }, []);
@@ -493,39 +519,42 @@ function BadgesCard() {
             fill="currentColor"
             style={{ color: tokens.color.warning }}
           />
-          <H3>AI Badge Progression</H3>
+          <H3>{t("challenges.badgeProgression")}</H3>
         </Row>
         {roadmap && (
           <Pill tone="warning" size="sm">
-            {roadmap.rarity_score} pts
+            {t("challenges.badgePoints", { n: roadmap.rarity_score })}
           </Pill>
         )}
       </Row>
 
       {roadmap ? (
         <Column style={{ gap: tokens.space[3] }}>
-          <div
+          <Column
             style={{
               padding: tokens.space[3],
               borderRadius: tokens.radius.md,
-              background: "rgba(255, 153, 0, 0.1)",
-              border: `1px solid rgba(255, 153, 0, 0.3)`,
+              background: `${tokens.color.warning}1A`,
+              border: `1px solid ${tokens.color.warning}4D`,
             }}
           >
-            <BodySm style={{ fontWeight: 600, color: "#ff9900", marginBottom: 4 }}>
+            <BodySm style={{ fontWeight: 600, color: tokens.color.warning, marginBottom: 4 }}>
               👑 {roadmap.foodie_rank_title}
             </BodySm>
             <BodySm tone="muted" style={{ fontSize: "0.8rem" }}>
               💡 {roadmap.next_milestone_advice}
             </BodySm>
-          </div>
+          </Column>
 
           <BodySm style={{ fontWeight: 600, marginTop: 4 }}>
-            Huy hiệu đang chinh phục ({roadmap.total_earned}/{roadmap.total_available}):
+            {t("challenges.badgesEarned", {
+              earned: roadmap.total_earned,
+              total: roadmap.total_available,
+            })}
           </BodySm>
 
           <Grid style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: tokens.space[2] }}>
-            {roadmap.progressions.slice(0, 4).map((prog: any) => (
+            {roadmap.progressions.slice(0, 4).map((prog) => (
               <Row
                 key={prog.badge_id}
                 vertical="center"
@@ -533,11 +562,11 @@ function BadgesCard() {
                   gap: tokens.space[2],
                   padding: tokens.space[3],
                   borderRadius: tokens.radius.md,
-                  background: prog.is_earned ? "rgba(16, 185, 129, 0.1)" : tokens.color.surfaceMuted,
-                  border: prog.is_earned ? "1px solid rgba(16, 185, 129, 0.3)" : "none",
+                  background: prog.is_earned ? `${tokens.color.success}1A` : tokens.color.surfaceMuted,
+                  border: prog.is_earned ? `1px solid ${tokens.color.success}4D` : "none",
                 }}
               >
-                <span style={{ color: prog.is_earned ? "#10b981" : tokens.color.textMuted }}>
+                <span style={{ color: prog.is_earned ? tokens.color.success : tokens.color.textMuted }}>
                   {prog.is_earned ? <Award size={16} /> : <Zap size={16} />}
                 </span>
                 <Column>
@@ -592,7 +621,7 @@ function BadgesCard() {
               strokeWidth={1.75}
               style={{ color: tokens.color.textSubtle }}
             />
-            <BodySm tone="subtle">Locked</BodySm>
+            <BodySm tone="subtle">{t("challenges.locked")}</BodySm>
           </Row>
         </Grid>
       )}
@@ -611,6 +640,7 @@ function CompactLevelCard({
   user: LevelUser | null;
   stats: UserGamificationInfo | null;
 }) {
+  const { t } = useLanguage();
   const pct = stats?.progress_percentage || 0;
   const remaining = stats ? Math.max(0, stats.next_level_xp - stats.current_xp) : 100;
   return (
@@ -623,7 +653,7 @@ function CompactLevelCard({
               fill="currentColor"
               style={{ color: tokens.color.warm }}
             />
-            <H3>Level {user?.level || 1}</H3>
+            <H3>{t("challenges.levelTitle", { n: user?.level || 1 })}</H3>
           </Row>
           <BodySm
             tone="muted"
@@ -651,7 +681,7 @@ function CompactLevelCard({
           />
         </Column>
         <BodySm tone="muted">
-          {remaining} XP to Level {(user?.level || 1) + 1}
+          {t("challenges.xpToNext", { n: remaining, next: (user?.level || 1) + 1 })}
         </BodySm>
       </Column>
     </Card>
@@ -659,6 +689,7 @@ function CompactLevelCard({
 }
 
 export default function ChallengesPage() {
+  const { t } = useLanguage();
   const { user, refreshUser } = useAuth();
   const [activeTab, setActiveTab] = useState<CatTab>("All");
   const [leaderboardPeriod, setLeaderboardPeriod] =
@@ -693,11 +724,11 @@ export default function ChallengesPage() {
       if (streakRes.success) setStreakInfo(streakRes.data);
     } catch (err) {
       console.error("Failed to load challenges data:", err);
-      toast.error("Failed to sync with game servers.");
+      toast.error(t("challenges.loadError"));
     } finally {
       setIsLoading(false);
     }
-  }, [leaderboardPeriod]);
+  }, [leaderboardPeriod, t]);
 
   useEffect(() => {
     fetchData();
@@ -711,7 +742,7 @@ export default function ChallengesPage() {
           {},
         );
         if (res.success) {
-          toast.success("Joined challenge.");
+          toast.success(t("challenges.joined"));
           fetchData();
         }
       } else {
@@ -720,13 +751,13 @@ export default function ChallengesPage() {
           data: { xp_awarded: number; new_level: number };
         }>(`/api/v1/challenges/${id}/claim`, {});
         if (res.success) {
-          toast.success(`Claimed reward. +${res.data.xp_awarded} XP`);
+          toast.success(t("challenges.claimedToast", { n: res.data.xp_awarded }));
           refreshUser();
           fetchData();
         }
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Failed to perform action";
+      const msg = err instanceof Error ? err.message : t("challenges.actionFailed");
       toast.error(msg);
     }
   };
@@ -771,7 +802,7 @@ export default function ChallengesPage() {
               animation: "spin 0.8s linear infinite",
             }}
           />
-          <BodySm tone="muted">Synchronizing Taste Vault…</BodySm>
+          <BodySm tone="muted">{t("challenges.syncing")}</BodySm>
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </Column>
       </Page>
@@ -780,22 +811,22 @@ export default function ChallengesPage() {
 
   const stats = [
     {
-      label: "Current rank",
+      label: t("challenges.stat.rank"),
       value: userStats?.rank ? `#${userStats.rank}` : "—",
       icon: <Medal size={16} strokeWidth={1.75} />,
     },
     {
-      label: "Active missions",
+      label: t("challenges.stat.active"),
       value: activeCount,
       icon: <Zap size={16} strokeWidth={1.75} />,
     },
     {
-      label: "Completed",
+      label: t("challenges.stat.completed"),
       value: completedCount,
       icon: <CheckCircle size={16} strokeWidth={1.75} />,
     },
     {
-      label: "Total XP",
+      label: t("challenges.stat.totalXp"),
       value: userStats?.total_xp_earned.toLocaleString() || "0",
       icon: <Trophy size={16} strokeWidth={1.75} />,
     },
@@ -825,12 +856,9 @@ export default function ChallengesPage() {
                 >
                   <Trophy size={20} strokeWidth={1.75} />
                 </span>
-                <H1>Challenges</H1>
+                <H1>{t("challenges.title")}</H1>
               </Row>
-              <Body tone="muted">
-                Refine your palate and climb the ranks. Every adventure brings
-                you closer to becoming an Elite Foodie.
-              </Body>
+              <Body tone="muted">{t("challenges.subtitle")}</Body>
             </Column>
 
             <Row vertical="center" style={{ gap: tokens.space[3] }}>
@@ -852,7 +880,7 @@ export default function ChallengesPage() {
                     >
                       {streakInfo?.current_streak || 0}
                     </Body>
-                    <Caption tone="muted">Day streak</Caption>
+                    <Caption tone="muted">{t("challenges.dayStreak")}</Caption>
                   </Column>
                 </Row>
               </Card>
@@ -958,7 +986,7 @@ export default function ChallengesPage() {
                       />
                     )}
                     <span style={{ position: "relative", zIndex: 1 }}>
-                      {tab}
+                      {t(`challenges.tab.${CAT_TAB_KEY[tab]}`)}
                     </span>
                     <Pill
                       tone="neutral"
@@ -1003,8 +1031,8 @@ export default function ChallengesPage() {
                   <Card radius="xl" padding="lg" shadow="none" surface="muted">
                     <EmptyState
                       icon={<SearchX size={32} strokeWidth={1.5} />}
-                      title="No adventures here"
-                      description="Check back later for new limited-time challenges."
+                      title={t("challenges.emptyTitle")}
+                      description={t("challenges.emptyBody")}
                     />
                   </Card>
                 )}
@@ -1022,7 +1050,7 @@ export default function ChallengesPage() {
                       strokeWidth={1.75}
                       style={{ color: tokens.color.warning }}
                     />
-                    <H3>Leaderboard</H3>
+                    <H3>{t("challenges.leaderboard")}</H3>
                   </Row>
                 </Row>
 
@@ -1062,7 +1090,7 @@ export default function ChallengesPage() {
                             transition: "all 0.15s ease",
                           }}
                         >
-                          {p === "alltime" ? "All time" : p}
+                          {t(`challenges.period.${p}`)}
                         </button>
                       );
                     },
@@ -1086,7 +1114,7 @@ export default function ChallengesPage() {
                         padding: tokens.space[8],
                       }}
                     >
-                      Rankings will appear shortly.
+                      {t("challenges.rankingsEmpty")}
                     </BodySm>
                   )}
                 </Column>
@@ -1097,7 +1125,7 @@ export default function ChallengesPage() {
                   fullWidth
                   rightIcon={<ChevronRight size={16} strokeWidth={1.75} />}
                 >
-                  View global ranks
+                  {t("challenges.viewGlobalRanks")}
                 </Button>
               </Column>
             </Card>
@@ -1114,21 +1142,32 @@ export default function ChallengesPage() {
                     strokeWidth={1.75}
                     style={{ color: tokens.color.warm }}
                   />
-                  <H3>Daily streak</H3>
+                  <H3>{t("challenges.dailyStreak")}</H3>
                 </Row>
                 <BodySm tone="muted">
-                  Check in every day to keep your streak alive and earn bonus
-                  XP. Currently at{" "}
-                  <span
-                    style={{
-                      color: tokens.color.warm,
-                      fontWeight: tokens.type.weight.bold,
-                    }}
-                  >
-                    {streakInfo?.current_streak || 0} days
-                  </span>
-                  .
+                  {t("challenges.streakBody", {
+                    n: streakInfo?.current_streak || 0,
+                  })}
                 </BodySm>
+                {(() => {
+                  const current = streakInfo?.current_streak || 0;
+                  const tier = user?.membership_tier;
+                  if (tier === "feast" && current < 14) {
+                    return (
+                      <Caption tone="muted">
+                        {t("challenges.toOmakase", { cur: current, n: 14 - current })}
+                      </Caption>
+                    );
+                  }
+                  if (current < 7 && tier !== "savor" && tier !== "feast" && tier !== "omakase") {
+                    return (
+                      <Caption tone="muted">
+                        {t("challenges.toSavor", { cur: current, n: 7 - current })}
+                      </Caption>
+                    );
+                  }
+                  return null;
+                })()}
                 <Button
                   variant={
                     streakInfo?.is_active_today ? "secondary" : "primary"
@@ -1138,14 +1177,21 @@ export default function ChallengesPage() {
                   disabled={streakInfo?.is_active_today}
                   onClick={async () => {
                     try {
-                      await apiPost("/api/v1/challenges/streaks/checkin", {});
-                      toast.success("Checked in for today.");
+                      const res = await apiPost<{
+                        current_streak: number;
+                        freeze_used?: boolean;
+                      }>("/api/v1/challenges/streaks/checkin", {});
+                      if (res.freeze_used) {
+                        toast.success(t("challenges.freezeUsed"));
+                      } else {
+                        toast.success(t("challenges.checkinSuccess"));
+                      }
                       setStreakInfo((prev) =>
                         prev
                           ? {
                               ...prev,
                               is_active_today: true,
-                              current_streak: prev.current_streak + 1,
+                              current_streak: res.current_streak ?? prev.current_streak + 1,
                             }
                           : null,
                       );
@@ -1156,14 +1202,14 @@ export default function ChallengesPage() {
                       if (statsRes.success) setUserStats(statsRes.data);
                     } catch (err) {
                       const msg =
-                        err instanceof Error ? err.message : "Check-in failed.";
+                        err instanceof Error ? err.message : t("challenges.checkinFailed");
                       toast.error(msg);
                     }
                   }}
                 >
                   {streakInfo?.is_active_today
-                    ? "Already checked in"
-                    : "Daily check-in"}
+                    ? t("challenges.alreadyCheckedIn")
+                    : t("challenges.checkIn")}
                 </Button>
               </Column>
             </Card>

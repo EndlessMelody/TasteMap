@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, UploadFile, File, Query, Request
 from src.media.service import upload_file
 from src.core.dependencies import get_current_user_id
+from src.core.rate_limit import limiter
 
 router = APIRouter()
 
@@ -10,6 +11,7 @@ router = APIRouter()
     summary="Upload ảnh, video, hoặc audio",
     description="Trả về URL để nhúng vào User/Post/Reel/Group/Chat. type: 'avatar'|'cover'|'post'|'reel'|'chat'"
 )
+@limiter.limit("20/minute")
 async def upload_media(
     request: Request,
     file: UploadFile = File(...),

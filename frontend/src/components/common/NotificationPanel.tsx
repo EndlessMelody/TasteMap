@@ -14,6 +14,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import type { AppNotification } from "@/hooks/useNotifications";
+import { tokens } from "@/styles/tokens";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -39,30 +40,30 @@ const TYPE_CFG: Record<
 > = {
   friend_request: {
     icon: <UserPlus size={14} />,
-    color: "#ff6b35",
-    bg: "rgba(255,107,53,0.1)",
+    color: tokens.color.warm,
+    bg: `${tokens.color.warm}1A`,
   },
   friend_accepted: {
     icon: <UserPlus size={14} />,
-    color: "#34C759",
-    bg: "rgba(52,199,89,0.1)",
+    color: tokens.color.success,
+    bg: `${tokens.color.success}1A`,
   },
   message: {
     icon: <MessageCircle size={14} />,
-    color: "#FF9500",
-    bg: "rgba(255,149,0,0.1)",
+    color: tokens.color.warning,
+    bg: `${tokens.color.warning}1A`,
   },
   achievement: {
     icon: <Star size={14} />,
-    color: "#AF52DE",
-    bg: "rgba(175,82,222,0.1)",
+    color: tokens.color.magic,
+    bg: `${tokens.color.magic}1A`,
   },
 };
 
 const DEFAULT_CFG = {
   icon: <Info size={14} />,
-  color: "#8E8E93",
-  bg: "rgba(142,142,147,0.1)",
+  color: tokens.color.textMuted,
+  bg: tokens.color.surfaceMuted,
 };
 
 function cfg(type: string) {
@@ -126,9 +127,9 @@ const NotifItem = React.memo(
         }}
         style={{
           padding: "14px 18px",
-          borderBottom: "1px solid rgba(0,0,0,0.045)",
+          borderBottom: `1px solid ${tokens.color.border}`,
           transition: "background-color 150ms",
-          backgroundColor: notif.is_read ? "transparent" : "rgba(0,122,255,0.028)",
+          backgroundColor: notif.is_read ? "transparent" : `${tokens.color.cool}07`,
           cursor: isFriendReq ? "default" : "pointer",
         }}
       >
@@ -154,7 +155,7 @@ const NotifItem = React.memo(
             <Text
               style={{
                 fontSize: 13,
-                color: "#1C1C1E",
+                color: tokens.color.text,
                 lineHeight: 1.4,
                 fontWeight: notif.is_read ? 500 : 700,
               }}
@@ -163,7 +164,7 @@ const NotifItem = React.memo(
             </Text>
 
             {notif.body && (
-              <Text style={{ fontSize: 12, color: "rgba(0,0,0,0.5)", lineHeight: 1.4 }}>
+              <Text style={{ fontSize: 12, color: tokens.color.textMuted, lineHeight: 1.4 }}>
                 {notif.body}
               </Text>
             )}
@@ -188,9 +189,9 @@ const NotifItem = React.memo(
                     border: "none",
                     fontSize: 12,
                     fontWeight: 700,
-                    backgroundColor: busy ? "#FFD4A3" : "#ff6b35",
+                    backgroundColor: busy ? `${tokens.color.warm}40` : tokens.color.warm,
                     cursor: busy ? "default" : "pointer",
-                    color: busy ? undefined : "white",
+                    color: busy ? undefined : tokens.color.textInverse,
                   }}
                 >
                   Accept
@@ -209,17 +210,17 @@ const NotifItem = React.memo(
                   style={{
                     padding: "5px 14px",
                     borderRadius: 8,
-                    border: "1.5px solid rgba(0,0,0,0.1)",
+                    border: `1.5px solid ${tokens.color.borderStrong}`,
                     transition: "background-color 150ms",
-                    backgroundColor: "white",
+                    backgroundColor: tokens.color.surface,
                     cursor: busy ? "default" : "pointer",
-                    color: "rgba(0,0,0,0.55)",
+                    color: tokens.color.textMuted,
                   }}
                   onMouseEnter={(e) => {
-                    if (!busy) e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)";
+                    if (!busy) e.currentTarget.style.backgroundColor = tokens.color.surfaceMuted;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "white";
+                    e.currentTarget.style.backgroundColor = tokens.color.surface;
                   }}
                 >
                   Decline
@@ -227,7 +228,7 @@ const NotifItem = React.memo(
               </Row>
             )}
 
-            <Text style={{ fontSize: 11, color: "rgba(0,0,0,0.3)", marginTop: 2 }}>
+            <Text style={{ fontSize: 11, color: tokens.color.textSubtle, marginTop: 2 }}>
               {timeAgo(notif.created_at)}
             </Text>
           </Column>
@@ -239,7 +240,7 @@ const NotifItem = React.memo(
                 width: 7,
                 height: 7,
                 borderRadius: "50%",
-                backgroundColor: "#ff6b35",
+                backgroundColor: tokens.color.warm,
                 flexShrink: 0,
                 marginTop: 5,
               }}
@@ -299,13 +300,13 @@ export default function NotificationPanel({
               bottom: 0,
               left: sidebarWidth,
               width: 340,
-              backgroundColor: "white",
+              backgroundColor: tokens.color.surface,
               boxShadow: "6px 0 32px rgba(0,0,0,0.11)",
               zIndex: 999,
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
-              borderRight: "1px solid rgba(0,0,0,0.05)",
+              borderRight: `1px solid ${tokens.color.border}`,
               willChange: "transform, opacity",
               transform: "translateZ(0)",
             }}
@@ -316,13 +317,13 @@ export default function NotificationPanel({
               horizontal="between"
               style={{
                 padding: "20px 18px 16px",
-                borderBottom: "1px solid rgba(0,0,0,0.05)",
+                borderBottom: `1px solid ${tokens.color.border}`,
                 flexShrink: 0,
               }}
             >
               <Row vertical="center" style={{ gap: 10 }}>
-                <Bell size={17} style={{ color: "#1C1C1E" }} />
-                <Heading variant="heading-strong-s" style={{ color: "#1C1C1E" }}>
+                <Bell size={17} style={{ color: tokens.color.text }} />
+                <Heading variant="heading-strong-s" style={{ color: tokens.color.text }}>
                   Notifications
                 </Heading>
                 {unreadCount > 0 && (
@@ -330,8 +331,8 @@ export default function NotificationPanel({
                     style={{
                       padding: "2px 8px",
                       borderRadius: "999px",
-                      backgroundColor: "#FF3B30",
-                      color: "white",
+                      backgroundColor: tokens.color.danger,
+                      color: tokens.color.textInverse,
                       fontSize: 11,
                       fontWeight: 800,
                     }}
@@ -351,9 +352,9 @@ export default function NotificationPanel({
                       gap: 5,
                       padding: "5px 10px",
                       borderRadius: 8,
-                      border: "1px solid rgba(0,0,0,0.1)",
+                      border: `1px solid ${tokens.color.borderStrong}`,
                       backgroundColor: "transparent",
-                      color: "rgba(0,0,0,0.45)",
+                      color: tokens.color.textMuted,
                       fontSize: 11,
                       fontWeight: 600,
                       cursor: "pointer",
@@ -361,7 +362,7 @@ export default function NotificationPanel({
                       transition: "background-color 150ms",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)";
+                      e.currentTarget.style.backgroundColor = tokens.color.surfaceMuted;
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = "transparent";
@@ -381,17 +382,17 @@ export default function NotificationPanel({
                     height: 28,
                     borderRadius: 8,
                     border: "none",
-                    backgroundColor: "rgba(0,0,0,0.05)",
-                    color: "rgba(0,0,0,0.5)",
+                    backgroundColor: tokens.color.surfaceMuted,
+                    color: tokens.color.textMuted,
                     cursor: "pointer",
                     flexShrink: 0,
                     transition: "background-color 150ms",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.1)";
+                    e.currentTarget.style.backgroundColor = tokens.color.borderStrong;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)";
+                    e.currentTarget.style.backgroundColor = tokens.color.surfaceMuted;
                   }}
                 >
                   <X size={14} />
@@ -410,7 +411,7 @@ export default function NotificationPanel({
                           width: 34,
                           height: 34,
                           borderRadius: "50%",
-                          backgroundColor: "rgba(0,0,0,0.05)",
+                          backgroundColor: tokens.color.surfaceMuted,
                           flexShrink: 0,
                           animation: "tm-pulse 1.4s ease-in-out infinite",
                         }}
@@ -419,7 +420,7 @@ export default function NotificationPanel({
                         <Column
                           style={{
                             height: 12,
-                            backgroundColor: "rgba(0,0,0,0.05)",
+                            backgroundColor: tokens.color.surfaceMuted,
                             borderRadius: "999px",
                             width: "72%",
                             animation: "tm-pulse 1.4s ease-in-out infinite",
@@ -428,7 +429,7 @@ export default function NotificationPanel({
                         <Column
                           style={{
                             height: 10,
-                            backgroundColor: "rgba(0,0,0,0.05)",
+                            backgroundColor: tokens.color.surfaceMuted,
                             borderRadius: "999px",
                             width: "48%",
                             animation: "tm-pulse 1.4s ease-in-out infinite",
@@ -454,13 +455,13 @@ export default function NotificationPanel({
                   }}
                 >
                   <Text style={{ fontSize: "2.2rem" }}>🔔</Text>
-                  <Text style={{ fontSize: 14, fontWeight: 700, color: "#1C1C1E" }}>
+                  <Text style={{ fontSize: 14, fontWeight: 700, color: tokens.color.text }}>
                     All caught up!
                   </Text>
                   <Text
                     style={{
                       fontSize: 12,
-                      color: "rgba(0,0,0,0.4)",
+                      color: tokens.color.textMuted,
                       textAlign: "center",
                       lineHeight: 1.5,
                     }}
@@ -482,11 +483,11 @@ export default function NotificationPanel({
                         padding: "8px 18px 6px",
                         fontSize: 10,
                         fontWeight: 800,
-                        color: "rgba(0,0,0,0.3)",
+                        color: tokens.color.textSubtle,
                         textTransform: "uppercase",
                         letterSpacing: "0.9px",
-                        backgroundColor: "rgba(0,0,0,0.018)",
-                        borderBottom: "1px solid rgba(0,0,0,0.05)",
+                        backgroundColor: tokens.color.surfaceMuted,
+                        borderBottom: `1px solid ${tokens.color.border}`,
                       }}
                     >
                       {label}
@@ -509,7 +510,7 @@ export default function NotificationPanel({
             <Column
               style={{
                 padding: "12px 18px",
-                borderTop: "1px solid rgba(0,0,0,0.05)",
+                borderTop: `1px solid ${tokens.color.border}`,
                 flexShrink: 0,
               }}
             >
@@ -523,16 +524,16 @@ export default function NotificationPanel({
                   gap: 6,
                   padding: 9,
                   borderRadius: 10,
-                  border: "1px solid rgba(0,0,0,0.1)",
+                  border: `1px solid ${tokens.color.borderStrong}`,
                   backgroundColor: "transparent",
-                  color: "rgba(0,0,0,0.4)",
+                  color: tokens.color.textMuted,
                   fontSize: 12,
                   fontWeight: 600,
                   cursor: "pointer",
                   transition: "background-color 150ms",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.05)";
+                  e.currentTarget.style.backgroundColor = tokens.color.surfaceMuted;
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = "transparent";

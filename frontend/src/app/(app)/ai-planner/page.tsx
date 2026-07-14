@@ -3,20 +3,25 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Column } from "@once-ui-system/core";
+import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 
-import { MOCK_ITINERARIES } from "./components/constants";
-import type { ItineraryStop } from "./components/types";
-import { generateItinerary } from "./lib/generateItinerary";
+import { generatePlan, tourToItineraryStops } from "./lib/generatePlan";
+import type { PlannerAlternate } from "./lib/generatePlan";
+import type { TourDetail } from "@/components/features/tours/lib";
 import { PlannerForm } from "./components/PlannerForm";
 import { StepGenerating } from "./components/steps/StepGenerating";
 import { StepResult } from "./components/steps/StepResult";
 
 type View = "form" | "generating" | "result";
 
+const MIN_GENERATING_MS = 2800;
+
 export default function AIPlanner() {
   const [view, setView] = useState<View>("form");
-  const [itinerary, setItinerary] = useState<ItineraryStop[]>(MOCK_ITINERARIES.default);
+  const [tour, setTour] = useState<TourDetail | null>(null);
+  const [alternates, setAlternates] = useState<PlannerAlternate[]>([]);
 
   const [mood, setMood] = useState<string | null>(null);
   const [cuisines, setCuisines] = useState<string[]>([]);
@@ -26,6 +31,7 @@ export default function AIPlanner() {
   const [location, setLocation] = useState("District 1");
 
   const { user } = useAuth();
+  const { t } = useLanguage();
   const username = user?.display_name ?? user?.username ?? "Foodie";
 
   const toggleCuisine = (c: string) =>
@@ -35,18 +41,22 @@ export default function AIPlanner() {
 
   const handleGenerate = useCallback(async () => {
     setView("generating");
+    const started = Date.now();
     try {
-      const stops = await generateItinerary({ mood, cuisines, duration, budget });
-      if (stops.length > 0) setItinerary(stops);
+      const [result] = await Promise.all([
+        generatePlan({ mood, cuisines, group, duration, budget, location }),
+        new Promise((r) => setTimeout(r, MIN_GENERATING_MS)),
+      ]);
+      setTour(result.tour);
+      setAlternates(result.alternates ?? []);
+      setView("result");
     } catch {
-      // API failed — keep current itinerary (mock data as fallback)
+      const elapsed = Date.now() - started;
+      if (elapsed < MIN_GENERATING_MS) await new Promise((r) => setTimeout(r, MIN_GENERATING_MS - elapsed));
+      toast.error(t("aiPlanner.generateFailed"));
+      setView("form");
     }
-  }, [mood, cuisines, duration, budget]);
-
-  const handleDone = useCallback(() => setView("result"), []);
-  const handleRegen = useCallback(() => {
-    handleGenerate();
-  }, [handleGenerate]);
+  }, [mood, cuisines, group, duration, budget, location, t]);
 
   return (
     <Column
@@ -97,11 +107,11 @@ export default function AIPlanner() {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             style={{ position: "absolute", inset: 0 }}
           >
-            <StepGenerating onDone={handleDone} />
+            <StepGenerating />
           </motion.div>
         )}
 
-        {view === "result" && (
+        {view === "result" && tour && (
           <motion.div
             key="result"
             initial={{ opacity: 0, y: 20 }}
@@ -111,9 +121,12 @@ export default function AIPlanner() {
             style={{ position: "absolute", inset: 0 }}
           >
             <StepResult
-              stops={itinerary}
-              onRegen={handleRegen}
+              tour={tour}
+              alternates={alternates}
+              stops={tourToItineraryStops(tour, "walking")}
+              onRegen={handleGenerate}
               onBack={() => setView("form")}
+              onTourUpdate={setTour}
             />
           </motion.div>
         )}

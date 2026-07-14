@@ -19,11 +19,13 @@ import {
   Moon,
   Monitor,
   Check,
+  Crown,
 } from "lucide-react";
 import { tokens } from "@/styles/tokens";
 import { useTheme, type Theme } from "@/context/ThemeContext";
 import { useAccent, type Accent } from "@/context/AccentContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { MembershipSettingsTab } from "@/components/features/membership";
 
 // Accent options map Once UI named schemes to the dot color shown in the picker.
 const ACCENT_SWATCHES: { id: Accent; swatch: string }[] = [
@@ -145,6 +147,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   id: "notifications",
                   labelKey: "settings.notifications",
                   icon: <BellRing size={16} />,
+                },
+                {
+                  id: "membership",
+                  labelKey: "settings.membership",
+                  icon: <Crown size={16} />,
                 },
               ].map((tab) => (
                 <Row
@@ -449,6 +456,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   </Column>
                 </>
               )}
+
+              {activeSettingsTab === "membership" && <MembershipSettingsTab />}
 
               {activeSettingsTab === "support" && (
                 <Column style={{ gap: "24px" }}>

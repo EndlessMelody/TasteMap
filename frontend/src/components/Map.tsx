@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 import { Row } from '@once-ui-system/core';
 
-// Dynamically import the Leaflet widget so Next.js doesn't try SSR on it (which throws "window is not defined")
+// Dynamically import the Mapbox GL widget so Next.js doesn't try SSR on it (which throws "window is not defined")
 const MapWidget = dynamic(
   () => import('./MapWidget'),
   { 

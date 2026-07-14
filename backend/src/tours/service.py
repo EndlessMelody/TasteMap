@@ -5,22 +5,31 @@ and contextual signals (weather/time), not just distance + rating. See
 docs/math_models.md ("Tour Routing — Vector-Aware Cost Model") and
 docs/api/discovery.md §8.
 """
+import logging
 import math
 import re
 import numpy as np
 from numpy.typing import NDArray
 
-from src.core.exceptions import ResourceNotFoundException
+import httpx
+
+from src.core.exceptions import ResourceNotFoundException, QuotaExceededException
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import Optional
 
 from src.tours.models import Tour, TourStop
 from src.locations.models import Location
+from src.users.models import User
+from src.membership.entitlements import get_entitlements
 from src.tours.schemas import (
-    StopCreate, OptimizeRequest, OptimizeResponse, OptimizedStop, OptimizeContext,
+    StopCreate, TourCreate, TourUpdate, ReorderRequest,
+    OptimizeRequest, OptimizeResponse, OptimizedStop, OptimizeContext,
 )
+
+log = logging.getLogger(__name__)
 # Reuse the recommendation engine's pure-math helpers (no circular import: the
 # recommendations module does not import tours).
 from src.recommendations.service import _cosine_sim, _get_user_vector, _haversine_km
@@ -76,9 +85,45 @@ def _dwell_min(loc: Location) -> int:
     return _DWELL_BY_CATEGORY.get(loc.category, _DEFAULT_DWELL)
 
 
-def _weather_coefficient() -> float:
-    """Mocked weather coefficient (0–1, higher = nicer). Isolated for a future weather API."""
-    return 0.8
+_OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
+_DEFAULT_WEATHER = (0.8, "unknown")
+
+# WMO weather_code → (coefficient 0-1 higher=nicer, condition label)
+_WEATHER_CODE_MAP: dict[int, tuple[float, str]] = {
+    0: (1.0, "clear"),
+    1: (0.9, "partly_cloudy"), 2: (0.9, "partly_cloudy"),
+    3: (0.8, "overcast"),
+    45: (0.7, "fog"), 48: (0.7, "fog"),
+    51: (0.6, "drizzle"), 53: (0.6, "drizzle"), 55: (0.6, "drizzle"),
+    56: (0.55, "drizzle"), 57: (0.55, "drizzle"),
+    61: (0.5, "light_rain"), 63: (0.45, "rain"), 80: (0.5, "light_rain"),
+    65: (0.3, "heavy_rain"), 66: (0.3, "heavy_rain"), 67: (0.3, "heavy_rain"), 82: (0.3, "heavy_rain"),
+    71: (0.4, "snow"), 73: (0.4, "snow"), 75: (0.35, "snow"), 77: (0.4, "snow"),
+    85: (0.4, "snow"), 86: (0.35, "snow"),
+    95: (0.2, "storm"), 96: (0.15, "storm"), 99: (0.15, "storm"),
+}
+
+
+async def _weather_coefficient(lat: Optional[float], lng: Optional[float]) -> tuple[float, str]:
+    """
+    Real-time weather coefficient (0–1, higher = nicer) + condition label via Open-Meteo
+    (keyless). Falls back to a neutral constant on missing coords or any request failure —
+    never blocks tour optimisation on a flaky third-party API.
+    """
+    if lat is None or lng is None:
+        return _DEFAULT_WEATHER
+    try:
+        async with httpx.AsyncClient(timeout=4.0) as client:
+            resp = await client.get(
+                _OPEN_METEO_URL,
+                params={"latitude": lat, "longitude": lng, "current": "weather_code"},
+            )
+            resp.raise_for_status()
+            code = int(resp.json()["current"]["weather_code"])
+            return _WEATHER_CODE_MAP.get(code, _DEFAULT_WEATHER)
+    except Exception as exc:
+        log.warning(f"[Tours] Open-Meteo lookup failed for ({lat},{lng}): {exc}")
+        return _DEFAULT_WEATHER
 
 
 def _weather_penalty(loc: Location, c_weather: float) -> float:
@@ -129,12 +174,65 @@ def _parse_price_vnd(price_range: Optional[str]) -> int:
 
 # ── CRUD ────────────────────────────────────────────────────────────────────
 
-async def create_tour(db: AsyncSession, user_id: int) -> Tour:
-    tour = Tour(user_id=user_id, status="building")
+async def _get_tier(db: AsyncSession, user_id: int) -> str:
+    res = await db.execute(select(User.membership_tier).where(User.id == user_id))
+    return res.scalar_one_or_none() or "bite"
+
+
+async def create_tour(db: AsyncSession, user_id: int, data: Optional[TourCreate] = None) -> Tour:
+    tier = await _get_tier(db, user_id)
+    max_tours = get_entitlements(tier)["saved_tours_max"]
+    if max_tours is not None:
+        count_res = await db.execute(select(func.count()).select_from(Tour).where(Tour.user_id == user_id))
+        if (count_res.scalar_one() or 0) >= max_tours:
+            raise QuotaExceededException(feature="saved_tours", tier=tier, limit=max_tours)
+
+    tour = Tour(user_id=user_id, status="building", title=(data.title if data else None))
     db.add(tour)
     await db.commit()
     await db.refresh(tour)
     return tour
+
+
+async def rename_tour(db: AsyncSession, tour_id: int, user_id: int, data: TourUpdate) -> dict:
+    result = await db.execute(select(Tour).where(Tour.id == tour_id, Tour.user_id == user_id))
+    tour = result.scalars().first()
+    if not tour:
+        raise ResourceNotFoundException(detail="Tour không tồn tại", error_code="TOUR_NOT_FOUND")
+    tour.title = data.title
+    await db.commit()
+    return {"id": tour.id, "title": tour.title}
+
+
+async def delete_tour(db: AsyncSession, tour_id: int, user_id: int) -> None:
+    result = await db.execute(select(Tour).where(Tour.id == tour_id, Tour.user_id == user_id))
+    tour = result.scalars().first()
+    if not tour:
+        raise ResourceNotFoundException(detail="Tour không tồn tại", error_code="TOUR_NOT_FOUND")
+    await db.delete(tour)
+    await db.commit()
+
+
+async def reorder_stops(db: AsyncSession, tour_id: int, user_id: int, data: ReorderRequest) -> dict:
+    tour_q = await db.execute(select(Tour).where(Tour.id == tour_id, Tour.user_id == user_id))
+    if not tour_q.scalars().first():
+        raise ResourceNotFoundException(detail="Tour không tồn tại", error_code="TOUR_NOT_FOUND")
+
+    stops_q = await db.execute(select(TourStop).where(TourStop.tour_id == tour_id))
+    stops_by_id = {s.id: s for s in stops_q.scalars().all()}
+    if set(data.stop_ids) != set(stops_by_id.keys()):
+        raise ResourceNotFoundException(detail="stop_ids không khớp với các stop hiện có", error_code="STOP_MISMATCH")
+
+    for idx, stop_id in enumerate(data.stop_ids, start=1):
+        stop = stops_by_id[stop_id]
+        stop.stop_order = idx
+        # Manual reorder invalidates the optimiser's personalised metrics until re-optimize.
+        stop.match_score = None
+        stop.dwell_min = None
+        stop.travel_min = None
+
+    await db.commit()
+    return await get_tour(db, tour_id, user_id)
 
 
 async def list_tours(db: AsyncSession, user_id: int, status: Optional[str], limit: int):
@@ -161,11 +259,16 @@ async def add_stop(db: AsyncSession, tour_id: int, user_id: int, data: StopCreat
     if not result.scalars().first():
         raise ResourceNotFoundException(detail="Tour không tồn tại", error_code="TOUR_NOT_FOUND")
 
+    existing_stops_result = await db.execute(select(TourStop).where(TourStop.tour_id == tour_id))
+    existing_stops = existing_stops_result.scalars().all()
+
+    tier = await _get_tier(db, user_id)
+    max_stops = get_entitlements(tier)["tour_stops_max"]
+    if max_stops is not None and len(existing_stops) >= max_stops:
+        raise QuotaExceededException(feature="tour_stops", tier=tier, limit=max_stops)
+
     if data.stop_order is None:
-        count_result = await db.execute(
-            select(TourStop).where(TourStop.tour_id == tour_id)
-        )
-        data.stop_order = len(count_result.scalars().all()) + 1
+        data.stop_order = len(existing_stops) + 1
 
     stop = TourStop(tour_id=tour_id, location_id=data.location_id, stop_order=data.stop_order)
     db.add(stop)
@@ -297,18 +400,23 @@ async def optimize_tour(db: AsyncSession, tour_id: int, user_id: int, body: Opti
         select(TourStop, Location)
         .join(Location, Location.id == TourStop.location_id)
         .where(TourStop.tour_id == tour_id)
+        .order_by(TourStop.stop_order)
     )
     rows = stops_result.all()
     if not rows:
         raise ResourceNotFoundException(detail="Tour không có stops", error_code="TOUR_EMPTY")
 
+    # No explicit start → default to the first added stop's coordinates.
+    start_lat = body.start_lat if body.start_lat is not None else rows[0][1].lat
+    start_lng = body.start_lng if body.start_lng is not None else rows[0][1].lng
+
     # Personalisation inputs.
     user_vec = await _get_user_vector(db, user_id, body.category)
-    c_weather = _weather_coefficient()
+    c_weather, weather_label = await _weather_coefficient(start_lat, start_lng)
     mode = body.transport_mode
 
     order, sim01, dwell = _optimize_order(
-        rows, user_vec, body.start_lat, body.start_lng,
+        rows, user_vec, start_lat, start_lng,
         c_weather=c_weather, mode=mode, time_context=body.time_context,
     )
 
@@ -366,7 +474,7 @@ async def optimize_tour(db: AsyncSession, tour_id: int, user_id: int, body: Opti
         estimated_cost_vnd=estimated_cost,
         context=OptimizeContext(
             time_slot=body.time_context or "any",
-            weather="unknown",
+            weather=weather_label,
             weather_coefficient=c_weather,
         ),
     )
@@ -384,7 +492,7 @@ async def _get_stops(db: AsyncSession, tour_id: int):
 
 def _tour_to_dict(tour: Tour, stops) -> dict:
     return {
-        "id": tour.id, "status": tour.status,
+        "id": tour.id, "title": tour.title, "status": tour.status,
         "total_distance": tour.total_distance,
         "estimated_cost": tour.estimated_cost,
         "estimated_duration": tour.estimated_duration,

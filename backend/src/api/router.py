@@ -18,6 +18,9 @@ from src.groups.router import router as groups_router
 # ─── Tours ───────────────────────────────────────────────────────────────
 from src.tours.router import router as tours_router
 
+# ─── AI Planner ──────────────────────────────────────────────────────────
+from src.planner.router import router as planner_router
+
 # ─── Social content ──────────────────────────────────────────────────────
 from src.posts.router import router as posts_router
 from src.posts.router import comments_router
@@ -45,6 +48,9 @@ from src.messages.router import router as messages_router
 # ─── Culture Guide ────────────────────────────────────────────────────────
 from src.culture.router import router as culture_router
 
+# ─── Membership & Monetization ───────────────────────────────────────────
+from src.membership.router import router as membership_router
+
 # ─── Health ──────────────────────────────────────────────────────────────
 from src.health.router import router as health_router
 
@@ -62,6 +68,7 @@ api_router.include_router(auth_router,             prefix="/auth",             t
 api_router.include_router(locations_router,        prefix="/locations",        tags=["locations"])
 api_router.include_router(groups_router,           prefix="/groups",           tags=["groups"])
 api_router.include_router(tours_router,            prefix="/tours",            tags=["tours"])
+api_router.include_router(planner_router,          prefix="/planner",          tags=["planner"])
 api_router.include_router(posts_router,            prefix="/posts",            tags=["posts"])
 api_router.include_router(comments_router,         prefix="/comments",         tags=["comments"])
 api_router.include_router(reels_router,            prefix="/reels",            tags=["reels"])
@@ -75,3 +82,4 @@ api_router.include_router(settings_router,         prefix="/settings",         t
 api_router.include_router(media_router,            prefix="/media",            tags=["media"])
 api_router.include_router(messages_router,         prefix="/messages",         tags=["messages"])
 api_router.include_router(culture_router,          prefix="/culture",          tags=["culture"])
+api_router.include_router(membership_router,       prefix="/membership",       tags=["membership"])

@@ -59,6 +59,8 @@ Ghi nhận batch swipe. Thuật toán: `U_new = U_old + α·P` với anti-spam d
 }
 ```
 
+> **Quota:** gated by `enforce_quota("swipes")` — Bite/Savor have a daily cap (see [`monetization.md`](./monetization.md) entitlement matrix); Feast/Omakase are unlimited. Over cap → `429 QUOTA_EXCEEDED`.
+
 ---
 
 ### `GET /api/v1/interactions/history` 🆕
@@ -184,7 +186,11 @@ Gợi ý theo ngữ cảnh (thời tiết, thời gian, khoảng cách).
 
 Tạo tour mới (trạng thái "building").
 
-**Response:** `{ "id": 1, "status": "building", "stops": [] }`
+| Field | Type | Required | Mô tả |
+|---|---|---|---|
+| `title` | string (≤120) | ❌ | Tên tour. Nếu bỏ trống, các UI hiển thị dùng fallback ("Tour #{id}"). AI Planner tự sinh title (VD: "Cozy evening · District 1"). |
+
+**Response:** `{ "id": 1, "title": null, "status": "building", "stops": [] }`
 
 ---
 
@@ -208,6 +214,7 @@ Chi tiết tour + danh sách stops (ordered). Sau khi `optimize`, mỗi stop kè
 ```json
 {
   "id": 1,
+  "title": "Cozy evening · District 1",
   "status": "ready",
   "total_distance": 5.2,
   "estimated_cost": 250000,
@@ -250,6 +257,44 @@ Xóa một stop khỏi tour. Tự re-order các stops còn lại.
 
 ---
 
+### `PUT /api/v1/tours/{tour_id}/stops/order` 🆕
+
+Sắp xếp lại thủ công thứ tự các stops (kéo-thả trong Journey View). Vì thứ tự được set thủ công,
+`match_score` / `dwell_min` / `travel_min` của tất cả stops bị **reset về `null`** cho tới khi user
+gọi lại `POST /optimize` để tính lại các chỉ số.
+
+| Field | Type | Required | Mô tả |
+|---|---|---|---|
+| `stop_ids` | int[] | ✅ | Danh sách `stop_id` theo thứ tự mới mong muốn (phải chứa đúng tập stop hiện có của tour) |
+
+```json
+{ "stop_ids": [12, 10, 11] }
+```
+
+**Response:** Tour detail đầy đủ (như `GET /tours/{id}`), với `stop_order` mới và các metrics = `null`.
+
+---
+
+### `PATCH /api/v1/tours/{tour_id}` 🆕
+
+Đổi tên tour.
+
+| Field | Type | Required |
+|---|---|---|
+| `title` | string (≤120) | ✅ |
+
+**Response:** `{ "id": 1, "title": "Weekend Food Crawl" }`
+
+---
+
+### `DELETE /api/v1/tours/{tour_id}` 🆕
+
+Xóa vĩnh viễn 1 tour (cascade xóa `tour_stops`). Chỉ owner mới xóa được.
+
+**Response:** `204 No Content`
+
+---
+
 ### `POST /api/v1/tours/{tour_id}/optimize` 🆕
 
 🔒 **Auth bắt buộc.** `user_id` suy ra từ token — dùng để nạp **taste vector** của user.
@@ -267,7 +312,8 @@ Hàm chi phí mỗi cạnh (đơn vị **phút**, nhỏ hơn = tốt hơn):
 - `sim = (cosine(user_vector, location.vector) + 1) / 2` ∈ [0,1] → lưu mỗi stop là `match_score = round(sim×100)`.
 - `Rating` chuẩn hoá từ `locations.rating` (0–5 → 0–1).
 - `OpenFit` ∈ [0,1]: độ khớp `open_hours` với `time_context`.
-- `Weather_Penalty`: hệ số thời tiết (hiện mock `0.8`, tách riêng 1 helper cho weather API sau).
+- `Weather_Penalty`: hệ số thời tiết lấy từ **Open-Meteo** (keyless, real-time theo `start_lat/start_lng`);
+  fallback về hằng số `0.8` nếu request thời tiết lỗi/timeout.
 - `dwell_min` (thời gian ở mỗi điểm) suy ra theo `category`/`characteristics`; `estimated_cost_vnd`
   được parse & cộng từ `price_range`.
 
@@ -278,8 +324,8 @@ Cross-link DB: [`tours` / `tour_stops`](../database_schema/content.md) · [`loca
 
 | Field | Type | Required | Default | Mô tả |
 |---|---|---|---|---|
-| `start_lat` | float | ✅ | — | Vĩ độ điểm xuất phát |
-| `start_lng` | float | ✅ | — | Kinh độ điểm xuất phát |
+| `start_lat` | float \| null | ❌ | null | Vĩ độ điểm xuất phát. Nếu bỏ trống → dùng tọa độ của **stop đầu tiên** trong tour |
+| `start_lng` | float \| null | ❌ | null | Kinh độ điểm xuất phát. Nếu bỏ trống → dùng tọa độ của **stop đầu tiên** trong tour |
 | `category` | "food" \| "place" | ❌ | "food" | Chọn `food_vector` hay `place_vector` của user |
 | `time_context` | string | ❌ | null | "breakfast"/"lunch"/"dinner"/"late_night"... → tính `OpenFit` |
 | `transport_mode` | "walking" \| "driving" \| "transit" | ❌ | "driving" | Điều chỉnh `SPEED_KMH` |
@@ -307,13 +353,16 @@ Cross-link DB: [`tours` / `tour_stops`](../database_schema/content.md) · [`loca
   "estimated_cost_vnd": 210000,
   "context": {
     "time_slot": "dinner",
-    "weather": "unknown",
-    "weather_coefficient": 0.8
+    "weather": "light_rain",
+    "weather_coefficient": 0.6
   }
 }
 ```
 - `total_duration_min` = Σ `estimated_travel_min` + Σ `dwell_min`.
 - `estimated_cost_vnd` = Σ `parse_price(location.price_range)` (0 nếu không parse được).
+- `context.weather` phản ánh điều kiện thời tiết thực tế tại `start_lat/start_lng` (Open-Meteo current
+  weather code, VD `"clear"`, `"light_rain"`, `"storm"`); trả về `"unknown"` nếu không lấy được (fallback
+  `weather_coefficient=0.8`).
 
 ---
 
@@ -328,9 +377,79 @@ Cross-link DB: [`tours` / `tour_stops`](../database_schema/content.md) · [`loca
 
 ---
 
+## 23. AI Planner
+
+> Module: `src/planner/` — Sinh tour tự động từ mood/ngân sách/thời gian (thay cho heuristic phía
+> client trước đây). Là lớp mỏng gọi lại engine thật của Tours (§8): candidate selection theo vector
+> + `optimize_tour()`. Output là **1 tour đã persist**, nên xuất hiện ngay trên `GET /tours` và trên
+> map "Latest Tour" ở Discovery.
+
+### `POST /api/v1/planner/generate` 🆕
+
+🔒 **Auth bắt buộc.** `user_id` suy ra từ token — dùng để nạp taste vector.
+
+> **Quota:** dùng chung `enforce_quota("recommendation_calls")` với `POST /tours/{id}/optimize`
+> (xem [`monetization.md`](./monetization.md) entitlement matrix). Vượt hạn mức → `429 QUOTA_EXCEEDED`.
+
+**Thuật toán:** xem [Mathematical Models — AI Planner](../math_models.md#ai-planner--mood-boosted-candidate-selection).
+Tóm tắt: `score = cosine(clip(user_vector + mood_boost, 0, 1), location.vector)`, lọc theo
+`budget_vnd_max` và cuisine, chọn `stop_count = clamp(round(duration_min / 55), 2, tour_stops_max)`
+địa điểm điểm cao nhất, rồi tạo tour + gọi `optimize_tour()` (§8) như quy trình build tour thủ công.
+Nếu `prompt` (free-text) được gửi kèm và server có `GROQ_API_KEY`, prompt được GROQ (llama-3.3-70b)
+parse thành các field có cấu trúc bên dưới, chỉ dùng để **điền vào chỗ trống** — field tường minh
+(client gửi rõ ràng) luôn được ưu tiên nếu trùng; nếu GROQ lỗi/timeout, âm thầm bỏ qua và dùng
+heuristic thuần (không fail request).
+
+**Request:**
+
+| Field | Type | Required | Default | Mô tả |
+|---|---|---|---|---|
+| `mood` | string | ❌ | null | "cozy" / "adventurous" / "romantic" / "family" ... → mood boost vector |
+| `cuisines` | string[] | ❌ | [] | Soft-boost các món/quán khớp cuisine |
+| `duration_min` | int | ❌ | 240 | Tổng thời lượng mong muốn → suy ra số stops |
+| `budget_vnd_max` | int \| null | ❌ | null | Lọc `price_range` ≤ giá trị này (VND) |
+| `party` | string | ❌ | null | "solo" / "couple" / "small_group" / "large_group" (metadata, chưa ảnh hưởng scoring) |
+| `start_lat` | float | ❌ | null | Truyền tiếp cho `optimize_tour()`; bỏ trống → dùng stop đầu tiên |
+| `start_lng` | float | ❌ | null | |
+| `time_context` | string | ❌ | null | "breakfast"/"lunch"/"dinner"/"late_night"... |
+| `transport_mode` | "walking" \| "driving" \| "transit" | ❌ | "walking" | |
+| `prompt` | string | ❌ | null | Free-text; parse bằng GROQ nếu có key, ngược lại bị bỏ qua |
+
+```json
+{
+  "mood": "cozy",
+  "cuisines": ["vietnamese"],
+  "duration_min": 240,
+  "budget_vnd_max": 300000,
+  "start_lat": 10.7769,
+  "start_lng": 106.7009,
+  "time_context": "dinner",
+  "transport_mode": "walking"
+}
+```
+
+**Response:**
+```json
+{
+  "tour": { "id": 42, "title": "Cozy evening · District 1", "status": "ready", "...": "giống GET /tours/{id}" },
+  "alternates": [
+    { "id": 9, "name": "Cafe Ợt", "lat": 10.78, "lng": 106.70, "image_url": "...", "price_range": "40k", "rating": 4.5, "category": "food" }
+  ]
+}
+```
+- `tour` có shape giống hệt `GET /tours/{tour_id}` (§8) và đã ở trạng thái `"ready"`.
+- `alternates` là danh sách địa điểm điểm cao tiếp theo chưa được chọn, dùng cho tính năng "Swap" ở
+  AI Planner result screen (xem [`tours` / `locations`](../database_schema/content.md)).
+
+Cross-link DB: [`tours` / `tour_stops` / `locations`](../database_schema/content.md).
+
+---
+
 ## 21. Culture Guide
 
 > Module: `src/culture/` — Khám phá văn hóa ẩm thực & AI Identification.
+>
+> **Quota:** `POST /culture/story`, `/identify`, `/identify-upload` are jointly gated by `enforce_quota("culture_calls")` (see [`monetization.md`](./monetization.md)) — Bite/Savor share a combined daily cap across all three; Feast/Omakase are unlimited.
 
 ### `POST /api/v1/culture/story` 🆕
 

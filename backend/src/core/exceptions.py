@@ -56,3 +56,29 @@ class ServiceUnavailableException(TasteMapException):
     """Raised when an external or downstream service (LLM, Redis, etc.) is unavailable."""
     def __init__(self, detail: str = "Service temporarily unavailable", error_code: str = "SERVICE_UNAVAILABLE"):
         super().__init__(detail=detail, status_code=status.HTTP_503_SERVICE_UNAVAILABLE, error_code=error_code)
+
+
+class PaymentDeclinedException(TasteMapException):
+    """Raised when the mock Visa provider declines a charge."""
+    def __init__(self, detail: str = "Your card was declined.", decline_code: Optional[str] = None):
+        super().__init__(detail=detail, status_code=status.HTTP_402_PAYMENT_REQUIRED, error_code="PAYMENT_DECLINED")
+        self.decline_code = decline_code
+
+
+class QuotaExceededException(TasteMapException):
+    """Raised when a caller exceeds their tier's daily/structural quota for a feature."""
+    def __init__(self, feature: str, tier: str, limit: int):
+        super().__init__(
+            detail=f"Daily limit reached for '{feature}' on the {tier} plan.",
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            error_code="QUOTA_EXCEEDED",
+            headers={"X-Quota-Limit": str(limit), "X-Quota-Remaining": "0"},
+        )
+        self.feature = feature
+        self.tier = tier
+
+
+class FrameNotEligibleException(TasteMapException):
+    """Raised when equipping an avatar frame the user does not own or no longer qualifies for."""
+    def __init__(self, detail: str = "You do not own this frame or your tier no longer qualifies."):
+        super().__init__(detail=detail, status_code=status.HTTP_403_FORBIDDEN, error_code="FRAME_NOT_ELIGIBLE")

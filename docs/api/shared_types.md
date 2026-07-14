@@ -104,3 +104,29 @@ Dành cho lưới hiển thị profile (Grid view), bookmarks collection.
   "comment_count": 12
 }
 ```
+
+### 3.4 `TierInfo`
+Trạng thái hội viên — nhúng vào `UserMe`/`GET /membership/me`.
+*Liên kết DB: `users.membership_tier`, `subscriptions`*
+
+```json
+{
+  "tier": "feast", // "bite" | "savor" | "feast" | "omakase"
+  "subscription_status": "active", // null nếu chưa từng subscribe / đã hết hạn
+  "cancel_at_period_end": false
+}
+```
+
+### 3.5 `FrameStub`
+Khung avatar đang gắn — nhúng vào `UserMe`/`UserProfile` để render `DecoratedAvatar` mà không cần gọi thêm API.
+*Liên kết DB: `avatar_frames`, `users.equipped_frame_id`*
+
+```json
+{
+  "id": 4,
+  "slug": "feast-signature-gradient",
+  "style_key": "feast-signature-gradient",
+  "accent_color": "#7b2ff7",
+  "is_animated": false
+}
+```

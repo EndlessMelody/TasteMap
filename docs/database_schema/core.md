@@ -37,3 +37,7 @@
 | `role` | `varchar` |  |
 | `next_level_xp` | `int4` |  Nullable |
 | `total_xp_earned` | `int4` |  Nullable |
+| `membership_tier` | `varchar` |  Default `'bite'` |
+| `equipped_frame_id` | `int4` |  Nullable |
+
+> `membership_tier` and `equipped_frame_id` are part of the Membership system — see [`monetization.md`](./monetization.md) for the full tier/frame/payment schema and tier-resolution rules.

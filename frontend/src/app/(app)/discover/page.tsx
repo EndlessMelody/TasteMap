@@ -11,6 +11,7 @@ import { HeroSection } from "@/components/features/dashboard/HeroSection";
 import { AIPicksSection } from "@/components/features/dashboard/AIPicksSection";
 import { TrendingReels } from "@/components/features/dashboard/TrendingReels";
 import { ContextualNavigator } from "@/components/features/dashboard/ContextualNavigator";
+import { LatestTourCard } from "@/components/features/tours";
 import { LobbySection } from "@/components/features/lobby";
 import { TasteVault } from "@/components/features/dashboard/TasteVault";
 import { FoodieFeed } from "@/components/features/dashboard/FoodieFeed";
@@ -118,6 +119,9 @@ export default function DiscoverPage() {
               </motion.div>
               <motion.div variants={itemVariants} style={{ marginTop: "32px" }}>
                 <ContextualNavigator />
+              </motion.div>
+              <motion.div variants={itemVariants} style={{ marginTop: "32px", maxWidth: 420 }}>
+                <LatestTourCard />
               </motion.div>
 
               {/* ── Fold 3 — INSPIRE (Social) ──────────────────────── */}

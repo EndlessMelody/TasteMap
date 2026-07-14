@@ -8,8 +8,9 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import { supabase } from "@/lib/supabase";
-import { apiPost, getApiBase } from "@/lib/api";
+import { apiPost } from "@/lib/api";
 import { BadgeSummary } from "@/types/gamification";
+import { MembershipTier, FrameStub } from "@/types/membership";
 
 export interface UserData {
   id: number;
@@ -41,6 +42,8 @@ export interface UserData {
     icon_name: string;
     accent_color: string;
   } | null;
+  membership_tier?: MembershipTier;
+  equipped_frame?: FrameStub | null;
 }
 
 interface AuthContextValue {
@@ -123,6 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   level: 1,
                   next_level_xp: 100,
                   total_xp_earned: 0,
+                  membership_tier: "bite",
                 });
                 document.cookie = `user_role=user; path=/; max-age=86400`;
               }
@@ -195,24 +199,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        const response = await fetch(`${getApiBase()}/api/v1/auth/sync`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`
-          }
-        });
-        if (response.ok) {
-          const result = await response.json();
-          if (result.success) {
-            setUser(result.data);
-          }
-        }
-      }
+      const userData = await apiPost<UserData>("/api/v1/auth/sync");
+      setUser(userData);
+      document.cookie = `user_role=${userData.role}; path=/; max-age=86400`;
     } catch (err) {
-      console.error("Failed to refresh user:", err);
+      console.warn("Failed to refresh user:", err);
     }
   };
 

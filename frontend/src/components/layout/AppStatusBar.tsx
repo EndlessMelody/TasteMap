@@ -3,6 +3,7 @@
 import React from "react";
 import { Column, Row, Text } from "@once-ui-system/core";
 import { useLanguage } from "@/context/LanguageContext";
+import { tokens } from "@/styles/tokens";
 import { 
   Database, 
   BrainCircuit, 
@@ -46,12 +47,12 @@ export const AppStatusBar = () => {
       horizontal="center"
       style={{
         height: "32px",
-        backgroundColor: "rgba(255, 244, 238, 0.92)",
+        backgroundColor: tokens.color.surface,
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
         borderTopWidth: "1px",
         borderTopStyle: "solid",
-        borderTopColor: "rgba(0, 0, 0, 0.05)",
+        borderTopColor: tokens.color.border,
         zIndex: 1000,
         paddingTop: "0px",
         paddingBottom: "0px",
@@ -69,10 +70,10 @@ export const AppStatusBar = () => {
         {/* Left: AI & Vector Subsystem */}
         <Row gap="16" vertical="center">
           <Row gap="8" vertical="center">
-            <Database size={12} style={{ color: "#ff6b35" }} />
+            <Database size={12} style={{ color: tokens.color.warm }} />
             <Text
               variant="body-default-xs"
-              style={{ color: "#1C1C1E", fontWeight: 600 }}
+              style={{ color: tokens.color.text, fontWeight: 600 }}
             >
               pgvector: IVFFlat
             </Text>
@@ -81,14 +82,14 @@ export const AppStatusBar = () => {
                 width: "6px",
                 height: "6px",
                 borderRadius: "50%",
-                backgroundColor: "#34C759",
-                boxShadow: "0 0 4px rgba(52, 199, 89, 0.5)",
+                backgroundColor: tokens.color.success,
+                boxShadow: `0 0 4px ${tokens.color.success}80`,
               }}
             />
           </Row>
           <Row gap="8" vertical="center" s={{ hide: true }}>
-            <BrainCircuit size={12} style={{ color: "#8E8E93" }} />
-            <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>
+            <BrainCircuit size={12} style={{ color: tokens.color.textMuted }} />
+            <Text variant="body-default-xs" style={{ color: tokens.color.textMuted }}>
               Learning: α=0.1
             </Text>
           </Row>
@@ -99,34 +100,34 @@ export const AppStatusBar = () => {
           gap="12"
           vertical="center"
           style={{
-            backgroundColor: "rgba(255, 107, 53, 0.05)",
+            backgroundColor: `${tokens.color.warm}0D`,
             paddingTop: "3px",
             paddingBottom: "3px",
             paddingLeft: "16px",
             paddingRight: "16px",
             borderRadius: "999px",
-            border: "1px solid rgba(255, 107, 53, 0.15)",
+            border: `1px solid ${tokens.color.warm}26`,
             cursor: "default",
           }}
         >
           <Row gap="8" vertical="center">
-            <Cpu size={12} style={{ color: "#ff6b35" }} />
+            <Cpu size={12} style={{ color: tokens.color.warm }} />
             <Text
               variant="body-default-xs"
-              style={{ color: "#1C1C1E", fontWeight: 600, fontVariantNumeric: "tabular-nums" }}
+              style={{ color: tokens.color.text, fontWeight: 600, fontVariantNumeric: "tabular-nums" }}
             >
-              <span style={{ color: "#8E8E93", fontWeight: 500 }}>CPU: </span>
+              <span style={{ color: tokens.color.textMuted, fontWeight: 500 }}>CPU: </span>
               14%
             </Text>
           </Row>
-          <Column style={{ width: 1, height: 10, backgroundColor: "rgba(0,0,0,0.1)" }} />
+          <Column style={{ width: 1, height: 10, backgroundColor: tokens.color.border }} />
           <Row gap="8" vertical="center">
-            <Activity size={12} style={{ color: "#9333EA" }} />
+            <Activity size={12} style={{ color: tokens.color.magic }} />
             <Text
               variant="body-default-xs"
-              style={{ color: "#1C1C1E", fontWeight: 600, fontVariantNumeric: "tabular-nums" }}
+              style={{ color: tokens.color.text, fontWeight: 600, fontVariantNumeric: "tabular-nums" }}
             >
-              <span style={{ color: "#8E8E93", fontWeight: 500 }}>GPU: </span>
+              <span style={{ color: tokens.color.textMuted, fontWeight: 500 }}>GPU: </span>
               41%
             </Text>
           </Row>
@@ -135,22 +136,22 @@ export const AppStatusBar = () => {
         {/* Right: Environment & Telemetry */}
         <Row gap="16" vertical="center">
           <Row gap="8" vertical="center" m={{ hide: true }}>
-            <Wifi size={12} style={{ color: "#34C759" }} />
-            <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>
+            <Wifi size={12} style={{ color: tokens.color.success }} />
+            <Text variant="body-default-xs" style={{ color: tokens.color.textMuted }}>
               24ms
             </Text>
           </Row>
           <Row gap="8" vertical="center" s={{ hide: true }}>
-            <CloudRain size={12} style={{ color: "#8E8E93" }} />
-            <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>
+            <CloudRain size={12} style={{ color: tokens.color.textMuted }} />
+            <Text variant="body-default-xs" style={{ color: tokens.color.textMuted }}>
               {t("statusbar.weather")}: +0.2
             </Text>
           </Row>
           <Row gap="8" vertical="center">
-            <Users size={11} style={{ color: "#ff6b35" }} />
+            <Users size={11} style={{ color: tokens.color.warm }} />
             <Text
               variant="body-default-xs"
-              style={{ color: "#1C1C1E", fontWeight: 600 }}
+              style={{ color: tokens.color.text, fontWeight: 600 }}
             >
               {t("statusbar.lobbies", { n: 342 })}
             </Text>
@@ -159,14 +160,14 @@ export const AppStatusBar = () => {
             style={{
               width: "1px",
               height: "12px",
-              backgroundColor: "rgba(0,0,0,0.1)",
+              backgroundColor: tokens.color.border,
             }}
           />
           <Row gap="8" vertical="center">
-            <Clock size={12} style={{ color: "#8E8E93" }} />
+            <Clock size={12} style={{ color: tokens.color.textMuted }} />
             <Text
               variant="body-default-xs"
-              style={{ color: "#8E8E93", fontVariantNumeric: "tabular-nums" }}
+              style={{ color: tokens.color.textMuted, fontVariantNumeric: "tabular-nums" }}
             >
               {time}
             </Text>

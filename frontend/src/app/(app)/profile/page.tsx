@@ -18,7 +18,7 @@ import {
   FriendItem,
   PostItem,
 } from "@/components/features/profile";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/context/AuthContext";
 import { useUserVector } from "@/context/UserVectorContext";
 import {
   CreatePostModal,
@@ -39,7 +39,7 @@ export default function ProfilePage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
 
-  const { user, refetch } = useAuth();
+  const { user, refreshUser } = useAuth();
   const { radarData } = useUserVector();
   const { badges, totalBadges, loading: badgesLoading } = useBadges();
 
@@ -178,7 +178,7 @@ export default function ProfilePage() {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         user={user}
-        onSuccess={refetch}
+        onSuccess={refreshUser}
       />
 
       <CreatePostModal

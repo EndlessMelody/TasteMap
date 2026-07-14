@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.users.models import User
 from src.challenges.models import XpTransaction, LevelConfig
 from src.db.redis import RedisClient
+from src.membership.entitlements import get_entitlements
 
 async def get_level_config(db: AsyncSession, level: int):
     """Fetch config for a specific level."""
@@ -79,6 +80,15 @@ async def award_xp(
     # 1. Fetch current user state
     res = await db.execute(select(User).where(User.id == user_id))
     user = res.scalar_one()
+
+    # Membership XP boost (Savor +10% / Feast +25% / Omakase +50%) — applied to the
+    # raw amount before the level-up math, so boosted XP counts toward levelling too.
+    tier = user.membership_tier or "bite"
+    boost_pct = get_entitlements(tier)["xp_boost_pct"]
+    if boost_pct:
+        amount = int(amount * (1 + boost_pct / 100))
+        if description:
+            description = f"{description} (+{boost_pct}% {tier})"
 
     old_level = user.level or 1
     old_total_xp = user.total_xp_earned or 0
