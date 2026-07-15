@@ -267,7 +267,10 @@ export const VaultCardV2: React.FC<VaultCardV2Props> = ({
         {/* ── Text area ── */}
         <Column
           style={{
-            padding: tokens.space[4],
+            paddingTop: tokens.space[4],
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[4],
+            paddingLeft: tokens.space[4],
             gap: 2,
           }}
         >

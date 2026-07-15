@@ -124,7 +124,10 @@ export const NearbyNowCard: React.FC = () => {
         style={{
           justifyContent: "space-between",
           gap: tokens.space[3],
-          padding: `${tokens.space[3]} ${tokens.space[4]}`,
+          paddingTop: tokens.space[3],
+          paddingRight: tokens.space[4],
+          paddingBottom: tokens.space[3],
+          paddingLeft: tokens.space[4],
           borderBottom: `1px solid ${tokens.color.border}`,
         }}
       >
@@ -205,7 +208,10 @@ export const NearbyNowCard: React.FC = () => {
               justifyContent: "center",
               gap: tokens.space[2],
               color: tokens.color.textMuted,
-              padding: tokens.space[5],
+              paddingTop: tokens.space[5],
+              paddingRight: tokens.space[5],
+              paddingBottom: tokens.space[5],
+              paddingLeft: tokens.space[5],
               textAlign: "center",
             }}
           >

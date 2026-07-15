@@ -261,7 +261,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 horizontal="between"
                 style={{
                   alignItems: "flex-start",
-                  padding: `${tokens.space[6]} ${tokens.space[8]}`,
+                  paddingTop: tokens.space[6],
+                  paddingRight: tokens.space[8],
+                  paddingBottom: tokens.space[6],
+                  paddingLeft: tokens.space[8],
                   borderBottom: `1px solid ${tokens.color.border}`,
                   flexShrink: 0,
                 }}
@@ -284,7 +287,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               <Column
                 className="no-scrollbar"
                 style={{
-                  padding: tokens.space[8],
+                  paddingTop: tokens.space[8],
+                  paddingRight: tokens.space[8],
+                  paddingBottom: tokens.space[8],
+                  paddingLeft: tokens.space[8],
                   overflowY: "auto",
                   flexGrow: 1,
                   gap: tokens.space[8],
@@ -530,7 +536,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 horizontal="end"
                 vertical="center"
                 style={{
-                  padding: `${tokens.space[5]} ${tokens.space[8]}`,
+                  paddingTop: tokens.space[5],
+                  paddingRight: tokens.space[8],
+                  paddingBottom: tokens.space[5],
+                  paddingLeft: tokens.space[8],
                   gap: tokens.space[3],
                   borderTop: `1px solid ${tokens.color.border}`,
                   background: tokens.color.surfaceMuted,

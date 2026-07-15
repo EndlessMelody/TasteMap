@@ -8,7 +8,7 @@ import { Plus, Check, Star, DollarSign } from "lucide-react";
 import { GlassCard } from "@/components/primitives/GlassCard";
 import { BodySm, Caption } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
-import type { SavedPlace } from "../lib";
+import { FALLBACK_IMG, type SavedPlace } from "../lib";
 
 interface SavedPlaceCardProps {
   place: SavedPlace;
@@ -21,7 +21,7 @@ export function SavedPlaceCard({ place, added, onToggle }: SavedPlaceCardProps) 
     <GlassCard variant="elevated" padding="none" radius="lg" interactive fillWidth onClick={onToggle}>
       <Column style={{ position: "relative", height: 116, width: "100%" }}>
         <img
-          src={place.image_url ?? ""}
+          src={place.image_url || FALLBACK_IMG}
           alt={place.name}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -52,7 +52,15 @@ export function SavedPlaceCard({ place, added, onToggle }: SavedPlaceCardProps) 
         </Row>
       </Column>
 
-      <Column style={{ padding: tokens.space[3], gap: 4 }}>
+      <Column
+        style={{
+          paddingTop: tokens.space[3],
+          paddingRight: tokens.space[3],
+          paddingBottom: tokens.space[3],
+          paddingLeft: tokens.space[3],
+          gap: 4,
+        }}
+      >
         <BodySm style={{ fontWeight: tokens.type.weight.bold, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
           {place.name}
         </BodySm>

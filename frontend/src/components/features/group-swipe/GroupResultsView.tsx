@@ -63,7 +63,10 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
         style={{
           flex: 1,
           overflowY: "auto",
-          padding: `0 ${tokens.space[5]} ${tokens.space[6]}`,
+          paddingTop: 0,
+          paddingRight: tokens.space[5],
+          paddingBottom: tokens.space[6],
+          paddingLeft: tokens.space[5],
           gap: tokens.space[3],
         }}
       >
@@ -164,7 +167,10 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
                           tone="subtle"
                           style={{
                             background: tokens.color.surfaceInset,
-                            padding: "2px 6px",
+                            paddingTop: "2px",
+                            paddingRight: "6px",
+                            paddingBottom: "2px",
+                            paddingLeft: "6px",
                             borderRadius: tokens.radius.xs,
                           }}
                         >
@@ -180,7 +186,15 @@ export function GroupResultsView({ results }: GroupResultsViewProps) {
         ))}
       </Column>
 
-      <Column style={{ padding: `0 ${tokens.space[5]} ${tokens.space[6]}`, flexShrink: 0 }}>
+      <Column
+        style={{
+          paddingTop: 0,
+          paddingRight: tokens.space[5],
+          paddingBottom: tokens.space[6],
+          paddingLeft: tokens.space[5],
+          flexShrink: 0,
+        }}
+      >
         <button
           onClick={() => {
             const ids = results.map((r) => r.location_id).join(",");

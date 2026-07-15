@@ -185,7 +185,10 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
                     top: tokens.space[2],
                     left: tokens.space[2],
                     gap: tokens.space[1],
-                    padding: `4px 10px 4px 4px`,
+                    paddingTop: `4px`,
+                    paddingRight: `10px`,
+                    paddingBottom: `4px`,
+                    paddingLeft: `4px`,
                     borderRadius: tokens.radius.pill,
                     background: "rgba(255, 255, 255, 0.92)",
                     backdropFilter: "blur(10px)",
@@ -231,7 +234,10 @@ export const BookmarksTab: React.FC<BookmarksTabProps> = ({ onItemClick }) => {
 
             <Column
               style={{
-                padding: tokens.space[4],
+                paddingTop: tokens.space[4],
+                paddingRight: tokens.space[4],
+                paddingBottom: tokens.space[4],
+                paddingLeft: tokens.space[4],
                 gap: tokens.space[1],
               }}
             >

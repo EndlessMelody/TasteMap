@@ -60,7 +60,17 @@ export const LatestTourCard: React.FC = () => {
   if (failed || !tour) {
     return (
       <GlassCard variant="elevated" padding="lg" radius="lg" fillWidth>
-        <Column horizontal="center" style={{ gap: tokens.space[3], textAlign: "center", padding: tokens.space[4] }}>
+        <Column
+          horizontal="center"
+          style={{
+            gap: tokens.space[3],
+            textAlign: "center",
+            paddingTop: tokens.space[4],
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[4],
+            paddingLeft: tokens.space[4],
+          }}
+        >
           <MapIcon size={22} color={tokens.color.textMuted} strokeWidth={1.8} />
           <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>{t("tour.emptyTitle")}</BodySm>
           <Button variant="primary" size="sm" leftIcon={<Sparkles size={14} />} onClick={() => router.push("/tour-builder")}>
@@ -87,7 +97,10 @@ export const LatestTourCard: React.FC = () => {
         style={{
           justifyContent: "space-between",
           gap: tokens.space[3],
-          padding: `${tokens.space[3]} ${tokens.space[4]}`,
+          paddingTop: tokens.space[3],
+          paddingRight: tokens.space[4],
+          paddingBottom: tokens.space[3],
+          paddingLeft: tokens.space[4],
           borderBottom: `1px solid ${tokens.color.border}`,
         }}
       >
@@ -122,7 +135,10 @@ export const LatestTourCard: React.FC = () => {
         vertical="center"
         style={{
           justifyContent: "space-between",
-          padding: `${tokens.space[3]} ${tokens.space[4]}`,
+          paddingTop: tokens.space[3],
+          paddingRight: tokens.space[4],
+          paddingBottom: tokens.space[3],
+          paddingLeft: tokens.space[4],
           borderTop: `1px solid ${tokens.color.border}`,
           gap: tokens.space[2],
         }}
@@ -136,7 +152,15 @@ export const LatestTourCard: React.FC = () => {
         </Caption>
       </Row>
 
-      <Row style={{ padding: `0 ${tokens.space[4]} ${tokens.space[4]}`, gap: tokens.space[2] }}>
+      <Row
+        style={{
+          paddingTop: 0,
+          paddingRight: tokens.space[4],
+          paddingBottom: tokens.space[4],
+          paddingLeft: tokens.space[4],
+          gap: tokens.space[2],
+        }}
+      >
         <Button
           variant="secondary"
           size="sm"

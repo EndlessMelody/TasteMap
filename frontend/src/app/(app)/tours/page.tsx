@@ -102,7 +102,10 @@ export default function MyToursPage() {
         vertical="center"
         horizontal="between"
         style={{
-          padding: `${tokens.space[4]} ${tokens.space[8]}`,
+          paddingTop: tokens.space[4],
+          paddingBottom: tokens.space[4],
+          paddingLeft: tokens.space[8],
+          paddingRight: tokens.space[8],
           background: "rgba(255,255,255,0.7)",
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
@@ -127,7 +130,7 @@ export default function MyToursPage() {
         </Button>
       </Row>
 
-      <Column className="no-scrollbar" fillWidth style={{ flex: 1, overflowY: "auto", padding: tokens.space[8] }}>
+      <Column className="no-scrollbar" fillWidth style={{ flex: 1, overflowY: "auto", paddingTop: tokens.space[8], paddingBottom: tokens.space[8], paddingLeft: tokens.space[8], paddingRight: tokens.space[8] }}>
         <Column style={{ gap: 4, marginBottom: tokens.space[6] }}>
           <Eyebrow style={{ color: tokens.color.warm }}>{t("tour.myToursTitle")}</Eyebrow>
           <Caption tone="muted">{t("tour.myToursSubtitle", { n: tours.length })}</Caption>
@@ -166,7 +169,7 @@ export default function MyToursPage() {
                   >
                     <TourMap stops={tour.stops} mapId={`my-tours-${tour.id}`} height={140} zoom={12} />
 
-                    <Column style={{ padding: tokens.space[4], gap: tokens.space[2] }}>
+                    <Column style={{ paddingTop: tokens.space[4], paddingBottom: tokens.space[4], paddingLeft: tokens.space[4], paddingRight: tokens.space[4], gap: tokens.space[2] }}>
                       <Row horizontal="between" vertical="center" style={{ gap: 8 }}>
                         {renamingId === tour.id ? (
                           <Row vertical="center" style={{ gap: 4, flex: 1 }}>

@@ -223,7 +223,17 @@ const RecommendationCard: React.FC<{
         </Column>
 
         {/* ── Content side ── */}
-        <Column flex="1" minWidth="0" gap="8" style={{ padding: "14px 16px" }}>
+        <Column
+          flex="1"
+          minWidth="0"
+          gap="8"
+          style={{
+            paddingTop: "14px",
+            paddingRight: "16px",
+            paddingBottom: "14px",
+            paddingLeft: "16px",
+          }}
+        >
           {/* Rank badge */}
           <Row
             vertical="center"

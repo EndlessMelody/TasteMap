@@ -103,15 +103,11 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
   ) => {
     const variantStyle = getVariantStyle(variant);
     const interactiveProps = interactive ? lift : {};
-    // If the caller overrides with longhand padding (paddingTop/Left/etc),
-    // skip the shorthand default — mixing both on one node trips React's
-    // conflicting-style-property warning.
-    const hasLonghandPadding =
-      !!style &&
-      ("paddingTop" in style ||
-        "paddingBottom" in style ||
-        "paddingLeft" in style ||
-        "paddingRight" in style);
+    // Always emit longhand padding (never the `padding` shorthand) so this
+    // never mixes shorthand + longhand on the same node across re-renders —
+    // that combination trips React's conflicting-style-property warning,
+    // regardless of which specific keys a caller's `style` override uses.
+    const basePadding = PADDING_MAP[padding];
 
     return (
       <motion.div
@@ -120,7 +116,10 @@ export const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
         {...rest}
         style={{
           ...variantStyle,
-          ...(hasLonghandPadding ? {} : { padding: PADDING_MAP[padding] }),
+          paddingTop: basePadding,
+          paddingRight: basePadding,
+          paddingBottom: basePadding,
+          paddingLeft: basePadding,
           borderRadius: RADIUS_MAP[radius],
           width: fillWidth ? "100%" : undefined,
           cursor: interactive ? "pointer" : undefined,

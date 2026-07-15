@@ -63,7 +63,7 @@ export function useRecommendations(
     setLoading(true);
     setError(null);
     try {
-      const data: any = await apiPost("/api/v1/recommendations", {
+      const data: any = await apiPost("/api/v1/recommendations/", {
         user_vector: userVector,
         top_n: topN,
         category: domain,

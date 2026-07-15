@@ -195,14 +195,23 @@ function DateSeparator({ label }: { label: string }) {
   return (
     <Row
       vertical="center"
-      style={{ gap: tokens.space[2], padding: `${tokens.space[2]} ${tokens.space[1]}` }}
+      style={{
+        gap: tokens.space[2],
+        paddingTop: tokens.space[2],
+        paddingBottom: tokens.space[2],
+        paddingLeft: tokens.space[1],
+        paddingRight: tokens.space[1],
+      }}
     >
       <Column style={{ flex: 1, height: 1, background: tokens.color.border }} />
       <Caption
         tone="subtle"
         style={{
           background: tokens.color.surfaceMuted,
-          padding: `4px 12px`,
+          paddingTop: "4px",
+          paddingBottom: "4px",
+          paddingLeft: "12px",
+          paddingRight: "12px",
           borderRadius: tokens.radius.pill,
           border: `1px solid ${tokens.color.border}`,
           whiteSpace: "nowrap",
@@ -648,7 +657,10 @@ function RichChatPanel({
         vertical="center"
         style={{
           gap: tokens.space[2],
-          padding: `${tokens.space[3]} ${tokens.space[4]}`,
+          paddingTop: tokens.space[3],
+          paddingBottom: tokens.space[3],
+          paddingLeft: tokens.space[4],
+          paddingRight: tokens.space[4],
           borderBottom: `1px solid ${tokens.color.border}`,
           flexShrink: 0,
         }}
@@ -678,7 +690,10 @@ function RichChatPanel({
         style={{
           flex: 1,
           overflowY: "auto",
-          padding: `${tokens.space[3]} ${tokens.space[3]} ${tokens.space[1]}`,
+          paddingTop: tokens.space[3],
+          paddingLeft: tokens.space[3],
+          paddingRight: tokens.space[3],
+          paddingBottom: tokens.space[1],
           gap: 2,
         }}
       >
@@ -780,10 +795,14 @@ function RichChatPanel({
 
                     <Column
                       style={{
-                        padding:
-                          msg.content_type?.toLowerCase() === "image"
-                            ? 4
-                            : `10px 14px`,
+                        paddingTop:
+                          msg.content_type?.toLowerCase() === "image" ? 4 : "10px",
+                        paddingBottom:
+                          msg.content_type?.toLowerCase() === "image" ? 4 : "10px",
+                        paddingLeft:
+                          msg.content_type?.toLowerCase() === "image" ? 4 : "14px",
+                        paddingRight:
+                          msg.content_type?.toLowerCase() === "image" ? 4 : "14px",
                         borderRadius: bubbleRadius(msg.sender, msg.pos),
                         background: me
                           ? tokens.color.warm
@@ -974,7 +993,10 @@ function RichChatPanel({
       <Column
         style={{
           position: "relative",
-          padding: `${tokens.space[3]} ${tokens.space[3]} ${tokens.space[4]}`,
+          paddingTop: tokens.space[3],
+          paddingLeft: tokens.space[3],
+          paddingRight: tokens.space[3],
+          paddingBottom: tokens.space[4],
           background: tokens.color.surface,
           borderTop: `1px solid ${tokens.color.border}`,
           flexShrink: 0,
@@ -1008,7 +1030,10 @@ function RichChatPanel({
             gap: tokens.space[2],
             background: tokens.color.surfaceMuted,
             borderRadius: tokens.radius.xl,
-            padding: `6px 6px 6px ${tokens.space[3]}`,
+            paddingTop: "6px",
+            paddingRight: "6px",
+            paddingBottom: "6px",
+            paddingLeft: tokens.space[3],
             border: `1px solid ${tokens.color.border}`,
           }}
         >
@@ -1164,7 +1189,10 @@ function VoiceChatPanel({
     <Column style={{ height: "100%", overflow: "hidden", background: tokens.color.surface }}>
       <Column
         style={{
-          padding: `${tokens.space[3]} ${tokens.space[4]}`,
+          paddingTop: tokens.space[3],
+          paddingBottom: tokens.space[3],
+          paddingLeft: tokens.space[4],
+          paddingRight: tokens.space[4],
           borderBottom: `1px solid ${tokens.color.border}`,
         }}
       >
@@ -1176,7 +1204,10 @@ function VoiceChatPanel({
         style={{
           flex: 1,
           overflowY: "auto",
-          padding: tokens.space[3],
+          paddingTop: tokens.space[3],
+          paddingBottom: tokens.space[3],
+          paddingLeft: tokens.space[3],
+          paddingRight: tokens.space[3],
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
           gap: tokens.space[3],
@@ -1273,7 +1304,10 @@ function VoiceChatPanel({
         horizontal="between"
         vertical="center"
         style={{
-          padding: `${tokens.space[3]} ${tokens.space[4]}`,
+          paddingTop: tokens.space[3],
+          paddingBottom: tokens.space[3],
+          paddingLeft: tokens.space[4],
+          paddingRight: tokens.space[4],
           borderTop: `1px solid ${tokens.color.border}`,
           background: tokens.color.surfaceMuted,
         }}
@@ -1375,7 +1409,10 @@ function VoiceChatPanel({
       {showVoiceSettings && (
         <Column
           style={{
-            padding: `${tokens.space[3]} ${tokens.space[4]}`,
+            paddingTop: tokens.space[3],
+            paddingBottom: tokens.space[3],
+            paddingLeft: tokens.space[4],
+            paddingRight: tokens.space[4],
             borderTop: `1px solid ${tokens.color.border}`,
             background: tokens.color.surface,
           }}
@@ -1813,7 +1850,10 @@ export default function GroupRoomPage() {
             bottom: 0,
             left: 0,
             right: 0,
-            padding: `0 ${tokens.space[5]} ${tokens.space[4]}`,
+            paddingTop: 0,
+            paddingLeft: tokens.space[5],
+            paddingRight: tokens.space[5],
+            paddingBottom: tokens.space[4],
           }}
         >
           <Caption
@@ -1848,7 +1888,10 @@ export default function GroupRoomPage() {
             vertical="center"
             style={{
               gap: tokens.space[3],
-              padding: `${tokens.space[3]} ${tokens.space[5]}`,
+              paddingTop: tokens.space[3],
+              paddingBottom: tokens.space[3],
+              paddingLeft: tokens.space[5],
+              paddingRight: tokens.space[5],
               borderBottom: `1px solid ${tokens.color.border}`,
               background: tokens.color.surfaceMuted,
             }}
@@ -1897,7 +1940,10 @@ export default function GroupRoomPage() {
           {room.status === "active" && (
             <Column
               style={{
-                padding: `${tokens.space[4]} ${tokens.space[5]}`,
+                paddingTop: tokens.space[4],
+                paddingBottom: tokens.space[4],
+                paddingLeft: tokens.space[5],
+                paddingRight: tokens.space[5],
                 borderBottom: `1px solid ${tokens.color.border}`,
                 gap: tokens.space[3],
               }}
@@ -1986,7 +2032,14 @@ export default function GroupRoomPage() {
           ) : (
             <Column
               center
-              style={{ flex: 1, padding: tokens.space[8], textAlign: "center" }}
+              style={{
+                flex: 1,
+                paddingTop: tokens.space[8],
+                paddingBottom: tokens.space[8],
+                paddingLeft: tokens.space[8],
+                paddingRight: tokens.space[8],
+                textAlign: "center",
+              }}
             >
               <Column
                 center
@@ -2036,14 +2089,20 @@ export default function GroupRoomPage() {
         >
           <Column
             style={{
-              padding: tokens.space[2],
+              paddingTop: tokens.space[2],
+              paddingBottom: tokens.space[2],
+              paddingLeft: tokens.space[2],
+              paddingRight: tokens.space[2],
               borderBottom: `1px solid ${tokens.color.border}`,
               flexShrink: 0,
             }}
           >
             <Row
               style={{
-                padding: 4,
+                paddingTop: 4,
+                paddingBottom: 4,
+                paddingLeft: 4,
+                paddingRight: 4,
                 background: tokens.color.surface,
                 borderRadius: tokens.radius.pill,
                 border: `1px solid ${tokens.color.border}`,

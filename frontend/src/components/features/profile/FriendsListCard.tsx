@@ -135,7 +135,7 @@ export const FriendsListCard: React.FC<FriendsListCardProps> = ({
       {friendsLoading ? (
         <Column style={{ gap: tokens.space[2] }}>
           {[1, 2, 3].map((i) => (
-            <Row key={i} vertical="center" style={{ gap: tokens.space[3], padding: tokens.space[3] }}>
+            <Row key={i} vertical="center" style={{ gap: tokens.space[3], paddingTop: tokens.space[3], paddingRight: tokens.space[3], paddingBottom: tokens.space[3], paddingLeft: tokens.space[3] }}>
               <Skeleton width={40} height={40} radius="pill" />
               <Column style={{ flex: 1, gap: 6 }}>
                 <Skeleton width="55%" height={13} />

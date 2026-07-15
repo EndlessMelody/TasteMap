@@ -129,7 +129,10 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
         transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)",
         borderLeft: `1px solid ${tokens.color.border}`,
         backgroundColor: tokens.color.surfaceWarm,
-        padding: isExpanded ? "20px 16px" : "20px 8px",
+        paddingTop: "20px",
+        paddingBottom: "20px",
+        paddingLeft: isExpanded ? "16px" : "8px",
+        paddingRight: isExpanded ? "16px" : "8px",
         gap: "20px",
       }}
     >
@@ -179,22 +182,29 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
           style={{
             width: "100%",
             height: isExpanded ? 180 : 64,
+            minWidth: 0,
             transition: "height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)",
             overflow: "hidden",
           }}
         >
-          {isExpanded ? (
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={50}>
-              <RadarChart
-                data={radarData}
-                cx="50%"
-                cy="50%"
-                outerRadius="72%"
-              >
-                <PolarGrid
-                  stroke={tokens.color.border}
-                  strokeDasharray="3 3"
-                />
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minWidth={0}
+            minHeight={isExpanded ? 180 : 64}
+            debounce={50}
+          >
+            <RadarChart
+              data={radarData}
+              cx="50%"
+              cy="50%"
+              outerRadius={isExpanded ? "72%" : "80%"}
+            >
+              <PolarGrid
+                stroke={tokens.color.border}
+                strokeDasharray="3 3"
+              />
+              {isExpanded && (
                 <PolarAngleAxis
                   dataKey="subject"
                   tick={{
@@ -203,36 +213,16 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                     fill: tokens.color.textMuted,
                   }}
                 />
-                <Radar
-                  dataKey="A"
-                  stroke={tokens.color.warm}
-                  fill={`${tokens.color.warm}26`}
-                  strokeWidth={2}
-                  dot
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          ) : (
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} debounce={50}>
-              <RadarChart
-                data={radarData}
-                cx="50%"
-                cy="50%"
-                outerRadius="80%"
-              >
-                <PolarGrid
-                  stroke={tokens.color.border}
-                  strokeDasharray="3 3"
-                />
-                <Radar
-                  dataKey="A"
-                  stroke={tokens.color.warm}
-                  fill={`${tokens.color.warm}26`}
-                  strokeWidth={2}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          )}
+              )}
+              <Radar
+                dataKey="A"
+                stroke={tokens.color.warm}
+                fill={`${tokens.color.warm}26`}
+                strokeWidth={2}
+                dot={isExpanded}
+              />
+            </RadarChart>
+          </ResponsiveContainer>
         </Column>
 
         {isExpanded && topTrait && (
@@ -263,7 +253,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
                 {topTrait.subject}
               </span>
             </Text>
-            <Text
+            <span
               style={{
                 fontSize: "0.7rem",
                 fontWeight: 700,
@@ -272,7 +262,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({
               }}
             >
               {Math.round((topTrait.A / topTrait.fullMark) * 100)}%
-            </Text>
+            </span>
           </motion.div>
         )}
       </Column>

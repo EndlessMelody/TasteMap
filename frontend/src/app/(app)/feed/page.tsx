@@ -75,7 +75,10 @@ function SkeletonCard() {
       <Skeleton height={220} radius="sm" />
       <Column
         style={{
-          padding: tokens.space[4],
+          paddingTop: tokens.space[4],
+          paddingBottom: tokens.space[4],
+          paddingLeft: tokens.space[4],
+          paddingRight: tokens.space[4],
           gap: tokens.space[2],
         }}
       >
@@ -150,7 +153,10 @@ export default function FeedPage() {
         style={{
           minHeight: "80vh",
           background: tokens.color.bg,
-          padding: tokens.space[6],
+          paddingTop: tokens.space[6],
+          paddingBottom: tokens.space[6],
+          paddingLeft: tokens.space[6],
+          paddingRight: tokens.space[6],
         }}
       >
         <Card radius="xl" padding="lg" shadow="sm" style={{ maxWidth: 480 }}>
@@ -180,8 +186,14 @@ export default function FeedPage() {
         fillWidth
         style={{
           maxWidth: 520,
-          margin: "0 auto",
-          padding: `${tokens.space[4]} 0`,
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: "auto",
+          marginRight: "auto",
+          paddingTop: tokens.space[4],
+          paddingBottom: tokens.space[4],
+          paddingLeft: 0,
+          paddingRight: 0,
         }}
       >
         {storyAuthors.length > 0 && (
@@ -189,7 +201,10 @@ export default function FeedPage() {
             className="no-scrollbar"
             style={{
               gap: tokens.space[3],
-              padding: `${tokens.space[2]} ${tokens.space[4]}`,
+              paddingTop: tokens.space[2],
+              paddingBottom: tokens.space[2],
+              paddingLeft: tokens.space[4],
+              paddingRight: tokens.space[4],
               overflowX: "auto",
             }}
           >
@@ -203,7 +218,10 @@ export default function FeedPage() {
           className="no-scrollbar"
           style={{
             gap: tokens.space[2],
-            padding: `${tokens.space[2]} ${tokens.space[4]} ${tokens.space[3]}`,
+            paddingTop: tokens.space[2],
+            paddingLeft: tokens.space[4],
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[3],
             overflowX: "auto",
           }}
         >
@@ -241,7 +259,7 @@ export default function FeedPage() {
           })}
         </Row>
 
-        <Column style={{ padding: `0 ${tokens.space[3]}` }}>
+        <Column style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: tokens.space[3], paddingRight: tokens.space[3] }}>
           {isLoading && (!posts || posts.length === 0) ? (
             <>
               <SkeletonCard />
@@ -283,7 +301,10 @@ export default function FeedPage() {
               tone="subtle"
               style={{
                 textAlign: "center",
-                padding: `${tokens.space[4]} 0 ${tokens.space[8]}`,
+                paddingTop: tokens.space[4],
+                paddingLeft: 0,
+                paddingRight: 0,
+                paddingBottom: tokens.space[8],
               }}
             >
               You're all caught up.

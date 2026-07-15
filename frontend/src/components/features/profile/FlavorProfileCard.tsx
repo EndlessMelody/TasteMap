@@ -50,7 +50,10 @@ export const FlavorProfileCard: React.FC = () => {
             vertical="center"
             style={{
               gap: tokens.space[3],
-              padding: tokens.space[3],
+              paddingTop: tokens.space[3],
+              paddingRight: tokens.space[3],
+              paddingBottom: tokens.space[3],
+              paddingLeft: tokens.space[3],
               borderRadius: tokens.radius.md,
               background: tokens.color.surfaceMuted,
             }}

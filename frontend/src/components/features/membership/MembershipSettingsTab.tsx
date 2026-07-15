@@ -164,7 +164,10 @@ export const MembershipSettingsTab: React.FC = () => {
                 horizontal="between"
                 vertical="center"
                 style={{
-                  padding: tokens.space[3],
+                  paddingTop: tokens.space[3],
+                  paddingRight: tokens.space[3],
+                  paddingBottom: tokens.space[3],
+                  paddingLeft: tokens.space[3],
                   borderRadius: tokens.radius.sm,
                   border: `1px solid ${tokens.color.border}`,
                 }}
@@ -202,7 +205,7 @@ export const MembershipSettingsTab: React.FC = () => {
                   horizontal="between"
                   vertical="center"
                   onClick={() => txn.status === "succeeded" && toggleReceipt(txn)}
-                  style={{ padding: tokens.space[3], cursor: txn.status === "succeeded" ? "pointer" : "default" }}
+                  style={{ paddingTop: tokens.space[3], paddingRight: tokens.space[3], paddingBottom: tokens.space[3], paddingLeft: tokens.space[3], cursor: txn.status === "succeeded" ? "pointer" : "default" }}
                 >
                   <Column style={{ gap: 2 }}>
                     <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
@@ -225,7 +228,7 @@ export const MembershipSettingsTab: React.FC = () => {
                   </Caption>
                 </Row>
                 {openReceiptId === txn.id && receipt && (
-                  <Column style={{ padding: tokens.space[3], borderTop: `1px solid ${tokens.color.border}`, gap: tokens.space[1] }}>
+                  <Column style={{ paddingTop: tokens.space[3], paddingRight: tokens.space[3], paddingBottom: tokens.space[3], paddingLeft: tokens.space[3], borderTop: `1px solid ${tokens.color.border}`, gap: tokens.space[1] }}>
                     <Caption tone="muted">{receipt.receipt_number}</Caption>
                     <BodySm tone="muted">
                       {receipt.card_last4 ? `•••• ${receipt.card_last4}` : ""} · {receipt.plan}

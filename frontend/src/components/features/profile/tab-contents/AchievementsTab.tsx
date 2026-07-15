@@ -171,7 +171,10 @@ export const AchievementsTab: React.FC<AchievementsTabProps> = ({
                     <Column
                       key={prog.badge_id}
                       style={{
-                        padding: tokens.space[3],
+                        paddingTop: tokens.space[3],
+                        paddingRight: tokens.space[3],
+                        paddingBottom: tokens.space[3],
+                        paddingLeft: tokens.space[3],
                         borderRadius: tokens.radius.lg,
                         background: tokens.color.surface,
                         border: `1px solid ${tokens.color.border}`,

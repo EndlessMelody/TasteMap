@@ -82,7 +82,10 @@ export const PostsTab: React.FC<PostsTabProps> = ({
             <Skeleton width="100%" height={160} radius="sm" />
             <Column
               style={{
-                padding: tokens.space[4],
+                paddingTop: tokens.space[4],
+                paddingRight: tokens.space[4],
+                paddingBottom: tokens.space[4],
+                paddingLeft: tokens.space[4],
                 gap: tokens.space[2],
               }}
             >
@@ -178,7 +181,10 @@ export const PostsTab: React.FC<PostsTabProps> = ({
 
             <Column
               style={{
-                padding: tokens.space[4],
+                paddingTop: tokens.space[4],
+                paddingRight: tokens.space[4],
+                paddingBottom: tokens.space[4],
+                paddingLeft: tokens.space[4],
                 gap: tokens.space[2],
               }}
             >

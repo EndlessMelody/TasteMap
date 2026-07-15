@@ -54,7 +54,20 @@ export function PromoHowItWorks() {
         overflow: "hidden",
       }}
     >
-      <Column style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" }}>
+      <Column
+        style={{
+          maxWidth: 1200,
+          marginTop: 0,
+          marginRight: "auto",
+          marginBottom: 0,
+          marginLeft: "auto",
+          paddingTop: 0,
+          paddingRight: "32px",
+          paddingBottom: 0,
+          paddingLeft: "32px",
+          width: "100%",
+        }}
+      >
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}

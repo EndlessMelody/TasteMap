@@ -38,7 +38,10 @@ export const Page = ({
       minHeight: "100vh",
       background: tokens.color.bg,
       color: tokens.color.text,
-      ...(center && { padding: tokens.space[6] }),
+      paddingTop: center ? tokens.space[6] : undefined,
+      paddingRight: center ? tokens.space[6] : undefined,
+      paddingBottom: center ? tokens.space[6] : undefined,
+      paddingLeft: center ? tokens.space[6] : undefined,
       ...style,
     }}
     {...props}
@@ -50,7 +53,10 @@ export const Page = ({
         fillWidth
         style={{
           maxWidth: bleed ? "none" : "1200px",
-          margin: "0 auto",
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: "auto",
+          marginRight: "auto",
           paddingLeft: flush ? 0 : "var(--ui-page-px, 16px)",
           paddingRight: flush ? 0 : "var(--ui-page-px, 16px)",
           paddingTop: tokens.space[6],

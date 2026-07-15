@@ -113,7 +113,10 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
             position: "absolute",
             top: tokens.space[4],
             right: tokens.space[4],
-            padding: tokens.space[2],
+            paddingTop: tokens.space[2],
+            paddingRight: tokens.space[2],
+            paddingBottom: tokens.space[2],
+            paddingLeft: tokens.space[2],
             borderRadius: tokens.radius.lg,
             backgroundColor: "rgba(255,255,255,0.95)",
             backdropFilter: "blur(10px)",
@@ -129,7 +132,10 @@ export const AIPickHeroCard: React.FC<AIPickHeroCardProps> = ({
       <Column
         style={{
           gap: tokens.space[3],
-          padding: tokens.space[5],
+          paddingTop: tokens.space[5],
+          paddingRight: tokens.space[5],
+          paddingBottom: tokens.space[5],
+          paddingLeft: tokens.space[5],
           flex: 1,
           minHeight: 0,
         }}

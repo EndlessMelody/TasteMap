@@ -425,7 +425,10 @@ export default function HotRoutesPage() {
         horizontal="between"
         vertical="center"
         style={{
-          padding: `${tokens.space[4]} ${tokens.space[6]}`,
+          paddingTop: tokens.space[4],
+          paddingBottom: tokens.space[4],
+          paddingLeft: tokens.space[6],
+          paddingRight: tokens.space[6],
           borderBottom: `1px solid ${tokens.color.border}`,
           background: tokens.color.surface,
           flexShrink: 0,
@@ -703,7 +706,10 @@ export default function HotRoutesPage() {
 
         <Row
           style={{
-            padding: `0 ${tokens.space[6]}`,
+            paddingTop: 0,
+            paddingBottom: 0,
+            paddingLeft: tokens.space[6],
+            paddingRight: tokens.space[6],
             marginTop: -tokens.space[2],
             flexShrink: 0,
             position: "relative",
@@ -833,7 +839,10 @@ export default function HotRoutesPage() {
 
         <Column
           style={{
-            padding: `${tokens.space[5]} ${tokens.space[6]} ${tokens.space[2]}`,
+            paddingTop: tokens.space[5],
+            paddingLeft: tokens.space[6],
+            paddingRight: tokens.space[6],
+            paddingBottom: tokens.space[2],
             flexShrink: 0,
           }}
         >
@@ -896,7 +905,10 @@ export default function HotRoutesPage() {
           className="no-scrollbar"
           style={{
             gap: tokens.space[2],
-            padding: `${tokens.space[1]} ${tokens.space[6]} ${tokens.space[8]}`,
+            paddingTop: tokens.space[1],
+            paddingLeft: tokens.space[6],
+            paddingRight: tokens.space[6],
+            paddingBottom: tokens.space[8],
             overflowX: "auto",
             flexShrink: 0,
           }}
@@ -929,7 +941,10 @@ export default function HotRoutesPage() {
 
       <Column
         style={{
-          padding: `${tokens.space[1]} ${tokens.space[6]}`,
+          paddingTop: tokens.space[1],
+          paddingBottom: tokens.space[1],
+          paddingLeft: tokens.space[6],
+          paddingRight: tokens.space[6],
           background: tokens.color.surface,
           borderTop: `1px solid ${tokens.color.border}`,
           flexShrink: 0,

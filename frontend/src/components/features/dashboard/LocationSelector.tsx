@@ -359,7 +359,10 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
               <Row
                 style={{
                   borderBottom: `1px solid ${tokens.color.border}`,
-                  padding: 4,
+                  paddingTop: 4,
+                  paddingRight: 4,
+                  paddingBottom: 4,
+                  paddingLeft: 4,
                   gap: 4,
                 }}
               >
@@ -386,8 +389,14 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                   {value && (
                     <Row
                       style={{
-                        margin: `${tokens.space[2]} ${tokens.space[4]} 0`,
-                        padding: `${tokens.space[3]} ${tokens.space[3]}`,
+                        marginTop: tokens.space[2],
+                        marginRight: tokens.space[4],
+                        marginBottom: 0,
+                        marginLeft: tokens.space[4],
+                        paddingTop: tokens.space[3],
+                        paddingRight: tokens.space[3],
+                        paddingBottom: tokens.space[3],
+                        paddingLeft: tokens.space[3],
                         background: tokens.color.surfaceMuted,
                         border: `1px solid ${tokens.color.border}`,
                         borderRadius: tokens.radius.md,
@@ -436,7 +445,10 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                     vertical="center"
                     style={{
                       gap: tokens.space[2],
-                      padding: `${tokens.space[3]} ${tokens.space[4]} ${tokens.space[1]}`,
+                      paddingTop: tokens.space[3],
+                      paddingRight: tokens.space[4],
+                      paddingBottom: tokens.space[1],
+                      paddingLeft: tokens.space[4],
                       borderBottom:
                         drillLevel !== "province"
                           ? `1px solid ${tokens.color.border}`
@@ -514,7 +526,10 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
 
                   <Column
                     style={{
-                      padding: `${tokens.space[2]} ${tokens.space[4]} ${tokens.space[1]}`,
+                      paddingTop: tokens.space[2],
+                      paddingRight: tokens.space[4],
+                      paddingBottom: tokens.space[1],
+                      paddingLeft: tokens.space[4],
                       position: "relative",
                     }}
                   >
@@ -568,7 +583,10 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                         horizontal="center"
                         vertical="center"
                         style={{
-                          padding: tokens.space[8],
+                          paddingTop: tokens.space[8],
+                          paddingRight: tokens.space[8],
+                          paddingBottom: tokens.space[8],
+                          paddingLeft: tokens.space[8],
                           gap: tokens.space[2],
                         }}
                       >
@@ -585,7 +603,10 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                     ) : filteredItems.length === 0 ? (
                       <Column
                         style={{
-                          padding: `${tokens.space[6]} ${tokens.space[4]}`,
+                          paddingTop: tokens.space[6],
+                          paddingRight: tokens.space[4],
+                          paddingBottom: tokens.space[6],
+                          paddingLeft: tokens.space[4],
                           textAlign: "center",
                         }}
                       >
@@ -616,7 +637,10 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
                 <Column
                   horizontal="center"
                   style={{
-                    padding: `${tokens.space[6]} ${tokens.space[5]} ${tokens.space[8]}`,
+                    paddingTop: tokens.space[6],
+                    paddingRight: tokens.space[5],
+                    paddingBottom: tokens.space[8],
+                    paddingLeft: tokens.space[5],
                     gap: tokens.space[4],
                   }}
                 >

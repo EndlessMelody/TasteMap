@@ -321,6 +321,9 @@ const en = {
     vaultEmptyDesc: "Save places you love while browsing, or use Swipe Assist to discover stops for this tour.",
     swipeToDiscover: "Swipe to discover",
     swipeToDiscoverMore: "Swipe to discover more",
+    swipeMode: "Swipe",
+    savedMode: "Saved",
+    pinned: "{n} pinned",
     yourTour: "Your tour",
     stopSingular: "{n} stop",
     stopPlural: "{n} stops",
@@ -561,6 +564,10 @@ const en = {
     omakaseUnlocked: "Omakase unlocked",
     comparePlans: "Compare all plans",
     streakShort: "{n}d",
+    demoPreview: {
+      title: "Preview Feast tier",
+      description: "Demo only — locally previews the Feast layout on this page without changing your real plan.",
+    },
     perk: {
       dailySwipes: "Daily swipes",
       superLikes: "Super likes / day",

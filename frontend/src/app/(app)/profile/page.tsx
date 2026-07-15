@@ -118,7 +118,9 @@ export default function ProfilePage() {
         style={{
           width: "100%",
           maxWidth: 1200,
-          margin: "0 auto",
+          marginRight: "auto",
+          marginBottom: 0,
+          marginLeft: "auto",
           paddingLeft: tokens.space[10],
           paddingRight: tokens.space[10],
           marginTop: "-80px",
@@ -159,7 +161,7 @@ export default function ProfilePage() {
           </Column>
         </Column>
 
-        <Row style={{ gap: tokens.space[6], marginBottom: tokens.space[12] }}>
+        <Row style={{ gap: tokens.space[6], marginBottom: tokens.space[12], minWidth: 0 }}>
           <TasteDNACard radarData={radarData} />
           <TopHighlightsCard radarData={radarData} />
         </Row>

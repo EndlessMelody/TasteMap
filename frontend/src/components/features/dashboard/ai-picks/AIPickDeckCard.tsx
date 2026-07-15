@@ -72,7 +72,10 @@ export const AIPickDeckCard: React.FC<AIPickDeckCardProps> = ({
           display: "flex",
           alignItems: "stretch",
           gap: tokens.space[3],
-          padding: tokens.space[2],
+          paddingTop: tokens.space[2],
+          paddingRight: tokens.space[2],
+          paddingBottom: tokens.space[2],
+          paddingLeft: tokens.space[2],
           width: "100%",
         }}
       >

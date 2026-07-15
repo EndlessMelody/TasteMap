@@ -320,6 +320,9 @@ const vi: Messages = {
     vaultEmptyDesc: "Lưu những địa điểm bạn thích khi duyệt, hoặc dùng Vuốt hỗ trợ để khám phá điểm dừng cho hành trình này.",
     swipeToDiscover: "Vuốt để khám phá",
     swipeToDiscoverMore: "Vuốt để khám phá thêm",
+    swipeMode: "Vuốt",
+    savedMode: "Đã lưu",
+    pinned: "Đã ghim {n}",
     yourTour: "Hành trình của bạn",
     stopSingular: "{n} điểm dừng",
     stopPlural: "{n} điểm dừng",
@@ -560,6 +563,10 @@ const vi: Messages = {
     omakaseUnlocked: "Đã mở khóa Omakase",
     comparePlans: "So sánh tất cả các gói",
     streakShort: "{n} ngày",
+    demoPreview: {
+      title: "Xem trước hạng Feast",
+      description: "Chỉ để demo — xem trước giao diện Feast cục bộ trên trang này, không thay đổi gói thực tế của bạn.",
+    },
     perk: {
       dailySwipes: "Lượt vuốt mỗi ngày",
       superLikes: "Super like / ngày",

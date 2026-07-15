@@ -562,7 +562,10 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
           vertical="center"
           style={{
             gap: "10px",
-            padding: isOpen ? "10px 12px" : "10px 0",
+            paddingTop: "10px",
+            paddingBottom: "10px",
+            paddingLeft: isOpen ? "12px" : "0px",
+            paddingRight: isOpen ? "12px" : "0px",
             borderRadius: "10px",
             border: `1px solid ${C.divider}`,
             justifyContent: isOpen ? "flex-start" : "center",
@@ -690,11 +693,14 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
   return (
     <Row
       vertical="center"
-      horizontal="start"
+      horizontal={isOpen ? "start" : "center"}
       onClick={() => router.push("/profile")}
       style={{
         gap: "10px",
-        padding: "8px 16px",
+        paddingTop: "8px",
+        paddingBottom: "8px",
+        paddingLeft: isOpen ? "16px" : "0px",
+        paddingRight: isOpen ? "16px" : "0px",
         borderRadius: "10px",
         backgroundColor: "rgba(255,255,255,0.03)",
         border: `1px solid ${C.border}`,
@@ -747,10 +753,11 @@ function SidebarProfileFooter({ isOpen }: { isOpen: boolean }) {
           display: "flex",
           alignItems: "center",
           gap: "10px",
-          flex: 1,
+          flex: isOpen ? 1 : "0 0 0px",
+          width: isOpen ? "auto" : 0,
           overflow: "hidden",
           whiteSpace: "nowrap",
-          marginLeft: 10,
+          marginLeft: isOpen ? 10 : 0,
         }}
       >
         <Column style={{ gap: "1px", overflow: "hidden", flex: 1 }}>

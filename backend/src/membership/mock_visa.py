@@ -28,7 +28,7 @@ TEST_CARD_OUTCOMES: dict[str, tuple[str, Optional[str]]] = {
     "4000000000000119": ("declined", "processing_error"),
 }
 
-_PROCESSING_DELAY_RANGE = (1.2, 2.4)
+_PROCESSING_DELAY_RANGE = (0.2, 0.4)
 
 
 def luhn_check(number: str) -> bool:

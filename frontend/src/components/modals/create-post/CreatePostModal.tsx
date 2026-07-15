@@ -286,8 +286,8 @@ export function CreatePostModal({
               <Row vertical="center" style={{ gap: "12px" }}>
                 <Column style={{ position: "relative" }}>
                   <Avatar
-                    src={user?.avatar_url}
-                    value={getInitials(user?.display_name || user?.username)}
+                    src={user?.avatar_url || undefined}
+                    value={user?.avatar_url ? undefined : getInitials(user?.display_name || user?.username)}
                     size="m"
                   />
                   <span
