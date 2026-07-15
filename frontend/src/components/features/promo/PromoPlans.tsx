@@ -60,7 +60,20 @@ export function PromoPlans() {
         overflow: "hidden",
       }}
     >
-      <Column style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" }}>
+      <Column
+        style={{
+          maxWidth: 1200,
+          marginTop: 0,
+          marginRight: "auto",
+          marginBottom: 0,
+          marginLeft: "auto",
+          paddingTop: 0,
+          paddingRight: "32px",
+          paddingBottom: 0,
+          paddingLeft: "32px",
+          width: "100%",
+        }}
+      >
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -123,7 +136,10 @@ export function PromoPlans() {
             gridTemplateColumns: "1fr 1fr",
             gap: 20,
             maxWidth: 860,
-            margin: "0 auto",
+            marginTop: 0,
+            marginRight: "auto",
+            marginBottom: 0,
+            marginLeft: "auto",
           }}
         >
           {PLANS.map((plan, i) => (
@@ -172,7 +188,10 @@ export function PromoPlans() {
                     top: -12,
                     left: "50%",
                     transform: "translateX(-50%)",
-                    padding: "4px 14px",
+                    paddingTop: "4px",
+                    paddingRight: "14px",
+                    paddingBottom: "4px",
+                    paddingLeft: "14px",
                     borderRadius: 20,
                     backgroundColor: "#FF5500",
                     boxShadow: "0 4px 16px rgba(255,85,0,0.35)",

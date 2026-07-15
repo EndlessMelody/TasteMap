@@ -76,7 +76,20 @@ export function PromoWhySection() {
         overflow: "hidden",
       }}
     >
-      <Column style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px", width: "100%" }}>
+      <Column
+        style={{
+          maxWidth: 1200,
+          marginTop: 0,
+          marginRight: "auto",
+          marginBottom: 0,
+          marginLeft: "auto",
+          paddingTop: 0,
+          paddingRight: "32px",
+          paddingBottom: 0,
+          paddingLeft: "32px",
+          width: "100%",
+        }}
+      >
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -144,7 +157,10 @@ export function PromoWhySection() {
             <Column
               key={s.label}
               style={{
-                padding: "24px 20px",
+                paddingTop: "24px",
+                paddingRight: "20px",
+                paddingBottom: "24px",
+                paddingLeft: "20px",
                 backgroundColor: "#FFFFFF",
                 borderRight:
                   i < BIG_STATS.length - 1
@@ -202,7 +218,10 @@ export function PromoWhySection() {
             <Grid
               style={{
                 gridTemplateColumns: "1fr auto auto",
-                padding: "14px 20px",
+                paddingTop: "14px",
+                paddingRight: "20px",
+                paddingBottom: "14px",
+                paddingLeft: "20px",
                 borderBottom: "1px solid rgba(0,0,0,0.07)",
                 gap: 16,
               }}
@@ -240,7 +259,10 @@ export function PromoWhySection() {
                 key={row.label}
                 style={{
                   gridTemplateColumns: "1fr auto auto",
-                  padding: "12px 20px",
+                  paddingTop: "12px",
+                  paddingRight: "20px",
+                  paddingBottom: "12px",
+                  paddingLeft: "20px",
                   gap: 16,
                   flex: 1,
                   borderBottom:
@@ -307,7 +329,10 @@ export function PromoWhySection() {
                 backgroundColor: "#FFFFFF",
                 borderRadius: 16,
                 border: "1px solid rgba(0,0,0,0.07)",
-                padding: "22px 22px 18px",
+                paddingTop: "22px",
+                paddingRight: "22px",
+                paddingBottom: "18px",
+                paddingLeft: "22px",
                 justifyContent: "space-between",
                 boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
               }}
@@ -348,7 +373,10 @@ export function PromoWhySection() {
                   vertical="center"
                   style={{
                     gap: 4,
-                    padding: "4px 10px",
+                    paddingTop: "4px",
+                    paddingRight: "10px",
+                    paddingBottom: "4px",
+                    paddingLeft: "10px",
                     borderRadius: 20,
                     backgroundColor: "rgba(22,163,74,0.08)",
                     border: "1px solid rgba(22,163,74,0.15)",
@@ -388,7 +416,10 @@ export function PromoWhySection() {
                 backgroundColor: "rgba(255,85,0,0.05)",
                 borderRadius: 16,
                 border: "1px solid rgba(255,85,0,0.12)",
-                padding: "22px",
+                paddingTop: "22px",
+                paddingRight: "22px",
+                paddingBottom: "22px",
+                paddingLeft: "22px",
               }}
             >
               <p

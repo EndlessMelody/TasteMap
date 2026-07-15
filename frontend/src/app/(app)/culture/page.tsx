@@ -232,7 +232,7 @@ export default function CulturePage() {
 
   return (
     <Page>
-      <Column style={{ maxWidth: 860, margin: "0 auto", width: "100%" }}>
+      <Column style={{ maxWidth: 860, marginTop: 0, marginBottom: 0, marginLeft: "auto", marginRight: "auto", width: "100%" }}>
 
         {/* ── Hero banner (gradient + search inside) ── */}
         <motion.div
@@ -312,7 +312,10 @@ export default function CulturePage() {
               backdropFilter: "blur(14px)",
               WebkitBackdropFilter: "blur(14px)",
               borderRadius: tokens.radius.xl,
-              padding: tokens.space[2],
+              paddingTop: tokens.space[2],
+              paddingBottom: tokens.space[2],
+              paddingLeft: tokens.space[2],
+              paddingRight: tokens.space[2],
               border: "1.5px solid rgba(255,255,255,0.9)",
               boxShadow: "0 2px 20px rgba(255,140,60,0.1), inset 0 1px 0 rgba(255,255,255,0.7)",
             }}>
@@ -644,7 +647,10 @@ export default function CulturePage() {
                   {story.when_to_eat && (
                     <Column style={{
                       flex: 1,
-                      padding: tokens.space[4],
+                      paddingTop: tokens.space[4],
+                      paddingBottom: tokens.space[4],
+                      paddingLeft: tokens.space[4],
+                      paddingRight: tokens.space[4],
                       borderRight: (story.pairing_suggestions.length > 0 || story.fun_fact)
                         ? `1px solid rgba(255,207,170,0.45)` : "none",
                     }}>
@@ -658,7 +664,10 @@ export default function CulturePage() {
                   {story.pairing_suggestions.length > 0 && (
                     <Column style={{
                       flex: 1,
-                      padding: tokens.space[4],
+                      paddingTop: tokens.space[4],
+                      paddingBottom: tokens.space[4],
+                      paddingLeft: tokens.space[4],
+                      paddingRight: tokens.space[4],
                       borderRight: story.fun_fact ? `1px solid rgba(255,207,170,0.45)` : "none",
                     }}>
                       <Row style={{ alignItems: "center", gap: tokens.space[1], marginBottom: tokens.space[2] }}>
@@ -673,7 +682,7 @@ export default function CulturePage() {
                     </Column>
                   )}
                   {story.fun_fact && (
-                    <Column style={{ flex: 1, padding: tokens.space[4] }}>
+                    <Column style={{ flex: 1, paddingTop: tokens.space[4], paddingBottom: tokens.space[4], paddingLeft: tokens.space[4], paddingRight: tokens.space[4] }}>
                       <Row style={{ alignItems: "center", gap: tokens.space[1], marginBottom: tokens.space[2] }}>
                         <Lightbulb size={13} strokeWidth={1.75} style={{ color: tokens.color.warning }} />
                         <Eyebrow tone="muted">Fun fact</Eyebrow>
@@ -820,7 +829,7 @@ export default function CulturePage() {
                               alt=""
                               style={{ width: "100%", height: 100, objectFit: "cover", display: "block" }}
                             />
-                            <Column style={{ padding: tokens.space[2] }}>
+                            <Column style={{ paddingTop: tokens.space[2], paddingBottom: tokens.space[2], paddingLeft: tokens.space[2], paddingRight: tokens.space[2] }}>
                               <BodySm style={{
                                 fontWeight: tokens.type.weight.semibold,
                                 whiteSpace: "nowrap",
@@ -836,7 +845,7 @@ export default function CulturePage() {
                       </Row>
                     </>
                   ) : (
-                    <BodySm tone="muted" style={{ textAlign: "center", padding: tokens.space[5], fontStyle: "italic" }}>
+                    <BodySm tone="muted" style={{ textAlign: "center", paddingTop: tokens.space[5], paddingBottom: tokens.space[5], paddingLeft: tokens.space[5], paddingRight: tokens.space[5], fontStyle: "italic" }}>
                       No specific locations found — but this dish is available at many local spots.
                     </BodySm>
                   )}

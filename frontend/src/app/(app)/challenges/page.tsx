@@ -532,7 +532,10 @@ function BadgesCard() {
         <Column style={{ gap: tokens.space[3] }}>
           <Column
             style={{
-              padding: tokens.space[3],
+              paddingTop: tokens.space[3],
+              paddingBottom: tokens.space[3],
+              paddingLeft: tokens.space[3],
+              paddingRight: tokens.space[3],
               borderRadius: tokens.radius.md,
               background: `${tokens.color.warning}1A`,
               border: `1px solid ${tokens.color.warning}4D`,
@@ -560,7 +563,10 @@ function BadgesCard() {
                 vertical="center"
                 style={{
                   gap: tokens.space[2],
-                  padding: tokens.space[3],
+                  paddingTop: tokens.space[3],
+                  paddingBottom: tokens.space[3],
+                  paddingLeft: tokens.space[3],
+                  paddingRight: tokens.space[3],
                   borderRadius: tokens.radius.md,
                   background: prog.is_earned ? `${tokens.color.success}1A` : tokens.color.surfaceMuted,
                   border: prog.is_earned ? `1px solid ${tokens.color.success}4D` : "none",
@@ -594,7 +600,10 @@ function BadgesCard() {
               vertical="center"
               style={{
                 gap: tokens.space[2],
-                padding: tokens.space[3],
+                paddingTop: tokens.space[3],
+                paddingBottom: tokens.space[3],
+                paddingLeft: tokens.space[3],
+                paddingRight: tokens.space[3],
                 borderRadius: tokens.radius.md,
                 background: tokens.color.surfaceMuted,
               }}
@@ -609,7 +618,10 @@ function BadgesCard() {
             vertical="center"
             style={{
               gap: tokens.space[2],
-              padding: tokens.space[3],
+              paddingTop: tokens.space[3],
+              paddingBottom: tokens.space[3],
+              paddingLeft: tokens.space[3],
+              paddingRight: tokens.space[3],
               borderRadius: tokens.radius.md,
               background: "transparent",
               border: `1px dashed ${tokens.color.border}`,
@@ -834,7 +846,7 @@ export default function ChallengesPage() {
 
   return (
     <Page bleed>
-      <Column style={{ maxWidth: 1400, margin: "0 auto", width: "100%" }}>
+      <Column style={{ maxWidth: 1400, marginTop: 0, marginBottom: 0, marginLeft: "auto", marginRight: "auto", width: "100%" }}>
         <Column style={{ gap: tokens.space[6], marginBottom: tokens.space[10] }}>
           <Row
             horizontal="between"
@@ -936,7 +948,10 @@ export default function ChallengesPage() {
             <Row
               style={{
                 gap: tokens.space[1],
-                padding: tokens.space[1],
+                paddingTop: tokens.space[1],
+                paddingBottom: tokens.space[1],
+                paddingLeft: tokens.space[1],
+                paddingRight: tokens.space[1],
                 background: tokens.color.surfaceMuted,
                 borderRadius: tokens.radius.md,
                 width: "fit-content",
@@ -1056,7 +1071,10 @@ export default function ChallengesPage() {
 
                 <Row
                   style={{
-                    padding: 4,
+                    paddingTop: 4,
+                    paddingBottom: 4,
+                    paddingLeft: 4,
+                    paddingRight: 4,
                     background: tokens.color.surfaceMuted,
                     borderRadius: tokens.radius.sm,
                   }}
@@ -1111,7 +1129,10 @@ export default function ChallengesPage() {
                       tone="muted"
                       style={{
                         textAlign: "center",
-                        padding: tokens.space[8],
+                        paddingTop: tokens.space[8],
+                        paddingBottom: tokens.space[8],
+                        paddingLeft: tokens.space[8],
+                        paddingRight: tokens.space[8],
                       }}
                     >
                       {t("challenges.rankingsEmpty")}

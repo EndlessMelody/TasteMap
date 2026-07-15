@@ -55,7 +55,10 @@ export default function PostCard({
           vertical="center"
           onClick={() => onOpen(post)}
           style={{
-            padding: tokens.space[4],
+            paddingTop: tokens.space[4],
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[4],
+            paddingLeft: tokens.space[4],
             cursor: "pointer",
             gap: tokens.space[3],
           }}
@@ -160,7 +163,12 @@ export default function PostCard({
         <Row
           horizontal="between"
           vertical="center"
-          style={{ padding: `${tokens.space[2]} ${tokens.space[4]}` }}
+          style={{
+            paddingTop: tokens.space[2],
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[2],
+            paddingLeft: tokens.space[4],
+          }}
         >
           <Row vertical="center" style={{ gap: tokens.space[3] }}>
             <button
@@ -234,7 +242,10 @@ export default function PostCard({
 
         <Column
           style={{
-            padding: `0 ${tokens.space[4]} ${tokens.space[4]}`,
+            paddingTop: 0,
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[4],
+            paddingLeft: tokens.space[4],
             gap: tokens.space[2],
           }}
         >

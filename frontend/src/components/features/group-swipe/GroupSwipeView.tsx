@@ -156,7 +156,10 @@ function GroupSwipeCard({
           background:
             "linear-gradient(to top, rgba(10, 10, 10, 0.85) 0%, rgba(10, 10, 10, 0.3) 40%, transparent 100%)",
           justifyContent: "flex-end",
-          padding: tokens.space[6],
+          paddingTop: tokens.space[6],
+          paddingRight: tokens.space[6],
+          paddingBottom: tokens.space[6],
+          paddingLeft: tokens.space[6],
         }}
       >
         <Body
@@ -334,7 +337,10 @@ export function GroupSwipeView({
     <Column style={{ height: "100%", overflow: "hidden", background: tokens.color.bg }}>
       <Column
         style={{
-          padding: `${tokens.space[4]} ${tokens.space[5]} ${tokens.space[2]}`,
+          paddingTop: tokens.space[4],
+          paddingRight: tokens.space[5],
+          paddingBottom: tokens.space[2],
+          paddingLeft: tokens.space[5],
           flexShrink: 0,
         }}
       >
@@ -347,7 +353,10 @@ export function GroupSwipeView({
         style={{
           flex: 1,
           overflow: "hidden",
-          padding: `${tokens.space[2]} ${tokens.space[6]}`,
+          paddingTop: tokens.space[2],
+          paddingRight: tokens.space[6],
+          paddingBottom: tokens.space[2],
+          paddingLeft: tokens.space[6],
         }}
       >
         {loadingCards && cards.length === 0 ? (
@@ -410,7 +419,10 @@ export function GroupSwipeView({
         center
         style={{
           gap: tokens.space[3],
-          padding: `${tokens.space[3]} 0`,
+          paddingTop: tokens.space[3],
+          paddingRight: 0,
+          paddingBottom: tokens.space[3],
+          paddingLeft: 0,
           flexShrink: 0,
         }}
       >
@@ -452,7 +464,10 @@ export function GroupSwipeView({
         horizontal="between"
         vertical="center"
         style={{
-          padding: `${tokens.space[2]} ${tokens.space[5]} ${tokens.space[4]}`,
+          paddingTop: tokens.space[2],
+          paddingRight: tokens.space[5],
+          paddingBottom: tokens.space[4],
+          paddingLeft: tokens.space[5],
           flexShrink: 0,
         }}
       >

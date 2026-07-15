@@ -106,7 +106,10 @@ export const QuickActionDock: React.FC = () => {
               display: "flex",
               alignItems: "center",
               gap: tokens.space[4],
-              padding: `${tokens.space[4]} ${tokens.space[5]}`,
+              paddingTop: tokens.space[4],
+              paddingRight: tokens.space[5],
+              paddingBottom: tokens.space[4],
+              paddingLeft: tokens.space[5],
             }}
           >
             {/* ── Icon tile ── */}

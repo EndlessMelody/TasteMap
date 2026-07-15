@@ -109,7 +109,10 @@ function ReviewCard({ review }: { review: Review }) {
         width: 300,
         backgroundColor: "#FFFFFF",
         borderRadius: 16,
-        padding: "20px 22px",
+        paddingTop: "20px",
+        paddingRight: "22px",
+        paddingBottom: "20px",
+        paddingLeft: "22px",
         border: "1px solid rgba(0,0,0,0.07)",
         gap: 12,
         boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
@@ -247,7 +250,19 @@ export function PromoSocialProof() {
       `}</style>
 
       {/* Heading */}
-      <Column style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px" }}>
+      <Column
+        style={{
+          maxWidth: 1200,
+          marginTop: 0,
+          marginRight: "auto",
+          marginBottom: 0,
+          marginLeft: "auto",
+          paddingTop: 0,
+          paddingRight: "32px",
+          paddingBottom: 0,
+          paddingLeft: "32px",
+        }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -316,7 +331,10 @@ export function PromoSocialProof() {
               key={s.label}
               horizontal="center"
               style={{
-                padding: "20px",
+                paddingTop: "20px",
+                paddingRight: "20px",
+                paddingBottom: "20px",
+                paddingLeft: "20px",
                 backgroundColor: "#FFFFFF",
                 borderRight:
                   i < STATS.length - 1

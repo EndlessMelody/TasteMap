@@ -62,8 +62,14 @@ export function PromoFeatures() {
       <Column
         style={{
           maxWidth: 1200,
-          margin: "0 auto",
-          padding: "0 32px",
+          marginTop: 0,
+          marginRight: "auto",
+          marginBottom: 0,
+          marginLeft: "auto",
+          paddingTop: 0,
+          paddingRight: "32px",
+          paddingBottom: 0,
+          paddingLeft: "32px",
           width: "100%",
         }}
       >
@@ -323,7 +329,10 @@ export function PromoFeatures() {
                   backgroundColor: "rgba(255,85,0,0.05)",
                   borderRadius: 12,
                   border: "1px solid rgba(255,85,0,0.12)",
-                  padding: "12px 14px",
+                  paddingTop: "12px",
+                  paddingRight: "14px",
+                  paddingBottom: "12px",
+                  paddingLeft: "14px",
                   justifyContent: "space-between",
                   gap: 12,
                 }}
@@ -355,7 +364,10 @@ export function PromoFeatures() {
                 <Column
                   style={{
                     flexShrink: 0,
-                    padding: "5px 11px",
+                    paddingTop: "5px",
+                    paddingRight: "11px",
+                    paddingBottom: "5px",
+                    paddingLeft: "11px",
                     borderRadius: 8,
                     backgroundColor: "#FF5500",
                     color: "white",

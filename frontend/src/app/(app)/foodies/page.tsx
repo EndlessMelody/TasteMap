@@ -139,8 +139,14 @@ function PendingRequestCard({
         </Column>
         <Column
           style={{
-            padding: `0 ${tokens.space[4]} ${tokens.space[4]}`,
+            paddingTop: 0,
+            paddingLeft: tokens.space[4],
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[4],
             marginTop: -22,
+            marginRight: 0,
+            marginBottom: 0,
+            marginLeft: 0,
           }}
         >
           <Avatar
@@ -284,7 +290,10 @@ export default function FoodiesPage() {
       >
         <Column
           style={{
-            padding: `${tokens.space[5]} ${tokens.space[4]} ${tokens.space[3]}`,
+            paddingTop: tokens.space[5],
+            paddingLeft: tokens.space[4],
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[3],
             gap: tokens.space[3],
             flexShrink: 0,
           }}
@@ -301,7 +310,10 @@ export default function FoodiesPage() {
         </Column>
         <Column
           style={{
-            padding: `${tokens.space[1]} 0 ${tokens.space[4]}`,
+            paddingTop: tokens.space[1],
+            paddingLeft: 0,
+            paddingRight: 0,
+            paddingBottom: tokens.space[4],
             gap: 2,
           }}
         >
@@ -318,7 +330,10 @@ export default function FoodiesPage() {
           {filtered.length === 0 && (
             <Column
               style={{
-                padding: `${tokens.space[8]} ${tokens.space[4]}`,
+                paddingTop: tokens.space[8],
+                paddingBottom: tokens.space[8],
+                paddingLeft: tokens.space[4],
+                paddingRight: tokens.space[4],
                 textAlign: "center",
               }}
             >
@@ -352,7 +367,10 @@ export default function FoodiesPage() {
       >
         <Column
           style={{
-            padding: tokens.space[10],
+            paddingTop: tokens.space[10],
+            paddingRight: tokens.space[10],
+            paddingBottom: tokens.space[10],
+            paddingLeft: tokens.space[10],
             gap: tokens.space[4],
           }}
         >
@@ -373,7 +391,10 @@ export default function FoodiesPage() {
           width: "100%",
           height: "100%",
           background: tokens.color.bg,
-          padding: tokens.space[6],
+          paddingTop: tokens.space[6],
+          paddingRight: tokens.space[6],
+          paddingBottom: tokens.space[6],
+          paddingLeft: tokens.space[6],
         }}
       >
         <Card radius="xl" padding="lg" shadow="sm" style={{ maxWidth: 480 }}>
@@ -498,7 +519,10 @@ export default function FoodiesPage() {
 
       <Column
         style={{
-          padding: `${tokens.space[6]} ${tokens.space[10]} ${tokens.space[12]}`,
+          paddingTop: tokens.space[6],
+          paddingLeft: tokens.space[10],
+          paddingRight: tokens.space[10],
+          paddingBottom: tokens.space[12],
           gap: tokens.space[8],
         }}
       >

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Check, Minus, Flame, Crown, Sparkles } from "lucide-react";
-import { Column, Row, Grid } from "@once-ui-system/core";
+import { Column, Row, Grid, Switch } from "@once-ui-system/core";
 import { Page, H1, H2, Body, BodySm, Caption, Button, DecoratedAvatar } from "@/components/ui";
 import { GlassCard } from "@/components/primitives/GlassCard";
 import { MatchRing } from "@/components/primitives/MatchRing";
@@ -64,22 +64,41 @@ export default function MembershipPage() {
   const { user } = useAuth();
   const router = useRouter();
   const openCheckout = useUiStore((s) => s.openCheckout);
+  const isCheckoutOpen = useUiStore((s) => s.isCheckoutOpen);
   const { byId: planById } = usePlans();
 
   const [status, setStatus] = useState<MembershipStatus | null>(null);
   const [entitlements, setEntitlements] = useState<EntitlementMatrix | null>(null);
+  const [previewFeast, setPreviewFeast] = useState(false);
 
   useEffect(() => {
-    membershipApi.getStatus().then(setStatus).catch(() => {});
     membershipApi.getEntitlements().then(setEntitlements).catch(() => {});
   }, []);
 
-  const tier = status?.tier ?? "bite";
+  useEffect(() => {
+    // CheckoutModal lives in the app layout, not this page, so a successful
+    // upgrade doesn't remount us — refetch whenever it opens/closes to pick
+    // up the tier change once the purchase closes the modal.
+    if (isCheckoutOpen) return;
+    membershipApi.getStatus().then(setStatus).catch(() => {});
+  }, [isCheckoutOpen]);
+
+  const tier = previewFeast ? "feast" : status?.tier ?? "bite";
   const streak = status?.streak;
 
   return (
     <Page>
-      <Column style={{ maxWidth: 1000, margin: "0 auto", width: "100%", gap: tokens.space[10] }}>
+      <Column
+        style={{
+          maxWidth: 1000,
+          marginTop: 0,
+          marginRight: "auto",
+          marginBottom: 0,
+          marginLeft: "auto",
+          width: "100%",
+          gap: tokens.space[10],
+        }}
+      >
         {/* ─── Hero ─── */}
         <motion.div initial="hidden" animate="show" variants={fadeUp}>
           <GlassCard variant="elevated" padding="lg">
@@ -249,15 +268,40 @@ export default function MembershipPage() {
                     minWidth: 640,
                   }}
                 >
-                  <Row />
+                  <Row
+                    style={{
+                      paddingTop: tokens.space[3],
+                      paddingRight: tokens.space[3],
+                      paddingBottom: tokens.space[3],
+                      paddingLeft: tokens.space[3],
+                    }}
+                  />
                   {(["bite", "savor", "feast", "omakase"] as MembershipTier[]).map((tk) => (
-                    <Row key={tk} horizontal="center" style={{ padding: tokens.space[3] }}>
+                    <Row
+                      key={tk}
+                      horizontal="center"
+                      style={{
+                        paddingTop: tokens.space[3],
+                        paddingRight: tokens.space[3],
+                        paddingBottom: tokens.space[3],
+                        paddingLeft: tokens.space[3],
+                      }}
+                    >
                       <TierBadgePill tier={tk} label={t(`membership.tier${capitalize(tk)}`)} />
                     </Row>
                   ))}
                   {PERK_ROWS.map((row) => (
                     <React.Fragment key={row.key}>
-                      <Row vertical="center" style={{ padding: tokens.space[3], borderTop: `1px solid ${tokens.color.border}` }}>
+                      <Row
+                        vertical="center"
+                        style={{
+                          paddingTop: tokens.space[3],
+                          paddingRight: tokens.space[3],
+                          paddingBottom: tokens.space[3],
+                          paddingLeft: tokens.space[3],
+                          borderTop: `1px solid ${tokens.color.border}`,
+                        }}
+                      >
                         <BodySm tone="muted">{t(row.labelKey)}</BodySm>
                       </Row>
                       {(["bite", "savor", "feast", "omakase"] as MembershipTier[]).map((tk) => (
@@ -265,7 +309,13 @@ export default function MembershipPage() {
                           key={tk}
                           horizontal="center"
                           vertical="center"
-                          style={{ padding: tokens.space[3], borderTop: `1px solid ${tokens.color.border}` }}
+                          style={{
+                            paddingTop: tokens.space[3],
+                            paddingRight: tokens.space[3],
+                            paddingBottom: tokens.space[3],
+                            paddingLeft: tokens.space[3],
+                            borderTop: `1px solid ${tokens.color.border}`,
+                          }}
                         >
                           <PerkCell row={row} value={entitlements[tk][row.key] as number | boolean | null} t={t} />
                         </Row>
@@ -277,6 +327,23 @@ export default function MembershipPage() {
             </Column>
           </motion.div>
         )}
+
+        {/* ─── Demo preview toggle ─── */}
+        <GlassCard variant="flat" padding="lg">
+          <Row horizontal="between" vertical="center" style={{ gap: tokens.space[4], flexWrap: "wrap" }}>
+            <Column style={{ gap: tokens.space[1] }}>
+              <BodySm style={{ fontWeight: tokens.type.weight.semibold }}>
+                {t("membership.demoPreview.title")}
+              </BodySm>
+              <Caption tone="muted">{t("membership.demoPreview.description")}</Caption>
+            </Column>
+            <Switch
+              isChecked={previewFeast}
+              onToggle={() => setPreviewFeast((v) => !v)}
+              ariaLabel={t("membership.demoPreview.title")}
+            />
+          </Row>
+        </GlassCard>
       </Column>
     </Page>
   );

@@ -2,7 +2,7 @@
 
 /**
  * Tour Builder — thin orchestrator over three phases:
- *   curate    → CurationCanvas (hybrid: saved quick-add + swipe assist)
+ *   curate    → CurationCanvas (full-page swipe deck + secondary saved-quick-add mode)
  *   optimizing→ OptimizingScene (vector-aware route optimiser running)
  *   journey   → JourneyView (cinematic vertical "Your Flavor Journey")
  *
@@ -19,7 +19,7 @@ import { apiGet, apiPost } from "@/lib/api";
 import { useUserVector } from "@/context/UserVectorContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTourBuilderStore, OptimizeResult } from "@/store/useTourBuilderStore";
-import { CurationCanvas, SwipeAssistDrawer, OptimizingScene, JourneyView } from "./components";
+import { CurationCanvas, OptimizingScene, JourneyView } from "./components";
 import { bestStart, timeContextNow } from "./lib";
 import type { TourDetail } from "./lib";
 
@@ -33,7 +33,6 @@ export default function TourBuilderClient() {
   const { tourDraft, metadata, setOptimizeResult, resetTour } = useTourBuilderStore();
 
   const [phase, setPhase] = useState<Phase>("curate");
-  const [assistOpen, setAssistOpen] = useState(false);
   const [tour, setTour] = useState<TourDetail | null>(null);
 
   // Reopen an existing tour (e.g. from the Discovery "Latest Tour" card or My Tours).
@@ -61,7 +60,6 @@ export default function TourBuilderClient() {
       toast.warning(t("tour.addOnePlace"));
       return;
     }
-    setAssistOpen(false);
     setPhase("optimizing");
 
     try {
@@ -126,8 +124,7 @@ export default function TourBuilderClient() {
 
   return (
     <>
-      <CurationCanvas onOpenAssist={() => setAssistOpen(true)} onBuild={handleBuild} />
-      <SwipeAssistDrawer open={assistOpen} onClose={() => setAssistOpen(false)} />
+      <CurationCanvas onBuild={handleBuild} />
       <AnimatePresence>{phase === "optimizing" && <OptimizingScene />}</AnimatePresence>
     </>
   );

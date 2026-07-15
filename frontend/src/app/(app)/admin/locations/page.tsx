@@ -1327,7 +1327,10 @@ export default function AdminLocationsPage() {
           fillWidth
           style={{
               background: "linear-gradient(135deg, #1C1C1E 0%, #000000 100%)",
-              padding: "48px 48px 40px",
+              paddingTop: "48px",
+              paddingLeft: "48px",
+              paddingRight: "48px",
+              paddingBottom: "40px",
               position: "relative",
               overflow: "hidden",
               flexShrink: 0,
@@ -1349,7 +1352,7 @@ export default function AdminLocationsPage() {
 
         <Column
             fillWidth
-            style={{ position: "relative", maxWidth: 960, margin: "0 auto" }}
+            style={{ position: "relative", maxWidth: 960, marginTop: 0, marginBottom: 0, marginLeft: "auto", marginRight: "auto" }}
         >
             <Row
                 horizontal="between"
@@ -1393,10 +1396,31 @@ export default function AdminLocationsPage() {
       <Column
         fillWidth
         horizontal="center"
-        style={{ padding: "40px 16px 20px", maxWidth: 960, margin: "0 auto", gap: "24px" }}
+        style={{
+          paddingTop: "40px",
+          paddingLeft: "16px",
+          paddingRight: "16px",
+          paddingBottom: "20px",
+          maxWidth: 960,
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: "auto",
+          marginRight: "auto",
+          gap: "24px",
+        }}
       >
         {/* Bulk Import Card */}
-        <Column fillWidth gap="16" style={{ ...cardStyle, padding: 24 }}>
+        <Column
+          fillWidth
+          gap="16"
+          style={{
+            ...cardStyle,
+            paddingTop: 24,
+            paddingBottom: 24,
+            paddingLeft: 24,
+            paddingRight: 24,
+          }}
+        >
           <Row
             horizontal="between"
             vertical="center"
@@ -1466,7 +1490,10 @@ export default function AdminLocationsPage() {
               gap="8"
               style={{
                 background: "var(--surface-overlay)",
-                padding: 16,
+                paddingTop: 16,
+                paddingBottom: 16,
+                paddingLeft: 16,
+                paddingRight: 16,
                 borderRadius: 12,
               }}
             >
@@ -1516,17 +1543,40 @@ export default function AdminLocationsPage() {
       <Column
         fillWidth
         horizontal="center"
-        style={{ padding: "24px 16px 80px", maxWidth: 960, margin: "0 auto" }}
+        style={{
+          paddingTop: "24px",
+          paddingLeft: "16px",
+          paddingRight: "16px",
+          paddingBottom: "80px",
+          maxWidth: 960,
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
       >
         {/* ══ Card 1: Thông tin cơ bản ══ */}
-        <Column fillWidth gap="20" style={{ ...cardStyle, padding: 24 }}>
+        <Column
+          fillWidth
+          gap="20"
+          style={{
+            ...cardStyle,
+            paddingTop: 24,
+            paddingBottom: 24,
+            paddingLeft: 24,
+            paddingRight: 24,
+          }}
+        >
           <Row gap="8" vertical="center">
             <Text
               variant="body-default-xs"
               style={{
                 background: "#FFF0E6",
                 color: "#ff6b35",
-                padding: "4px 10px",
+                paddingTop: "4px",
+                paddingBottom: "4px",
+                paddingLeft: "10px",
+                paddingRight: "10px",
                 borderRadius: 8,
                 fontWeight: 600,
               }}
@@ -1664,7 +1714,14 @@ export default function AdminLocationsPage() {
         <Column
           fillWidth
           gap="16"
-          style={{ ...cardStyle, padding: 24, marginTop: 20 }}
+          style={{
+            ...cardStyle,
+            paddingTop: 24,
+            paddingBottom: 24,
+            paddingLeft: 24,
+            paddingRight: 24,
+            marginTop: 20,
+          }}
         >
           <Row fillWidth horizontal="between" vertical="center">
             <Row gap="8" vertical="center">
@@ -1673,7 +1730,10 @@ export default function AdminLocationsPage() {
                 style={{
                   background: "#F0EAFF",
                   color: "#5856D6",
-                  padding: "4px 10px",
+                  paddingTop: "4px",
+                  paddingBottom: "4px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
                   borderRadius: 8,
                   fontWeight: 600,
                 }}
@@ -1718,7 +1778,10 @@ export default function AdminLocationsPage() {
                   fillWidth
                   style={{
                     borderBottom: "1px solid var(--border-weak)",
-                    padding: "14px 0",
+                    paddingTop: "14px",
+                    paddingBottom: "14px",
+                    paddingLeft: 0,
+                    paddingRight: 0,
                   }}
                 >
                   {/* Dimension Row */}
@@ -1862,7 +1925,10 @@ export default function AdminLocationsPage() {
                       <Row
                         fillWidth
                         style={{
-                          padding: "8px 14px",
+                          paddingTop: "8px",
+                          paddingBottom: "8px",
+                          paddingLeft: "14px",
+                          paddingRight: "14px",
                           background: "#F8F8FA",
                           borderBottom: "1px solid var(--border-weak)",
                         }}
@@ -1894,7 +1960,10 @@ export default function AdminLocationsPage() {
                           vertical="center"
                           gap="8"
                           style={{
-                            padding: "10px 14px",
+                            paddingTop: "10px",
+                            paddingBottom: "10px",
+                            paddingLeft: "14px",
+                            paddingRight: "14px",
                             borderBottom:
                               li < dim.levels.length - 1
                                 ? "1px solid var(--border-weak)"
@@ -1936,7 +2005,10 @@ export default function AdminLocationsPage() {
                             <Text
                               variant="body-default-xs"
                               style={{
-                                padding: "2px 8px",
+                                paddingTop: "2px",
+                                paddingBottom: "2px",
+                                paddingLeft: "8px",
+                                paddingRight: "8px",
                                 borderRadius: 6,
                                 background: "#F2F2F7",
                                 fontWeight: 700,
@@ -2007,7 +2079,14 @@ export default function AdminLocationsPage() {
           <Column
             fillWidth
             gap="12"
-            style={{ ...cardStyle, padding: 20, marginTop: 20 }}
+            style={{
+              ...cardStyle,
+              paddingTop: 20,
+              paddingBottom: 20,
+              paddingLeft: 20,
+              paddingRight: 20,
+              marginTop: 20,
+            }}
           >
             <Row gap="8" vertical="center">
               <Text
@@ -2015,7 +2094,10 @@ export default function AdminLocationsPage() {
                 style={{
                   background: "#E8F5E9",
                   color: "#2E7D32",
-                  padding: "4px 10px",
+                  paddingTop: "4px",
+                  paddingBottom: "4px",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
                   borderRadius: 8,
                   fontWeight: 600,
                 }}
@@ -2032,7 +2114,10 @@ export default function AdminLocationsPage() {
                   horizontal="between"
                   vertical="center"
                   style={{
-                    padding: "10px 14px",
+                    paddingTop: "10px",
+                    paddingBottom: "10px",
+                    paddingLeft: "14px",
+                    paddingRight: "14px",
                     borderRadius: 12,
                     background: "#F9FBF9",
                     border: "1px solid #E8F5E9",

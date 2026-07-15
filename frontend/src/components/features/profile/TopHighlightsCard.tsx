@@ -97,7 +97,10 @@ export const TopHighlightsCard: React.FC<TopHighlightsCardProps> = ({
                 vertical="center"
                 style={{
                   gap: tokens.space[4],
-                  padding: tokens.space[4],
+                  paddingTop: tokens.space[4],
+                  paddingRight: tokens.space[4],
+                  paddingBottom: tokens.space[4],
+                  paddingLeft: tokens.space[4],
                   borderRadius: tokens.radius.md,
                   background: tokens.color.surfaceMuted,
                 }}
@@ -141,7 +144,10 @@ export const TopHighlightsCard: React.FC<TopHighlightsCardProps> = ({
         horizontal="between"
         vertical="center"
         style={{
-          padding: tokens.space[4],
+          paddingTop: tokens.space[4],
+          paddingRight: tokens.space[4],
+          paddingBottom: tokens.space[4],
+          paddingLeft: tokens.space[4],
           borderRadius: tokens.radius.md,
           background: tokens.color.surfaceMuted,
         }}

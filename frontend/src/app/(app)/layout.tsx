@@ -106,13 +106,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           flexBasis: isFoodies && isChatOpen ? "320px" : "0%",
         }}
       >
-        <Column
+        {/* Plain div (not Once UI's Column): Once UI's Flex-family components always
+            construct a style object containing both the margin/padding shorthand key
+            and the longhand sub-properties (see @once-ui-system/core ServerFlex.js),
+            which trips React's shorthand/longhand style-conflict warning on every
+            rerender once a consumer sets any margin/padding via `style`. */}
+        <div
           key={pathname}
-          fillWidth
-          fillHeight
-          vertical="between"
-          gap="0"
           style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            height: "100%",
             flexGrow: 1,
             flexShrink: 1,
             flexBasis: "0%",
@@ -122,10 +127,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 : isFoodies && isChatOpen
                   ? "none"
                   : "1440px",
+            marginTop: "0",
+            marginBottom: "0",
             marginLeft: isFoodies && isChatOpen ? "0" : "auto",
             marginRight: isFoodies && isChatOpen ? "0" : "auto",
-            paddingBottom: "0",
             paddingTop: "0",
+            paddingRight: "0",
+            paddingBottom: "0",
+            paddingLeft: "0",
             overflowY: "auto",
             position: "relative",
             minHeight: "1px",
@@ -133,7 +142,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           }}
         >
           {children}
-        </Column>
+        </div>
         {!isFoodies && !isExplorePage && <AppStatusBar />}
       </Column>
 

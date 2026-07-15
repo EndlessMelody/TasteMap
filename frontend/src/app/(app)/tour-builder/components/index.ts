@@ -3,7 +3,6 @@
  * Phase views + journey primitives, all built on @/styles/tokens + @/components/ui.
  */
 export { CurationCanvas } from "./CurationCanvas";
-export { SwipeAssistDrawer } from "./SwipeAssistDrawer";
 export { OptimizingScene } from "./OptimizingScene";
 export { JourneyView } from "./JourneyView";
 export { JourneyStopCard } from "./JourneyStopCard";

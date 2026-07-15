@@ -32,6 +32,7 @@ export const TasteDNACard: React.FC<TasteDNACardProps> = ({ radarData }) => {
         flexGrow: 1.2,
         flexShrink: 1,
         flexBasis: "0%",
+        minWidth: 0,
         height: 420,
         display: "flex",
         flexDirection: "column",
@@ -64,7 +65,7 @@ export const TasteDNACard: React.FC<TasteDNACardProps> = ({ radarData }) => {
         </Button>
       </Row>
 
-      <Column style={{ flex: 1, width: "100%", minHeight: 280 }}>
+      <Column style={{ flex: 1, width: "100%", minWidth: 0, minHeight: 280 }}>
         <ClientOnly>
           <ResponsiveContainer
             width="100%"

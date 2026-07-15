@@ -177,7 +177,10 @@ export function AddFriendSearch({ onRequestSent }: AddFriendSearchProps) {
                     vertical="center"
                     style={{
                       gap: tokens.space[3],
-                      padding: `${tokens.space[2]} ${tokens.space[4]}`,
+                      paddingTop: tokens.space[2],
+                      paddingRight: tokens.space[4],
+                      paddingBottom: tokens.space[2],
+                      paddingLeft: tokens.space[4],
                       borderBottom:
                         idx < results.length - 1
                           ? `1px solid ${tokens.color.border}`

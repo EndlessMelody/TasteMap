@@ -602,7 +602,10 @@ function StickyBar({
       vertical="center"
       style={{
         flexShrink: 0,
-        padding: "12px 24px",
+        paddingTop: "12px",
+        paddingBottom: "12px",
+        paddingLeft: "24px",
+        paddingRight: "24px",
         backgroundColor: "rgba(250,248,245,0.92)",
         backdropFilter: "blur(24px)",
         borderTop: "1px solid rgba(0,0,0,0.05)",
@@ -764,7 +767,10 @@ export function PlannerForm({
         vertical="center"
         style={{
           flexShrink: 0,
-          padding: "16px 24px",
+          paddingTop: "16px",
+          paddingBottom: "16px",
+          paddingLeft: "24px",
+          paddingRight: "24px",
           gap: 10,
           borderBottom: "1px solid rgba(0,0,0,0.05)",
           backgroundColor: "rgba(250,248,245,0.85)",
@@ -796,7 +802,19 @@ export function PlannerForm({
         className="no-scrollbar"
         style={{ flex: 1, overflowY: "auto", position: "relative", zIndex: 1 }}
       >
-        <Column style={{ maxWidth: 640, margin: "0 auto", padding: "24px 24px 32px" }}>
+        <Column
+          style={{
+            maxWidth: 640,
+            marginTop: 0,
+            marginBottom: 0,
+            marginLeft: "auto",
+            marginRight: "auto",
+            paddingTop: "24px",
+            paddingLeft: "24px",
+            paddingRight: "24px",
+            paddingBottom: "32px",
+          }}
+        >
           <AIGreeting username={username} mood={mood} />
 
           <PromptInput

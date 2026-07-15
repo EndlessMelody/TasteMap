@@ -318,6 +318,9 @@ const zh: Messages = {
     vaultEmptyDesc: "浏览时保存你喜欢的地点，或使用滑动助手为这次行程发现站点。",
     swipeToDiscover: "滑动发现",
     swipeToDiscoverMore: "滑动发现更多",
+    swipeMode: "滑动",
+    savedMode: "已保存",
+    pinned: "已固定 {n} 个",
     yourTour: "你的行程",
     stopSingular: "{n} 站",
     stopPlural: "{n} 站",
@@ -558,6 +561,10 @@ const zh: Messages = {
     omakaseUnlocked: "Omakase 已解锁",
     comparePlans: "比较所有套餐",
     streakShort: "{n}天",
+    demoPreview: {
+      title: "预览 Feast 等级",
+      description: "仅供演示 — 在此页面本地预览 Feast 版式，不会更改你的实际套餐。",
+    },
     perk: {
       dailySwipes: "每日滑动次数",
       superLikes: "超级喜欢 / 天",

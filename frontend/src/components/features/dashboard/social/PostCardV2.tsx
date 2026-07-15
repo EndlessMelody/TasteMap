@@ -209,7 +209,10 @@ export const PostCardV2: React.FC<PostCardV2Props> = ({
         <Column
           style={{
             gap: tokens.space[3],
-            padding: tokens.space[4],
+            paddingTop: tokens.space[4],
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[4],
+            paddingLeft: tokens.space[4],
           }}
         >
           {/* Spot name */}

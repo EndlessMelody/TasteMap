@@ -33,7 +33,7 @@ export interface SavedPlace {
   price_range: string | null;
 }
 
-const FALLBACK_IMG =
+export const FALLBACK_IMG =
   "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&h=600&fit=crop";
 
 // ─── Time-of-day → optimiser time_context ────────────────────────────────────

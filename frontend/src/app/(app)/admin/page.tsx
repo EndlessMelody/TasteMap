@@ -116,7 +116,10 @@ export default function AdminDashboard() {
                     width: "100%",
                     flexShrink: 0,
                     background: "linear-gradient(135deg, #1C1C1E 0%, #000000 100%)",
-                    padding: "48px 48px 40px",
+                    paddingTop: "48px",
+                    paddingLeft: "48px",
+                    paddingRight: "48px",
+                    paddingBottom: "40px",
                     position: "relative",
                     overflow: "hidden",
                 }}
@@ -135,7 +138,7 @@ export default function AdminDashboard() {
                     }}
                 />
 
-                <Column style={{ position: "relative", maxWidth: 1400, margin: "0 auto", width: "100%" }}>
+                <Column style={{ position: "relative", maxWidth: 1400, marginTop: 0, marginBottom: 0, marginLeft: "auto", marginRight: "auto", width: "100%" }}>
                     <Row horizontal="between" style={{ alignItems: "flex-start", marginBottom: 32, width: "100%" }}>
                         <Column>
                             <Row vertical="center" style={{ gap: 16, marginBottom: 12 }}>
@@ -166,7 +169,10 @@ export default function AdminDashboard() {
                             vertical="center"
                             style={{
                                 gap: 12,
-                                padding: "12px 20px",
+                                paddingTop: "12px",
+                                paddingBottom: "12px",
+                                paddingLeft: "20px",
+                                paddingRight: "20px",
                                 borderRadius: 20,
                                 backgroundColor: "rgba(255,255,255,0.1)",
                                 border: "1px solid rgba(255,255,255,0.1)",
@@ -224,7 +230,21 @@ export default function AdminDashboard() {
             </Column>
 
             {/* ── BẢNG ĐIỀU KHIỂN CÁC MODULE ── */}
-            <Column style={{ maxWidth: 1400, margin: "0 auto", width: "100%", padding: "40px 48px", gap: 32 }}>
+            <Column
+                style={{
+                    maxWidth: 1400,
+                    marginTop: 0,
+                    marginBottom: 0,
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    width: "100%",
+                    paddingTop: "40px",
+                    paddingBottom: "40px",
+                    paddingLeft: "48px",
+                    paddingRight: "48px",
+                    gap: 32,
+                }}
+            >
                 <h2 style={{ fontSize: 20, fontWeight: 900, color: "#1C1C1E", margin: 0 }}>System Modules</h2>
 
                 <Grid style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 24 }}>
@@ -236,7 +256,10 @@ export default function AdminDashboard() {
                                 style={{
                                     backgroundColor: "#fff",
                                     borderRadius: 32,
-                                    padding: 24,
+                                    paddingTop: 24,
+                                    paddingBottom: 24,
+                                    paddingLeft: 24,
+                                    paddingRight: 24,
                                     boxShadow: "0 20px 25px -5px rgba(0,0,0,0.05)",
                                     border: "1px solid rgba(0,0,0,0.05)",
                                     transition: "transform 0.2s",

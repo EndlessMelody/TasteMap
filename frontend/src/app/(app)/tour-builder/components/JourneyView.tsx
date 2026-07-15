@@ -92,7 +92,10 @@ export function JourneyView({ tour, transportMode, onStartOver, onStartTour, onT
         vertical="center"
         horizontal="between"
         style={{
-          padding: `${tokens.space[4]} ${tokens.space[8]}`,
+          paddingTop: tokens.space[4],
+          paddingBottom: tokens.space[4],
+          paddingLeft: tokens.space[8],
+          paddingRight: tokens.space[8],
           background: "rgba(255,255,255,0.7)",
           backdropFilter: "blur(20px) saturate(180%)",
           WebkitBackdropFilter: "blur(20px) saturate(180%)",
@@ -183,7 +186,10 @@ export function JourneyView({ tour, transportMode, onStartOver, onStartTour, onT
               vertical="center"
               style={{
                 gap: tokens.space[2],
-                padding: `${tokens.space[2]} ${tokens.space[3]}`,
+                paddingTop: tokens.space[2],
+                paddingBottom: tokens.space[2],
+                paddingLeft: tokens.space[3],
+                paddingRight: tokens.space[3],
                 borderRadius: tokens.radius.md,
                 background: needsReoptimize ? `${tokens.color.warm}10` : tokens.color.surfaceMuted,
                 border: `1px solid ${needsReoptimize ? `${tokens.color.warm}40` : tokens.color.border}`,
@@ -223,7 +229,10 @@ export function JourneyView({ tour, transportMode, onStartOver, onStartTour, onT
                     color: "#fff",
                     background: "rgba(0,0,0,0.35)",
                     borderRadius: tokens.radius.pill,
-                    padding: 6,
+                    paddingTop: 6,
+                    paddingBottom: 6,
+                    paddingLeft: 6,
+                    paddingRight: 6,
                   }}
                 >
                   <GripVertical size={14} />

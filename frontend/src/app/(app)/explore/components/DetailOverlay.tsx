@@ -46,7 +46,10 @@ export default function DetailOverlay({ spot, onClose }: DetailOverlayProps) {
         <Row
           style={{
             gap: tokens.space[5],
-            padding: tokens.space[5],
+            paddingTop: tokens.space[5],
+            paddingBottom: tokens.space[5],
+            paddingLeft: tokens.space[5],
+            paddingRight: tokens.space[5],
           }}
         >
           <Column

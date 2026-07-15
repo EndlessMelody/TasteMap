@@ -37,7 +37,10 @@ export const EmptyState = ({
     className={cn("ui-empty", className)}
     style={{
       gap: tokens.space[4],
-      padding: compact ? tokens.space[6] : tokens.space[12],
+      paddingTop: compact ? tokens.space[6] : tokens.space[12],
+      paddingRight: compact ? tokens.space[6] : tokens.space[12],
+      paddingBottom: compact ? tokens.space[6] : tokens.space[12],
+      paddingLeft: compact ? tokens.space[6] : tokens.space[12],
       ...style,
     }}
     {...props}

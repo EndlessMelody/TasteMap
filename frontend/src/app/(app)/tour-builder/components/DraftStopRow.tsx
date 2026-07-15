@@ -32,7 +32,10 @@ export function DraftStopRow({ node, index, onRemove }: DraftStopRowProps) {
         fillWidth
         style={{
           gap: tokens.space[3],
-          padding: tokens.space[2],
+          paddingTop: tokens.space[2],
+          paddingBottom: tokens.space[2],
+          paddingLeft: tokens.space[2],
+          paddingRight: tokens.space[2],
           borderRadius: tokens.radius.md,
           background: tokens.color.surface,
           border: `1px solid ${tokens.color.border}`,

@@ -122,8 +122,14 @@ function ProfileSkeleton() {
         style={{
           maxWidth: 1200,
           width: "100%",
-          margin: "0 auto",
-          padding: `0 ${tokens.space[6]} ${tokens.space[16]}`,
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: "auto",
+          marginRight: "auto",
+          paddingTop: 0,
+          paddingLeft: tokens.space[6],
+          paddingRight: tokens.space[6],
+          paddingBottom: tokens.space[16],
         }}
       >
         <Row
@@ -407,7 +413,10 @@ export default function FoodieProfilePage() {
           width: "100%",
           minHeight: "100%",
           background: tokens.color.bg,
-          padding: tokens.space[6],
+          paddingTop: tokens.space[6],
+          paddingBottom: tokens.space[6],
+          paddingLeft: tokens.space[6],
+          paddingRight: tokens.space[6],
         }}
       >
         <Card radius="xl" padding="lg" shadow="sm" style={{ maxWidth: 480 }}>
@@ -541,8 +550,14 @@ export default function FoodieProfilePage() {
         style={{
           maxWidth: 1200,
           width: "100%",
-          margin: "0 auto",
-          padding: `0 ${tokens.space[6]} ${tokens.space[16]}`,
+          marginTop: 0,
+          marginBottom: 0,
+          marginLeft: "auto",
+          marginRight: "auto",
+          paddingTop: 0,
+          paddingLeft: tokens.space[6],
+          paddingRight: tokens.space[6],
+          paddingBottom: tokens.space[16],
         }}
       >
         <motion.div

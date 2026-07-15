@@ -71,7 +71,13 @@ export const Card = ({
       background: SURFACE[surface],
       borderRadius: RADIUS[radius],
       boxShadow: SHADOW[shadow],
-      padding: PADDING[padding],
+      // Always longhand (never the `padding` shorthand) — mixing shorthand
+      // and longhand padding on the same node across re-renders trips
+      // React's conflicting-style-property warning.
+      paddingTop: PADDING[padding],
+      paddingRight: PADDING[padding],
+      paddingBottom: PADDING[padding],
+      paddingLeft: PADDING[padding],
       border: borderless ? "none" : `1px solid ${tokens.color.border}`,
       ...style,
     }}

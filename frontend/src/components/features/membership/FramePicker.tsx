@@ -61,7 +61,10 @@ export const FramePicker: React.FC = () => {
               horizontal="center"
               style={{
                 gap: tokens.space[2],
-                padding: tokens.space[3],
+                paddingTop: tokens.space[3],
+                paddingRight: tokens.space[3],
+                paddingBottom: tokens.space[3],
+                paddingLeft: tokens.space[3],
                 borderRadius: tokens.radius.md,
                 border: equipped ? `2px solid ${frame.accent_color}` : `1px solid ${tokens.color.border}`,
                 width: 108,
@@ -86,7 +89,10 @@ export const FramePicker: React.FC = () => {
                   style={{
                     fontSize: tokens.type.size.caption,
                     color: equipped ? tokens.color.textMuted : frame.accent_color,
-                    padding: 0,
+                    paddingTop: 0,
+                    paddingRight: 0,
+                    paddingBottom: 0,
+                    paddingLeft: 0,
                     height: "auto",
                   }}
                 >

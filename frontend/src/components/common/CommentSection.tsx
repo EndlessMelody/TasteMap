@@ -3,7 +3,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Avatar, Column, Row } from "@once-ui-system/core";
-import { getInitials } from "@/lib/avatar";
 import { apiGet, apiPost } from "@/lib/api";
 import { MessageCircle, Send, X } from "lucide-react";
 import { FaMedal } from "react-icons/fa";
@@ -138,8 +137,14 @@ function CommentItem({
     <Column
       style={{
         gap: "10px",
+        marginTop: 0,
+        marginBottom: 0,
         marginLeft: isReply ? 18 : 0,
+        marginRight: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
         paddingLeft: isReply ? 12 : 0,
+        paddingRight: 0,
         borderLeft: isReply ? "1px solid rgba(255, 107, 53, 0.16)" : "none",
       }}
     >
@@ -148,7 +153,7 @@ function CommentItem({
         animate={{ opacity: 1, y: 0 }}
         style={{ display: "flex", gap: "9px", alignItems: "flex-start" }}
       >
-        <Avatar src={avatarSrc || DEFAULT_AVATAR} size="s" value={getInitials(name)} />
+        <Avatar src={avatarSrc || DEFAULT_AVATAR} size="s" />
         <Column style={{ flex: 1 }}>
           <Column style={{ flex: 1, minWidth: 0 }}>
             <Column
@@ -156,7 +161,10 @@ function CommentItem({
                 backgroundColor: isReply ? tokens.color.surfaceWarm : tokens.color.surfaceMuted,
                 borderRadius: "14px",
                 borderTopLeftRadius: "4px",
-                padding: "8px 12px",
+                paddingTop: "8px",
+                paddingBottom: "8px",
+                paddingLeft: "12px",
+                paddingRight: "12px",
                 border: isReply ? `1px solid ${tokens.color.warm}1F` : "none",
                 width: "fit-content"
               }}
@@ -371,7 +379,16 @@ export function CommentSection({
       >
         {header}
         {loadingComments ? (
-          <Row vertical="center" style={{ gap: "8px", padding: "0 16px" }}>
+          <Row
+            vertical="center"
+            style={{
+              gap: "8px",
+              paddingTop: "0",
+              paddingBottom: "0",
+              paddingLeft: "16px",
+              paddingRight: "16px",
+            }}
+          >
             {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
@@ -382,7 +399,15 @@ export function CommentSection({
             ))}
           </Row>
         ) : comments.length === 0 ? (
-          <Column style={{ textAlign: "center", padding: "24px 0" }}>
+          <Column
+            style={{
+              textAlign: "center",
+              paddingTop: "24px",
+              paddingBottom: "24px",
+              paddingLeft: "0",
+              paddingRight: "0",
+            }}
+          >
             <MessageCircle size={28} color={tokens.color.borderStrong} />
             <p style={{ margin: "8px 0 0", color: tokens.color.textSubtle, fontSize: "0.8rem" }}>{emptyMessage}</p>
           </Column>
@@ -403,7 +428,10 @@ export function CommentSection({
 
       <Column
         style={{
-          padding: "12px 16px 14px",
+          paddingTop: "12px",
+          paddingLeft: "16px",
+          paddingRight: "16px",
+          paddingBottom: "14px",
           borderTop: `1px solid ${tokens.color.border}`,
           gap: "8px",
           backgroundColor: tokens.color.surface,
@@ -417,7 +445,10 @@ export function CommentSection({
             style={{
               justifyContent: "space-between",
               gap: "12px",
-              padding: "0 4px",
+              paddingTop: "0",
+              paddingBottom: "0",
+              paddingLeft: "4px",
+              paddingRight: "4px",
             }}
           >
             <span style={{ fontSize: "0.72rem", color: tokens.color.textMuted, fontWeight: 600 }}>
@@ -451,7 +482,10 @@ export function CommentSection({
             gap: "8px",
             backgroundColor: tokens.color.surfaceMuted,
             borderRadius: "22px",
-            padding: "8px 8px 8px 14px",
+            paddingTop: "8px",
+            paddingRight: "8px",
+            paddingBottom: "8px",
+            paddingLeft: "14px",
             border: `1.5px solid ${isInputFocused ? `${tokens.color.warm}59` : "transparent"
               }`,
             transition: "border-color 0.2s",

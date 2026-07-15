@@ -220,7 +220,10 @@ export const ReelCardV2: React.FC<ReelCardV2Props> = ({
           bottom: 0,
           left: 0,
           right: 0,
-          padding: tokens.space[3],
+          paddingTop: tokens.space[3],
+          paddingRight: tokens.space[3],
+          paddingBottom: tokens.space[3],
+          paddingLeft: tokens.space[3],
           gap: 2,
         }}
       >

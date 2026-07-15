@@ -12,7 +12,7 @@ import { MatchRing } from "@/components/primitives/MatchRing";
 import { H3 } from "@/components/ui";
 import { tokens } from "@/styles/tokens";
 import { fadeUp, viewportOnce } from "@/lib/motion";
-import { accentFor } from "../lib";
+import { accentFor, FALLBACK_IMG } from "../lib";
 import type { JourneyStop } from "../lib";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -26,7 +26,10 @@ function MetaPill({ icon, label }: { icon: React.ReactNode; label: string }) {
       vertical="center"
       style={{
         gap: 5,
-        padding: "5px 10px",
+        paddingTop: "5px",
+        paddingRight: "10px",
+        paddingBottom: "5px",
+        paddingLeft: "10px",
         borderRadius: tokens.radius.pill,
         background: "rgba(255,255,255,0.16)",
         backdropFilter: "blur(8px)",
@@ -55,7 +58,7 @@ export function JourneyStopCard({ stop }: JourneyStopCardProps) {
         {/* Image banner */}
         <Column style={{ position: "relative", height: 208, width: "100%" }}>
           <img
-            src={loc?.image_url ?? ""}
+            src={loc?.image_url || FALLBACK_IMG}
             alt={loc?.name ?? "Stop"}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
@@ -98,7 +101,10 @@ export function JourneyStopCard({ stop }: JourneyStopCardProps) {
                 position: "absolute",
                 top: tokens.space[3],
                 right: tokens.space[3],
-                padding: 4,
+                paddingTop: 4,
+                paddingRight: 4,
+                paddingBottom: 4,
+                paddingLeft: 4,
                 borderRadius: "50%",
                 background: "rgba(255,255,255,0.85)",
                 backdropFilter: "blur(8px)",
@@ -116,7 +122,10 @@ export function JourneyStopCard({ stop }: JourneyStopCardProps) {
               left: 0,
               right: 0,
               bottom: 0,
-              padding: tokens.space[5],
+              paddingTop: tokens.space[5],
+              paddingRight: tokens.space[5],
+              paddingBottom: tokens.space[5],
+              paddingLeft: tokens.space[5],
               gap: tokens.space[2],
             }}
           >

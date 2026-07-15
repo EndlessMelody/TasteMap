@@ -38,7 +38,10 @@ export default function LobbySection({ lobbies }: LobbySectionProps) {
         horizontal="between"
         style={{
           alignItems: "flex-end",
-          padding: `0 ${tokens.space[4]}`,
+          paddingTop: 0,
+          paddingRight: tokens.space[4],
+          paddingBottom: 0,
+          paddingLeft: tokens.space[4],
           gap: tokens.space[3],
         }}
       >
@@ -95,14 +98,14 @@ export default function LobbySection({ lobbies }: LobbySectionProps) {
         ) : error ? (
           <BodySm
             tone="muted"
-            style={{ padding: `${tokens.space[4]} 0` }}
+            style={{ paddingTop: tokens.space[4], paddingRight: 0, paddingBottom: tokens.space[4], paddingLeft: 0 }}
           >
             Unable to load lobbies: {error}
           </BodySm>
         ) : data.length === 0 ? (
           <BodySm
             tone="muted"
-            style={{ padding: `${tokens.space[4]} 0` }}
+            style={{ paddingTop: tokens.space[4], paddingRight: 0, paddingBottom: tokens.space[4], paddingLeft: 0 }}
           >
             No active lobbies right now.
           </BodySm>

@@ -319,6 +319,9 @@ const ja: Messages = {
     vaultEmptyDesc: "閲覧中に気に入った場所を保存するか、スワイプアシストでこのツアーのスポットを見つけましょう。",
     swipeToDiscover: "スワイプして発見",
     swipeToDiscoverMore: "もっとスワイプして発見",
+    swipeMode: "スワイプ",
+    savedMode: "保存済み",
+    pinned: "{n}件ピン留め",
     yourTour: "あなたのツアー",
     stopSingular: "{n} スポット",
     stopPlural: "{n} スポット",
@@ -559,6 +562,10 @@ const ja: Messages = {
     omakaseUnlocked: "Omakase 解放済み",
     comparePlans: "全プランを比較",
     streakShort: "{n}日",
+    demoPreview: {
+      title: "Feastプランをプレビュー",
+      description: "デモ専用 — このページでFeastのレイアウトをローカルでプレビューします。実際のプランは変更されません。",
+    },
     perk: {
       dailySwipes: "1日のスワイプ回数",
       superLikes: "スーパーいいね / 日",

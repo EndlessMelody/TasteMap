@@ -73,7 +73,10 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
         >
           <Column
             style={{
-              padding: tokens.space[6],
+              paddingTop: tokens.space[6],
+              paddingRight: tokens.space[6],
+              paddingBottom: tokens.space[6],
+              paddingLeft: tokens.space[6],
               background: tokens.color.surfaceMuted,
             }}
           >
@@ -133,7 +136,7 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
             </Row>
           </Column>
 
-          <Column style={{ padding: tokens.space[6] }}>
+          <Column style={{ paddingTop: tokens.space[6], paddingRight: tokens.space[6], paddingBottom: tokens.space[6], paddingLeft: tokens.space[6] }}>
             <Eyebrow tone="muted" style={{ marginBottom: tokens.space[4], display: "block" }}>
               Current explorers
             </Eyebrow>
@@ -213,7 +216,7 @@ export default function LobbyDetailModal({ lobby, onClose }: LobbyModalProps) {
             </Column>
           </Column>
 
-          <Column style={{ padding: `${tokens.space[2]} ${tokens.space[6]} ${tokens.space[6]}` }}>
+          <Column style={{ paddingTop: tokens.space[2], paddingRight: tokens.space[6], paddingBottom: tokens.space[6], paddingLeft: tokens.space[6] }}>
             <Button
               variant="primary"
               size="lg"

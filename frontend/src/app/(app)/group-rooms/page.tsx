@@ -247,7 +247,10 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
         <Card radius="xl" padding="none" shadow="lg" style={{ overflow: "hidden" }}>
           <Column
             style={{
-              padding: tokens.space[6],
+              paddingTop: tokens.space[6],
+              paddingBottom: tokens.space[6],
+              paddingLeft: tokens.space[6],
+              paddingRight: tokens.space[6],
               background: tokens.color.surfaceMuted,
               position: "relative",
             }}
@@ -286,7 +289,10 @@ function JoinByCodeModal({ onClose }: { onClose: () => void }) {
           </Column>
           <Column
             style={{
-              padding: tokens.space[6],
+              paddingTop: tokens.space[6],
+              paddingBottom: tokens.space[6],
+              paddingLeft: tokens.space[6],
+              paddingRight: tokens.space[6],
               gap: tokens.space[4],
             }}
           >
@@ -456,7 +462,10 @@ function RoomCard({
             bottom: 0,
             left: 0,
             right: 0,
-            padding: `0 ${tokens.space[4]} ${tokens.space[3]}`,
+            paddingTop: 0,
+            paddingLeft: tokens.space[4],
+            paddingRight: tokens.space[4],
+            paddingBottom: tokens.space[3],
           }}
         >
           <H3
@@ -472,7 +481,7 @@ function RoomCard({
         </Column>
       </Column>
 
-      <Column style={{ padding: tokens.space[4] }}>
+      <Column style={{ paddingTop: tokens.space[4], paddingBottom: tokens.space[4], paddingLeft: tokens.space[4], paddingRight: tokens.space[4] }}>
         {lobby.description && (
           <BodySm
             tone="muted"
@@ -739,7 +748,10 @@ function CreateRoomModal({
           <Row
             horizontal="between"
             style={{
-              padding: tokens.space[6],
+              paddingTop: tokens.space[6],
+              paddingBottom: tokens.space[6],
+              paddingLeft: tokens.space[6],
+              paddingRight: tokens.space[6],
               background: tokens.color.surfaceMuted,
               alignItems: "flex-start",
             }}
@@ -762,7 +774,10 @@ function CreateRoomModal({
           <Column
             className="no-scrollbar"
             style={{
-              padding: tokens.space[6],
+              paddingTop: tokens.space[6],
+              paddingBottom: tokens.space[6],
+              paddingLeft: tokens.space[6],
+              paddingRight: tokens.space[6],
               gap: tokens.space[4],
               maxHeight: "60vh",
               overflowY: "auto",
@@ -971,7 +986,10 @@ function CreateRoomModal({
 
           <Row
             style={{
-              padding: `${tokens.space[3]} ${tokens.space[6]} ${tokens.space[6]}`,
+              paddingTop: tokens.space[3],
+              paddingLeft: tokens.space[6],
+              paddingRight: tokens.space[6],
+              paddingBottom: tokens.space[6],
               gap: tokens.space[3],
             }}
           >
@@ -1113,7 +1131,10 @@ export default function GroupRoomsPage() {
           horizontal="between"
           vertical="center"
           style={{
-            padding: `${tokens.space[4]} ${tokens.space[8]}`,
+            paddingTop: tokens.space[4],
+            paddingBottom: tokens.space[4],
+            paddingLeft: tokens.space[8],
+            paddingRight: tokens.space[8],
             gap: tokens.space[3],
             flexWrap: "wrap",
           }}
@@ -1171,7 +1192,12 @@ export default function GroupRoomsPage() {
       </Column>
 
       <Column
-        style={{ padding: `${tokens.space[6]} ${tokens.space[8]} ${tokens.space[12]}` }}
+        style={{
+          paddingTop: tokens.space[6],
+          paddingLeft: tokens.space[8],
+          paddingRight: tokens.space[8],
+          paddingBottom: tokens.space[12],
+        }}
       >
         <motion.div
           initial={{ opacity: 0, y: 8 }}

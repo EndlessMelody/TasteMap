@@ -58,14 +58,25 @@ export function GroupVaultSheet({ open, onClose, vault, loading }: GroupVaultShe
               overflow: "hidden",
             }}
           >
-            <Column style={{ padding: `${tokens.space[3]} ${tokens.space[5]} 0`, flexShrink: 0 }}>
+            <Column
+              style={{
+                paddingTop: tokens.space[3],
+                paddingRight: tokens.space[5],
+                paddingBottom: 0,
+                paddingLeft: tokens.space[5],
+                flexShrink: 0,
+              }}
+            >
               <Column
                 style={{
                   width: 36,
                   height: 4,
                   borderRadius: 2,
                   background: tokens.color.surfaceInset,
-                  margin: "0 auto 12px",
+                  marginTop: 0,
+                  marginRight: "auto",
+                  marginBottom: "12px",
+                  marginLeft: "auto",
                 }}
               />
 
@@ -115,11 +126,17 @@ export function GroupVaultSheet({ open, onClose, vault, loading }: GroupVaultShe
               style={{
                 flex: 1,
                 overflowY: "auto",
-                padding: `${tokens.space[3]} ${tokens.space[5]} ${tokens.space[6]}`,
+                paddingTop: tokens.space[3],
+                paddingRight: tokens.space[5],
+                paddingBottom: tokens.space[6],
+                paddingLeft: tokens.space[5],
               }}
             >
               {loading ? (
-                <Column center style={{ padding: 40 }}>
+                <Column
+                  center
+                  style={{ paddingTop: 40, paddingRight: 40, paddingBottom: 40, paddingLeft: 40 }}
+                >
                   <Column
                     style={{
                       width: 32,
@@ -136,7 +153,10 @@ export function GroupVaultSheet({ open, onClose, vault, loading }: GroupVaultShe
                 <Column
                   style={{
                     textAlign: "center",
-                    padding: `${tokens.space[10]} ${tokens.space[5]}`,
+                    paddingTop: tokens.space[10],
+                    paddingRight: tokens.space[5],
+                    paddingBottom: tokens.space[10],
+                    paddingLeft: tokens.space[5],
                     color: tokens.color.textSubtle,
                   }}
                 >

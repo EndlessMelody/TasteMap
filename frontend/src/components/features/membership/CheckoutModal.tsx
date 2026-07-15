@@ -162,7 +162,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, i
             <Row
               horizontal="between"
               vertical="center"
-              style={{ padding: `${tokens.space[5]} ${tokens.space[6]}`, borderBottom: `1px solid ${tokens.color.border}` }}
+              style={{ paddingTop: tokens.space[5], paddingRight: tokens.space[6], paddingBottom: tokens.space[5], paddingLeft: tokens.space[6], borderBottom: `1px solid ${tokens.color.border}` }}
             >
               <H2 style={{ fontSize: tokens.type.size.h3 }}>{t("membership.checkout.title")}</H2>
               {step !== "processing" && (
@@ -176,7 +176,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, i
               )}
             </Row>
 
-            <Column style={{ padding: tokens.space[6], gap: tokens.space[5] }}>
+            <Column style={{ paddingTop: tokens.space[6], paddingRight: tokens.space[6], paddingBottom: tokens.space[6], paddingLeft: tokens.space[6], gap: tokens.space[5] }}>
               <AnimatePresence mode="wait">
                 {step === "plan" && (
                   <motion.div key="plan" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }} transition={transitions.smooth}>
@@ -191,7 +191,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, i
                             horizontal="between"
                             vertical="center"
                             style={{
-                              padding: tokens.space[4],
+                              paddingTop: tokens.space[4],
+                              paddingRight: tokens.space[4],
+                              paddingBottom: tokens.space[4],
+                              paddingLeft: tokens.space[4],
                               borderRadius: tokens.radius.md,
                               border: active ? `2px solid ${tokens.color.tierFeast}` : `1px solid ${tokens.color.border}`,
                               background: active ? "rgba(123,47,247,0.06)" : "transparent",
@@ -234,7 +237,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, i
                     <Column style={{ gap: tokens.space[4] }}>
                       <Row
                         style={{
-                          padding: tokens.space[3],
+                          paddingTop: tokens.space[3],
+                          paddingRight: tokens.space[3],
+                          paddingBottom: tokens.space[3],
+                          paddingLeft: tokens.space[3],
                           borderRadius: tokens.radius.sm,
                           background: tokens.color.surfaceMuted,
                           border: `1px solid ${tokens.color.border}`,
@@ -297,7 +303,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, i
 
                 {step === "processing" && (
                   <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={transitions.smooth}>
-                    <Column horizontal="center" style={{ gap: tokens.space[4], padding: `${tokens.space[8]} 0` }}>
+                    <Column horizontal="center" style={{ gap: tokens.space[4], paddingTop: tokens.space[8], paddingRight: 0, paddingBottom: tokens.space[8], paddingLeft: 0 }}>
                       <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
                         <Loader2 size={32} color={tokens.color.tierFeast} />
                       </motion.div>
@@ -308,7 +314,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, i
 
                 {step === "success" && (
                   <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={transitions.spring}>
-                    <Column horizontal="center" style={{ gap: tokens.space[4], padding: `${tokens.space[6]} 0`, textAlign: "center" }}>
+                    <Column horizontal="center" style={{ gap: tokens.space[4], paddingTop: tokens.space[6], paddingRight: 0, paddingBottom: tokens.space[6], paddingLeft: 0, textAlign: "center" }}>
                       <CheckCircle2 size={48} color={tokens.color.success} />
                       <H2 style={{ fontSize: tokens.type.size.h3 }}>{t("membership.checkout.successTitle")}</H2>
                       <Body tone="muted">
@@ -323,7 +329,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, i
 
                 {step === "error" && (
                   <motion.div key="error" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={transitions.spring}>
-                    <Column horizontal="center" style={{ gap: tokens.space[4], padding: `${tokens.space[6]} 0`, textAlign: "center" }}>
+                    <Column horizontal="center" style={{ gap: tokens.space[4], paddingTop: tokens.space[6], paddingRight: 0, paddingBottom: tokens.space[6], paddingLeft: 0, textAlign: "center" }}>
                       <AlertCircle size={48} color={tokens.color.danger} />
                       <Body style={{ color: tokens.color.danger }}>{errorMessage}</Body>
                       <Button variant="primary" fullWidth onClick={() => setStep("card")}>

@@ -207,7 +207,7 @@ _ALLOWED_ORIGIN_PATTERN = _re.compile(settings.ALLOWED_ORIGIN_REGEX) if settings
 def _is_origin_allowed(origin: str) -> bool:
     if not origin:
         return False
-    if _is_origin_allowed(origin):
+    if origin in ALLOWED_ORIGINS:
         return True
     return bool(_ALLOWED_ORIGIN_PATTERN and _ALLOWED_ORIGIN_PATTERN.fullmatch(origin))
 

@@ -156,7 +156,10 @@ export default function ChallengeManagementPage() {
                 style={{
                     flexShrink: 0,
                     background: "linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 100%)",
-                    padding: "48px 48px 40px",
+                    paddingTop: "48px",
+                    paddingLeft: "48px",
+                    paddingRight: "48px",
+                    paddingBottom: "40px",
                     position: "relative",
                     overflow: "hidden",
                 }}
@@ -167,12 +170,15 @@ export default function ChallengeManagementPage() {
                     borderRadius: "50%", background: "rgba(0,122,255,0.15)", filter: "blur(90px)"
                 }} />
 
-                <Column fillWidth style={{ position: "relative", maxWidth: 1400, margin: "0 auto" }}>
+                <Column fillWidth style={{ position: "relative", maxWidth: 1400, marginTop: 0, marginBottom: 0, marginLeft: "auto", marginRight: "auto" }}>
                     <Row fillWidth horizontal="between" vertical="end" style={{ marginBottom: 32 }}>
                         <Column gap="8">
                             <Row gap="12" vertical="center">
                                 <Column style={{
-                                    padding: 12,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    paddingLeft: 12,
+                                    paddingRight: 12,
                                     borderRadius: 16,
                                     background: "rgba(255,255,255,0.1)",
                                     backdropFilter: "blur(12px)",
@@ -239,11 +245,25 @@ export default function ChallengeManagementPage() {
             </Column>
 
             {/* ─── MAIN CONTENT: Management Area ─── */}
-            <Column gap="32" style={{ maxWidth: 1400, margin: "0 auto", width: "100%", padding: "40px 48px" }}>
+            <Column
+                gap="32"
+                style={{
+                    maxWidth: 1400,
+                    marginTop: 0,
+                    marginBottom: 0,
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    width: "100%",
+                    paddingTop: "40px",
+                    paddingBottom: "40px",
+                    paddingLeft: "48px",
+                    paddingRight: "48px",
+                }}
+            >
 
                 {/* Toolbar: Search & Tabs */}
                 <Row fillWidth horizontal="between" vertical="center" style={{ flexWrap: "wrap", gap: 20 }}>
-                    <Row gap="4" style={{ background: "rgba(0,0,0,0.05)", padding: 4, borderRadius: 16 }}>
+                    <Row gap="4" style={{ background: "rgba(0,0,0,0.05)", paddingTop: 4, paddingBottom: 4, paddingLeft: 4, paddingRight: 4, borderRadius: 16 }}>
                         {(["All", "Active", "Scheduled", "Draft", "Expired"] as const).map((tab) => (
                             <button
                                 key={tab}
@@ -314,7 +334,10 @@ export default function ChallengeManagementPage() {
                                 horizontal="between"
                                 style={{
                                     background: "#fff",
-                                    padding: "16px 24px",
+                                    paddingTop: "16px",
+                                    paddingBottom: "16px",
+                                    paddingLeft: "24px",
+                                    paddingRight: "24px",
                                     borderRadius: "24px",
                                     border: "1px solid rgba(0,0,0,0.04)",
                                     boxShadow: "0 4px 20px rgba(0,0,0,0.02)"
@@ -322,7 +345,10 @@ export default function ChallengeManagementPage() {
                             >
                                 <Row gap="20" vertical="center" style={{ flex: 2 }}>
                                     <Column style={{
-                                        padding: 16,
+                                        paddingTop: 16,
+                                        paddingBottom: 16,
+                                        paddingLeft: 16,
+                                        paddingRight: 16,
                                         borderRadius: 16,
                                         ...(challenge.difficulty === 'Easy'
                                             ? { background: "#F0FDF4", color: "#16A34A" }
@@ -523,7 +549,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
     };
 
     return (
-        <Row horizontal="center" vertical="center" style={{ position: "fixed", inset: 0, zIndex: 100, padding: 24, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
+        <Row horizontal="center" vertical="center" style={{ position: "fixed", inset: 0, zIndex: 100, paddingTop: 24, paddingBottom: 24, paddingLeft: 24, paddingRight: 24, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -538,7 +564,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                     maxHeight: "90vh",
                 }}
             >
-                <Row horizontal="between" vertical="center" style={{ padding: "24px 32px", borderBottom: "1px solid #F3F4F6", background: "rgba(249,250,251,0.5)" }}>
+                <Row horizontal="between" vertical="center" style={{ paddingTop: "24px", paddingBottom: "24px", paddingLeft: "32px", paddingRight: "32px", borderBottom: "1px solid #F3F4F6", background: "rgba(249,250,251,0.5)" }}>
                     <Heading variant="heading-strong-m">
                         {mode === "create" ? "Tạo Thử Thách Mới" : "Chỉnh Sửa Thử Thách"}
                     </Heading>
@@ -740,7 +766,7 @@ function ChallengeFormModal({ isOpen, onClose, onSubmit, initialData, mode, isSu
                     </Column>
                 </form>
 
-                <Row horizontal="end" gap="12" style={{ padding: "24px 32px", borderTop: "1px solid #F3F4F6", background: "rgba(249,250,251,0.5)" }}>
+                <Row horizontal="end" gap="12" style={{ paddingTop: "24px", paddingBottom: "24px", paddingLeft: "32px", paddingRight: "32px", borderTop: "1px solid #F3F4F6", background: "rgba(249,250,251,0.5)" }}>
                     <Button variant="tertiary" onClick={onClose} disabled={isSubmitting}>Huỷ</Button>
                     <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
                         {isSubmitting ? "Đang lưu..." : (
@@ -773,7 +799,10 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: ChallengeViewModalPr
         const color = (status ? colors[status] : undefined) || colors.Draft;
         return (
             <Column style={{
-                padding: "4px 12px",
+                paddingTop: "4px",
+                paddingBottom: "4px",
+                paddingLeft: "12px",
+                paddingRight: "12px",
                 borderRadius: 9999,
                 fontSize: 10,
                 fontWeight: 700,
@@ -791,7 +820,7 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: ChallengeViewModalPr
     if (!isOpen || !challenge) return null;
 
     return (
-        <Row horizontal="center" vertical="center" style={{ position: "fixed", inset: 0, zIndex: 100, padding: 24, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
+        <Row horizontal="center" vertical="center" style={{ position: "fixed", inset: 0, zIndex: 100, paddingTop: 24, paddingBottom: 24, paddingLeft: 24, paddingRight: 24, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)" }}>
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -807,13 +836,16 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: ChallengeViewModalPr
                     maxHeight: "90vh",
                 }}
             >
-                <Column style={{ padding: 32 }}>
+                <Column style={{ paddingTop: 32, paddingBottom: 32, paddingLeft: 32, paddingRight: 32 }}>
                     <Row horizontal="between" vertical="start">
                         <Column gap="8">
                             <Row gap="8" vertical="center">
                                 <StatusBadge status={challenge.computedStatus} />
                                 <Column style={{
-                                    padding: "4px 12px",
+                                    paddingTop: "4px",
+                                    paddingBottom: "4px",
+                                    paddingLeft: "12px",
+                                    paddingRight: "12px",
                                     background: "#F3F4F6",
                                     color: "#6B7280",
                                     fontSize: 10,
@@ -836,20 +868,20 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: ChallengeViewModalPr
                         </Row>
                     </Row>
 
-                    <Column style={{ margin: "24px 0", padding: 20, background: "#F9FAFB", borderRadius: 16, border: "1px solid #F3F4F6" }}>
+                    <Column style={{ marginTop: "24px", marginBottom: "24px", marginLeft: 0, marginRight: 0, paddingTop: 20, paddingBottom: 20, paddingLeft: 20, paddingRight: 20, background: "#F9FAFB", borderRadius: 16, border: "1px solid #F3F4F6" }}>
                         <Text variant="body-default-m" style={{ color: "#48484A" }}>{challenge.description}</Text>
                     </Column>
 
                     <Grid gap="16" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
-                        <Column style={{ padding: 16, background: "rgba(239,246,255,0.3)", borderRadius: 16, border: "1px solid rgba(219,234,254,0.3)", textAlign: "center" }}>
+                        <Column style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 16, paddingRight: 16, background: "rgba(239,246,255,0.3)", borderRadius: 16, border: "1px solid rgba(219,234,254,0.3)", textAlign: "center" }}>
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Hoàn thành</Text>
                             <Heading variant="heading-strong-s" style={{ color: "#007AFF" }}>{challenge.completion_rate}%</Heading>
                         </Column>
-                        <Column style={{ padding: 16, background: "rgba(250,245,255,0.3)", borderRadius: 16, border: "1px solid rgba(233,213,255,0.3)", textAlign: "center" }}>
+                        <Column style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 16, paddingRight: 16, background: "rgba(250,245,255,0.3)", borderRadius: 16, border: "1px solid rgba(233,213,255,0.3)", textAlign: "center" }}>
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Phần thưởng</Text>
                             <Heading variant="heading-strong-s" style={{ color: "#AF52DE" }}>+{challenge.xp_reward} XP</Heading>
                         </Column>
-                        <Column style={{ padding: 16, background: "rgba(240,253,244,0.3)", borderRadius: 16, border: "1px solid rgba(187,247,208,0.3)", textAlign: "center" }}>
+                        <Column style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 16, paddingRight: 16, background: "rgba(240,253,244,0.3)", borderRadius: 16, border: "1px solid rgba(187,247,208,0.3)", textAlign: "center" }}>
                             <Text variant="body-default-xs" style={{ color: "#8E8E93" }}>Người chơi</Text>
                             <Heading variant="heading-strong-s" style={{ color: "#34C759" }}>{challenge.participants_count}</Heading>
                         </Column>
@@ -885,7 +917,10 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: ChallengeViewModalPr
                     <Column style={{ marginTop: 24 }}>
                         <Text variant="body-default-xs" style={{ color: "#8E8E93", marginBottom: 4 }}>Action Filter (Raw)</Text>
                         <Column style={{
-                            padding: 12,
+                            paddingTop: 12,
+                            paddingBottom: 12,
+                            paddingLeft: 12,
+                            paddingRight: 12,
                             background: "#111827",
                             borderRadius: 12,
                             fontFamily: "monospace",
@@ -898,7 +933,7 @@ function ChallengeViewModal({ isOpen, onClose, challenge }: ChallengeViewModalPr
                         </Column>
                     </Column>
                 </Column>
-                <Row horizontal="center" style={{ padding: 16, background: "#F9FAFB", borderTop: "1px solid #F3F4F6" }}>
+                <Row horizontal="center" style={{ paddingTop: 16, paddingBottom: 16, paddingLeft: 16, paddingRight: 16, background: "#F9FAFB", borderTop: "1px solid #F3F4F6" }}>
                     <Button variant="tertiary" onClick={onClose} fillWidth>Đóng cửa sổ</Button>
                 </Row>
             </motion.div>
@@ -918,7 +953,7 @@ function DeleteConfirmModal({ isOpen, onClose, onConfirm, challengeTitle, isSubm
     if (!isOpen) return null;
 
     return (
-        <Row horizontal="center" vertical="center" style={{ position: "fixed", inset: 0, zIndex: 110, padding: 24, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)" }}>
+        <Row horizontal="center" vertical="center" style={{ position: "fixed", inset: 0, zIndex: 110, paddingTop: 24, paddingBottom: 24, paddingLeft: 24, paddingRight: 24, background: "rgba(0,0,0,0.6)", backdropFilter: "blur(12px)" }}>
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -931,7 +966,7 @@ function DeleteConfirmModal({ isOpen, onClose, onConfirm, challengeTitle, isSubm
                     textAlign: "center",
                 }}
             >
-                <Row horizontal="center" vertical="center" style={{ margin: "0 auto 24px", width: 64, height: 64, background: "#FEF2F2", borderRadius: 16 }}>
+                <Row horizontal="center" vertical="center" style={{ marginTop: 0, marginLeft: "auto", marginRight: "auto", marginBottom: 24, width: 64, height: 64, background: "#FEF2F2", borderRadius: 16 }}>
                     <AlertIcon size={32} style={{ color: "#FF3B30" }} />
                 </Row>
                 <Heading variant="heading-strong-s" style={{ marginBottom: 12 }}>Xoá thử thách?</Heading>

@@ -412,7 +412,10 @@ export const FriendRow: React.FC<FriendRowProps> = ({
 
         <Column
           style={{
-            padding: `0 ${tokens.space[6]} ${tokens.space[5]}`,
+            paddingTop: 0,
+            paddingRight: tokens.space[6],
+            paddingBottom: tokens.space[5],
+            paddingLeft: tokens.space[6],
             marginTop: -16,
           }}
         >
@@ -438,7 +441,16 @@ export const FriendRow: React.FC<FriendRowProps> = ({
                 gap: 2,
               }}
             >
-              <H3>{friend.name}</H3>
+              <H3
+                style={{
+                  fontSize: tokens.type.size.h3,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {friend.name}
+              </H3>
               <Row
                 vertical="center"
                 style={{
